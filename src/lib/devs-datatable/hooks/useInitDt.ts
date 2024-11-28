@@ -4,9 +4,11 @@ import useMounted from "./useMounted";
 export const useInitDt = ({
   tbody,
   thead,
+  isMerged,
 }: {
   tbody: React.RefObject<HTMLDivElement>;
   thead: React.RefObject<HTMLDivElement>;
+  isMerged: boolean;
 }) => {
   const mounted = useMounted();
   const visibleStickyColShadow = () => {
@@ -111,7 +113,13 @@ export const useInitDt = ({
       let setLeft = 0;
       for (let cell = 0; cell < stickyColsInRow.length; cell++) {
         stickyColsInRow[cell].style.left = `${setLeft}px`;
-        setLeft += stickyColsInRow[cell].getBoundingClientRect()?.width;
+        if (stickyColsInRow[cell].dataset.hidden === "true") {
+          setLeft += parseFloat(
+            stickyColsInRow[cell].dataset.width?.toString() ?? "100"
+          );
+        } else {
+          setLeft += stickyColsInRow[cell].getBoundingClientRect()?.width;
+        }
 
         if (cell === stickyColsInRow.length - 1) {
           // last sticky col shadow 설정

@@ -19,6 +19,7 @@ interface DevsDataTableRef {
 // DevsDataTable 컴포넌트 타입 설정 및 구현
 const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
   (props, ref) => {
+    const [isMerged, setIsMerged] = React.useState(false);
     const [headerWidth, setHeaderWidth] = React.useState<number>(0);
 
     const [focusedCell, setFocusedCell] = React.useState<null | string>(null);
@@ -32,6 +33,7 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
     const init = useInitDt({
       tbody: tbody,
       thead: thead,
+      isMerged,
     });
 
     React.useEffect(() => {

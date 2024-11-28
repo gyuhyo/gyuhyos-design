@@ -79,16 +79,18 @@ require("./dev.datatable.style.css");
 // DevsDataTable 컴포넌트 타입 설정 및 구현
 var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
     var _a, _b, _c, _d, _e, _f, _g;
-    var _h = __read(react_1.default.useState(0), 2), headerWidth = _h[0], setHeaderWidth = _h[1];
-    var _j = __read(react_1.default.useState(null), 2), focusedCell = _j[0], setFocusedCell = _j[1];
-    var _k = __read(react_1.default.useState(null), 2), focusedRow = _k[0], setFocusedRow = _k[1];
+    var _h = __read(react_1.default.useState(false), 2), isMerged = _h[0], setIsMerged = _h[1];
+    var _j = __read(react_1.default.useState(0), 2), headerWidth = _j[0], setHeaderWidth = _j[1];
+    var _k = __read(react_1.default.useState(null), 2), focusedCell = _k[0], setFocusedCell = _k[1];
+    var _l = __read(react_1.default.useState(null), 2), focusedRow = _l[0], setFocusedRow = _l[1];
     var formsRef = react_1.default.useRef({});
     var thead = react_1.default.useRef(null);
     var tbody = react_1.default.useRef(null);
-    var _l = __read(react_1.default.useState(false), 2), DtForceUpdate = _l[1];
+    var _m = __read(react_1.default.useState(false), 2), DtForceUpdate = _m[1];
     var init = (0, useInitDt_1.useInitDt)({
         tbody: tbody,
         thead: thead,
+        isMerged: isMerged,
     });
     react_1.default.useEffect(function () {
         if (!thead.current)

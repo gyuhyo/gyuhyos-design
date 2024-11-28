@@ -202,7 +202,23 @@ function DevsDtCell({
   }, [defaultValue, row, col, mode]);
 
   if (merge !== undefined && merge.hidden === true) {
-    return null;
+    return (
+      <td
+        ref={cellRef}
+        className={classString}
+        rowSpan={0}
+        data-hidden={true}
+        data-width={col.width}
+        style={
+          {
+            display: "none",
+            "--width": col.width ? `${col.width}px` : `100px`,
+            textAlign: col.align ?? "left",
+            ...col.style,
+          } as React.CSSProperties
+        }
+      />
+    );
   }
 
   return (
@@ -210,6 +226,8 @@ function DevsDtCell({
       ref={cellRef}
       className={classString}
       rowSpan={merge?.rowSpan}
+      data-hidden={false}
+      data-width={col.width}
       style={
         {
           "--width": col.width ? `${col.width}px` : `100px`,

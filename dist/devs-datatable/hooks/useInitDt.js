@@ -13,8 +13,8 @@ import React from "react";
 import useMounted from "./useMounted";
 export var useInitDt = function (_a) {
     var e_1, _b;
-    var _c, _d;
-    var tbody = _a.tbody, thead = _a.thead;
+    var _c, _d, _e, _f;
+    var tbody = _a.tbody, thead = _a.thead, isMerged = _a.isMerged;
     var mounted = useMounted();
     var visibleStickyColShadow = function () {
         var e_2, _a;
@@ -133,7 +133,12 @@ export var useInitDt = function (_a) {
                 var setLeft_1 = 0;
                 for (var cell = 0; cell < stickyColsInRow.length; cell++) {
                     stickyColsInRow[cell].style.left = "".concat(setLeft_1, "px");
-                    setLeft_1 += (_d = stickyColsInRow[cell].getBoundingClientRect()) === null || _d === void 0 ? void 0 : _d.width;
+                    if (stickyColsInRow[cell].dataset.hidden === "true") {
+                        setLeft_1 += parseFloat((_e = (_d = stickyColsInRow[cell].dataset.width) === null || _d === void 0 ? void 0 : _d.toString()) !== null && _e !== void 0 ? _e : "100");
+                    }
+                    else {
+                        setLeft_1 += (_f = stickyColsInRow[cell].getBoundingClientRect()) === null || _f === void 0 ? void 0 : _f.width;
+                    }
                     if (cell === stickyColsInRow.length - 1) {
                         // last sticky col shadow 설정
                         stickyColsInRow[cell].classList.add("devs-dt-sticky-col-last");

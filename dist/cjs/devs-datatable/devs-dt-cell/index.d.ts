@@ -15,6 +15,6 @@ type TDevsDtCell = {
         hidden: boolean;
     };
 };
-declare function DevsDtCell({ register, control, col, mode, defaultValue, error, autoFocus, row, merge, }: TDevsDtCell): import("@emotion/react/jsx-runtime").JSX.Element | null;
+declare function DevsDtCell({ register, control, col, mode, defaultValue, error, autoFocus, row, merge, }: TDevsDtCell): import("@emotion/react/jsx-runtime").JSX.Element;
 declare const _default: React.MemoExoticComponent<typeof DevsDtCell>;
 export default _default;

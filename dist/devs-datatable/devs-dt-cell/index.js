@@ -16,9 +16,9 @@ import { Controller, } from "react-hook-form";
 import { DatePicker, InputNumber, Select } from "antd";
 import { useDt } from "../context/devs-dt-context";
 function DevsDtCell(_a) {
-    var _b;
+    var _b, _c;
     var register = _a.register, control = _a.control, col = _a.col, mode = _a.mode, defaultValue = _a.defaultValue, error = _a.error, autoFocus = _a.autoFocus, row = _a.row, merge = _a.merge;
-    var _c = useDt(), focusedRow = _c.focusedRow, focusedCell = _c.focusedCell, setFocusedCell = _c.setFocusedCell;
+    var _d = useDt(), focusedRow = _d.focusedRow, focusedCell = _d.focusedCell, setFocusedCell = _d.setFocusedCell;
     var cellRef = React.useRef(null);
     var classString = React.useMemo(function () {
         var classes = [];
@@ -111,8 +111,8 @@ function DevsDtCell(_a) {
         }
     }, [defaultValue, row, col, mode]);
     if (merge !== undefined && merge.hidden === true) {
-        return null;
+        return (_jsx("td", { ref: cellRef, className: classString, rowSpan: 0, "data-hidden": true, "data-width": col.width, style: __assign({ display: "none", "--width": col.width ? "".concat(col.width, "px") : "100px", textAlign: (_b = col.align) !== null && _b !== void 0 ? _b : "left" }, col.style) }));
     }
-    return (_jsx("td", __assign({ ref: cellRef, className: classString, rowSpan: merge === null || merge === void 0 ? void 0 : merge.rowSpan, style: __assign({ "--width": col.width ? "".concat(col.width, "px") : "100px", textAlign: (_b = col.align) !== null && _b !== void 0 ? _b : "left" }, col.style) }, { children: Cell })));
+    return (_jsx("td", __assign({ ref: cellRef, className: classString, rowSpan: merge === null || merge === void 0 ? void 0 : merge.rowSpan, "data-hidden": false, "data-width": col.width, style: __assign({ "--width": col.width ? "".concat(col.width, "px") : "100px", textAlign: (_c = col.align) !== null && _c !== void 0 ? _c : "left" }, col.style) }, { children: Cell })));
 }
 export default React.memo(DevsDtCell);
