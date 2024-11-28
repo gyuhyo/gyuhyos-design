@@ -48,6 +48,13 @@ var DevsDtProviderComponent = function (_a) {
         }
     }, []);
     react_1.default.useEffect(function () {
+        var validRowIds = new Set(dataSource.map(function (obj) { return obj.rowId; }));
+        // Step 2: targetObject에서 유효하지 않은 키 삭제
+        Object.keys(formsRef.current).forEach(function (key) {
+            if (!validRowIds.has(key)) {
+                delete formsRef.current[key];
+            }
+        });
         setDataSource(function (prev) {
             return dataSource.map(function (d) {
                 return __assign({ rowId: (0, react_uuid_1.default)(), mode: "r", checked: false }, d);
