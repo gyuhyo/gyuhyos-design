@@ -110,7 +110,6 @@ function App() {
       title: "1",
       width: 200,
       required: true,
-      sticky: true,
       resizing: false,
       merge: true,
       updatable: false,
@@ -119,7 +118,6 @@ function App() {
       field: "2",
       title: "2",
       type: "select",
-      sticky: true,
       options: [
         { value: "0", label: "0" },
         { value: "1", label: "1" },
@@ -224,7 +222,6 @@ function App() {
         setDataSource={setDataSource}
         options={{
           showRowNumber: true,
-          enabledRowCheck: true,
           enabledRowOrder: true,
         }}
         buttons={{

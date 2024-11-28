@@ -97,8 +97,8 @@
     background-color: #b5d3eb !important;
   }
 
-  &:is([data-edit-mode="u"]) > .devs-dt-index-cell::after,
-  &:is([data-edit-mode="c"]) > .devs-dt-index-cell::after {
+  &:is([data-edit-mode="u"]) > .devs-dt-index-cell::before,
+  &:is([data-edit-mode="c"]) > .devs-dt-index-cell::before {
     content: "\270e";
     position: absolute;
     top: 50%;
@@ -125,7 +125,7 @@
     color: red;
   }
 
-  &:hover > .devs-dt-index-cell::after {
+  &:hover > .devs-dt-index-cell::before {
     content: "\276F";
     z-index: 2;
     position: absolute;
