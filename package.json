@@ -1,6 +1,6 @@
 {
   "name": "gyuhyos-design",
-  "version": "0.0.40",
+  "version": "0.1.11",
   "description": "Copyright Gyuhyos Design Components",
   "license": "MIT",
   "author": {
@@ -24,6 +24,7 @@
     "@emotion/babel-preset-css-prop": "^11.12.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@hello-pangea/dnd": "^17.0.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -31,9 +32,11 @@
     "@types/node": "^16.18.119",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "dayjs": "^1.11.13",
+    "react-hook-form": "^7.52.2",
+    "react-icons": "^5.2.1",
     "react-scripts": "5.0.1",
+    "react-uuid": "^2.0.0",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
@@ -44,15 +47,16 @@
   "peerDependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react": "^18.0.0 || ^17.0.0",
+    "react-dom": "^18.0.0 || ^17.0.0",
+    "antd": "^5.21.6"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prepare": "rm -rf dist && mkdir dist && tsc && tsc --module commonjs --outDir ./dist/cjs"
+    "prepare": "rm -rf dist && mkdir dist && tsc && copyfiles -u 2 \"src/lib/**/*.css\" dist && tsc --module commonjs --outDir ./dist/cjs"
   },
   "eslintConfig": {
     "extends": [
@@ -72,5 +76,12 @@
       "last 1 safari version"
     ]
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "typescript": "^4.9.5",
+    "copyfiles": "^2.4.1",
+    "antd": "^5.21.6"
+  }
 }

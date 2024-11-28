@@ -33,6 +33,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
 var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
         if (ar || !(i in from)) {
@@ -54,11 +70,11 @@ var __1 = __importDefault(require(".."));
 var MessageContext = (0, react_1.createContext)(undefined);
 exports.MessageProvider = react_1.default.memo(function (_a) {
     var children = _a.children;
-    var _b = (0, react_1.useState)([]), messages = _b[0], setMessages = _b[1];
+    var _b = __read((0, react_1.useState)([]), 2), messages = _b[0], setMessages = _b[1];
     var showMessage = function (props) {
         setMessages(function (prev) {
             var _a, _b, _c, _d, _e, _f, _g, _h;
-            return __spreadArray(__spreadArray([], prev, true), [
+            return __spreadArray(__spreadArray([], __read(prev), false), [
                 {
                     alertID: Date.now().toString(),
                     type: (_a = props.type) !== null && _a !== void 0 ? _a : "default",

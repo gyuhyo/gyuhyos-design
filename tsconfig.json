@@ -16,8 +16,9 @@
     "noEmit": false,
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react",
+    "downlevelIteration": true,
     "declaration": true,
     "outDir": "./dist"
   },
-  "include": ["./src/lib/**/*.tsx", "./src/lib/**/*.ts"]
+  "include": ["./src/lib/**/*.tsx", "./src/lib/**/*.ts", "./src/lib/**/*.css"]
 }

@@ -5,6 +5,7 @@ import AlertMessageBody from "./alert-message-body";
 import AlertMessageFooter from "./alert-message-footer";
 import AlertMessageHeader from "./alert-message-header";
 import { MessageContextTypes } from "./types/message-context-props";
+import "./message.styles.css";
 
 const backdrop = css({
   width: "100vw",
@@ -34,47 +35,6 @@ const hiddenAlert = css({
   opacity: 0,
   visibility: "hidden",
   transition: "opacity 200ms ease-in-out, visibility 0ms ease-in-out 200ms",
-});
-
-const wrapperOpenKeyframe = keyframes`
-    0% {
-        transform: scale(0);
-        opacity: 0;
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-`;
-
-const wrapperCloseKeyframe = keyframes`
-    0% {
-        transform: scale(1);
-        opacity: 1;
-    }
-
-    100% {
-        transform: scale(0);
-        opacity: 0;
-    }
-`;
-
-const alertMessageWrapper = css({
-  minWidth: 300,
-  maxWidth: 400,
-  minHeight: 150,
-  background: "rgb(255, 255, 255)",
-  borderRadius: 5,
-  display: "flex",
-  flexDirection: "column",
-  animation: `${wrapperOpenKeyframe} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards`,
-  boxShadow:
-    "5px 5px 11px rgba(0, 0, 0, 0.2), -5px -5px 11px rgba(0, 0, 0, 0.2)",
-});
-
-const alertmessageWrapperClose = css({
-  animation: `${wrapperCloseKeyframe} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards`,
 });
 
 const AlertMessage: React.FC<MessageContextTypes> = (props) => {
@@ -125,10 +85,9 @@ const AlertMessage: React.FC<MessageContextTypes> = (props) => {
   return (
     <div css={[backdrop, isShowState ? visibleAlert : hiddenAlert]}>
       <div
-        css={[
-          alertMessageWrapper,
-          isShowState ? undefined : alertmessageWrapperClose,
-        ]}
+        className={`alertMessageWrapper ${
+          isShowState ? undefined : "alertMessageWrapperClose"
+        }`}
       >
         <AlertMessageHeader
           type={type!}

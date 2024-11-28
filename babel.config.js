@@ -9,5 +9,16 @@ module.exports = {
       },
     ],
   ],
-  plugins: ["@emotion/babel-plugin"], // Emotion 전용 Babel 플러그인
+  plugins: [
+    "@emotion/babel-plugin",
+    [
+      "@emotion",
+      {
+        // sourceMap is on by default but source maps are dead code eliminated in production
+        sourceMap: true,
+        autoLabel: "dev-only",
+        labelFormat: "[local]",
+      },
+    ],
+  ], // Emotion 전용 Babel 플러그인
 };
