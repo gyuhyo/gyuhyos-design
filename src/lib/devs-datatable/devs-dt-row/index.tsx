@@ -177,20 +177,46 @@ function DevsDtRow({
         />
       )}
       {lastNode &&
-        lastNode.map((col, index) => (
-          <DevsDtCell
-            key={`${rowKey}-${col.field}`}
-            register={register}
-            control={control}
-            col={col}
-            mode={data.mode}
-            defaultValue={data[col.field]}
-            error={errors.hasOwnProperty(col.field)}
-            autoFocus={index === 0}
-            row={data}
-            merge={data._merge?.[col.field]}
-          />
-        ))}
+        lastNode.map((col, index) => {
+          let autoFocus = false;
+
+          const editables = lastNode.filter(
+            (x) => x.editable === true || x.editable === undefined
+          );
+          const updatables = lastNode.filter(
+            (x) => x.updatable === true || x.updatable === undefined
+          );
+
+          const myEditableIndex = editables.findIndex(
+            (x) => x.field === col.field
+          );
+          const myUpdatableIndex = updatables.findIndex(
+            (x) => x.field === col.field
+          );
+
+          if (data.mode === "c") {
+            autoFocus = !myEditableIndex;
+          } else if (data.mode === "u") {
+            autoFocus = !myUpdatableIndex;
+          } else {
+            autoFocus = false;
+          }
+
+          return (
+            <DevsDtCell
+              key={`${rowKey}-${col.field}`}
+              register={register}
+              control={control}
+              col={col}
+              mode={data.mode}
+              defaultValue={data[col.field]}
+              error={errors.hasOwnProperty(col.field)}
+              autoFocus={myEditableIndex === 0 || myUpdatableIndex === 0}
+              row={data}
+              merge={data._merge?.[col.field]}
+            />
+          );
+        })}
     </tr>
   );
 }
