@@ -40,10 +40,14 @@ var DevsDtProviderComponent = function (_a) {
                 return prevCols.map(function (col) { return (__assign(__assign({}, col), { resizing: col.resizing === undefined ? true : col.resizing })); });
             });
         }
-        setDataSource(dataSource.map(function (d) {
-            return __assign({ rowId: uuid(), mode: "r", checked: false }, d);
-        }));
-    }, [dataSource.length]);
+    }, []);
+    React.useEffect(function () {
+        setDataSource(function (prev) {
+            return dataSource.map(function (d) {
+                return __assign({ rowId: uuid(), mode: "r", checked: false }, d);
+            });
+        });
+    }, [JSON.stringify(dataSource)]);
     return (_jsx(DevsDtContext.Provider, __assign({ value: {
             columns: columns,
             setColumns: setColumns,

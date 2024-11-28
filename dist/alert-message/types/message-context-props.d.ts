@@ -10,11 +10,11 @@ export interface MessageShowProps {
     okCaption?: string;
     cancelCaption?: string;
     isOkButtonVisible?: boolean;
-    onOkClick?: (e: MouseEvent<HTMLButtonElement>) => void | boolean;
+    onOkClick?: (e?: MouseEvent<HTMLButtonElement>) => void | boolean;
     isCancelButtonVisible?: boolean;
-    onCancelClick?: (e: MouseEvent<HTMLButtonElement>) => void;
+    onCancelClick?: (e?: MouseEvent<HTMLButtonElement>) => void;
     isCloseButtonVisible?: boolean;
-    onCloseClick?: (e: MouseEvent<HTMLDivElement>) => void;
+    onCloseClick?: (e?: MouseEvent<HTMLDivElement>) => void;
     footerStart?: React.ReactNode;
 }
 export interface MessageContextTypes extends MessageContextProps, MessageShowProps {
@@ -23,11 +23,11 @@ export interface MessageContextTypes extends MessageContextProps, MessageShowPro
     okCaption: string;
     cancelCaption: string;
     isOkButtonVisible: boolean;
-    onOkClick: (e: MouseEvent<HTMLButtonElement>) => void | boolean;
+    onOkClick: (e?: MouseEvent<HTMLButtonElement>) => void | boolean;
     isCancelButtonVisible: boolean;
-    onCancelClick: (e: MouseEvent<HTMLButtonElement>) => void;
+    onCancelClick: (e?: MouseEvent<HTMLButtonElement>) => void;
     isCloseButtonVisible: boolean;
-    onCloseClick: (e: MouseEvent<HTMLDivElement>) => void;
+    onCloseClick: (e?: MouseEvent<HTMLDivElement>) => void;
 }
 export interface MessageClicentProps {
     showMessage: ({ type, title, message, okCaption, cancelCaption, isOkButtonVisible, onOkClick, isCancelButtonVisible, onCancelClick, isCloseButtonVisible, onCloseClick, footerStart, }: MessageShowProps) => void;

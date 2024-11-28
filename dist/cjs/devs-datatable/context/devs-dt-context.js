@@ -46,10 +46,14 @@ var DevsDtProviderComponent = function (_a) {
                 return prevCols.map(function (col) { return (__assign(__assign({}, col), { resizing: col.resizing === undefined ? true : col.resizing })); });
             });
         }
-        setDataSource(dataSource.map(function (d) {
-            return __assign({ rowId: (0, react_uuid_1.default)(), mode: "r", checked: false }, d);
-        }));
-    }, [dataSource.length]);
+    }, []);
+    react_1.default.useEffect(function () {
+        setDataSource(function (prev) {
+            return dataSource.map(function (d) {
+                return __assign({ rowId: (0, react_uuid_1.default)(), mode: "r", checked: false }, d);
+            });
+        });
+    }, [JSON.stringify(dataSource)]);
     return ((0, jsx_runtime_1.jsx)(DevsDtContext.Provider, __assign({ value: {
             columns: columns,
             setColumns: setColumns,

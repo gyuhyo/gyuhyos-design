@@ -103,8 +103,14 @@ var AlertMessage = function (props) {
             return;
         document.activeElement.blur();
         var closeKeyDownPopup = function (e) {
-            if (e.key === "Enter")
+            if (e.key === "Enter") {
+                if (onOkClick) {
+                    var next = onOkClick();
+                    if (typeof next === "boolean" && !next)
+                        return;
+                }
                 closeAlert();
+            }
         };
         window.addEventListener("keydown", closeKeyDownPopup);
         return function () {

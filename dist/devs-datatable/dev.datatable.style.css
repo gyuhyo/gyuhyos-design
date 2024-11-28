@@ -97,12 +97,14 @@
     background-color: #b5d3eb !important;
   }
 
-  &:is([data-edit-mode="u"]) > .devs-dt-index-cell::after {
+  &:is([data-edit-mode="u"]) > .devs-dt-index-cell::after,
+  &:is([data-edit-mode="c"]) > .devs-dt-index-cell::after {
     content: "\270e";
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     left: 3px;
+    font-size: 0.8rem;
   }
 
   &:is([data-edit-mode="u"]) > .devs-dt-cell[data-updatable="true"]::after,
@@ -130,6 +132,7 @@
     top: 50%;
     transform: translateY(-50%);
     left: 3px;
+    font-size: 1rem;
   }
 }
 

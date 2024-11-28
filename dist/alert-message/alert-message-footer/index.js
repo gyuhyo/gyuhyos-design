@@ -30,7 +30,7 @@ var AlertMessageFooter = React.memo(function (_a) {
                     columnGap: 7,
                 }) }, { children: [isOkButtonVisible && (_jsx(Button, __assign({ bgColor: "#1f619d", color: "#fff", onClick: function (e) {
                             if (onOkClick) {
-                                var next = onOkClick(e);
+                                var next = onOkClick();
                                 if (typeof next === "boolean" && !next)
                                     return;
                             }
