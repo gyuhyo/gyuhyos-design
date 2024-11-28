@@ -20,6 +20,6 @@ var alertMessageBody = css({
 });
 var AlertMessageBody = React.memo(function (_a) {
     var message = _a.message;
-    return (_jsx("div", __assign({ css: alertMessageBody }, { children: typeof message === "string" ? _jsx("p", { children: message }) : message })));
+    return (_jsx("div", __assign({ css: alertMessageBody }, { children: typeof message === "string" ? (_jsx("p", __assign({ css: css({ whiteSpace: "pre-wrap" }) }, { children: message }))) : (message) })));
 });
 export default AlertMessageBody;

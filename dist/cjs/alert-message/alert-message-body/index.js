@@ -45,6 +45,6 @@ var alertMessageBody = (0, react_1.css)({
 });
 var AlertMessageBody = React.memo(function (_a) {
     var message = _a.message;
-    return ((0, jsx_runtime_1.jsx)("div", __assign({ css: alertMessageBody }, { children: typeof message === "string" ? (0, jsx_runtime_1.jsx)("p", { children: message }) : message })));
+    return ((0, jsx_runtime_1.jsx)("div", __assign({ css: alertMessageBody }, { children: typeof message === "string" ? ((0, jsx_runtime_1.jsx)("p", __assign({ css: (0, react_1.css)({ whiteSpace: "pre-wrap" }) }, { children: message }))) : (message) })));
 });
 exports.default = AlertMessageBody;

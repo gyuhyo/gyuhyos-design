@@ -15,7 +15,11 @@ const AlertMessageBody: React.FC<AlertMessageBodyProps> = React.memo(
   ({ message }) => {
     return (
       <div css={alertMessageBody}>
-        {typeof message === "string" ? <p>{message}</p> : message}
+        {typeof message === "string" ? (
+          <p css={css({ whiteSpace: "pre-wrap" })}>{message}</p>
+        ) : (
+          message
+        )}
       </div>
     );
   }
