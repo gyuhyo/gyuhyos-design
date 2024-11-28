@@ -73,15 +73,15 @@ function DevsDtRow(_a) {
                     var myEditableIndex = editables.findIndex(function (x) { return x.field === col.field; });
                     var myUpdatableIndex = updatables.findIndex(function (x) { return x.field === col.field; });
                     if (data.mode === "c") {
-                        autoFocus = !myEditableIndex;
+                        autoFocus = myEditableIndex === 0;
                     }
                     else if (data.mode === "u") {
-                        autoFocus = !myUpdatableIndex;
+                        autoFocus = myUpdatableIndex === 0;
                     }
                     else {
                         autoFocus = false;
                     }
-                    return (_jsx(DevsDtCell, { register: register, control: control, col: col, mode: data.mode, defaultValue: data[col.field], error: errors.hasOwnProperty(col.field), autoFocus: myEditableIndex === 0 || myUpdatableIndex === 0, row: data, merge: (_a = data._merge) === null || _a === void 0 ? void 0 : _a[col.field] }, "".concat(rowKey, "-").concat(col.field)));
+                    return (_jsx(DevsDtCell, { register: register, control: control, col: col, mode: data.mode, defaultValue: data[col.field], error: errors.hasOwnProperty(col.field), autoFocus: autoFocus, row: data, merge: (_a = data._merge) === null || _a === void 0 ? void 0 : _a[col.field] }, "".concat(rowKey, "-").concat(col.field)));
                 })] })));
 }
 export default React.memo(DevsDtRow);

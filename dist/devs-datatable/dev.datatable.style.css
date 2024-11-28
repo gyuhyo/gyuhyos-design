@@ -105,6 +105,10 @@
     left: 3px;
   }
 
+  &:is([data-edit-mode="u"]) > .devs-dt-cell[data-updatable="true"] {
+    border: 1px solid orange !important;
+  }
+
   &:hover > .devs-dt-index-cell::after {
     content: "\276F";
     z-index: 2;

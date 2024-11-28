@@ -228,6 +228,8 @@ function DevsDtCell({
       rowSpan={merge?.rowSpan}
       data-hidden={false}
       data-width={col.width ?? 100}
+      data-editable={col.editable ?? true}
+      data-updatable={col.updatable ?? true}
       style={
         {
           "--width": col.width ? `${col.width}px` : `100px`,

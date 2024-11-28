@@ -195,9 +195,9 @@ function DevsDtRow({
           );
 
           if (data.mode === "c") {
-            autoFocus = !myEditableIndex;
+            autoFocus = myEditableIndex === 0;
           } else if (data.mode === "u") {
-            autoFocus = !myUpdatableIndex;
+            autoFocus = myUpdatableIndex === 0;
           } else {
             autoFocus = false;
           }
@@ -211,7 +211,7 @@ function DevsDtRow({
               mode={data.mode}
               defaultValue={data[col.field]}
               error={errors.hasOwnProperty(col.field)}
-              autoFocus={myEditableIndex === 0 || myUpdatableIndex === 0}
+              autoFocus={autoFocus}
               row={data}
               merge={data._merge?.[col.field]}
             />

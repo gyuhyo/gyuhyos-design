@@ -113,6 +113,7 @@ function App() {
       sticky: true,
       resizing: false,
       merge: true,
+      updatable: false,
     },
     {
       field: "2",
@@ -124,6 +125,7 @@ function App() {
         { value: "1", label: "1" },
         { value: "2", label: "2" },
       ],
+      updatable: false,
     },
     {
       field: "3",
