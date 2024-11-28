@@ -72,7 +72,13 @@ const AlertMessage: React.FC<MessageContextTypes> = (props) => {
     (document.activeElement! as HTMLElement).blur();
 
     const closeKeyDownPopup = (e: KeyboardEvent) => {
-      if (e.key === "Enter") closeAlert();
+      if (e.key === "Enter") {
+        if (onOkClick) {
+          const next = onOkClick();
+          if (typeof next === "boolean" && !next) return;
+        }
+        closeAlert();
+      }
     };
 
     window.addEventListener("keydown", closeKeyDownPopup);

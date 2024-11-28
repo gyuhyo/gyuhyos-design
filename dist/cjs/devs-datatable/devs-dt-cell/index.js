@@ -21,9 +21,9 @@ var react_hook_form_1 = require("react-hook-form");
 var antd_1 = require("antd");
 var devs_dt_context_1 = require("../context/devs-dt-context");
 function DevsDtCell(_a) {
-    var _b, _c, _d, _e, _f;
+    var _b, _c, _d, _e, _f, _g;
     var register = _a.register, control = _a.control, col = _a.col, mode = _a.mode, defaultValue = _a.defaultValue, error = _a.error, autoFocus = _a.autoFocus, row = _a.row, merge = _a.merge;
-    var _g = (0, devs_dt_context_1.useDt)(), focusedRow = _g.focusedRow, focusedCell = _g.focusedCell, setFocusedCell = _g.setFocusedCell;
+    var _h = (0, devs_dt_context_1.useDt)(), focusedRow = _h.focusedRow, focusedCell = _h.focusedCell, setFocusedCell = _h.setFocusedCell;
     var cellRef = react_1.default.useRef(null);
     var classString = react_1.default.useMemo(function () {
         var classes = [];
@@ -118,6 +118,6 @@ function DevsDtCell(_a) {
     if (merge !== undefined && merge.hidden === true) {
         return ((0, jsx_runtime_1.jsx)("td", { ref: cellRef, className: classString, rowSpan: 0, "data-hidden": true, "data-width": col.width, style: __assign({ display: "none", "--width": col.width ? "".concat(col.width, "px") : "100px", textAlign: (_b = col.align) !== null && _b !== void 0 ? _b : "left" }, col.style) }));
     }
-    return ((0, jsx_runtime_1.jsx)("td", __assign({ ref: cellRef, className: classString, rowSpan: merge === null || merge === void 0 ? void 0 : merge.rowSpan, "data-hidden": false, "data-width": (_c = col.width) !== null && _c !== void 0 ? _c : 100, "data-editable": (_d = col.editable) !== null && _d !== void 0 ? _d : true, "data-updatable": (_e = col.updatable) !== null && _e !== void 0 ? _e : true, style: __assign({ "--width": col.width ? "".concat(col.width, "px") : "100px", textAlign: (_f = col.align) !== null && _f !== void 0 ? _f : "left" }, col.style) }, { children: Cell })));
+    return ((0, jsx_runtime_1.jsx)("td", __assign({ ref: cellRef, className: classString, rowSpan: merge === null || merge === void 0 ? void 0 : merge.rowSpan, "data-hidden": false, "data-width": (_c = col.width) !== null && _c !== void 0 ? _c : 100, "data-editable": (_d = col.editable) !== null && _d !== void 0 ? _d : true, "data-updatable": (_e = col.updatable) !== null && _e !== void 0 ? _e : true, "data-required": (_f = col.required) !== null && _f !== void 0 ? _f : false, style: __assign({ "--width": col.width ? "".concat(col.width, "px") : "100px", textAlign: (_g = col.align) !== null && _g !== void 0 ? _g : "left" }, col.style) }, { children: Cell })));
 }
 exports.default = react_1.default.memo(DevsDtCell);

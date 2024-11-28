@@ -36,18 +36,20 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = ({
         }))
       );
     }
+  }, []);
 
-    setDataSource(
-      dataSource.map((d) => {
+  React.useEffect(() => {
+    setDataSource((prev) => {
+      return dataSource.map((d) => {
         return {
           rowId: uuid(),
           mode: "r",
           checked: false,
           ...d,
         };
-      })
-    );
-  }, [dataSource.length]);
+      });
+    });
+  }, [JSON.stringify(dataSource)]);
 
   return (
     <DevsDtContext.Provider

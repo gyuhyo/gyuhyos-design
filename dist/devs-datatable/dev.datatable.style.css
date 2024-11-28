@@ -105,8 +105,22 @@
     left: 3px;
   }
 
-  &:is([data-edit-mode="u"]) > .devs-dt-cell[data-updatable="true"] {
-    border: 1px solid orange !important;
+  &:is([data-edit-mode="u"]) > .devs-dt-cell[data-updatable="true"]::after,
+  &:is([data-edit-mode="c"]) > .devs-dt-cell[data-editable="true"]::after {
+    content: "*";
+    position: absolute;
+    pointer-events: none;
+    left: 0px;
+    top: 0px;
+    color: black;
+    line-height: 1;
+  }
+
+  &:is([data-edit-mode="u"])
+    > .devs-dt-cell[data-updatable="true"][data-required="true"]::after,
+  &:is([data-edit-mode="c"])
+    > .devs-dt-cell[data-editable="true"][data-required="true"]::after {
+    color: red;
   }
 
   &:hover > .devs-dt-index-cell::after {

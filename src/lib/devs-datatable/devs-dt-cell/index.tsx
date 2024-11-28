@@ -230,6 +230,7 @@ function DevsDtCell({
       data-width={col.width ?? 100}
       data-editable={col.editable ?? true}
       data-updatable={col.updatable ?? true}
+      data-required={col.required ?? false}
       style={
         {
           "--width": col.width ? `${col.width}px` : `100px`,

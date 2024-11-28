@@ -190,7 +190,10 @@ function App() {
       type: "success",
       message: "저장되었습니다.",
       isCancelButtonVisible: false,
-      onOkClick: (e: any) => {},
+      onOkClick: (e: any) => {
+        dummyData[0]["1"] = "123123";
+        setDataSource(dummyData);
+      },
     });
     console.log(data);
   };

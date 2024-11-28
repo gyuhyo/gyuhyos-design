@@ -15,11 +15,11 @@ const alertMessageFooter = css({
 type AlertMessageFooterProps = {
   footerStart: React.ReactNode;
   isOkButtonVisible: boolean;
-  onOkClick: (e: React.MouseEvent<HTMLButtonElement>) => void | boolean;
+  onOkClick: (e?: React.MouseEvent<HTMLButtonElement>) => void | boolean;
   okCaption: string;
   closeAlert: () => void;
   isCancelButtonVisible: boolean;
-  onCancelClick: (e: React.MouseEvent<HTMLButtonElement>) => void | boolean;
+  onCancelClick: (e?: React.MouseEvent<HTMLButtonElement>) => void | boolean;
   cancelCaption: string;
 };
 
@@ -50,7 +50,7 @@ const AlertMessageFooter: React.FC<AlertMessageFooterProps> = React.memo(
               color="#fff"
               onClick={(e) => {
                 if (onOkClick) {
-                  const next = onOkClick(e);
+                  const next = onOkClick();
                   if (typeof next === "boolean" && !next) return;
                 }
                 closeAlert();
