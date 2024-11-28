@@ -16,6 +16,7 @@ export interface IDataTableColumn {
     resizing?: boolean;
     type?: string;
     align?: string;
+    merge?: boolean;
     render?: ({ value, rowData, index, }: {
         value?: any;
         rowData: IDataSource;

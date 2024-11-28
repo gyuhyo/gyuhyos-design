@@ -22,7 +22,7 @@ var antd_1 = require("antd");
 var devs_dt_context_1 = require("../context/devs-dt-context");
 function DevsDtCell(_a) {
     var _b;
-    var register = _a.register, control = _a.control, col = _a.col, mode = _a.mode, defaultValue = _a.defaultValue, error = _a.error, autoFocus = _a.autoFocus, row = _a.row;
+    var register = _a.register, control = _a.control, col = _a.col, mode = _a.mode, defaultValue = _a.defaultValue, error = _a.error, autoFocus = _a.autoFocus, row = _a.row, merge = _a.merge;
     var _c = (0, devs_dt_context_1.useDt)(), focusedRow = _c.focusedRow, focusedCell = _c.focusedCell, setFocusedCell = _c.setFocusedCell;
     var cellRef = react_1.default.useRef(null);
     var classString = react_1.default.useMemo(function () {
@@ -115,6 +115,9 @@ function DevsDtCell(_a) {
             return cellComp;
         }
     }, [defaultValue, row, col, mode]);
-    return ((0, jsx_runtime_1.jsx)("div", __assign({ ref: cellRef, className: classString, style: __assign({ "--width": col.width ? "".concat(col.width, "px") : "100px", textAlign: (_b = col.align) !== null && _b !== void 0 ? _b : "left" }, col.style) }, { children: Cell })));
+    if (merge !== undefined && merge.hidden === true) {
+        return null;
+    }
+    return ((0, jsx_runtime_1.jsx)("td", __assign({ ref: cellRef, className: classString, rowSpan: merge === null || merge === void 0 ? void 0 : merge.rowSpan, style: __assign({ "--width": col.width ? "".concat(col.width, "px") : "100px", textAlign: (_b = col.align) !== null && _b !== void 0 ? _b : "left" }, col.style) }, { children: Cell })));
 }
 exports.default = react_1.default.memo(DevsDtCell);

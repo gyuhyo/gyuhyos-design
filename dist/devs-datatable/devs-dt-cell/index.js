@@ -17,7 +17,7 @@ import { DatePicker, InputNumber, Select } from "antd";
 import { useDt } from "../context/devs-dt-context";
 function DevsDtCell(_a) {
     var _b;
-    var register = _a.register, control = _a.control, col = _a.col, mode = _a.mode, defaultValue = _a.defaultValue, error = _a.error, autoFocus = _a.autoFocus, row = _a.row;
+    var register = _a.register, control = _a.control, col = _a.col, mode = _a.mode, defaultValue = _a.defaultValue, error = _a.error, autoFocus = _a.autoFocus, row = _a.row, merge = _a.merge;
     var _c = useDt(), focusedRow = _c.focusedRow, focusedCell = _c.focusedCell, setFocusedCell = _c.setFocusedCell;
     var cellRef = React.useRef(null);
     var classString = React.useMemo(function () {
@@ -110,6 +110,9 @@ function DevsDtCell(_a) {
             return cellComp;
         }
     }, [defaultValue, row, col, mode]);
-    return (_jsx("div", __assign({ ref: cellRef, className: classString, style: __assign({ "--width": col.width ? "".concat(col.width, "px") : "100px", textAlign: (_b = col.align) !== null && _b !== void 0 ? _b : "left" }, col.style) }, { children: Cell })));
+    if (merge !== undefined && merge.hidden === true) {
+        return null;
+    }
+    return (_jsx("td", __assign({ ref: cellRef, className: classString, rowSpan: merge === null || merge === void 0 ? void 0 : merge.rowSpan, style: __assign({ "--width": col.width ? "".concat(col.width, "px") : "100px", textAlign: (_b = col.align) !== null && _b !== void 0 ? _b : "left" }, col.style) }, { children: Cell })));
 }
 export default React.memo(DevsDtCell);

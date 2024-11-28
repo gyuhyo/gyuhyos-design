@@ -25,6 +25,17 @@ var __read = (this && this.__read) || function (o, n) {
     }
     return ar;
 };
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
 var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
         if (ar || !(i in from)) {
@@ -62,6 +73,70 @@ function DevsDtTBody(_a) {
         return lastNodes;
     };
     var lastNode = React.useMemo(function () { return getLastNodes(columns); }, [columns]);
+    var mergedDataSource = React.useMemo(function () {
+        var e_1, _a, e_2, _b, _c, _d, _e;
+        if (dataSource.length === 0 ||
+            (dataSource.length > 0 && !dataSource[0].hasOwnProperty("mode")))
+            return;
+        var end = false;
+        var copyDataSource = JSON.parse(JSON.stringify(dataSource));
+        try {
+            for (var copyDataSource_1 = __values(copyDataSource), copyDataSource_1_1 = copyDataSource_1.next(); !copyDataSource_1_1.done; copyDataSource_1_1 = copyDataSource_1.next()) {
+                var d = copyDataSource_1_1.value;
+                delete d["_merge"];
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (copyDataSource_1_1 && !copyDataSource_1_1.done && (_a = copyDataSource_1.return)) _a.call(copyDataSource_1);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        var isMergedField = lastNode.filter(function (x) { return x.merge === true; });
+        try {
+            for (var isMergedField_1 = __values(isMergedField), isMergedField_1_1 = isMergedField_1.next(); !isMergedField_1_1.done; isMergedField_1_1 = isMergedField_1.next()) {
+                var d = isMergedField_1_1.value;
+                for (var i = 0; i < copyDataSource.length - 1; i++) {
+                    copyDataSource[i]["_merge"] = __assign(__assign({}, copyDataSource[i]["_merge"]), (_c = {}, _c[d.field] = {
+                        rowSpan: 1,
+                        hidden: false,
+                    }, _c));
+                    if (copyDataSource[i].mode === "c" || copyDataSource[i].mode === "u")
+                        continue;
+                    for (var j = i + 1; j < copyDataSource.length; j++) {
+                        if (copyDataSource[i][d.field] !== copyDataSource[j][d.field] ||
+                            copyDataSource[j]["mode"] === "c" ||
+                            copyDataSource[j]["mode"] === "u") {
+                            i = j - 1;
+                            break;
+                        }
+                        copyDataSource[i]["_merge"] = __assign(__assign({}, copyDataSource[i]["_merge"]), (_d = {}, _d[d.field] = {
+                            rowSpan: copyDataSource[i]["_merge"][d.field]["rowSpan"] + 1,
+                            hidden: false,
+                        }, _d));
+                        copyDataSource[j]["_merge"] = __assign(__assign({}, copyDataSource[j]["_merge"]), (_e = {}, _e[d.field] = { rowSpan: 1, hidden: true }, _e));
+                        if (j === copyDataSource.length - 1) {
+                            end = true;
+                        }
+                    }
+                    if (end)
+                        break;
+                }
+            }
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (isMergedField_1_1 && !isMergedField_1_1.done && (_b = isMergedField_1.return)) _b.call(isMergedField_1);
+            }
+            finally { if (e_2) throw e_2.error; }
+        }
+        if (JSON.stringify(copyDataSource) !== JSON.stringify(dataSource)) {
+            return copyDataSource;
+        }
+        return dataSource;
+    }, [dataSource, lastNode]);
     var setRowOrderChange = React.useCallback(function (e) {
         setIsDrop(false);
         if (!e.destination)
@@ -88,8 +163,8 @@ function DevsDtTBody(_a) {
     if (dataSource === undefined || dataSource.length === 0) {
         return (_jsx("div", __assign({ ref: tbody, className: "devs-dt-tbody-wrapper" }, { children: _jsx("div", __assign({ className: "devs-dt-table devs-dt-table-fixed", style: { width: headerWidth, height: "100%" } }, { children: _jsx("div", __assign({ className: "devs-dt-tbody", style: { position: "relative" } }, { children: _jsx(EmptySvg, {}) })) })) })));
     }
-    return (_jsx("div", __assign({ ref: tbody, className: "devs-dt-tbody-wrapper" }, { children: _jsx(DragDropContext, __assign({ onDragEnd: setRowOrderChange, onDragStart: function (e) { return console.log("start", e); }, onDragUpdate: onDragUpdate }, { children: _jsx(Droppable, __assign({ droppableId: "droppable", mode: "standard", type: "", direction: "vertical", isDropDisabled: isDrop }, { children: function (provided) { return (_jsx("div", __assign({ className: "devs-dt-table devs-dt-table-fixed", ref: provided.innerRef }, provided.droppableProps, { children: _jsxs("div", __assign({ className: "devs-dt-tbody" }, { children: [dataSource &&
-                                dataSource
+    return (_jsx("div", __assign({ ref: tbody, className: "devs-dt-tbody-wrapper" }, { children: _jsx(DragDropContext, __assign({ onDragEnd: setRowOrderChange, onDragStart: function (e) { return console.log("start", e); }, onDragUpdate: onDragUpdate }, { children: _jsx(Droppable, __assign({ droppableId: "droppable", mode: "standard", type: "", direction: "vertical", isDropDisabled: isDrop }, { children: function (provided) { return (_jsx("table", __assign({ className: "devs-dt-table devs-dt-table-fixed", ref: provided.innerRef }, provided.droppableProps, { children: _jsxs("tbody", __assign({ className: "devs-dt-tbody" }, { children: [mergedDataSource &&
+                                mergedDataSource
                                     .filter(function (f) { return f.rowId; })
                                     .map(function (row, index) {
                                     return (_jsx(Draggable, __assign({ draggableId: row.rowId, index: index, isDragDisabled: !(options === null || options === void 0 ? void 0 : options.enabledRowOrder) || row.mode === "c" }, { children: function (provided2, snapshot) { return (_jsx(DevsDtRow, { index: index, rowKey: row.rowId, data: row, lastNode: lastNode, dragProvided: provided2, dragSnapshot: snapshot }, row.rowId)); } }), row.rowId));
