@@ -227,7 +227,7 @@ function DevsDtCell({
       className={classString}
       rowSpan={merge?.rowSpan}
       data-hidden={false}
-      data-width={col.width}
+      data-width={col.width ?? 100}
       style={
         {
           "--width": col.width ? `${col.width}px` : `100px`,
