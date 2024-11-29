@@ -55,18 +55,42 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
 
       const sortedDataSource = d.sort((a: IDataSource, b: IDataSource) => {
         if (!isNumberField) {
-          return sorter.type === "desc"
-            ? a[sorter.field!] > b[sorter.field!]
-              ? -1
-              : 1
-            : a[sorter.field!] > b[sorter.field!]
-            ? 1
-            : -1;
+          if (sorter.type === "desc") {
+            if (a[sorter.field!] === b[sorter.field!]) {
+              return a.originIndex - b.originIndex;
+            } else {
+              if (a[sorter.field!] > b[sorter.field!]) {
+                return -1;
+              } else {
+                return 1;
+              }
+            }
+          }
+
+          if (a[sorter.field!] === b[sorter.field!]) {
+            return a.originIndex - b.originIndex;
+          } else {
+            if (a[sorter.field!] > b[sorter.field!]) {
+              return 1;
+            } else {
+              return -1;
+            }
+          }
         }
 
-        return sorter.type === "desc"
-          ? b[sorter.field!] - a[sorter.field!]
-          : a[sorter.field!] - b[sorter.field!];
+        if (sorter.type === "desc") {
+          if (a[sorter.field!] === b[sorter.field!]) {
+            return a.originIndex - b.originIndex;
+          } else {
+            return b[sorter.field!] - a[sorter.field!];
+          }
+        }
+
+        if (a[sorter.field!] === b[sorter.field!]) {
+          return a.originIndex - b.originIndex;
+        } else {
+          return a[sorter.field!] - b[sorter.field!];
+        }
       });
 
       return sortedDataSource;
