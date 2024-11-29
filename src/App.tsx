@@ -121,22 +121,28 @@ function App() {
       updatable: false,
     },
     {
-      field: "2",
-      title: "2",
-      type: "select",
-      sticky: true,
-      options: [
-        { value: "0", label: "0" },
-        { value: "1", label: "1" },
-        { value: "2", label: "2" },
+      field: "mergedheader",
+      title: "merge",
+      children: [
+        {
+          field: "2",
+          title: "2",
+          type: "select",
+          sticky: true,
+          options: [
+            { value: "0", label: "0" },
+            { value: "1", label: "1" },
+            { value: "2", label: "2" },
+          ],
+          updatable: false,
+        },
+        {
+          field: "3",
+          title: "3",
+          width: 150,
+          type: "date",
+        },
       ],
-      updatable: false,
-    },
-    {
-      field: "3",
-      title: "3",
-      width: 150,
-      type: "date",
     },
     {
       field: "4",
@@ -245,7 +251,6 @@ function App() {
           onAddClick: handleAddClick,
           onDeleteClick: handleDeleteClick,
         }}
-        loading={false}
       />
     </div>
   );

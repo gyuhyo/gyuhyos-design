@@ -11,6 +11,10 @@
   height: 100%;
   overflow: hidden;
   border: 1px solid #c6c6c6;
+
+  * {
+    transition: color 200ms linear, background-color 200ms linear;
+  }
 }
 
 .devs-dt-table input,
@@ -203,6 +207,14 @@
   text-align: center;
 }
 
+.devs-dt-th[data-sortable="true"]:hover {
+  filter: contrast(0.9);
+}
+
+.devs-dt-th[data-sortable="true"]:not(:has(.devs-dt-resize-col:active)):active {
+  filter: contrast(0.7);
+}
+
 .devs-dt-sticky-col {
   position: sticky;
   z-index: 2;
@@ -327,10 +339,23 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: 7px;
+  width: 9px;
   height: 100%;
   cursor: col-resize;
-  background-color: transparent;
+  background: transparent;
+}
+
+.devs-dt-resize-col:hover {
+  background-color: #a6a6a6;
+  opacity: 0.8;
+  background-size: 10px 10px;
+  background-image: repeating-linear-gradient(
+    45deg,
+    #a6a6a6 0,
+    #a6a6a6 1px,
+    #e5e5f7 0,
+    #e5e5f7 50%
+  );
 }
 
 /* active 상태인 컬럼이 있을 때 hover 스타일 비활성화 */
@@ -368,6 +393,11 @@
   visibility: visible;
 }
 
+.devs-dt-th[data-col="true"][data-sorted="true"] .asc_ico,
+.devs-dt-th[data-col="true"][data-sorted="true"] .desc_ico {
+  visibility: visible;
+}
+
 .asc_ico,
 .desc_ico {
   border: 5px solid transparent;
@@ -389,9 +419,9 @@
 }
 
 .asc_ico.sorter_active {
-  border-bottom-color: #000;
+  border-bottom-color: #434343;
 }
 
 .desc_ico.sorter_active {
-  border-top-color: #000;
+  border-top-color: #434343;
 }

@@ -34,6 +34,10 @@ var DevsDtProviderComponent = function (_a) {
     var children = _a.children, columns = _a.columns, setColumns = _a.setColumns, dataSource = _a.dataSource, setDataSource = _a.setDataSource, options = _a.options, formsRef = _a.formsRef, focusedRow = _a.focusedRow, setFocusedRow = _a.setFocusedRow, focusedCell = _a.focusedCell, setFocusedCell = _a.setFocusedCell;
     var keyField = (_b = columns.find(function (col) { return col.key; })) === null || _b === void 0 ? void 0 : _b.field;
     var _c = __read(React.useState(false), 2), isSetUUID = _c[0], setIsSetUUID = _c[1];
+    var _d = __read(React.useState({
+        field: null,
+        type: "asc",
+    }), 2), sorter = _d[0], setSorter = _d[1];
     React.useEffect(function () {
         if (setColumns !== undefined) {
             setColumns(function (prevCols) {
@@ -50,8 +54,8 @@ var DevsDtProviderComponent = function (_a) {
             }
         });
         setDataSource(function (prev) {
-            return dataSource.map(function (d) {
-                return __assign({ rowId: uuid(), mode: "r", checked: false }, d);
+            return dataSource.map(function (d, idx) {
+                return __assign({ originIndex: idx, rowId: uuid(), mode: "r", checked: false }, d);
             });
         });
     }, [JSON.stringify(dataSource)]);
@@ -67,6 +71,8 @@ var DevsDtProviderComponent = function (_a) {
             setFocusedRow: setFocusedRow,
             focusedCell: focusedCell,
             setFocusedCell: setFocusedCell,
+            sorter: sorter,
+            setSorter: setSorter,
         } }, { children: _jsx("div", __assign({ style: {
                 height: "100%",
                 display: "flex",

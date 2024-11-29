@@ -17,7 +17,8 @@ type TDevsDtTBody = {
 };
 
 function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
-  const { columns, dataSource, setDataSource, options, formsRef } = useDt();
+  const { columns, dataSource, setDataSource, options, formsRef, sorter } =
+    useDt();
   const [isDrop, setIsDrop] = React.useState(false);
 
   const keyField: string | undefined = React.useMemo(() => {
@@ -41,7 +42,39 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
 
   const lastNode = React.useMemo(() => getLastNodes(columns), [columns]);
 
-  const mergedDataSource: IDataSource[] = React.useMemo(() => {
+  const sortDataSource = React.useCallback(
+    (d: IDataSource[]): IDataSource[] => {
+      if (sorter.field === null || sorter.field === undefined) {
+        return d.sort(
+          (a: IDataSource, b: IDataSource) => a.originIndex - b.originIndex
+        );
+      }
+
+      const isNumberField =
+        columns.find((x) => x.field === sorter.field)?.type === "number";
+
+      const sortedDataSource = d.sort((a: IDataSource, b: IDataSource) => {
+        if (!isNumberField) {
+          return sorter.type === "desc"
+            ? a[sorter.field!] > b[sorter.field!]
+              ? -1
+              : 1
+            : a[sorter.field!] > b[sorter.field!]
+            ? 1
+            : -1;
+        }
+
+        return sorter.type === "desc"
+          ? b[sorter.field!] - a[sorter.field!]
+          : a[sorter.field!] - b[sorter.field!];
+      });
+
+      return sortedDataSource;
+    },
+    [sorter, columns]
+  );
+
+  const mergedDataSource: IDataSource[] | undefined = React.useMemo(() => {
     if (
       dataSource.length === 0 ||
       (dataSource.length > 0 && !dataSource[0].hasOwnProperty("mode"))
@@ -49,7 +82,9 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
       return;
 
     let end = false;
-    const copyDataSource = JSON.parse(JSON.stringify(dataSource));
+    const copyDataSource = JSON.parse(
+      JSON.stringify(sortDataSource(dataSource))
+    );
 
     for (let d of copyDataSource) {
       delete d["_merge"];
@@ -120,8 +155,9 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
     if (JSON.stringify(copyDataSource) !== JSON.stringify(dataSource)) {
       return copyDataSource;
     }
+
     return dataSource;
-  }, [dataSource, lastNode]);
+  }, [dataSource, lastNode, sorter]);
 
   const setRowOrderChange = React.useCallback(
     (e: DropResult<string>) => {
@@ -138,7 +174,9 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
       const [removed] = newDataSource.splice(startIndex, 1);
       newDataSource.splice(endIndex, 0, removed);
 
-      setDataSource(newDataSource);
+      setDataSource(
+        newDataSource.map((x, idx) => ({ ...x, originIndex: idx }))
+      );
 
       if (options?.rowOrderEnd !== undefined) {
         options.rowOrderEnd(newDataSource);

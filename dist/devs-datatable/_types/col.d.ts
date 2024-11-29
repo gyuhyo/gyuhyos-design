@@ -35,6 +35,7 @@ export interface IDataTableColumn {
     }) => any;
     inputOptions?: any;
     style?: React.CSSProperties;
+    sortable?: boolean;
     editable?: boolean;
     updatable?: boolean;
     options?: IDataTableSelectorOptionsProps[];

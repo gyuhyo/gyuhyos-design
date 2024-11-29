@@ -7,6 +7,7 @@ import { IDataTableButtons, IDataTableOptions } from "../_types";
 interface IDataTableButtonsProps {
   options?: IDataTableOptions | undefined;
   buttons?: IDataTableButtons | undefined;
+  setInnerLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
@@ -64,6 +65,21 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
     return props.buttons.custom;
   }
 
+  const ButtonEventBeforeShowLoading = (event: any) => {
+    props.setInnerLoading(true);
+
+    const timer = setTimeout(() => {
+      if (event !== undefined) {
+        (event as Function)();
+      }
+      props.setInnerLoading(false);
+    }, 300);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  };
+
   return (
     <div
       style={{
@@ -79,7 +95,9 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
           border={true}
           compact
           style={{ padding: "5px 7px" }}
-          onClick={props.buttons?.onSearchClick}
+          onClick={() =>
+            ButtonEventBeforeShowLoading(props.buttons?.onSearchClick)
+          }
         >
           <MdSearch /> 조회
         </Button>

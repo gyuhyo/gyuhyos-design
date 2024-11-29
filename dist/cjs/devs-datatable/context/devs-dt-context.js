@@ -40,6 +40,10 @@ var DevsDtProviderComponent = function (_a) {
     var children = _a.children, columns = _a.columns, setColumns = _a.setColumns, dataSource = _a.dataSource, setDataSource = _a.setDataSource, options = _a.options, formsRef = _a.formsRef, focusedRow = _a.focusedRow, setFocusedRow = _a.setFocusedRow, focusedCell = _a.focusedCell, setFocusedCell = _a.setFocusedCell;
     var keyField = (_b = columns.find(function (col) { return col.key; })) === null || _b === void 0 ? void 0 : _b.field;
     var _c = __read(react_1.default.useState(false), 2), isSetUUID = _c[0], setIsSetUUID = _c[1];
+    var _d = __read(react_1.default.useState({
+        field: null,
+        type: "asc",
+    }), 2), sorter = _d[0], setSorter = _d[1];
     react_1.default.useEffect(function () {
         if (setColumns !== undefined) {
             setColumns(function (prevCols) {
@@ -56,8 +60,8 @@ var DevsDtProviderComponent = function (_a) {
             }
         });
         setDataSource(function (prev) {
-            return dataSource.map(function (d) {
-                return __assign({ rowId: (0, react_uuid_1.default)(), mode: "r", checked: false }, d);
+            return dataSource.map(function (d, idx) {
+                return __assign({ originIndex: idx, rowId: (0, react_uuid_1.default)(), mode: "r", checked: false }, d);
             });
         });
     }, [JSON.stringify(dataSource)]);
@@ -73,6 +77,8 @@ var DevsDtProviderComponent = function (_a) {
             setFocusedRow: setFocusedRow,
             focusedCell: focusedCell,
             setFocusedCell: setFocusedCell,
+            sorter: sorter,
+            setSorter: setSorter,
         } }, { children: (0, jsx_runtime_1.jsx)("div", __assign({ style: {
                 height: "100%",
                 display: "flex",

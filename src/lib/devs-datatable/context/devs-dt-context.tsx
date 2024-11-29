@@ -3,6 +3,7 @@ import {
   IDataTableColumn,
   IDataTableContextProps,
   IDataTableProviderProps,
+  IDataTableSorterProps,
 } from "../_types";
 import { useForm } from "react-hook-form";
 import uuid from "react-uuid";
@@ -26,6 +27,10 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = ({
 }) => {
   const keyField: string | undefined = columns.find((col) => col.key)?.field;
   const [isSetUUID, setIsSetUUID] = React.useState(false);
+  const [sorter, setSorter] = React.useState<IDataTableSorterProps>({
+    field: null,
+    type: "asc",
+  });
 
   React.useEffect(() => {
     if (setColumns !== undefined) {
@@ -49,8 +54,9 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = ({
     });
 
     setDataSource((prev) => {
-      return dataSource.map((d) => {
+      return dataSource.map((d, idx) => {
         return {
+          originIndex: idx,
           rowId: uuid(),
           mode: "r",
           checked: false,
@@ -74,6 +80,8 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = ({
         setFocusedRow,
         focusedCell,
         setFocusedCell,
+        sorter,
+        setSorter,
       }}
     >
       <div

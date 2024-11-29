@@ -58,7 +58,7 @@ var empty_svg_1 = __importDefault(require("../assets/empty.svg"));
 var dnd_1 = require("@hello-pangea/dnd");
 function DevsDtTBody(_a) {
     var tbody = _a.tbody, headerWidth = _a.headerWidth;
-    var _b = (0, devs_dt_context_1.useDt)(), columns = _b.columns, dataSource = _b.dataSource, setDataSource = _b.setDataSource, options = _b.options, formsRef = _b.formsRef;
+    var _b = (0, devs_dt_context_1.useDt)(), columns = _b.columns, dataSource = _b.dataSource, setDataSource = _b.setDataSource, options = _b.options, formsRef = _b.formsRef, sorter = _b.sorter;
     var _c = __read(react_1.default.useState(false), 2), isDrop = _c[0], setIsDrop = _c[1];
     var keyField = react_1.default.useMemo(function () {
         var _a;
@@ -78,13 +78,35 @@ function DevsDtTBody(_a) {
         return lastNodes;
     };
     var lastNode = react_1.default.useMemo(function () { return getLastNodes(columns); }, [columns]);
+    var sortDataSource = react_1.default.useCallback(function (d) {
+        var _a;
+        if (sorter.field === null || sorter.field === undefined) {
+            return d.sort(function (a, b) { return a.originIndex - b.originIndex; });
+        }
+        var isNumberField = ((_a = columns.find(function (x) { return x.field === sorter.field; })) === null || _a === void 0 ? void 0 : _a.type) === "number";
+        var sortedDataSource = d.sort(function (a, b) {
+            if (!isNumberField) {
+                return sorter.type === "desc"
+                    ? a[sorter.field] > b[sorter.field]
+                        ? -1
+                        : 1
+                    : a[sorter.field] > b[sorter.field]
+                        ? 1
+                        : -1;
+            }
+            return sorter.type === "desc"
+                ? b[sorter.field] - a[sorter.field]
+                : a[sorter.field] - b[sorter.field];
+        });
+        return sortedDataSource;
+    }, [sorter, columns]);
     var mergedDataSource = react_1.default.useMemo(function () {
         var e_1, _a, e_2, _b, _c, _d, _e;
         if (dataSource.length === 0 ||
             (dataSource.length > 0 && !dataSource[0].hasOwnProperty("mode")))
             return;
         var end = false;
-        var copyDataSource = JSON.parse(JSON.stringify(dataSource));
+        var copyDataSource = JSON.parse(JSON.stringify(sortDataSource(dataSource)));
         try {
             for (var copyDataSource_1 = __values(copyDataSource), copyDataSource_1_1 = copyDataSource_1.next(); !copyDataSource_1_1.done; copyDataSource_1_1 = copyDataSource_1.next()) {
                 var d = copyDataSource_1_1.value;
@@ -152,7 +174,7 @@ function DevsDtTBody(_a) {
             return copyDataSource;
         }
         return dataSource;
-    }, [dataSource, lastNode]);
+    }, [dataSource, lastNode, sorter]);
     var setRowOrderChange = react_1.default.useCallback(function (e) {
         setIsDrop(false);
         if (!e.destination)
@@ -165,7 +187,7 @@ function DevsDtTBody(_a) {
         var newDataSource = __spreadArray([], __read(dataSource), false);
         var _a = __read(newDataSource.splice(startIndex, 1), 1), removed = _a[0];
         newDataSource.splice(endIndex, 0, removed);
-        setDataSource(newDataSource);
+        setDataSource(newDataSource.map(function (x, idx) { return (__assign(__assign({}, x), { originIndex: idx })); }));
         if ((options === null || options === void 0 ? void 0 : options.rowOrderEnd) !== undefined) {
             options.rowOrderEnd(newDataSource);
         }

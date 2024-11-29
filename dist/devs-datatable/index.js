@@ -73,12 +73,13 @@ import DevsDtButtons from "./devs-dt-component/buttons";
 var DevsDataTable = React.forwardRef(function (props, ref) {
     var _a = __read(React.useState(false), 2), isMerged = _a[0], setIsMerged = _a[1];
     var _b = __read(React.useState(0), 2), headerWidth = _b[0], setHeaderWidth = _b[1];
-    var _c = __read(React.useState(null), 2), focusedCell = _c[0], setFocusedCell = _c[1];
-    var _d = __read(React.useState(null), 2), focusedRow = _d[0], setFocusedRow = _d[1];
+    var _c = __read(React.useState(false), 2), innerLoading = _c[0], setInnerLoading = _c[1];
+    var _d = __read(React.useState(null), 2), focusedCell = _d[0], setFocusedCell = _d[1];
+    var _e = __read(React.useState(null), 2), focusedRow = _e[0], setFocusedRow = _e[1];
     var formsRef = React.useRef({});
     var thead = React.useRef(null);
     var tbody = React.useRef(null);
-    var _e = __read(React.useState(false), 2), DtForceUpdate = _e[1];
+    var _f = __read(React.useState(false), 2), DtForceUpdate = _f[1];
     var init = useInitDt({
         tbody: tbody,
         thead: thead,
@@ -153,7 +154,7 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
     }); }, [props.dataSource, props.options, focusedRow]);
     if (!init)
         return _jsx(_Fragment, { children: "loading..." });
-    return (_jsxs(DevsDtProvider, __assign({ columns: props.columns, setColumns: props.setColumns, dataSource: props.dataSource, setDataSource: props.setDataSource, options: props.options, formsRef: formsRef, focusedRow: focusedRow, setFocusedRow: setFocusedRow, focusedCell: focusedCell, setFocusedCell: setFocusedCell }, { children: [props.loading !== undefined && props.loading === true && (_jsx("div", __assign({ className: "loader-backdrop" }, { children: _jsxs("div", __assign({ className: "loader-container" }, { children: [_jsx("span", { className: "spinner" }), _jsx("span", { children: "\uB370\uC774\uD130 \uBD88\uB7EC\uC624\uB294 \uC911..." })] })) }))), _jsxs("div", __assign({ style: {
+    return (_jsxs(DevsDtProvider, __assign({ columns: props.columns, setColumns: props.setColumns, dataSource: props.dataSource, setDataSource: props.setDataSource, options: props.options, formsRef: formsRef, focusedRow: focusedRow, setFocusedRow: setFocusedRow, focusedCell: focusedCell, setFocusedCell: setFocusedCell }, { children: [(props.loading === true || innerLoading === true) && (_jsx("div", __assign({ className: "loader-backdrop" }, { children: _jsxs("div", __assign({ className: "loader-container" }, { children: [_jsx("span", { className: "spinner" }), _jsx("span", __assign({ style: { fontWeight: "bold" } }, { children: "\uB370\uC774\uD130 \uBD88\uB7EC\uC624\uB294 \uC911..." }))] })) }))), _jsxs("div", __assign({ style: {
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "space-between",
@@ -167,6 +168,6 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
                                     marginLeft: props.title !== undefined && props.title !== ""
                                         ? "7px"
                                         : "0px",
-                                } }, { children: ["(*) \uC785\uB825 \uAC00\uB2A5 (", _jsx("span", __assign({ style: { color: "red" } }, { children: "*" })), ") \uD544\uC218\uC785\uB825"] }))] })), _jsx(DevsDtButtons, { buttons: props.buttons, options: props.options })] })), _jsxs("div", __assign({ className: "dev-table-wrapper" }, { children: [_jsx(DevsDtTHead, { thead: thead, setHeaderWidth: setHeaderWidth }), _jsx(DevsDtTBody, { tbody: tbody, headerWidth: headerWidth })] }))] })));
+                                } }, { children: ["(*) \uC785\uB825 \uAC00\uB2A5 (", _jsx("span", __assign({ style: { color: "red" } }, { children: "*" })), ") \uD544\uC218\uC785\uB825"] }))] })), _jsx(DevsDtButtons, { buttons: props.buttons, options: props.options, setInnerLoading: setInnerLoading })] })), _jsxs("div", __assign({ className: "dev-table-wrapper" }, { children: [_jsx(DevsDtTHead, { thead: thead, setHeaderWidth: setHeaderWidth }), _jsx(DevsDtTBody, { tbody: tbody, headerWidth: headerWidth })] }))] })));
 });
 export default React.memo(DevsDataTable);

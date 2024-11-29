@@ -85,7 +85,9 @@ function getMaxDepth(columns: IDataTableColumn[], currentDepth = 0) {
 }
 
 function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
-  const { columns, options, setDataSource, setColumns } = useDt();
+  const { columns, options, setDataSource, setColumns, sorter, setSorter } =
+    useDt();
+  const isResizingRef = React.useRef<boolean>(false);
   const resizingColumnRef = React.useRef<{
     startX: number;
     startWidth: number;
@@ -104,9 +106,33 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
     setHeaderWidth(width);
   }, [rows]);
 
+  const updateColumnWidth = (
+    columns: IDataTableColumn[],
+    targetField: string,
+    newWidth: number
+  ): IDataTableColumn[] => {
+    return columns.map((column) => {
+      // 컬럼이 자식 컬럼을 가지는 경우
+      if (column.children) {
+        return {
+          ...column,
+          children: updateColumnWidth(column.children, targetField, newWidth),
+        };
+      }
+
+      // field가 일치하는 컬럼을 찾아서 width 업데이트
+      if (column.field === targetField) {
+        return { ...column, width: newWidth };
+      }
+
+      return column;
+    });
+  };
+
   // 마우스 이동 핸들러
   const handleMouseMove = React.useCallback(
     (e: MouseEvent) => {
+      e.stopPropagation();
       if (resizingColumnRef.current && setColumns !== undefined) {
         const { startX, startWidth } = resizingColumnRef.current;
         const col = columns.find(
@@ -115,11 +141,13 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
 
         const deltaX = e.clientX - startX;
         const newWidth = Math.max(startWidth + deltaX, col?.width ?? 100); // 최소 너비 50px
+
+        // columns 배열을 자식 컬럼까지 고려하여 업데이트
         setColumns((prevColumns) =>
-          prevColumns.map((m) =>
-            m.field === resizingColumnRef.current?.column.field
-              ? { ...m, width: newWidth }
-              : { ...m }
+          updateColumnWidth(
+            prevColumns,
+            resizingColumnRef.current?.column.field!,
+            newWidth
           )
         );
       }
@@ -128,11 +156,17 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
   );
 
   // 마우스 업 핸들러
-  const handleMouseUp = React.useCallback(() => {
-    resizingColumnRef.current = null;
-    document.removeEventListener("mousemove", handleMouseMove);
-    document.removeEventListener("mouseup", handleMouseUp);
-  }, [handleMouseMove]);
+  const handleMouseUp = React.useCallback(
+    (e: MouseEvent) => {
+      resizingColumnRef.current = null;
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      setTimeout(() => {
+        isResizingRef.current = false;
+      }, 100);
+    },
+    [handleMouseMove]
+  );
 
   // 마우스 다운 핸들러
   const handleMouseDown = React.useCallback(
@@ -140,6 +174,8 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
       e: React.MouseEvent<HTMLDivElement, MouseEvent>,
       col: IDataTableColumn
     ) => {
+      e.stopPropagation();
+      isResizingRef.current = true;
       resizingColumnRef.current = {
         startX: e.clientX,
         startWidth: col.width ?? 100,
@@ -172,9 +208,45 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
             rowSpan={rowspan}
             colSpan={colspan}
             data-col={true}
+            data-sortable={
+              column.children === undefined &&
+              (column.sortable === undefined || column.sortable === true)
+            }
+            data-sorted={sorter.field === column.field}
+            onClick={(e) => {
+              if (
+                column.children === undefined &&
+                (column.sortable === undefined || column.sortable === true) &&
+                !isResizingRef.current
+              ) {
+                setSorter((prev) => ({
+                  field:
+                    prev.field !== column.field
+                      ? column.field
+                      : prev.type === "desc"
+                      ? null
+                      : column.field,
+                  type:
+                    prev.field === column.field
+                      ? prev.type === "asc"
+                        ? "desc"
+                        : "asc"
+                      : "asc",
+                }));
+              }
+            }}
             style={
               {
-                "--width": `${column.width ?? 100}px`,
+                "--width": `${
+                  column.children !== undefined
+                    ? "auto"
+                    : (column.width ?? 100) + "px"
+                }`,
+                cursor:
+                  column.children === undefined &&
+                  (column.sortable === undefined || column.sortable === true)
+                    ? "pointer"
+                    : "inherit",
               } as React.CSSProperties
             }
           >
@@ -188,18 +260,35 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
               }}
             >
               <p>{column.title}</p>
-              {/* <div>
-                <span className="asc_ico"></span>
-                <span className="desc_ico"></span>
-              </div> */}
+              {column.children === undefined &&
+                (column.sortable === undefined || column.sortable === true) && (
+                  <div>
+                    <span
+                      className={`asc_ico${
+                        sorter.field === column.field && sorter.type === "asc"
+                          ? " sorter_active"
+                          : ""
+                      }`}
+                    ></span>
+                    <span
+                      className={`desc_ico${
+                        sorter.field === column.field && sorter.type === "desc"
+                          ? " sorter_active"
+                          : ""
+                      }`}
+                    ></span>
+                  </div>
+                )}
             </div>
 
-            {column.resizing === true && (
-              <div
-                className={"devs-dt-resize-col"}
-                onMouseDown={(e) => handleMouseDown(e, column)}
-              />
-            )}
+            {column.children === undefined &&
+              (column.resizing === undefined || column.resizing === true) && (
+                <div
+                  className={"devs-dt-resize-col"}
+                  onMouseDown={(e) => handleMouseDown(e, column)}
+                  onClick={(e) => e.stopPropagation()}
+                />
+              )}
           </th>
         );
 

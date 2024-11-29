@@ -87,7 +87,8 @@ function getMaxDepth(columns, currentDepth) {
 }
 function DevsDtTHead(_a) {
     var thead = _a.thead, setHeaderWidth = _a.setHeaderWidth;
-    var _b = (0, devs_dt_context_1.useDt)(), columns = _b.columns, options = _b.options, setDataSource = _b.setDataSource, setColumns = _b.setColumns;
+    var _b = (0, devs_dt_context_1.useDt)(), columns = _b.columns, options = _b.options, setDataSource = _b.setDataSource, setColumns = _b.setColumns, sorter = _b.sorter, setSorter = _b.setSorter;
+    var isResizingRef = react_1.default.useRef(false);
     var resizingColumnRef = react_1.default.useRef(null);
     var rows = generateTableRows(columns);
     var maxDepth = getMaxDepth(columns, 0) + 1;
@@ -98,32 +99,49 @@ function DevsDtTHead(_a) {
         var width = theadRef.current.getBoundingClientRect().width;
         setHeaderWidth(width);
     }, [rows]);
+    var updateColumnWidth = function (columns, targetField, newWidth) {
+        return columns.map(function (column) {
+            // 컬럼이 자식 컬럼을 가지는 경우
+            if (column.children) {
+                return __assign(__assign({}, column), { children: updateColumnWidth(column.children, targetField, newWidth) });
+            }
+            // field가 일치하는 컬럼을 찾아서 width 업데이트
+            if (column.field === targetField) {
+                return __assign(__assign({}, column), { width: newWidth });
+            }
+            return column;
+        });
+    };
     // 마우스 이동 핸들러
     var handleMouseMove = react_1.default.useCallback(function (e) {
         var _a;
+        e.stopPropagation();
         if (resizingColumnRef.current && setColumns !== undefined) {
             var _b = resizingColumnRef.current, startX = _b.startX, startWidth = _b.startWidth;
             var col = columns.find(function (f) { return f.field === resizingColumnRef.current.column.field; });
             var deltaX = e.clientX - startX;
             var newWidth_1 = Math.max(startWidth + deltaX, (_a = col === null || col === void 0 ? void 0 : col.width) !== null && _a !== void 0 ? _a : 100); // 최소 너비 50px
+            // columns 배열을 자식 컬럼까지 고려하여 업데이트
             setColumns(function (prevColumns) {
-                return prevColumns.map(function (m) {
-                    var _a;
-                    return m.field === ((_a = resizingColumnRef.current) === null || _a === void 0 ? void 0 : _a.column.field)
-                        ? __assign(__assign({}, m), { width: newWidth_1 }) : __assign({}, m);
-                });
+                var _a;
+                return updateColumnWidth(prevColumns, (_a = resizingColumnRef.current) === null || _a === void 0 ? void 0 : _a.column.field, newWidth_1);
             });
         }
     }, [resizingColumnRef, setColumns]);
     // 마우스 업 핸들러
-    var handleMouseUp = react_1.default.useCallback(function () {
+    var handleMouseUp = react_1.default.useCallback(function (e) {
         resizingColumnRef.current = null;
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
+        setTimeout(function () {
+            isResizingRef.current = false;
+        }, 100);
     }, [handleMouseMove]);
     // 마우스 다운 핸들러
     var handleMouseDown = react_1.default.useCallback(function (e, col) {
         var _a;
+        e.stopPropagation();
+        isResizingRef.current = true;
         resizingColumnRef.current = {
             startX: e.clientX,
             startWidth: (_a = col.width) !== null && _a !== void 0 ? _a : 100,
@@ -144,15 +162,45 @@ function DevsDtTHead(_a) {
                 var classString = column.sticky
                     ? "".concat(defaultClassString, " devs-dt-sticky-col")
                     : defaultClassString;
-                rows[depth].push((0, jsx_runtime_1.jsxs)("th", __assign({ className: classString, rowSpan: rowspan, colSpan: colspan, "data-col": true, style: {
-                        "--width": "".concat((_a = column.width) !== null && _a !== void 0 ? _a : 100, "px"),
-                    } }, { children: [(0, jsx_runtime_1.jsx)("div", __assign({ style: {
+                rows[depth].push((0, jsx_runtime_1.jsxs)("th", __assign({ className: classString, rowSpan: rowspan, colSpan: colspan, "data-col": true, "data-sortable": column.children === undefined &&
+                        (column.sortable === undefined || column.sortable === true), "data-sorted": sorter.field === column.field, onClick: function (e) {
+                        if (column.children === undefined &&
+                            (column.sortable === undefined || column.sortable === true) &&
+                            !isResizingRef.current) {
+                            setSorter(function (prev) { return ({
+                                field: prev.field !== column.field
+                                    ? column.field
+                                    : prev.type === "desc"
+                                        ? null
+                                        : column.field,
+                                type: prev.field === column.field
+                                    ? prev.type === "asc"
+                                        ? "desc"
+                                        : "asc"
+                                    : "asc",
+                            }); });
+                        }
+                    }, style: {
+                        "--width": "".concat(column.children !== undefined
+                            ? "auto"
+                            : ((_a = column.width) !== null && _a !== void 0 ? _a : 100) + "px"),
+                        cursor: column.children === undefined &&
+                            (column.sortable === undefined || column.sortable === true)
+                            ? "pointer"
+                            : "inherit",
+                    } }, { children: [(0, jsx_runtime_1.jsxs)("div", __assign({ style: {
                                 width: "100%",
                                 display: "flex",
                                 flexDirection: "row",
                                 justifyContent: "center",
                                 alignItems: "center",
-                            } }, { children: (0, jsx_runtime_1.jsx)("p", { children: column.title }) })), column.resizing === true && ((0, jsx_runtime_1.jsx)("div", { className: "devs-dt-resize-col", onMouseDown: function (e) { return handleMouseDown(e, column); } }))] }), "col-".concat(column.field)));
+                            } }, { children: [(0, jsx_runtime_1.jsx)("p", { children: column.title }), column.children === undefined &&
+                                    (column.sortable === undefined || column.sortable === true) && ((0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("span", { className: "asc_ico".concat(sorter.field === column.field && sorter.type === "asc"
+                                                ? " sorter_active"
+                                                : "") }), (0, jsx_runtime_1.jsx)("span", { className: "desc_ico".concat(sorter.field === column.field && sorter.type === "desc"
+                                                ? " sorter_active"
+                                                : "") })] }))] })), column.children === undefined &&
+                            (column.resizing === undefined || column.resizing === true) && ((0, jsx_runtime_1.jsx)("div", { className: "devs-dt-resize-col", onMouseDown: function (e) { return handleMouseDown(e, column); }, onClick: function (e) { return e.stopPropagation(); } }))] }), "col-".concat(column.field)));
                 if (column.children) {
                     fillRows(column.children, depth + 1);
                 }

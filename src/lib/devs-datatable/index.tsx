@@ -19,7 +19,7 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
   (props, ref) => {
     const [isMerged, setIsMerged] = React.useState(false);
     const [headerWidth, setHeaderWidth] = React.useState<number>(0);
-
+    const [innerLoading, setInnerLoading] = React.useState<boolean>(false);
     const [focusedCell, setFocusedCell] = React.useState<null | string>(null);
     const [focusedRow, setFocusedRow] = React.useState<null | IDataSource>(
       null
@@ -123,11 +123,11 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
         focusedCell={focusedCell}
         setFocusedCell={setFocusedCell}
       >
-        {props.loading !== undefined && props.loading === true && (
+        {(props.loading === true || innerLoading === true) && (
           <div className="loader-backdrop">
             <div className="loader-container">
               <span className="spinner"></span>
-              <span>데이터 불러오는 중...</span>
+              <span style={{ fontWeight: "bold" }}>데이터 불러오는 중...</span>
             </div>
           </div>
         )}
@@ -159,7 +159,11 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
               (*) 입력 가능 (<span style={{ color: "red" }}>*</span>) 필수입력
             </span>
           </p>
-          <DevsDtButtons buttons={props.buttons} options={props.options} />
+          <DevsDtButtons
+            buttons={props.buttons}
+            options={props.options}
+            setInnerLoading={setInnerLoading}
+          />
         </div>
         <div className="dev-table-wrapper">
           <DevsDtTHead thead={thead} setHeaderWidth={setHeaderWidth} />
