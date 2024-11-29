@@ -11,7 +11,7 @@ type TDevsDtThead = {
 const RowNumberCell: React.FC<{ maxDepth: number }> = ({ maxDepth }) => {
   return (
     <th
-      className="devs-dt-cell devs-dt-th devs-dt-sticky-col"
+      className="devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-th-bottom-border"
       style={{ "--width": "50px" } as React.CSSProperties}
       rowSpan={maxDepth}
     >
@@ -26,7 +26,7 @@ const RowCheckCell: React.FC<{
 }> = ({ setDataSource, maxDepth }) => {
   return (
     <th
-      className="devs-dt-cell devs-dt-th devs-dt-sticky-col"
+      className="devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-th-bottom-border"
       style={{ "--width": "30px" } as React.CSSProperties}
       rowSpan={maxDepth}
     >
@@ -58,7 +58,7 @@ function calculateWidth(column: IDataTableColumn): number {
 const RowChangeOrderCell: React.FC<{ maxDepth: number }> = ({ maxDepth }) => {
   return (
     <th
-      className="devs-dt-cell devs-dt-th devs-dt-sticky-col"
+      className="devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-th-bottom-border"
       style={{ "--width": "30px" } as React.CSSProperties}
       rowSpan={maxDepth}
     >

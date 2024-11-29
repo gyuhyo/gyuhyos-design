@@ -81,6 +81,13 @@
   display: table-header-group;
 }
 
+.devs-dt-thead th[colspan="1"],
+.devs-dt-thead .devs-dt-scrollbar-header,
+.devs-dt-thead .devs-dt-empty-header,
+.devs-dt-thead .devs-dt-th-bottom-border {
+  border-bottom: 2px solid #c6c6c6;
+}
+
 .devs-dt-tbody {
   display: table-row-group;
 }

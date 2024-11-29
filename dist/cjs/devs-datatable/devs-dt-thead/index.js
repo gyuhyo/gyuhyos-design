@@ -44,11 +44,11 @@ var react_1 = __importDefault(require("react"));
 var devs_dt_context_1 = require("../context/devs-dt-context");
 var RowNumberCell = function (_a) {
     var maxDepth = _a.maxDepth;
-    return ((0, jsx_runtime_1.jsx)("th", __assign({ className: "devs-dt-cell devs-dt-th devs-dt-sticky-col", style: { "--width": "50px" }, rowSpan: maxDepth }, { children: "No" })));
+    return ((0, jsx_runtime_1.jsx)("th", __assign({ className: "devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-th-bottom-border", style: { "--width": "50px" }, rowSpan: maxDepth }, { children: "No" })));
 };
 var RowCheckCell = function (_a) {
     var setDataSource = _a.setDataSource, maxDepth = _a.maxDepth;
-    return ((0, jsx_runtime_1.jsx)("th", __assign({ className: "devs-dt-cell devs-dt-th devs-dt-sticky-col", style: { "--width": "30px" }, rowSpan: maxDepth }, { children: (0, jsx_runtime_1.jsx)("input", { name: "allCheck", type: "checkbox", onChange: function (e) {
+    return ((0, jsx_runtime_1.jsx)("th", __assign({ className: "devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-th-bottom-border", style: { "--width": "30px" }, rowSpan: maxDepth }, { children: (0, jsx_runtime_1.jsx)("input", { name: "allCheck", type: "checkbox", onChange: function (e) {
                 setDataSource(function (prev) {
                     return prev.map(function (p) { return (__assign(__assign({}, p), { checked: e.target.checked })); });
                 });
@@ -68,7 +68,7 @@ function calculateWidth(column) {
 }
 var RowChangeOrderCell = function (_a) {
     var maxDepth = _a.maxDepth;
-    return ((0, jsx_runtime_1.jsx)("th", __assign({ className: "devs-dt-cell devs-dt-th devs-dt-sticky-col", style: { "--width": "30px" }, rowSpan: maxDepth }, { children: "\u00A0" })));
+    return ((0, jsx_runtime_1.jsx)("th", __assign({ className: "devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-th-bottom-border", style: { "--width": "30px" }, rowSpan: maxDepth }, { children: "\u00A0" })));
 };
 function getMaxDepth(columns, currentDepth) {
     if (currentDepth === void 0) { currentDepth = 0; }
