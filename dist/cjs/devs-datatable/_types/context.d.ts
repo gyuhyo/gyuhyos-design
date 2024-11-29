@@ -25,4 +25,5 @@ export interface IDataTableContextProps extends IDataTableProps {
     setFocusedCell: React.Dispatch<React.SetStateAction<null | string>>;
     sorter: IDataTableSorterProps;
     setSorter: React.Dispatch<React.SetStateAction<IDataTableSorterProps>>;
+    id: string;
 }

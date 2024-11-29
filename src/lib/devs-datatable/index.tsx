@@ -31,7 +31,7 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
     const init = useInitDt({
       tbody: tbody,
       thead: thead,
-      isMerged,
+      id: props.id,
     });
 
     React.useEffect(() => {
@@ -122,6 +122,7 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
         setFocusedRow={setFocusedRow}
         focusedCell={focusedCell}
         setFocusedCell={setFocusedCell}
+        id={props.id}
       >
         {(props.loading === true || innerLoading === true) && (
           <div className="loader-backdrop">
@@ -165,7 +166,7 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
             setInnerLoading={setInnerLoading}
           />
         </div>
-        <div className="dev-table-wrapper">
+        <div id={props.id} className="dev-table-wrapper">
           <DevsDtTHead thead={thead} setHeaderWidth={setHeaderWidth} />
           <DevsDtTBody tbody={tbody} headerWidth={headerWidth} />
         </div>

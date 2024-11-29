@@ -39,6 +39,7 @@ export interface IDataTableButtons {
 
 export interface IDataTableProps {
   title?: string;
+  id: string;
   columns: IDataTableColumn[];
   setColumns: React.Dispatch<React.SetStateAction<IDataTableColumn[]>>;
   dataSource: IDataSource[];

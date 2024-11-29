@@ -31,7 +31,7 @@ import uuid from "react-uuid";
 var DevsDtContext = React.createContext(undefined);
 var DevsDtProviderComponent = function (_a) {
     var _b;
-    var children = _a.children, columns = _a.columns, setColumns = _a.setColumns, dataSource = _a.dataSource, setDataSource = _a.setDataSource, options = _a.options, formsRef = _a.formsRef, focusedRow = _a.focusedRow, setFocusedRow = _a.setFocusedRow, focusedCell = _a.focusedCell, setFocusedCell = _a.setFocusedCell;
+    var children = _a.children, columns = _a.columns, setColumns = _a.setColumns, dataSource = _a.dataSource, setDataSource = _a.setDataSource, options = _a.options, formsRef = _a.formsRef, focusedRow = _a.focusedRow, setFocusedRow = _a.setFocusedRow, focusedCell = _a.focusedCell, setFocusedCell = _a.setFocusedCell, id = _a.id;
     var keyField = (_b = columns.find(function (col) { return col.key; })) === null || _b === void 0 ? void 0 : _b.field;
     var _c = __read(React.useState(false), 2), isSetUUID = _c[0], setIsSetUUID = _c[1];
     var _d = __read(React.useState({
@@ -73,6 +73,7 @@ var DevsDtProviderComponent = function (_a) {
             setFocusedCell: setFocusedCell,
             sorter: sorter,
             setSorter: setSorter,
+            id: id,
         } }, { children: _jsx("div", __assign({ style: {
                 height: "100%",
                 display: "flex",

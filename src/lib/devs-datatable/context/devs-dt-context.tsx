@@ -24,6 +24,7 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = ({
   setFocusedRow,
   focusedCell,
   setFocusedCell,
+  id,
 }) => {
   const keyField: string | undefined = columns.find((col) => col.key)?.field;
   const [isSetUUID, setIsSetUUID] = React.useState(false);
@@ -82,6 +83,7 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = ({
         setFocusedCell,
         sorter,
         setSorter,
+        id,
       }}
     >
       <div

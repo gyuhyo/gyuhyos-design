@@ -103,6 +103,7 @@ function generateDummyData() {
 function App() {
   const { showMessage } = useMessage();
   const tb = React.useRef<any>(null);
+  const tb2 = React.useRef<any>(null);
   const [columns, setColumns] = React.useState<IDataTableColumn[]>([
     {
       key: true,
@@ -224,10 +225,40 @@ function App() {
         maxHeight: "100vh",
         overflow: "hidden",
         padding: "12px 7px 20px 7px",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       <DevsDataTable
+        ref={tb2}
+        id="tb2"
+        title="생산 계획 등록"
+        columns={columns}
+        setColumns={setColumns}
+        dataSource={dataSource}
+        setDataSource={setDataSource}
+        options={{
+          showRowNumber: true,
+          enabledRowOrder: true,
+          rowOrderEnd: (data) => {
+            console.log(data);
+          },
+        }}
+        buttons={{
+          isVisible: true,
+          export: {
+            visible: true,
+            excel: true,
+            print: true,
+          },
+          onSaveClick: handleSaveClick,
+          onAddClick: handleAddClick,
+          onDeleteClick: handleDeleteClick,
+        }}
+      />
+      <DevsDataTable
         ref={tb}
+        id="tb"
         title="생산 계획 등록"
         columns={columns}
         setColumns={setColumns}

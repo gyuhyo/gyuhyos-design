@@ -4,17 +4,17 @@ import useMounted from "./useMounted";
 export const useInitDt = ({
   tbody,
   thead,
-  isMerged,
+  id,
 }: {
   tbody: React.RefObject<HTMLDivElement>;
   thead: React.RefObject<HTMLDivElement>;
-  isMerged: boolean;
+  id: string;
 }) => {
   const mounted = useMounted();
   const visibleStickyColShadow = () => {
-    const lastStickyCols: NodeListOf<Element> = document.querySelectorAll(
-      ".devs-dt-sticky-col-last"
-    );
+    const lastStickyCols: NodeListOf<Element> = document
+      .querySelector(`#${id}`)!
+      .querySelectorAll(".devs-dt-sticky-col-last");
 
     for (let el of lastStickyCols) {
       el.classList.add("devs-dt-sticky-col-last-visible");
@@ -22,9 +22,9 @@ export const useInitDt = ({
   };
 
   const hiddenStickyColShadow = () => {
-    const lastStickyCols = document.querySelectorAll(
-      ".devs-dt-sticky-col-last"
-    );
+    const lastStickyCols = document
+      .querySelector(`#${id}`)!
+      .querySelectorAll(".devs-dt-sticky-col-last");
 
     for (let el of lastStickyCols) {
       el.classList.remove("devs-dt-sticky-col-last-visible");
@@ -32,9 +32,11 @@ export const useInitDt = ({
   };
 
   const hiddenLastColumnBorder = () => {
-    const lastColumn = document.querySelectorAll(
-      ".devs-dt-thead .devs-dt-th:nth-last-child(3), .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child"
-    );
+    const lastColumn = document
+      .querySelector(`#${id}`)!
+      .querySelectorAll(
+        ".devs-dt-thead .devs-dt-th:nth-last-child(3), .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child"
+      );
 
     for (let el of lastColumn) {
       el.classList.add("devs-dt-hidden-border");
@@ -42,9 +44,11 @@ export const useInitDt = ({
   };
 
   const visibleLastColumnBorder = () => {
-    const lastColumn = document.querySelectorAll(
-      ".devs-dt-thead .devs-dt-th:nth-last-child(3), .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child"
-    );
+    const lastColumn = document
+      .querySelector(`#${id}`)!
+      .querySelectorAll(
+        ".devs-dt-thead .devs-dt-th:nth-last-child(3), .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child"
+      );
 
     for (let el of lastColumn) {
       el.classList.remove("devs-dt-hidden-border");

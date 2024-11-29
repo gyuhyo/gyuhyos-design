@@ -88,7 +88,7 @@ var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
     var init = (0, useInitDt_1.useInitDt)({
         tbody: tbody,
         thead: thead,
-        isMerged: isMerged,
+        id: props.id,
     });
     react_1.default.useEffect(function () {
         if (!thead.current)
@@ -159,7 +159,7 @@ var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
     }); }, [props.dataSource, props.options, focusedRow]);
     if (!init)
         return (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: "loading..." });
-    return ((0, jsx_runtime_1.jsxs)(devs_dt_context_1.DevsDtProvider, __assign({ columns: props.columns, setColumns: props.setColumns, dataSource: props.dataSource, setDataSource: props.setDataSource, options: props.options, formsRef: formsRef, focusedRow: focusedRow, setFocusedRow: setFocusedRow, focusedCell: focusedCell, setFocusedCell: setFocusedCell }, { children: [(props.loading === true || innerLoading === true) && ((0, jsx_runtime_1.jsx)("div", __assign({ className: "loader-backdrop" }, { children: (0, jsx_runtime_1.jsxs)("div", __assign({ className: "loader-container" }, { children: [(0, jsx_runtime_1.jsx)("span", { className: "spinner" }), (0, jsx_runtime_1.jsx)("span", __assign({ style: { fontWeight: "bold" } }, { children: "\uB370\uC774\uD130 \uBD88\uB7EC\uC624\uB294 \uC911..." }))] })) }))), (0, jsx_runtime_1.jsxs)("div", __assign({ style: {
+    return ((0, jsx_runtime_1.jsxs)(devs_dt_context_1.DevsDtProvider, __assign({ columns: props.columns, setColumns: props.setColumns, dataSource: props.dataSource, setDataSource: props.setDataSource, options: props.options, formsRef: formsRef, focusedRow: focusedRow, setFocusedRow: setFocusedRow, focusedCell: focusedCell, setFocusedCell: setFocusedCell, id: props.id }, { children: [(props.loading === true || innerLoading === true) && ((0, jsx_runtime_1.jsx)("div", __assign({ className: "loader-backdrop" }, { children: (0, jsx_runtime_1.jsxs)("div", __assign({ className: "loader-container" }, { children: [(0, jsx_runtime_1.jsx)("span", { className: "spinner" }), (0, jsx_runtime_1.jsx)("span", __assign({ style: { fontWeight: "bold" } }, { children: "\uB370\uC774\uD130 \uBD88\uB7EC\uC624\uB294 \uC911..." }))] })) }))), (0, jsx_runtime_1.jsxs)("div", __assign({ style: {
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "space-between",
@@ -173,6 +173,6 @@ var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
                                     marginLeft: props.title !== undefined && props.title !== ""
                                         ? "7px"
                                         : "0px",
-                                } }, { children: ["(*) \uC785\uB825 \uAC00\uB2A5 (", (0, jsx_runtime_1.jsx)("span", __assign({ style: { color: "red" } }, { children: "*" })), ") \uD544\uC218\uC785\uB825"] }))] })), (0, jsx_runtime_1.jsx)(buttons_1.default, { buttons: props.buttons, options: props.options, setInnerLoading: setInnerLoading })] })), (0, jsx_runtime_1.jsxs)("div", __assign({ className: "dev-table-wrapper" }, { children: [(0, jsx_runtime_1.jsx)(devs_dt_thead_1.default, { thead: thead, setHeaderWidth: setHeaderWidth }), (0, jsx_runtime_1.jsx)(devs_dt_tbody_1.default, { tbody: tbody, headerWidth: headerWidth })] }))] })));
+                                } }, { children: ["(*) \uC785\uB825 \uAC00\uB2A5 (", (0, jsx_runtime_1.jsx)("span", __assign({ style: { color: "red" } }, { children: "*" })), ") \uD544\uC218\uC785\uB825"] }))] })), (0, jsx_runtime_1.jsx)(buttons_1.default, { buttons: props.buttons, options: props.options, setInnerLoading: setInnerLoading })] })), (0, jsx_runtime_1.jsxs)("div", __assign({ id: props.id, className: "dev-table-wrapper" }, { children: [(0, jsx_runtime_1.jsx)(devs_dt_thead_1.default, { thead: thead, setHeaderWidth: setHeaderWidth }), (0, jsx_runtime_1.jsx)(devs_dt_tbody_1.default, { tbody: tbody, headerWidth: headerWidth })] }))] })));
 });
 exports.default = react_1.default.memo(DevsDataTable);

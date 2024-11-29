@@ -14,11 +14,13 @@ import useMounted from "./useMounted";
 export var useInitDt = function (_a) {
     var e_1, _b;
     var _c, _d, _e, _f;
-    var tbody = _a.tbody, thead = _a.thead, isMerged = _a.isMerged;
+    var tbody = _a.tbody, thead = _a.thead, id = _a.id;
     var mounted = useMounted();
     var visibleStickyColShadow = function () {
         var e_2, _a;
-        var lastStickyCols = document.querySelectorAll(".devs-dt-sticky-col-last");
+        var lastStickyCols = document
+            .querySelector("#".concat(id))
+            .querySelectorAll(".devs-dt-sticky-col-last");
         try {
             for (var lastStickyCols_1 = __values(lastStickyCols), lastStickyCols_1_1 = lastStickyCols_1.next(); !lastStickyCols_1_1.done; lastStickyCols_1_1 = lastStickyCols_1.next()) {
                 var el = lastStickyCols_1_1.value;
@@ -35,7 +37,9 @@ export var useInitDt = function (_a) {
     };
     var hiddenStickyColShadow = function () {
         var e_3, _a;
-        var lastStickyCols = document.querySelectorAll(".devs-dt-sticky-col-last");
+        var lastStickyCols = document
+            .querySelector("#".concat(id))
+            .querySelectorAll(".devs-dt-sticky-col-last");
         try {
             for (var lastStickyCols_2 = __values(lastStickyCols), lastStickyCols_2_1 = lastStickyCols_2.next(); !lastStickyCols_2_1.done; lastStickyCols_2_1 = lastStickyCols_2.next()) {
                 var el = lastStickyCols_2_1.value;
@@ -52,7 +56,9 @@ export var useInitDt = function (_a) {
     };
     var hiddenLastColumnBorder = function () {
         var e_4, _a;
-        var lastColumn = document.querySelectorAll(".devs-dt-thead .devs-dt-th:nth-last-child(3), .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child");
+        var lastColumn = document
+            .querySelector("#".concat(id))
+            .querySelectorAll(".devs-dt-thead .devs-dt-th:nth-last-child(3), .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child");
         try {
             for (var lastColumn_1 = __values(lastColumn), lastColumn_1_1 = lastColumn_1.next(); !lastColumn_1_1.done; lastColumn_1_1 = lastColumn_1.next()) {
                 var el = lastColumn_1_1.value;
@@ -69,7 +75,9 @@ export var useInitDt = function (_a) {
     };
     var visibleLastColumnBorder = function () {
         var e_5, _a;
-        var lastColumn = document.querySelectorAll(".devs-dt-thead .devs-dt-th:nth-last-child(3), .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child");
+        var lastColumn = document
+            .querySelector("#".concat(id))
+            .querySelectorAll(".devs-dt-thead .devs-dt-th:nth-last-child(3), .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child");
         try {
             for (var lastColumn_2 = __values(lastColumn), lastColumn_2_1 = lastColumn_2.next(); !lastColumn_2_1.done; lastColumn_2_1 = lastColumn_2.next()) {
                 var el = lastColumn_2_1.value;
