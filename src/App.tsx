@@ -231,7 +231,6 @@ function App() {
     >
       <DevsDataTable
         ref={tb2}
-        id="tb2"
         title="생산 계획 등록"
         columns={columns}
         setColumns={setColumns}
@@ -258,7 +257,6 @@ function App() {
       />
       <DevsDataTable
         ref={tb}
-        id="tb"
         title="생산 계획 등록"
         columns={columns}
         setColumns={setColumns}

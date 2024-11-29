@@ -17,6 +17,10 @@ interface DevsDataTableRef {
 // DevsDataTable 컴포넌트 타입 설정 및 구현
 const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
   (props, ref) => {
+    const id = React.useMemo(
+      () => `tb${Math.random().toString(36).substring(2, 12)}`,
+      []
+    );
     const [isMerged, setIsMerged] = React.useState(false);
     const [headerWidth, setHeaderWidth] = React.useState<number>(0);
     const [innerLoading, setInnerLoading] = React.useState<boolean>(false);
@@ -31,7 +35,7 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
     const init = useInitDt({
       tbody: tbody,
       thead: thead,
-      id: props.id,
+      id: id,
     });
 
     React.useEffect(() => {
@@ -122,7 +126,6 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
         setFocusedRow={setFocusedRow}
         focusedCell={focusedCell}
         setFocusedCell={setFocusedCell}
-        id={props.id}
       >
         {(props.loading === true || innerLoading === true) && (
           <div className="loader-backdrop">
@@ -166,7 +169,7 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
             setInnerLoading={setInnerLoading}
           />
         </div>
-        <div id={props.id} className="dev-table-wrapper">
+        <div id={id} className="dev-table-wrapper">
           <DevsDtTHead thead={thead} setHeaderWidth={setHeaderWidth} />
           <DevsDtTBody tbody={tbody} headerWidth={headerWidth} />
         </div>
