@@ -189,7 +189,7 @@ function DevsDtTHead(_a) {
                                 flexDirection: "row",
                                 justifyContent: "center",
                                 alignItems: "center",
-                            } }, { children: [_jsx("p", { children: column.title }), column.children === undefined &&
+                            } }, { children: [_jsx("p", __assign({ style: { whiteSpace: "pre-wrap" } }, { children: column.title })), column.children === undefined &&
                                     (column.sortable === undefined || column.sortable === true) && (_jsxs("div", { children: [_jsx("span", { className: "asc_ico".concat(sorter.field === column.field && sorter.type === "asc"
                                                 ? " sorter_active"
                                                 : "") }), _jsx("span", { className: "desc_ico".concat(sorter.field === column.field && sorter.type === "desc"
