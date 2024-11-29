@@ -44,56 +44,65 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
 
   const sortDataSource = React.useCallback(
     (d: IDataSource[]): IDataSource[] => {
+      const newRows = d.filter((x) => x.mode === "c");
+
       if (sorter.field === null || sorter.field === undefined) {
-        return d.sort(
-          (a: IDataSource, b: IDataSource) => a.originIndex - b.originIndex
-        );
+        return [
+          ...newRows,
+          ...d
+            .filter((x) => x.mode !== "c")
+            .sort(
+              (a: IDataSource, b: IDataSource) => a.originIndex - b.originIndex
+            ),
+        ];
       }
 
       const isNumberField =
         columns.find((x) => x.field === sorter.field)?.type === "number";
 
-      const sortedDataSource = d.sort((a: IDataSource, b: IDataSource) => {
-        if (!isNumberField) {
-          if (sorter.type === "desc") {
+      const sortedDataSource = d
+        .filter((x) => x.mode !== "c")
+        .sort((a: IDataSource, b: IDataSource) => {
+          if (!isNumberField) {
+            if (sorter.type === "desc") {
+              if (a[sorter.field!] === b[sorter.field!]) {
+                return a.originIndex - b.originIndex;
+              } else {
+                if (a[sorter.field!] > b[sorter.field!]) {
+                  return -1;
+                } else {
+                  return 1;
+                }
+              }
+            }
+
             if (a[sorter.field!] === b[sorter.field!]) {
               return a.originIndex - b.originIndex;
             } else {
               if (a[sorter.field!] > b[sorter.field!]) {
-                return -1;
-              } else {
                 return 1;
+              } else {
+                return -1;
               }
             }
           }
 
-          if (a[sorter.field!] === b[sorter.field!]) {
-            return a.originIndex - b.originIndex;
-          } else {
-            if (a[sorter.field!] > b[sorter.field!]) {
-              return 1;
+          if (sorter.type === "desc") {
+            if (a[sorter.field!] === b[sorter.field!]) {
+              return a.originIndex - b.originIndex;
             } else {
-              return -1;
+              return b[sorter.field!] - a[sorter.field!];
             }
           }
-        }
 
-        if (sorter.type === "desc") {
           if (a[sorter.field!] === b[sorter.field!]) {
             return a.originIndex - b.originIndex;
           } else {
-            return b[sorter.field!] - a[sorter.field!];
+            return a[sorter.field!] - b[sorter.field!];
           }
-        }
+        });
 
-        if (a[sorter.field!] === b[sorter.field!]) {
-          return a.originIndex - b.originIndex;
-        } else {
-          return a[sorter.field!] - b[sorter.field!];
-        }
-      });
-
-      return sortedDataSource;
+      return [...newRows, ...sortedDataSource];
     },
     [sorter, columns]
   );

@@ -26,6 +26,15 @@ var __read = (this && this.__read) || function (o, n) {
     }
     return ar;
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 var __values = (this && this.__values) || function(o) {
     var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) return m.call(o);
@@ -36,15 +45,6 @@ var __values = (this && this.__values) || function(o) {
         }
     };
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
-};
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
 };
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -80,11 +80,16 @@ function DevsDtTBody(_a) {
     var lastNode = react_1.default.useMemo(function () { return getLastNodes(columns); }, [columns]);
     var sortDataSource = react_1.default.useCallback(function (d) {
         var _a;
+        var newRows = d.filter(function (x) { return x.mode === "c"; });
         if (sorter.field === null || sorter.field === undefined) {
-            return d.sort(function (a, b) { return a.originIndex - b.originIndex; });
+            return __spreadArray(__spreadArray([], __read(newRows), false), __read(d
+                .filter(function (x) { return x.mode !== "c"; })
+                .sort(function (a, b) { return a.originIndex - b.originIndex; })), false);
         }
         var isNumberField = ((_a = columns.find(function (x) { return x.field === sorter.field; })) === null || _a === void 0 ? void 0 : _a.type) === "number";
-        var sortedDataSource = d.sort(function (a, b) {
+        var sortedDataSource = d
+            .filter(function (x) { return x.mode !== "c"; })
+            .sort(function (a, b) {
             if (!isNumberField) {
                 if (sorter.type === "desc") {
                     if (a[sorter.field] === b[sorter.field]) {
@@ -126,7 +131,7 @@ function DevsDtTBody(_a) {
                 return a[sorter.field] - b[sorter.field];
             }
         });
-        return sortedDataSource;
+        return __spreadArray(__spreadArray([], __read(newRows), false), __read(sortedDataSource), false);
     }, [sorter, columns]);
     var mergedDataSource = react_1.default.useMemo(function () {
         var e_1, _a, e_2, _b, _c, _d, _e;
