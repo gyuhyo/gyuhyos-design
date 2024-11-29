@@ -17,6 +17,11 @@ export interface IDataTableColumn {
     type?: string;
     align?: string;
     merge?: boolean;
+    mergeOptions?: ({ prev, curr, next, }: {
+        prev: IDataSource;
+        curr: IDataSource;
+        next?: IDataSource;
+    }) => boolean;
     render?: ({ value, rowData, index, }: {
         value?: any;
         rowData: IDataSource;

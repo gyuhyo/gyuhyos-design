@@ -1,13 +1,11 @@
 import React from "react";
-import { FaFileExport } from "react-icons/fa6";
-import { MdAdd, MdCancel, MdDelete, MdSave, MdSearch } from "react-icons/md";
 import { IDataSource, IDataTableProps, IFormsRef } from "./_types";
 import { DevsDtProvider } from "./context/devs-dt-context";
+import "./dev.datatable.style.css";
 import DevsDtTBody from "./devs-dt-tbody";
 import DevsDtTHead from "./devs-dt-thead";
 import { useInitDt } from "./hooks/useInitDt";
-import Button from "../button";
-import "./dev.datatable.style.css";
+import DevsDtButtons from "./devs-dt-component/buttons";
 
 // 1. DevsDataTable Ref 타입 정의
 interface DevsDataTableRef {
@@ -146,91 +144,20 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
             {props.title !== undefined && props.title !== "" && (
               <>&#x27a4; {props.title}</>
             )}
-          </p>
-          {props.buttons && props.buttons.isVisible && props.buttons.custom ? (
-            <>{props.buttons.custom}</>
-          ) : (
-            <div
+            <span
               style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                columnGap: 3,
+                fontSize: 12,
+                color: "#7a7a7a",
+                marginLeft:
+                  props.title !== undefined && props.title !== ""
+                    ? "7px"
+                    : "0px",
               }}
             >
-              {(props.buttons!.isSearchVisible === undefined ||
-                props.buttons!.isSearchVisible === true) && (
-                <Button
-                  border={true}
-                  compact
-                  style={{ padding: "5px 7px" }}
-                  onClick={props.buttons?.onSearchClick}
-                >
-                  <MdSearch /> 조회
-                </Button>
-              )}
-              {(props.buttons!.isAddVisible === undefined ||
-                props.buttons!.isAddVisible === true) && (
-                <Button
-                  border={true}
-                  compact
-                  style={{ padding: "5px 7px" }}
-                  onClick={props.buttons?.onAddClick}
-                >
-                  <MdAdd /> 추가
-                </Button>
-              )}
-              {(props.buttons!.isSaveVisible === undefined ||
-                props.buttons!.isSaveVisible === true) && (
-                <Button
-                  border={true}
-                  compact
-                  style={{ padding: "5px 7px" }}
-                  onClick={props.buttons?.onSaveClick}
-                >
-                  <MdSave />{" "}
-                  {props.options?.enabledRowCheck === true
-                    ? "선택 저장"
-                    : "저장"}
-                </Button>
-              )}
-              {(props.buttons!.isDeleteVisible === undefined ||
-                props.buttons!.isDeleteVisible === true) && (
-                <Button
-                  border={true}
-                  compact
-                  style={{ padding: "5px 7px" }}
-                  bgColor="#df4873"
-                  color="#fff"
-                  onClick={props.buttons?.onDeleteClick}
-                >
-                  <MdDelete /> 선택 삭제
-                </Button>
-              )}
-              {(props.buttons!.isCancelVisible === undefined ||
-                props.buttons!.isCancelVisible === true) && (
-                <Button
-                  border={true}
-                  compact
-                  style={{ padding: "5px 7px" }}
-                  onClick={props.buttons?.onCancelClick}
-                >
-                  <MdCancel /> 취소
-                </Button>
-              )}
-              {(props.buttons!.isExportVisible === undefined ||
-                props.buttons!.isExportVisible === true) && (
-                <Button
-                  border={true}
-                  compact
-                  style={{ padding: "5px 7px" }}
-                  onClick={props.buttons?.onExportClick}
-                >
-                  <FaFileExport /> Export
-                </Button>
-              )}
-            </div>
-          )}
+              (*) 입력 가능 (<span style={{ color: "red" }}>*</span>) 필수입력
+            </span>
+          </p>
+          <DevsDtButtons buttons={props.buttons} options={props.options} />
         </div>
         <div className="dev-table-wrapper">
           <DevsDtTHead thead={thead} setHeaderWidth={setHeaderWidth} />

@@ -80,6 +80,22 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
             break;
           }
 
+          if (d.mergeOptions !== undefined) {
+            const nextData =
+              j + 1 > copyDataSource.length ? null : copyDataSource[j + 1];
+
+            if (
+              !d.mergeOptions({
+                prev: copyDataSource[j - 1],
+                curr: copyDataSource[j],
+                next: nextData,
+              })
+            ) {
+              i = j - 1;
+              break;
+            }
+          }
+
           copyDataSource[i]["_merge"] = {
             ...copyDataSource[i]["_merge"],
             [d.field]: {

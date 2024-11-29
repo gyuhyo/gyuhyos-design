@@ -63,25 +63,22 @@ var __read = (this && this.__read) || function (o, n) {
 };
 import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "@emotion/react/jsx-runtime";
 import React from "react";
-import { FaFileExport } from "react-icons/fa6";
-import { MdAdd, MdCancel, MdDelete, MdSave, MdSearch } from "react-icons/md";
 import { DevsDtProvider } from "./context/devs-dt-context";
+import "./dev.datatable.style.css";
 import DevsDtTBody from "./devs-dt-tbody";
 import DevsDtTHead from "./devs-dt-thead";
 import { useInitDt } from "./hooks/useInitDt";
-import Button from "../button";
-import "./dev.datatable.style.css";
+import DevsDtButtons from "./devs-dt-component/buttons";
 // DevsDataTable 컴포넌트 타입 설정 및 구현
 var DevsDataTable = React.forwardRef(function (props, ref) {
-    var _a, _b, _c, _d, _e, _f, _g;
-    var _h = __read(React.useState(false), 2), isMerged = _h[0], setIsMerged = _h[1];
-    var _j = __read(React.useState(0), 2), headerWidth = _j[0], setHeaderWidth = _j[1];
-    var _k = __read(React.useState(null), 2), focusedCell = _k[0], setFocusedCell = _k[1];
-    var _l = __read(React.useState(null), 2), focusedRow = _l[0], setFocusedRow = _l[1];
+    var _a = __read(React.useState(false), 2), isMerged = _a[0], setIsMerged = _a[1];
+    var _b = __read(React.useState(0), 2), headerWidth = _b[0], setHeaderWidth = _b[1];
+    var _c = __read(React.useState(null), 2), focusedCell = _c[0], setFocusedCell = _c[1];
+    var _d = __read(React.useState(null), 2), focusedRow = _d[0], setFocusedRow = _d[1];
     var formsRef = React.useRef({});
     var thead = React.useRef(null);
     var tbody = React.useRef(null);
-    var _m = __read(React.useState(false), 2), DtForceUpdate = _m[1];
+    var _e = __read(React.useState(false), 2), DtForceUpdate = _e[1];
     var init = useInitDt({
         tbody: tbody,
         thead: thead,
@@ -162,19 +159,12 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
                     justifyContent: "space-between",
                     alignItems: "center",
                     marginBottom: 7,
-                } }, { children: [_jsx("p", __assign({ style: { fontSize: 18, fontWeight: "bold" } }, { children: props.title !== undefined && props.title !== "" && (_jsxs(_Fragment, { children: ["\u27A4 ", props.title] })) })), props.buttons && props.buttons.isVisible && props.buttons.custom ? (_jsx(_Fragment, { children: props.buttons.custom })) : (_jsxs("div", __assign({ style: {
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            columnGap: 3,
-                        } }, { children: [(props.buttons.isSearchVisible === undefined ||
-                                props.buttons.isSearchVisible === true) && (_jsxs(Button, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, onClick: (_a = props.buttons) === null || _a === void 0 ? void 0 : _a.onSearchClick }, { children: [_jsx(MdSearch, {}), " \uC870\uD68C"] }))), (props.buttons.isAddVisible === undefined ||
-                                props.buttons.isAddVisible === true) && (_jsxs(Button, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, onClick: (_b = props.buttons) === null || _b === void 0 ? void 0 : _b.onAddClick }, { children: [_jsx(MdAdd, {}), " \uCD94\uAC00"] }))), (props.buttons.isSaveVisible === undefined ||
-                                props.buttons.isSaveVisible === true) && (_jsxs(Button, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, onClick: (_c = props.buttons) === null || _c === void 0 ? void 0 : _c.onSaveClick }, { children: [_jsx(MdSave, {}), " ", ((_d = props.options) === null || _d === void 0 ? void 0 : _d.enabledRowCheck) === true
-                                        ? "선택 저장"
-                                        : "저장"] }))), (props.buttons.isDeleteVisible === undefined ||
-                                props.buttons.isDeleteVisible === true) && (_jsxs(Button, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, bgColor: "#df4873", color: "#fff", onClick: (_e = props.buttons) === null || _e === void 0 ? void 0 : _e.onDeleteClick }, { children: [_jsx(MdDelete, {}), " \uC120\uD0DD \uC0AD\uC81C"] }))), (props.buttons.isCancelVisible === undefined ||
-                                props.buttons.isCancelVisible === true) && (_jsxs(Button, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, onClick: (_f = props.buttons) === null || _f === void 0 ? void 0 : _f.onCancelClick }, { children: [_jsx(MdCancel, {}), " \uCDE8\uC18C"] }))), (props.buttons.isExportVisible === undefined ||
-                                props.buttons.isExportVisible === true) && (_jsxs(Button, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, onClick: (_g = props.buttons) === null || _g === void 0 ? void 0 : _g.onExportClick }, { children: [_jsx(FaFileExport, {}), " Export"] })))] })))] })), _jsxs("div", __assign({ className: "dev-table-wrapper" }, { children: [_jsx(DevsDtTHead, { thead: thead, setHeaderWidth: setHeaderWidth }), _jsx(DevsDtTBody, { tbody: tbody, headerWidth: headerWidth })] }))] })));
+                } }, { children: [_jsxs("p", __assign({ style: { fontSize: 18, fontWeight: "bold" } }, { children: [props.title !== undefined && props.title !== "" && (_jsxs(_Fragment, { children: ["\u27A4 ", props.title] })), _jsxs("span", __assign({ style: {
+                                    fontSize: 12,
+                                    color: "#7a7a7a",
+                                    marginLeft: props.title !== undefined && props.title !== ""
+                                        ? "7px"
+                                        : "0px",
+                                } }, { children: ["(*) \uC785\uB825 \uAC00\uB2A5 (", _jsx("span", __assign({ style: { color: "red" } }, { children: "*" })), ") \uD544\uC218\uC785\uB825"] }))] })), _jsx(DevsDtButtons, { buttons: props.buttons, options: props.options })] })), _jsxs("div", __assign({ className: "dev-table-wrapper" }, { children: [_jsx(DevsDtTHead, { thead: thead, setHeaderWidth: setHeaderWidth }), _jsx(DevsDtTBody, { tbody: tbody, headerWidth: headerWidth })] }))] })));
 });
 export default React.memo(DevsDataTable);

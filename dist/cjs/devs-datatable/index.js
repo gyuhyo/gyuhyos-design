@@ -68,25 +68,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsx_runtime_1 = require("@emotion/react/jsx-runtime");
 var react_1 = __importDefault(require("react"));
-var fa6_1 = require("react-icons/fa6");
-var md_1 = require("react-icons/md");
 var devs_dt_context_1 = require("./context/devs-dt-context");
+require("./dev.datatable.style.css");
 var devs_dt_tbody_1 = __importDefault(require("./devs-dt-tbody"));
 var devs_dt_thead_1 = __importDefault(require("./devs-dt-thead"));
 var useInitDt_1 = require("./hooks/useInitDt");
-var button_1 = __importDefault(require("../button"));
-require("./dev.datatable.style.css");
+var buttons_1 = __importDefault(require("./devs-dt-component/buttons"));
 // DevsDataTable 컴포넌트 타입 설정 및 구현
 var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
-    var _a, _b, _c, _d, _e, _f, _g;
-    var _h = __read(react_1.default.useState(false), 2), isMerged = _h[0], setIsMerged = _h[1];
-    var _j = __read(react_1.default.useState(0), 2), headerWidth = _j[0], setHeaderWidth = _j[1];
-    var _k = __read(react_1.default.useState(null), 2), focusedCell = _k[0], setFocusedCell = _k[1];
-    var _l = __read(react_1.default.useState(null), 2), focusedRow = _l[0], setFocusedRow = _l[1];
+    var _a = __read(react_1.default.useState(false), 2), isMerged = _a[0], setIsMerged = _a[1];
+    var _b = __read(react_1.default.useState(0), 2), headerWidth = _b[0], setHeaderWidth = _b[1];
+    var _c = __read(react_1.default.useState(null), 2), focusedCell = _c[0], setFocusedCell = _c[1];
+    var _d = __read(react_1.default.useState(null), 2), focusedRow = _d[0], setFocusedRow = _d[1];
     var formsRef = react_1.default.useRef({});
     var thead = react_1.default.useRef(null);
     var tbody = react_1.default.useRef(null);
-    var _m = __read(react_1.default.useState(false), 2), DtForceUpdate = _m[1];
+    var _e = __read(react_1.default.useState(false), 2), DtForceUpdate = _e[1];
     var init = (0, useInitDt_1.useInitDt)({
         tbody: tbody,
         thead: thead,
@@ -167,19 +164,12 @@ var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
                     justifyContent: "space-between",
                     alignItems: "center",
                     marginBottom: 7,
-                } }, { children: [(0, jsx_runtime_1.jsx)("p", __assign({ style: { fontSize: 18, fontWeight: "bold" } }, { children: props.title !== undefined && props.title !== "" && ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: ["\u27A4 ", props.title] })) })), props.buttons && props.buttons.isVisible && props.buttons.custom ? ((0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: props.buttons.custom })) : ((0, jsx_runtime_1.jsxs)("div", __assign({ style: {
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            columnGap: 3,
-                        } }, { children: [(props.buttons.isSearchVisible === undefined ||
-                                props.buttons.isSearchVisible === true) && ((0, jsx_runtime_1.jsxs)(button_1.default, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, onClick: (_a = props.buttons) === null || _a === void 0 ? void 0 : _a.onSearchClick }, { children: [(0, jsx_runtime_1.jsx)(md_1.MdSearch, {}), " \uC870\uD68C"] }))), (props.buttons.isAddVisible === undefined ||
-                                props.buttons.isAddVisible === true) && ((0, jsx_runtime_1.jsxs)(button_1.default, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, onClick: (_b = props.buttons) === null || _b === void 0 ? void 0 : _b.onAddClick }, { children: [(0, jsx_runtime_1.jsx)(md_1.MdAdd, {}), " \uCD94\uAC00"] }))), (props.buttons.isSaveVisible === undefined ||
-                                props.buttons.isSaveVisible === true) && ((0, jsx_runtime_1.jsxs)(button_1.default, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, onClick: (_c = props.buttons) === null || _c === void 0 ? void 0 : _c.onSaveClick }, { children: [(0, jsx_runtime_1.jsx)(md_1.MdSave, {}), " ", ((_d = props.options) === null || _d === void 0 ? void 0 : _d.enabledRowCheck) === true
-                                        ? "선택 저장"
-                                        : "저장"] }))), (props.buttons.isDeleteVisible === undefined ||
-                                props.buttons.isDeleteVisible === true) && ((0, jsx_runtime_1.jsxs)(button_1.default, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, bgColor: "#df4873", color: "#fff", onClick: (_e = props.buttons) === null || _e === void 0 ? void 0 : _e.onDeleteClick }, { children: [(0, jsx_runtime_1.jsx)(md_1.MdDelete, {}), " \uC120\uD0DD \uC0AD\uC81C"] }))), (props.buttons.isCancelVisible === undefined ||
-                                props.buttons.isCancelVisible === true) && ((0, jsx_runtime_1.jsxs)(button_1.default, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, onClick: (_f = props.buttons) === null || _f === void 0 ? void 0 : _f.onCancelClick }, { children: [(0, jsx_runtime_1.jsx)(md_1.MdCancel, {}), " \uCDE8\uC18C"] }))), (props.buttons.isExportVisible === undefined ||
-                                props.buttons.isExportVisible === true) && ((0, jsx_runtime_1.jsxs)(button_1.default, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, onClick: (_g = props.buttons) === null || _g === void 0 ? void 0 : _g.onExportClick }, { children: [(0, jsx_runtime_1.jsx)(fa6_1.FaFileExport, {}), " Export"] })))] })))] })), (0, jsx_runtime_1.jsxs)("div", __assign({ className: "dev-table-wrapper" }, { children: [(0, jsx_runtime_1.jsx)(devs_dt_thead_1.default, { thead: thead, setHeaderWidth: setHeaderWidth }), (0, jsx_runtime_1.jsx)(devs_dt_tbody_1.default, { tbody: tbody, headerWidth: headerWidth })] }))] })));
+                } }, { children: [(0, jsx_runtime_1.jsxs)("p", __assign({ style: { fontSize: 18, fontWeight: "bold" } }, { children: [props.title !== undefined && props.title !== "" && ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: ["\u27A4 ", props.title] })), (0, jsx_runtime_1.jsxs)("span", __assign({ style: {
+                                    fontSize: 12,
+                                    color: "#7a7a7a",
+                                    marginLeft: props.title !== undefined && props.title !== ""
+                                        ? "7px"
+                                        : "0px",
+                                } }, { children: ["(*) \uC785\uB825 \uAC00\uB2A5 (", (0, jsx_runtime_1.jsx)("span", __assign({ style: { color: "red" } }, { children: "*" })), ") \uD544\uC218\uC785\uB825"] }))] })), (0, jsx_runtime_1.jsx)(buttons_1.default, { buttons: props.buttons, options: props.options })] })), (0, jsx_runtime_1.jsxs)("div", __assign({ className: "dev-table-wrapper" }, { children: [(0, jsx_runtime_1.jsx)(devs_dt_thead_1.default, { thead: thead, setHeaderWidth: setHeaderWidth }), (0, jsx_runtime_1.jsx)(devs_dt_tbody_1.default, { tbody: tbody, headerWidth: headerWidth })] }))] })));
 });
 exports.default = react_1.default.memo(DevsDataTable);

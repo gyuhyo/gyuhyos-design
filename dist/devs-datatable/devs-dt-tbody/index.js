@@ -111,6 +111,17 @@ function DevsDtTBody(_a) {
                             i = j - 1;
                             break;
                         }
+                        if (d.mergeOptions !== undefined) {
+                            var nextData = j + 1 > copyDataSource.length ? null : copyDataSource[j + 1];
+                            if (!d.mergeOptions({
+                                prev: copyDataSource[j - 1],
+                                curr: copyDataSource[j],
+                                next: nextData,
+                            })) {
+                                i = j - 1;
+                                break;
+                            }
+                        }
                         copyDataSource[i]["_merge"] = __assign(__assign({}, copyDataSource[i]["_merge"]), (_d = {}, _d[d.field] = {
                             rowSpan: copyDataSource[i]["_merge"][d.field]["rowSpan"] + 1,
                             hidden: false,

@@ -82,7 +82,7 @@
   display: table-row;
 
   &:nth-child(even) > .devs-dt-cell {
-    background-color: #e6e6e6 !important;
+    background-color: #e6e6e6;
   }
 
   &:hover > .devs-dt-cell {

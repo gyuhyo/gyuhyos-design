@@ -9,6 +9,7 @@ export interface ButtonProps
       HTMLButtonElement
     >,
     React.AriaAttributes {
+  btnref?: React.RefObject<HTMLButtonElement>;
   bgColor?: string;
   color?: string;
   compact?: boolean;
@@ -29,6 +30,7 @@ const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
   } = props;
   return (
     <button
+      ref={props.btnref}
       css={css({
         padding: compact ? "0px 7px" : "5px 20px",
         borderRadius: rounded ? 2 : 0,
@@ -36,7 +38,12 @@ const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
         border: border ? "1px solid #ddd" : undefined,
         color: color,
         "&:hover": {
-          opacity: 0.8,
+          cursor: "pointer",
+          background: `linear-gradient(180deg, ${bgColor}${(95 * 0.9).toFixed(
+            0
+          )} 0%, ${bgColor}${(100 * 0.9).toFixed(0)} 50%, ${bgColor}${(
+            95 * 0.9
+          ).toFixed(0)} 100%)`,
         },
         "&:active": {
           filter: "contrast(0.7)",

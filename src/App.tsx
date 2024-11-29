@@ -112,12 +112,19 @@ function App() {
       required: true,
       resizing: false,
       merge: true,
+      mergeOptions: ({ prev, curr, next }) => {
+        if (curr["3"] === "2024-11-02") {
+          return false;
+        }
+        return true;
+      },
       updatable: false,
     },
     {
       field: "2",
       title: "2",
       type: "select",
+      sticky: true,
       options: [
         { value: "0", label: "0" },
         { value: "1", label: "1" },
@@ -226,7 +233,11 @@ function App() {
         }}
         buttons={{
           isVisible: true,
-          isExportVisible: false,
+          export: {
+            visible: true,
+            excel: true,
+            print: true,
+          },
           onSaveClick: handleSaveClick,
           onAddClick: handleAddClick,
           onDeleteClick: handleDeleteClick,

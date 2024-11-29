@@ -10,6 +10,11 @@ export interface IDataTableOptions {
     readonly?: boolean;
     editMode?: "default" | "popup" | "slider";
 }
+export interface IDataTableExportButtonProps {
+    visible: boolean;
+    excel: boolean;
+    print: boolean;
+}
 export interface IDataTableButtons {
     isVisible: boolean;
     custom?: JSX.Element;
@@ -18,7 +23,7 @@ export interface IDataTableButtons {
     isSaveVisible?: boolean;
     isDeleteVisible?: boolean;
     isCancelVisible?: boolean;
-    isExportVisible?: boolean;
+    export?: IDataTableExportButtonProps;
     onSearchClick?: () => void;
     onAddClick?: () => void;
     onSaveClick?: () => void;

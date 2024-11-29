@@ -27,14 +27,15 @@ var jsx_runtime_1 = require("@emotion/react/jsx-runtime");
 var react_1 = require("@emotion/react");
 var Button = function (props) {
     var children = props.children, _a = props.compact, compact = _a === void 0 ? false : _a, _b = props.rounded, rounded = _b === void 0 ? true : _b, _c = props.border, border = _c === void 0 ? false : _c, _d = props.bgColor, bgColor = _d === void 0 ? "#dadada" : _d, _e = props.color, color = _e === void 0 ? "#000" : _e, anotherProps = __rest(props, ["children", "compact", "rounded", "border", "bgColor", "color"]);
-    return ((0, jsx_runtime_1.jsxs)("button", __assign({ css: (0, react_1.css)({
+    return ((0, jsx_runtime_1.jsxs)("button", __assign({ ref: props.btnref, css: (0, react_1.css)({
             padding: compact ? "0px 7px" : "5px 20px",
             borderRadius: rounded ? 2 : 0,
             background: "linear-gradient(180deg, ".concat(bgColor, "95 0%, ").concat(bgColor, " 50%, ").concat(bgColor, "95 100%)"),
             border: border ? "1px solid #ddd" : undefined,
             color: color,
             "&:hover": {
-                opacity: 0.8,
+                cursor: "pointer",
+                background: "linear-gradient(180deg, ".concat(bgColor).concat((95 * 0.9).toFixed(0), " 0%, ").concat(bgColor).concat((100 * 0.9).toFixed(0), " 50%, ").concat(bgColor).concat((95 * 0.9).toFixed(0), " 100%)"),
             },
             "&:active": {
                 filter: "contrast(0.7)",
