@@ -11,10 +11,23 @@ var __assign = (this && this.__assign) || function () {
 };
 import { jsx as _jsx } from "@emotion/react/jsx-runtime";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import advancedFormat from "dayjs/plugin/advancedFormat";
+import localeData from "dayjs/plugin/localeData";
+import weekday from "dayjs/plugin/weekday";
+import weekOfYear from "dayjs/plugin/weekOfYear";
+import weekYear from "dayjs/plugin/weekYear";
 import React from "react";
 import { Controller, } from "react-hook-form";
 import { DatePicker, InputNumber, Select } from "antd";
 import { useDt } from "../context/devs-dt-context";
+dayjs.extend(customParseFormat);
+dayjs.extend(advancedFormat);
+dayjs.extend(weekday);
+dayjs.extend(localeData);
+dayjs.extend(weekOfYear);
+dayjs.extend(weekYear);
+dayjs.locale("ko");
 function DevsDtCell(_a) {
     var _b, _c, _d, _e, _f, _g;
     var register = _a.register, control = _a.control, col = _a.col, mode = _a.mode, defaultValue = _a.defaultValue, error = _a.error, autoFocus = _a.autoFocus, row = _a.row, merge = _a.merge;

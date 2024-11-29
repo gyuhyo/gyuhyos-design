@@ -16,10 +16,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsx_runtime_1 = require("@emotion/react/jsx-runtime");
 var dayjs_1 = __importDefault(require("dayjs"));
+var customParseFormat_1 = __importDefault(require("dayjs/plugin/customParseFormat"));
+var advancedFormat_1 = __importDefault(require("dayjs/plugin/advancedFormat"));
+var localeData_1 = __importDefault(require("dayjs/plugin/localeData"));
+var weekday_1 = __importDefault(require("dayjs/plugin/weekday"));
+var weekOfYear_1 = __importDefault(require("dayjs/plugin/weekOfYear"));
+var weekYear_1 = __importDefault(require("dayjs/plugin/weekYear"));
 var react_1 = __importDefault(require("react"));
 var react_hook_form_1 = require("react-hook-form");
 var antd_1 = require("antd");
 var devs_dt_context_1 = require("../context/devs-dt-context");
+dayjs_1.default.extend(customParseFormat_1.default);
+dayjs_1.default.extend(advancedFormat_1.default);
+dayjs_1.default.extend(weekday_1.default);
+dayjs_1.default.extend(localeData_1.default);
+dayjs_1.default.extend(weekOfYear_1.default);
+dayjs_1.default.extend(weekYear_1.default);
+dayjs_1.default.locale("ko");
 function DevsDtCell(_a) {
     var _b, _c, _d, _e, _f, _g;
     var register = _a.register, control = _a.control, col = _a.col, mode = _a.mode, defaultValue = _a.defaultValue, error = _a.error, autoFocus = _a.autoFocus, row = _a.row, merge = _a.merge;
