@@ -139,6 +139,10 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
       newDataSource.splice(endIndex, 0, removed);
 
       setDataSource(newDataSource);
+
+      if (options?.rowOrderEnd !== undefined) {
+        options.rowOrderEnd(newDataSource);
+      }
     },
     [dataSource]
   );
@@ -175,7 +179,7 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
     <div ref={tbody} className="devs-dt-tbody-wrapper">
       <DragDropContext
         onDragEnd={setRowOrderChange}
-        onDragStart={(e) => console.log("start", e)}
+        onDragStart={(e) => {}}
         onDragUpdate={onDragUpdate}
       >
         <Droppable
@@ -205,17 +209,29 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
                             !options?.enabledRowOrder || row.mode === "c"
                           }
                         >
-                          {(provided2, snapshot) => (
-                            <DevsDtRow
-                              key={row.rowId}
-                              index={index}
-                              rowKey={row.rowId}
-                              data={row}
-                              lastNode={lastNode}
-                              dragProvided={provided2}
-                              dragSnapshot={snapshot}
-                            />
-                          )}
+                          {(provided2, snapshot) => {
+                            var style = provided2.draggableProps.style;
+                            if (style !== undefined) {
+                              var transform =
+                                provided2.draggableProps.style!.transform;
+                              if (transform) {
+                                var t = transform.split(",")[1];
+                                provided2.draggableProps.style!.transform =
+                                  "translate(0px," + t;
+                              }
+                            }
+                            return (
+                              <DevsDtRow
+                                key={row.rowId}
+                                index={index}
+                                rowKey={row.rowId}
+                                data={row}
+                                lastNode={lastNode}
+                                dragProvided={provided2}
+                                dragSnapshot={snapshot}
+                              />
+                            );
+                          }}
                         </Draggable>
                       );
                     })}

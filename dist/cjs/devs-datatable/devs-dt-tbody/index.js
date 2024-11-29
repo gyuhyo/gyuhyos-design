@@ -166,6 +166,9 @@ function DevsDtTBody(_a) {
         var _a = __read(newDataSource.splice(startIndex, 1), 1), removed = _a[0];
         newDataSource.splice(endIndex, 0, removed);
         setDataSource(newDataSource);
+        if ((options === null || options === void 0 ? void 0 : options.rowOrderEnd) !== undefined) {
+            options.rowOrderEnd(newDataSource);
+        }
     }, [dataSource]);
     var onDragUpdate = react_1.default.useCallback(function (e) {
         var _a;
@@ -179,11 +182,22 @@ function DevsDtTBody(_a) {
     if (dataSource === undefined || dataSource.length === 0) {
         return ((0, jsx_runtime_1.jsx)("div", __assign({ ref: tbody, className: "devs-dt-tbody-wrapper" }, { children: (0, jsx_runtime_1.jsx)("div", __assign({ className: "devs-dt-table devs-dt-table-fixed", style: { width: headerWidth, height: "100%" } }, { children: (0, jsx_runtime_1.jsx)("div", __assign({ className: "devs-dt-tbody", style: { position: "relative" } }, { children: (0, jsx_runtime_1.jsx)(empty_svg_1.default, {}) })) })) })));
     }
-    return ((0, jsx_runtime_1.jsx)("div", __assign({ ref: tbody, className: "devs-dt-tbody-wrapper" }, { children: (0, jsx_runtime_1.jsx)(dnd_1.DragDropContext, __assign({ onDragEnd: setRowOrderChange, onDragStart: function (e) { return console.log("start", e); }, onDragUpdate: onDragUpdate }, { children: (0, jsx_runtime_1.jsx)(dnd_1.Droppable, __assign({ droppableId: "droppable", mode: "standard", type: "", direction: "vertical", isDropDisabled: isDrop }, { children: function (provided) { return ((0, jsx_runtime_1.jsx)("table", __assign({ className: "devs-dt-table devs-dt-table-fixed", ref: provided.innerRef }, provided.droppableProps, { children: (0, jsx_runtime_1.jsxs)("tbody", __assign({ className: "devs-dt-tbody" }, { children: [mergedDataSource &&
+    return ((0, jsx_runtime_1.jsx)("div", __assign({ ref: tbody, className: "devs-dt-tbody-wrapper" }, { children: (0, jsx_runtime_1.jsx)(dnd_1.DragDropContext, __assign({ onDragEnd: setRowOrderChange, onDragStart: function (e) { }, onDragUpdate: onDragUpdate }, { children: (0, jsx_runtime_1.jsx)(dnd_1.Droppable, __assign({ droppableId: "droppable", mode: "standard", type: "", direction: "vertical", isDropDisabled: isDrop }, { children: function (provided) { return ((0, jsx_runtime_1.jsx)("table", __assign({ className: "devs-dt-table devs-dt-table-fixed", ref: provided.innerRef }, provided.droppableProps, { children: (0, jsx_runtime_1.jsxs)("tbody", __assign({ className: "devs-dt-tbody" }, { children: [mergedDataSource &&
                                 mergedDataSource
                                     .filter(function (f) { return f.rowId; })
                                     .map(function (row, index) {
-                                    return ((0, jsx_runtime_1.jsx)(dnd_1.Draggable, __assign({ draggableId: row.rowId, index: index, isDragDisabled: !(options === null || options === void 0 ? void 0 : options.enabledRowOrder) || row.mode === "c" }, { children: function (provided2, snapshot) { return ((0, jsx_runtime_1.jsx)(devs_dt_row_1.default, { index: index, rowKey: row.rowId, data: row, lastNode: lastNode, dragProvided: provided2, dragSnapshot: snapshot }, row.rowId)); } }), row.rowId));
+                                    return ((0, jsx_runtime_1.jsx)(dnd_1.Draggable, __assign({ draggableId: row.rowId, index: index, isDragDisabled: !(options === null || options === void 0 ? void 0 : options.enabledRowOrder) || row.mode === "c" }, { children: function (provided2, snapshot) {
+                                            var style = provided2.draggableProps.style;
+                                            if (style !== undefined) {
+                                                var transform = provided2.draggableProps.style.transform;
+                                                if (transform) {
+                                                    var t = transform.split(",")[1];
+                                                    provided2.draggableProps.style.transform =
+                                                        "translate(0px," + t;
+                                                }
+                                            }
+                                            return ((0, jsx_runtime_1.jsx)(devs_dt_row_1.default, { index: index, rowKey: row.rowId, data: row, lastNode: lastNode, dragProvided: provided2, dragSnapshot: snapshot }, row.rowId));
+                                        } }), row.rowId));
                                 }), provided.placeholder] })) }))); } })) })) })));
 }
 exports.default = react_1.default.memo(DevsDtTBody);

@@ -9,6 +9,7 @@ export interface IDataTableOptions {
   showRowNumber?: boolean;
   enabledRowCheck?: boolean;
   enabledRowOrder?: boolean;
+  rowOrderEnd?: (data: IDataSource[]) => void;
   readonly?: boolean;
   editMode?: "default" | "popup" | "slider";
 }

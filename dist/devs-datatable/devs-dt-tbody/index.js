@@ -161,6 +161,9 @@ function DevsDtTBody(_a) {
         var _a = __read(newDataSource.splice(startIndex, 1), 1), removed = _a[0];
         newDataSource.splice(endIndex, 0, removed);
         setDataSource(newDataSource);
+        if ((options === null || options === void 0 ? void 0 : options.rowOrderEnd) !== undefined) {
+            options.rowOrderEnd(newDataSource);
+        }
     }, [dataSource]);
     var onDragUpdate = React.useCallback(function (e) {
         var _a;
@@ -174,11 +177,22 @@ function DevsDtTBody(_a) {
     if (dataSource === undefined || dataSource.length === 0) {
         return (_jsx("div", __assign({ ref: tbody, className: "devs-dt-tbody-wrapper" }, { children: _jsx("div", __assign({ className: "devs-dt-table devs-dt-table-fixed", style: { width: headerWidth, height: "100%" } }, { children: _jsx("div", __assign({ className: "devs-dt-tbody", style: { position: "relative" } }, { children: _jsx(EmptySvg, {}) })) })) })));
     }
-    return (_jsx("div", __assign({ ref: tbody, className: "devs-dt-tbody-wrapper" }, { children: _jsx(DragDropContext, __assign({ onDragEnd: setRowOrderChange, onDragStart: function (e) { return console.log("start", e); }, onDragUpdate: onDragUpdate }, { children: _jsx(Droppable, __assign({ droppableId: "droppable", mode: "standard", type: "", direction: "vertical", isDropDisabled: isDrop }, { children: function (provided) { return (_jsx("table", __assign({ className: "devs-dt-table devs-dt-table-fixed", ref: provided.innerRef }, provided.droppableProps, { children: _jsxs("tbody", __assign({ className: "devs-dt-tbody" }, { children: [mergedDataSource &&
+    return (_jsx("div", __assign({ ref: tbody, className: "devs-dt-tbody-wrapper" }, { children: _jsx(DragDropContext, __assign({ onDragEnd: setRowOrderChange, onDragStart: function (e) { }, onDragUpdate: onDragUpdate }, { children: _jsx(Droppable, __assign({ droppableId: "droppable", mode: "standard", type: "", direction: "vertical", isDropDisabled: isDrop }, { children: function (provided) { return (_jsx("table", __assign({ className: "devs-dt-table devs-dt-table-fixed", ref: provided.innerRef }, provided.droppableProps, { children: _jsxs("tbody", __assign({ className: "devs-dt-tbody" }, { children: [mergedDataSource &&
                                 mergedDataSource
                                     .filter(function (f) { return f.rowId; })
                                     .map(function (row, index) {
-                                    return (_jsx(Draggable, __assign({ draggableId: row.rowId, index: index, isDragDisabled: !(options === null || options === void 0 ? void 0 : options.enabledRowOrder) || row.mode === "c" }, { children: function (provided2, snapshot) { return (_jsx(DevsDtRow, { index: index, rowKey: row.rowId, data: row, lastNode: lastNode, dragProvided: provided2, dragSnapshot: snapshot }, row.rowId)); } }), row.rowId));
+                                    return (_jsx(Draggable, __assign({ draggableId: row.rowId, index: index, isDragDisabled: !(options === null || options === void 0 ? void 0 : options.enabledRowOrder) || row.mode === "c" }, { children: function (provided2, snapshot) {
+                                            var style = provided2.draggableProps.style;
+                                            if (style !== undefined) {
+                                                var transform = provided2.draggableProps.style.transform;
+                                                if (transform) {
+                                                    var t = transform.split(",")[1];
+                                                    provided2.draggableProps.style.transform =
+                                                        "translate(0px," + t;
+                                                }
+                                            }
+                                            return (_jsx(DevsDtRow, { index: index, rowKey: row.rowId, data: row, lastNode: lastNode, dragProvided: provided2, dragSnapshot: snapshot }, row.rowId));
+                                        } }), row.rowId));
                                 }), provided.placeholder] })) }))); } })) })) })));
 }
 export default React.memo(DevsDtTBody);

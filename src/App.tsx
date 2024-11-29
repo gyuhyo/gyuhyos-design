@@ -230,6 +230,9 @@ function App() {
         options={{
           showRowNumber: true,
           enabledRowOrder: true,
+          rowOrderEnd: (data) => {
+            console.log(data);
+          },
         }}
         buttons={{
           isVisible: true,

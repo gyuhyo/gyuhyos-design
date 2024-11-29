@@ -138,6 +138,8 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
             justifyContent: "space-between",
             alignItems: "center",
             marginBottom: 7,
+            flexWrap: "wrap",
+            gap: "7px",
           }}
         >
           <p style={{ fontSize: 18, fontWeight: "bold" }}>

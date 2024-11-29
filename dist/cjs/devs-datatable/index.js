@@ -164,6 +164,8 @@ var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
                     justifyContent: "space-between",
                     alignItems: "center",
                     marginBottom: 7,
+                    flexWrap: "wrap",
+                    gap: "7px",
                 } }, { children: [(0, jsx_runtime_1.jsxs)("p", __assign({ style: { fontSize: 18, fontWeight: "bold" } }, { children: [props.title !== undefined && props.title !== "" && ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: ["\u27A4 ", props.title] })), (0, jsx_runtime_1.jsxs)("span", __assign({ style: {
                                     fontSize: 12,
                                     color: "#7a7a7a",
