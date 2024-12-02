@@ -35,48 +35,47 @@ var jsx_runtime_1 = require("@emotion/react/jsx-runtime");
 var react_1 = __importDefault(require("react"));
 var react_uuid_1 = __importDefault(require("react-uuid"));
 var DevsDtContext = react_1.default.createContext(undefined);
-var DevsDtProviderComponent = function (_a) {
-    var _b;
-    var children = _a.children, columns = _a.columns, setColumns = _a.setColumns, dataSource = _a.dataSource, setDataSource = _a.setDataSource, options = _a.options, formsRef = _a.formsRef, focusedRow = _a.focusedRow, setFocusedRow = _a.setFocusedRow, focusedCell = _a.focusedCell, setFocusedCell = _a.setFocusedCell;
-    var keyField = (_b = columns.find(function (col) { return col.key; })) === null || _b === void 0 ? void 0 : _b.field;
-    var _c = __read(react_1.default.useState(false), 2), isSetUUID = _c[0], setIsSetUUID = _c[1];
-    var _d = __read(react_1.default.useState({
+var DevsDtProviderComponent = function (props) {
+    var _a;
+    var keyField = (_a = props.columns.find(function (col) { return col.key; })) === null || _a === void 0 ? void 0 : _a.field;
+    var _b = __read(react_1.default.useState(false), 2), isSetUUID = _b[0], setIsSetUUID = _b[1];
+    var _c = __read(react_1.default.useState({
         field: null,
         type: "asc",
-    }), 2), sorter = _d[0], setSorter = _d[1];
+    }), 2), sorter = _c[0], setSorter = _c[1];
     react_1.default.useEffect(function () {
-        if (setColumns !== undefined) {
-            setColumns(function (prevCols) {
+        if (props.setColumns !== undefined) {
+            props.setColumns(function (prevCols) {
                 return prevCols.map(function (col) { return (__assign(__assign({}, col), { resizing: col.resizing === undefined ? true : col.resizing })); });
             });
         }
     }, []);
     react_1.default.useEffect(function () {
-        var validRowIds = new Set(dataSource.map(function (obj) { return obj.rowId; }));
+        var validRowIds = new Set(props.dataSource.map(function (obj) { return obj.rowId; }));
         // Step 2: targetObject에서 유효하지 않은 키 삭제
-        Object.keys(formsRef.current).forEach(function (key) {
+        Object.keys(props.formsRef.current).forEach(function (key) {
             if (!validRowIds.has(key)) {
-                delete formsRef.current[key];
+                delete props.formsRef.current[key];
             }
         });
-        setDataSource(function (prev) {
-            return dataSource.map(function (d, idx) {
+        props.setDataSource(function (prev) {
+            return props.dataSource.map(function (d, idx) {
                 return __assign({ originIndex: idx, rowId: (0, react_uuid_1.default)(), mode: "r", checked: false }, d);
             });
         });
-    }, [JSON.stringify(dataSource)]);
+    }, [JSON.stringify(props.dataSource)]);
     return ((0, jsx_runtime_1.jsx)(DevsDtContext.Provider, __assign({ value: {
-            columns: columns,
-            setColumns: setColumns,
-            dataSource: dataSource,
-            setDataSource: setDataSource,
+            columns: props.columns,
+            setColumns: props.setColumns,
+            dataSource: props.dataSource,
+            setDataSource: props.setDataSource,
             keyField: keyField,
-            options: options,
-            formsRef: formsRef,
-            focusedRow: focusedRow,
-            setFocusedRow: setFocusedRow,
-            focusedCell: focusedCell,
-            setFocusedCell: setFocusedCell,
+            options: props.options,
+            formsRef: props.formsRef,
+            focusedRow: props.focusedRow,
+            setFocusedRow: props.setFocusedRow,
+            focusedCell: props.focusedCell,
+            setFocusedCell: props.setFocusedCell,
             sorter: sorter,
             setSorter: setSorter,
         } }, { children: (0, jsx_runtime_1.jsx)("div", __assign({ style: {
@@ -84,7 +83,7 @@ var DevsDtProviderComponent = function (_a) {
                 display: "flex",
                 flexDirection: "column",
                 position: "relative",
-            } }, { children: children })) })));
+            } }, { children: props.children })) })));
 };
 exports.DevsDtProvider = react_1.default.memo(DevsDtProviderComponent);
 var useDt = function () {

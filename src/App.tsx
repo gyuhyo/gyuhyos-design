@@ -266,6 +266,7 @@ function App() {
         options={{
           showRowNumber: true,
           enabledRowOrder: true,
+          enabledRowCheck: true,
           rowOrderEnd: (data) => {
             console.log(data);
           },

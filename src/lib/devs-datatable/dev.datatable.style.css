@@ -176,6 +176,7 @@
   min-width: var(--width);
   line-height: 25px;
   height: 29.03px;
+  align-content: center;
 }
 
 .devs-dt-tbody .devs-dt-cell {
