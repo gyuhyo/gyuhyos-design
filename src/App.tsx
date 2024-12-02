@@ -9,7 +9,7 @@ import { DatePicker } from "antd";
 const dummyData = [
   {
     "1": "Group 1",
-    "2": "Option A",
+    "2": "Option A123123123123123",
     "3": "2024-11-01",
     "4": "Batch A",
     "5": "Category X",
@@ -25,7 +25,7 @@ const dummyData = [
   },
   {
     "1": "Group 1",
-    "2": "Option B",
+    "2": "Option B\naaaaaaa\naaaaaaaaaaaaaaaaaa\naaaaaaaaaaa\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\naaaaaaaaaaa\naaaaaaa",
     "3": "2024-11-02",
     "4": "Batch A",
     "5": "Category Z",
@@ -135,13 +135,13 @@ function App() {
             { value: "1", label: "1" },
             { value: "2", label: "2" },
           ],
-          updatable: false,
         },
         {
           field: "3",
           title: "3",
           width: 150,
           type: "date",
+          required: true,
         },
       ],
     },
@@ -174,10 +174,7 @@ function App() {
 
   const handleAddClick = () => {
     setDataSource((prev) => {
-      return [
-        { checked: true, mode: "c", one: "", two: "", three: "" },
-        ...prev,
-      ];
+      return [{ checked: true, mode: "c" }, ...prev];
     });
   };
 
@@ -185,6 +182,7 @@ function App() {
     if (!tb.current) return;
 
     const { valid, data } = await tb.current.api.onValidationCheck();
+    console.log(valid);
 
     if (!valid) {
       showMessage({
@@ -229,7 +227,7 @@ function App() {
         flexDirection: "column",
       }}
     >
-      <DevsDataTable
+      {/*<DevsDataTable
         ref={tb2}
         title="생산 계획 등록"
         columns={columns}
@@ -254,7 +252,7 @@ function App() {
           onAddClick: handleAddClick,
           onDeleteClick: handleDeleteClick,
         }}
-      />
+      />*/}
       <DevsDataTable
         ref={tb}
         title="생산 계획 등록"
@@ -262,6 +260,9 @@ function App() {
         setColumns={setColumns}
         dataSource={dataSource}
         setDataSource={setDataSource}
+        focusedRowChanged={(row) => {
+          console.log(row);
+        }}
         options={{
           showRowNumber: true,
           enabledRowOrder: true,
@@ -276,6 +277,7 @@ function App() {
             excel: true,
             print: true,
           },
+          onSearchClick: () => tb.current.api.focusedRowIndex(2),
           onSaveClick: handleSaveClick,
           onAddClick: handleAddClick,
           onDeleteClick: handleDeleteClick,

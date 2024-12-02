@@ -12,20 +12,10 @@ const DevsDtContext = React.createContext<IDataTableContextProps | undefined>(
   undefined
 );
 
-const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = ({
-  children,
-  columns,
-  setColumns,
-  dataSource,
-  setDataSource,
-  options,
-  formsRef,
-  focusedRow,
-  setFocusedRow,
-  focusedCell,
-  setFocusedCell,
-}) => {
-  const keyField: string | undefined = columns.find((col) => col.key)?.field;
+const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
+  const keyField: string | undefined = props.columns.find(
+    (col) => col.key
+  )?.field;
   const [isSetUUID, setIsSetUUID] = React.useState(false);
   const [sorter, setSorter] = React.useState<IDataTableSorterProps>({
     field: null,
@@ -33,8 +23,8 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = ({
   });
 
   React.useEffect(() => {
-    if (setColumns !== undefined) {
-      setColumns((prevCols) =>
+    if (props.setColumns !== undefined) {
+      props.setColumns((prevCols) =>
         prevCols.map((col) => ({
           ...col,
           resizing: col.resizing === undefined ? true : col.resizing,
@@ -44,17 +34,17 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = ({
   }, []);
 
   React.useEffect(() => {
-    const validRowIds = new Set(dataSource.map((obj) => obj.rowId));
+    const validRowIds = new Set(props.dataSource.map((obj) => obj.rowId));
 
     // Step 2: targetObject에서 유효하지 않은 키 삭제
-    Object.keys(formsRef.current).forEach((key) => {
+    Object.keys(props.formsRef.current).forEach((key) => {
       if (!validRowIds.has(key)) {
-        delete formsRef.current[key];
+        delete props.formsRef.current[key];
       }
     });
 
-    setDataSource((prev) => {
-      return dataSource.map((d, idx) => {
+    props.setDataSource((prev) => {
+      return props.dataSource.map((d, idx) => {
         return {
           originIndex: idx,
           rowId: uuid(),
@@ -64,22 +54,22 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = ({
         };
       });
     });
-  }, [JSON.stringify(dataSource)]);
+  }, [JSON.stringify(props.dataSource)]);
 
   return (
     <DevsDtContext.Provider
       value={{
-        columns,
-        setColumns,
-        dataSource,
-        setDataSource,
-        keyField,
-        options,
-        formsRef,
-        focusedRow,
-        setFocusedRow,
-        focusedCell,
-        setFocusedCell,
+        columns: props.columns,
+        setColumns: props.setColumns,
+        dataSource: props.dataSource,
+        setDataSource: props.setDataSource,
+        keyField: keyField,
+        options: props.options,
+        formsRef: props.formsRef,
+        focusedRow: props.focusedRow,
+        setFocusedRow: props.setFocusedRow,
+        focusedCell: props.focusedCell,
+        setFocusedCell: props.setFocusedCell,
         sorter,
         setSorter,
       }}
@@ -92,7 +82,7 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = ({
           position: "relative",
         }}
       >
-        {children}
+        {props.children}
       </div>
     </DevsDtContext.Provider>
   );

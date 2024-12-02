@@ -33,12 +33,14 @@
 }
 
 .devs-dt-table input,
+.devs-dt-table textarea,
 .devs-dt-table select,
 .devs-dt-table .ant-select,
 .devs-dt-table .ant-select-selector,
 .devs-dt-table .ant-picker,
 .devs-dt-table .ant-input-number {
   width: 100% !important;
+  height: 100% !important;
   background: transparent !important;
   outline: none !important;
   border: none !important;
@@ -168,12 +170,9 @@
   background: #fff;
   border-inline-end: 1px solid #c6c6c6;
   border-bottom: 1px solid #c6c6c6;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  word-break: keep-all;
   overflow: unset;
   width: var(--width);
-  max-width: var(--max-width);
+  max-width: var(--width);
   min-width: var(--width);
   line-height: 25px;
   height: 29.03px;
@@ -188,7 +187,7 @@
 }
 
 .devs-dt-focused-cell {
-  border: 1px dotted #000;
+  /*border-block: 1px dotted #000;*/
 }
 
 .devs-dt-cell:has(input:not([type="submit"], [type="checkbox"]):focus)::before {
@@ -216,6 +215,8 @@
   height: 100%;
   border: 1px solid red !important;
   align-content: center;
+  text-align: left;
+  padding-left: 3px;
 }
 
 .devs-dt-cell-padding-zero > .devs-dt-cell {
@@ -416,7 +417,7 @@
 }
 
 .devs-dt-th[data-col="true"][data-sorted="true"] .asc_ico,
-.devs-dt-th[data-col="true"][data-sorted="true"] .desc_ico {
+.devs-dt-th[data-col="true"][data-sorte="true"] .desc_ico {
   visibility: visible;
 }
 

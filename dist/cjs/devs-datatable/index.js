@@ -62,6 +62,15 @@ var __read = (this && this.__read) || function (o, n) {
     }
     return ar;
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -70,26 +79,25 @@ var jsx_runtime_1 = require("@emotion/react/jsx-runtime");
 var react_1 = __importDefault(require("react"));
 var devs_dt_context_1 = require("./context/devs-dt-context");
 require("./dev.datatable.style.css");
+var buttons_1 = __importDefault(require("./devs-dt-component/buttons"));
 var devs_dt_tbody_1 = __importDefault(require("./devs-dt-tbody"));
 var devs_dt_thead_1 = __importDefault(require("./devs-dt-thead"));
 var useInitDt_1 = require("./hooks/useInitDt");
-var buttons_1 = __importDefault(require("./devs-dt-component/buttons"));
 // DevsDataTable 컴포넌트 타입 설정 및 구현
 var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
-    var id = react_1.default.useMemo(function () { return "tb".concat(Math.random().toString(36).substring(2, 12)); }, []);
-    var _a = __read(react_1.default.useState(false), 2), isMerged = _a[0], setIsMerged = _a[1];
-    var _b = __read(react_1.default.useState(0), 2), headerWidth = _b[0], setHeaderWidth = _b[1];
-    var _c = __read(react_1.default.useState(false), 2), innerLoading = _c[0], setInnerLoading = _c[1];
-    var _d = __read(react_1.default.useState(null), 2), focusedCell = _d[0], setFocusedCell = _d[1];
-    var _e = __read(react_1.default.useState(null), 2), focusedRow = _e[0], setFocusedRow = _e[1];
+    var _a = __read(react_1.default.useState(0), 2), headerWidth = _a[0], setHeaderWidth = _a[1];
+    var _b = __read(react_1.default.useState(false), 2), innerLoading = _b[0], setInnerLoading = _b[1];
+    var _c = __read(react_1.default.useState(null), 2), focusedCell = _c[0], setFocusedCell = _c[1];
+    var _d = __read(react_1.default.useState(null), 2), focusedRow = _d[0], setFocusedRow = _d[1];
     var formsRef = react_1.default.useRef({});
+    var table = react_1.default.useRef(null);
     var thead = react_1.default.useRef(null);
     var tbody = react_1.default.useRef(null);
-    var _f = __read(react_1.default.useState(false), 2), DtForceUpdate = _f[1];
+    var _e = __read(react_1.default.useState(false), 2), DtForceUpdate = _e[1];
     var init = (0, useInitDt_1.useInitDt)({
+        table: table,
         tbody: tbody,
         thead: thead,
-        id: id,
     });
     react_1.default.useEffect(function () {
         if (!thead.current)
@@ -155,9 +163,34 @@ var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
                 });
             }); },
             getFocusedRow: focusedRow,
+            getFocusedRowIndex: focusedRow === null ? null : props.dataSource.indexOf(focusedRow),
+            getFocusedCell: { row: focusedRow, field: focusedCell },
             getCheckedRows: props.dataSource.filter(function (f) { return f.checked === true; }),
+            focusedRowIndex: function (index) {
+                if (props.dataSource.length > index) {
+                    setFocusedRow(props.dataSource[index]);
+                }
+            },
+            focusedRow: function (row) { return setFocusedRow(row); },
+            addRow: function (defaultValues) {
+                return props.setDataSource(function (prev) { return __spreadArray([
+                    __assign({ checked: true, mode: "c" }, defaultValues)
+                ], __read(prev), false); });
+            },
         },
-    }); }, [props.dataSource, props.options, focusedRow]);
+    }); }, [props.dataSource, props.options, focusedRow, focusedCell]);
+    react_1.default.useEffect(function () {
+        if (focusedRow !== null && props.focusedRowChanged !== undefined) {
+            props.focusedRowChanged(focusedRow);
+        }
+    }, [focusedRow]);
+    react_1.default.useEffect(function () {
+        if (focusedRow !== null &&
+            focusedCell !== null &&
+            props.focusedCellChanged !== undefined) {
+            props.focusedCellChanged({ row: focusedRow, field: focusedCell });
+        }
+    }, [focusedCell, focusedRow]);
     if (!init)
         return (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: "loading..." });
     return ((0, jsx_runtime_1.jsxs)(devs_dt_context_1.DevsDtProvider, __assign({ columns: props.columns, setColumns: props.setColumns, dataSource: props.dataSource, setDataSource: props.setDataSource, options: props.options, formsRef: formsRef, focusedRow: focusedRow, setFocusedRow: setFocusedRow, focusedCell: focusedCell, setFocusedCell: setFocusedCell }, { children: [(props.loading === true || innerLoading === true) && ((0, jsx_runtime_1.jsx)("div", __assign({ className: "loader-backdrop" }, { children: (0, jsx_runtime_1.jsxs)("div", __assign({ className: "loader-container" }, { children: [(0, jsx_runtime_1.jsx)("span", { className: "spinner" }), (0, jsx_runtime_1.jsx)("span", __assign({ style: { fontWeight: "bold" } }, { children: "\uB370\uC774\uD130 \uBD88\uB7EC\uC624\uB294 \uC911..." }))] })) }))), (0, jsx_runtime_1.jsxs)("div", __assign({ style: {
@@ -174,6 +207,6 @@ var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
                                     marginLeft: props.title !== undefined && props.title !== ""
                                         ? "7px"
                                         : "0px",
-                                } }, { children: ["(*) \uC785\uB825 \uAC00\uB2A5 (", (0, jsx_runtime_1.jsx)("span", __assign({ style: { color: "red" } }, { children: "*" })), ") \uD544\uC218\uC785\uB825"] }))] })), (0, jsx_runtime_1.jsx)(buttons_1.default, { buttons: props.buttons, options: props.options, setInnerLoading: setInnerLoading })] })), (0, jsx_runtime_1.jsxs)("div", __assign({ id: id, className: "dev-table-wrapper" }, { children: [(0, jsx_runtime_1.jsx)(devs_dt_thead_1.default, { thead: thead, setHeaderWidth: setHeaderWidth }), (0, jsx_runtime_1.jsx)(devs_dt_tbody_1.default, { tbody: tbody, headerWidth: headerWidth })] }))] })));
+                                } }, { children: ["(*) \uC785\uB825 \uAC00\uB2A5 (", (0, jsx_runtime_1.jsx)("span", __assign({ style: { color: "red" } }, { children: "*" })), ") \uD544\uC218\uC785\uB825"] }))] })), (0, jsx_runtime_1.jsx)(buttons_1.default, { buttons: props.buttons, options: props.options, setInnerLoading: setInnerLoading })] })), (0, jsx_runtime_1.jsxs)("div", __assign({ ref: table, className: "dev-table-wrapper" }, { children: [(0, jsx_runtime_1.jsx)(devs_dt_thead_1.default, { thead: thead, setHeaderWidth: setHeaderWidth }), (0, jsx_runtime_1.jsx)(devs_dt_tbody_1.default, { tbody: tbody, headerWidth: headerWidth })] }))] })));
 });
 exports.default = react_1.default.memo(DevsDataTable);

@@ -10,22 +10,6 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-var __read = (this && this.__read) || function (o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m) return o;
-    var i = m.call(o), r, ar = [], e;
-    try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-    }
-    catch (error) { e = { error: error }; }
-    finally {
-        try {
-            if (r && !r.done && (m = i["return"])) m.call(i);
-        }
-        finally { if (e) throw e.error; }
-    }
-    return ar;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -33,52 +17,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var jsx_runtime_1 = require("@emotion/react/jsx-runtime");
 var react_1 = __importDefault(require("react"));
 var button_1 = __importDefault(require("../../button"));
-var fa6_1 = require("react-icons/fa6");
-var md_1 = require("react-icons/md");
 var DevsDtButtons = function (props) {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
-    var _j = __read(react_1.default.useState(false), 2), visible = _j[0], setVisible = _j[1];
-    var buttonRef = react_1.default.useRef(null);
-    var popoverRef = react_1.default.useRef(null);
-    var _k = __read(react_1.default.useState({ top: 0, left: 0 }), 2), position = _k[0], setPosition = _k[1];
-    react_1.default.useEffect(function () {
-        var handleClickOutside = function (event) {
-            // buttonRef와 popoverRef 외부 클릭 감지
-            if (buttonRef.current &&
-                !buttonRef.current.contains(event.target) &&
-                popoverRef.current &&
-                !popoverRef.current.contains(event.target)) {
-                setVisible(false);
-            }
-        };
-        if (visible && buttonRef.current && popoverRef.current) {
-            var buttonRect = buttonRef.current.getBoundingClientRect();
-            var popover = popoverRef.current;
-            var top_1 = buttonRect.bottom + 10; // 버튼 아래
-            var left = buttonRect.right - popover.offsetWidth; // 버튼 우측 끝 기준
-            // 화면 경계 처리 (상하좌우)
-            if (top_1 + popover.offsetHeight > window.innerHeight) {
-                top_1 = buttonRect.top - popover.offsetHeight - 10; // Popover를 버튼 위로
-            }
-            if (left + popover.offsetWidth > window.innerWidth) {
-                left = window.innerWidth - popover.offsetWidth - 10; // Popover를 화면 안으로
-            }
-            if (left < 0) {
-                left = 10; // 최소 여백
-            }
-            setPosition({ top: top_1, left: left });
-            window.addEventListener("click", handleClickOutside);
-        }
-        return function () {
-            window.removeEventListener("click", handleClickOutside);
-        };
-    }, [visible]);
-    if (((_a = props.buttons) === null || _a === void 0 ? void 0 : _a.isVisible) === false) {
-        return null;
-    }
-    if (((_b = props.buttons) === null || _b === void 0 ? void 0 : _b.custom) !== undefined) {
-        return props.buttons.custom;
-    }
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y;
     var ButtonEventBeforeShowLoading = function (event) {
         props.setInnerLoading(true);
         var timer = setTimeout(function () {
@@ -96,27 +36,14 @@ var DevsDtButtons = function (props) {
             flexDirection: "row",
             justifyContent: "space-between",
             columnGap: 3,
-        } }, { children: [(props.buttons.isSearchVisible === undefined ||
-                props.buttons.isSearchVisible === true) && ((0, jsx_runtime_1.jsxs)(button_1.default, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, onClick: function () { var _a; return ButtonEventBeforeShowLoading((_a = props.buttons) === null || _a === void 0 ? void 0 : _a.onSearchClick); } }, { children: [(0, jsx_runtime_1.jsx)(md_1.MdSearch, {}), " \uC870\uD68C"] }))), (props.buttons.isAddVisible === undefined ||
-                props.buttons.isAddVisible === true) && ((0, jsx_runtime_1.jsxs)(button_1.default, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, onClick: (_c = props.buttons) === null || _c === void 0 ? void 0 : _c.onAddClick }, { children: [(0, jsx_runtime_1.jsx)(md_1.MdAdd, {}), " \uCD94\uAC00"] }))), (props.buttons.isSaveVisible === undefined ||
-                props.buttons.isSaveVisible === true) && ((0, jsx_runtime_1.jsxs)(button_1.default, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, onClick: (_d = props.buttons) === null || _d === void 0 ? void 0 : _d.onSaveClick }, { children: [(0, jsx_runtime_1.jsx)(md_1.MdSave, {}), " ", ((_e = props.options) === null || _e === void 0 ? void 0 : _e.enabledRowCheck) === true ? "선택 저장" : "저장"] }))), (props.buttons.isDeleteVisible === undefined ||
-                props.buttons.isDeleteVisible === true) && ((0, jsx_runtime_1.jsxs)(button_1.default, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, bgColor: "#df4873", color: "#fff", onClick: (_f = props.buttons) === null || _f === void 0 ? void 0 : _f.onDeleteClick }, { children: [(0, jsx_runtime_1.jsx)(md_1.MdDelete, {}), " \uC120\uD0DD \uC0AD\uC81C"] }))), (props.buttons.isCancelVisible === undefined ||
-                props.buttons.isCancelVisible === true) && ((0, jsx_runtime_1.jsxs)(button_1.default, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, onClick: (_g = props.buttons) === null || _g === void 0 ? void 0 : _g.onCancelClick }, { children: [(0, jsx_runtime_1.jsx)(md_1.MdCancel, {}), " \uCDE8\uC18C"] }))), ((_h = props.buttons.export) === null || _h === void 0 ? void 0 : _h.visible) === true && ((0, jsx_runtime_1.jsxs)(button_1.default, __assign({ btnref: buttonRef, border: true, compact: true, style: { padding: "5px 7px", position: "relative" }, onClick: function () { return setVisible(function (prev) { return !prev; }); } }, { children: [(0, jsx_runtime_1.jsx)(fa6_1.FaFileExport, {}), " Export", visible && ((0, jsx_runtime_1.jsxs)("div", __assign({ ref: popoverRef, style: {
-                            position: "fixed",
-                            top: position.top,
-                            left: position.left,
-                            padding: "10px",
-                            background: "white",
-                            border: "1px solid #ddd",
-                            borderRadius: "4px",
-                            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                            zIndex: 100,
-                        } }, { children: [(0, jsx_runtime_1.jsx)(button_1.default, __assign({ border: true, style: { width: "100%" }, onClick: function (e) {
-                                    e.stopPropagation();
-                                    setVisible(false);
-                                } }, { children: "Excel" })), (0, jsx_runtime_1.jsx)(button_1.default, __assign({ border: true, style: { width: "100%", marginTop: 7 }, onClick: function (e) {
-                                    e.stopPropagation();
-                                    setVisible(false);
-                                } }, { children: "Print" }))] })))] })))] })));
+        } }, { children: [((_a = props.buttons) === null || _a === void 0 ? void 0 : _a.custom) !== undefined && props.buttons.custom, ((_b = props.buttons) === null || _b === void 0 ? void 0 : _b.isVisible) === undefined ||
+                (((_c = props.buttons) === null || _c === void 0 ? void 0 : _c.isVisible) === true && ((0, jsx_runtime_1.jsxs)(react_1.default.Fragment, { children: [(props.buttons.isSearchVisible === undefined ||
+                            props.buttons.isSearchVisible === true) && ((0, jsx_runtime_1.jsxs)(button_1.default, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, onClick: function () { var _a; return ButtonEventBeforeShowLoading((_a = props.buttons) === null || _a === void 0 ? void 0 : _a.onSearchClick); } }, { children: [(0, jsx_runtime_1.jsxs)("svg", __assign({ stroke: "currentColor", fill: "currentColor", strokeWidth: "0", viewBox: "0 0 24 24", height: "1em", width: "1em", xmlns: "http://www.w3.org/2000/svg" }, { children: [(0, jsx_runtime_1.jsx)("path", { fill: "none", d: "M0 0h24v24H0z" }), (0, jsx_runtime_1.jsx)("path", { d: "M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" })] })), (0, jsx_runtime_1.jsx)("span", { children: (_e = (_d = props.buttons) === null || _d === void 0 ? void 0 : _d.searchText) !== null && _e !== void 0 ? _e : "조회" })] }))), (props.buttons.isAddVisible === undefined ||
+                            props.buttons.isAddVisible === true) && ((0, jsx_runtime_1.jsxs)(button_1.default, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, onClick: (_f = props.buttons) === null || _f === void 0 ? void 0 : _f.onAddClick }, { children: [(0, jsx_runtime_1.jsxs)("svg", __assign({ stroke: "currentColor", fill: "currentColor", strokeWidth: "0", viewBox: "0 0 24 24", height: "1em", width: "1em", xmlns: "http://www.w3.org/2000/svg" }, { children: [(0, jsx_runtime_1.jsx)("path", { fill: "none", d: "M0 0h24v24H0z" }), (0, jsx_runtime_1.jsx)("path", { d: "M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" })] })), (0, jsx_runtime_1.jsx)("span", { children: (_h = (_g = props.buttons) === null || _g === void 0 ? void 0 : _g.addText) !== null && _h !== void 0 ? _h : "추가" })] }))), (props.buttons.isSaveVisible === undefined ||
+                            props.buttons.isSaveVisible === true) && ((0, jsx_runtime_1.jsxs)(button_1.default, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, onClick: (_j = props.buttons) === null || _j === void 0 ? void 0 : _j.onSaveClick }, { children: [(0, jsx_runtime_1.jsxs)("svg", __assign({ stroke: "currentColor", fill: "currentColor", strokeWidth: "0", viewBox: "0 0 24 24", height: "1em", width: "1em", xmlns: "http://www.w3.org/2000/svg" }, { children: [(0, jsx_runtime_1.jsx)("path", { fill: "none", d: "M0 0h24v24H0z" }), (0, jsx_runtime_1.jsx)("path", { d: "M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z" })] })), (0, jsx_runtime_1.jsx)("span", { children: ((_l = (_k = props.buttons) === null || _k === void 0 ? void 0 : _k.saveText) !== null && _l !== void 0 ? _l : ((_m = props.options) === null || _m === void 0 ? void 0 : _m.enabledRowCheck) === true)
+                                        ? "선택 저장"
+                                        : "저장" })] }))), (props.buttons.isDeleteVisible === undefined ||
+                            props.buttons.isDeleteVisible === true) && ((0, jsx_runtime_1.jsxs)(button_1.default, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, bgColor: "#df4873", color: "#fff", onClick: (_o = props.buttons) === null || _o === void 0 ? void 0 : _o.onDeleteClick }, { children: [(0, jsx_runtime_1.jsxs)("svg", __assign({ stroke: "currentColor", fill: "currentColor", strokeWidth: "0", viewBox: "0 0 24 24", height: "1em", width: "1em", xmlns: "http://www.w3.org/2000/svg" }, { children: [(0, jsx_runtime_1.jsx)("path", { fill: "none", d: "M0 0h24v24H0z" }), (0, jsx_runtime_1.jsx)("path", { d: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" })] })), (0, jsx_runtime_1.jsx)("span", { children: (_q = (_p = props.buttons) === null || _p === void 0 ? void 0 : _p.deleteText) !== null && _q !== void 0 ? _q : "선택 삭제" })] }))), (props.buttons.isCancelVisible === undefined ||
+                            props.buttons.isCancelVisible === true) && ((0, jsx_runtime_1.jsxs)(button_1.default, __assign({ border: true, compact: true, style: { padding: "5px 7px" }, onClick: (_r = props.buttons) === null || _r === void 0 ? void 0 : _r.onCancelClick }, { children: [(0, jsx_runtime_1.jsxs)("svg", __assign({ stroke: "currentColor", fill: "currentColor", strokeWidth: "0", viewBox: "0 0 24 24", height: "1em", width: "1em", xmlns: "http://www.w3.org/2000/svg" }, { children: [(0, jsx_runtime_1.jsx)("path", { fill: "none", d: "M0 0h24v24H0z" }), (0, jsx_runtime_1.jsx)("path", { d: "M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z" })] })), (0, jsx_runtime_1.jsx)("span", { children: (_t = (_s = props.buttons) === null || _s === void 0 ? void 0 : _s.cancelText) !== null && _t !== void 0 ? _t : "취소" })] }))), ((_u = props.buttons.export) === null || _u === void 0 ? void 0 : _u.visible) === true && ((0, jsx_runtime_1.jsxs)(button_1.default, __assign({ border: true, compact: true, style: { padding: "5px 7px", position: "relative" }, onClick: (_v = props.buttons) === null || _v === void 0 ? void 0 : _v.onExportClick }, { children: [(0, jsx_runtime_1.jsx)("svg", __assign({ stroke: "currentColor", fill: "currentColor", strokeWidth: "0", viewBox: "0 0 576 512", height: "1em", width: "1em", xmlns: "http://www.w3.org/2000/svg" }, { children: (0, jsx_runtime_1.jsx)("path", { d: "M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V288H216c-13.3 0-24 10.7-24 24s10.7 24 24 24H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zM384 336V288H494.1l-39-39c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l80 80c9.4 9.4 9.4 24.6 0 33.9l-80 80c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l39-39H384zm0-208H256V0L384 128z" }) })), (0, jsx_runtime_1.jsx)("span", { children: (_y = (_x = (_w = props.buttons) === null || _w === void 0 ? void 0 : _w.export) === null || _x === void 0 ? void 0 : _x.exportText) !== null && _y !== void 0 ? _y : "Export" })] })))] })))] })));
 };
 exports.default = DevsDtButtons;

@@ -14,7 +14,7 @@ export interface IDataTableColumn {
     required?: boolean;
     sticky?: boolean;
     resizing?: boolean;
-    type?: string;
+    type?: "date" | "select" | "number" | "textarea";
     align?: string;
     merge?: boolean;
     mergeOptions?: ({ prev, curr, next, }: {

@@ -2,26 +2,40 @@ import React from "react";
 import { IDataSource, IDataTableProps, IFormsRef } from "./_types";
 import { DevsDtProvider } from "./context/devs-dt-context";
 import "./dev.datatable.style.css";
+import DevsDtButtons from "./devs-dt-component/buttons";
 import DevsDtTBody from "./devs-dt-tbody";
 import DevsDtTHead from "./devs-dt-thead";
 import { useInitDt } from "./hooks/useInitDt";
-import DevsDtButtons from "./devs-dt-component/buttons";
+
+/**
+ * @typedef {Object} DevsDataTableRef
+ * @property {() => Promise<{ valid: boolean, data: any }>} onValidationCheck
+ * @property {null | IDataSource} getFocusedRow
+ * @property {number | null} getFocusedRowIndex
+ * @property {null | { row: null | IDataSource; field: null | string }} getFocusedCell
+ * @property {IDataSource[]} getCheckedRows
+ * @property {(index: number) => void} focusedRowIndex
+ * @property {(row: IDataSource) => void} focusedRow
+ * @property {(defaultValues?: IDataSource) => void} addRow
+ */
 
 // 1. DevsDataTable Ref 타입 정의
 interface DevsDataTableRef {
   api: {
     onValidationCheck: () => Promise<{ valid: boolean; data?: any }>;
+    getFocusedRow: null | IDataSource;
+    getFocusedCell: null | { row: null | IDataSource; field: null | string };
+    getCheckedRows: IDataSource[];
+    addRow: (defaultValues?: IDataSource) => void;
+    focusedRow: (row: IDataSource) => void;
+    focusedRowIndex: (index: number) => void;
+    getFocusedRowIndex: null | number;
   };
 }
 
 // DevsDataTable 컴포넌트 타입 설정 및 구현
 const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
   (props, ref) => {
-    const id = React.useMemo(
-      () => `tb${Math.random().toString(36).substring(2, 12)}`,
-      []
-    );
-    const [isMerged, setIsMerged] = React.useState(false);
     const [headerWidth, setHeaderWidth] = React.useState<number>(0);
     const [innerLoading, setInnerLoading] = React.useState<boolean>(false);
     const [focusedCell, setFocusedCell] = React.useState<null | string>(null);
@@ -29,13 +43,14 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
       null
     );
     const formsRef = React.useRef<IFormsRef>({});
+    const table = React.useRef<HTMLDivElement>(null);
     const thead = React.useRef<HTMLDivElement>(null);
     const tbody = React.useRef<HTMLDivElement>(null);
     const [, DtForceUpdate] = React.useState(false);
     const init = useInitDt({
+      table: table,
       tbody: tbody,
       thead: thead,
-      id: id,
     });
 
     React.useEffect(() => {
@@ -69,7 +84,7 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
 
     React.useImperativeHandle(
       ref,
-      () => ({
+      (): DevsDataTableRef => ({
         api: {
           onValidationCheck: async () => {
             const forms = Object.values(formsRef.current);
@@ -106,11 +121,41 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
             }
           },
           getFocusedRow: focusedRow,
+          getFocusedRowIndex:
+            focusedRow === null ? null : props.dataSource.indexOf(focusedRow),
+          getFocusedCell: { row: focusedRow, field: focusedCell },
           getCheckedRows: props.dataSource.filter((f) => f.checked === true),
+          focusedRowIndex: (index: number) => {
+            if (props.dataSource.length > index) {
+              setFocusedRow(props.dataSource[index]);
+            }
+          },
+          focusedRow: (row: IDataSource) => setFocusedRow(row),
+          addRow: (defaultValues?: IDataSource) =>
+            props.setDataSource((prev) => [
+              { checked: true, mode: "c", ...defaultValues },
+              ...prev,
+            ]),
         },
       }),
-      [props.dataSource, props.options, focusedRow]
+      [props.dataSource, props.options, focusedRow, focusedCell]
     );
+
+    React.useEffect(() => {
+      if (focusedRow !== null && props.focusedRowChanged !== undefined) {
+        props.focusedRowChanged(focusedRow);
+      }
+    }, [focusedRow]);
+
+    React.useEffect(() => {
+      if (
+        focusedRow !== null &&
+        focusedCell !== null &&
+        props.focusedCellChanged !== undefined
+      ) {
+        props.focusedCellChanged({ row: focusedRow, field: focusedCell });
+      }
+    }, [focusedCell, focusedRow]);
 
     if (!init) return <>loading...</>;
 
@@ -169,7 +214,7 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
             setInnerLoading={setInnerLoading}
           />
         </div>
-        <div id={id} className="dev-table-wrapper">
+        <div ref={table} className="dev-table-wrapper">
           <DevsDtTHead thead={thead} setHeaderWidth={setHeaderWidth} />
           <DevsDtTBody tbody={tbody} headerWidth={headerWidth} />
         </div>

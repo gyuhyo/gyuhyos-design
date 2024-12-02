@@ -13,17 +13,23 @@ export interface IDataTableOptions {
 }
 export interface IDataTableExportButtonProps {
     visible: boolean;
+    exportText?: string;
     excel: boolean;
     print: boolean;
 }
 export interface IDataTableButtons {
-    isVisible: boolean;
+    isVisible?: boolean;
     custom?: JSX.Element;
     isSearchVisible?: boolean;
+    searchText?: string;
     isAddVisible?: boolean;
+    addText?: string;
     isSaveVisible?: boolean;
+    saveText?: string;
     isDeleteVisible?: boolean;
+    deleteText?: string;
     isCancelVisible?: boolean;
+    cancelText?: string;
     export?: IDataTableExportButtonProps;
     onSearchClick?: () => void;
     onAddClick?: () => void;
@@ -39,6 +45,11 @@ export interface IDataTableProps {
     setColumns: React.Dispatch<React.SetStateAction<IDataTableColumn[]>>;
     dataSource: IDataSource[];
     setDataSource: React.Dispatch<React.SetStateAction<IDataSource[]>>;
+    focusedRowChanged?: (row: IDataSource) => void;
+    focusedCellChanged?: ({ row, field, }: {
+        row: IDataSource;
+        field: string;
+    }) => void;
     options?: IDataTableOptions;
     buttons?: IDataTableButtons;
     loading?: boolean;

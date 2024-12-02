@@ -166,6 +166,19 @@ function DevsDtCell({
       );
     }
 
+    if (col.type === "textarea") {
+      return (
+        <textarea
+          {...register(col.field, {
+            required: col.required,
+          })}
+          defaultValue={defaultValue || null}
+          autoFocus={autoFocus}
+          {...col.inputOptions}
+        />
+      );
+    }
+
     if (col.editor !== undefined) {
       return (
         <Controller
@@ -188,7 +201,7 @@ function DevsDtCell({
     return (
       <input
         {...register(col.field, {
-          required: col.required ? "필수 입력사항 입니다." : false,
+          required: col.required,
         })}
         type="text"
         defaultValue={defaultValue || null}
@@ -196,7 +209,7 @@ function DevsDtCell({
         {...col.inputOptions}
       />
     );
-  }, [col]);
+  }, [col, autoFocus, defaultValue]);
 
   const Cell = React.useMemo(() => {
     if (
@@ -245,6 +258,7 @@ function DevsDtCell({
       data-editable={col.editable ?? true}
       data-updatable={col.updatable ?? true}
       data-required={col.required ?? false}
+      onClick={() => setFocusedCell(col.field)}
       style={
         {
           "--width": col.width ? `${col.width}px` : `100px`,
@@ -253,7 +267,19 @@ function DevsDtCell({
         } as React.CSSProperties
       }
     >
-      {Cell}
+      <div
+        style={{
+          overflow: "hidden",
+          whiteSpace: "pre",
+          textOverflow: "ellipsis",
+          wordBreak: "keep-all",
+          width: "100%",
+          height: "100%",
+          alignContent: "center",
+        }}
+      >
+        {Cell}
+      </div>
     </td>
   );
 }

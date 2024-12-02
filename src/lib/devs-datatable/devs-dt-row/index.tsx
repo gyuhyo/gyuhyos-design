@@ -148,10 +148,43 @@ function DevsDtRow({
     }
   };
 
+  const GetAutoFocus = React.useCallback(
+    (field: string) => {
+      let focusabled = false;
+
+      if (data.mode === "c") {
+        const editables = lastNode.filter(
+          (x) => x.editable === true || x.editable === undefined
+        );
+
+        if (editables.length === 0) {
+          return false;
+        } else {
+          return editables[0].field === field;
+        }
+      } else if (data.mode === "u") {
+        const updatables = lastNode.filter(
+          (x) => x.updatable === true || x.updatable === undefined
+        );
+
+        if (updatables.length === 0) {
+          return false;
+        } else {
+          return updatables[0].field === field;
+        }
+      } else {
+        focusabled = false;
+      }
+
+      return focusabled;
+    },
+    [lastNode, data]
+  );
+
   return (
     <tr
       className={`devs-dt-row${
-        focusedRow === data ? " devs-dt-focused-row" : ""
+        focusedRow?.rowId === data.rowId ? " devs-dt-focused-row" : ""
       }${data.checked === true ? " devs-dt-checked-row" : ""}`}
       onSubmit={handleSubmit(() => {})}
       onDoubleClick={onEditModeClick}
@@ -178,30 +211,6 @@ function DevsDtRow({
       )}
       {lastNode &&
         lastNode.map((col, index) => {
-          let autoFocus = false;
-
-          const editables = lastNode.filter(
-            (x) => x.editable === true || x.editable === undefined
-          );
-          const updatables = lastNode.filter(
-            (x) => x.updatable === true || x.updatable === undefined
-          );
-
-          const myEditableIndex = editables.findIndex(
-            (x) => x.field === col.field
-          );
-          const myUpdatableIndex = updatables.findIndex(
-            (x) => x.field === col.field
-          );
-
-          if (data.mode === "c") {
-            autoFocus = myEditableIndex === 0;
-          } else if (data.mode === "u") {
-            autoFocus = myUpdatableIndex === 0;
-          } else {
-            autoFocus = false;
-          }
-
           return (
             <DevsDtCell
               key={`${rowKey}-${col.field}`}
@@ -211,7 +220,7 @@ function DevsDtRow({
               mode={data.mode}
               defaultValue={data[col.field]}
               error={errors.hasOwnProperty(col.field)}
-              autoFocus={autoFocus}
+              autoFocus={GetAutoFocus(col.field)}
               row={data}
               merge={data._merge?.[col.field]}
             />

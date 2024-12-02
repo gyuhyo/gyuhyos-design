@@ -64,24 +64,35 @@ function DevsDtRow(_a) {
             });
         }
     };
-    return (_jsxs("tr", __assign({ className: "devs-dt-row".concat(focusedRow === data ? " devs-dt-focused-row" : "").concat(data.checked === true ? " devs-dt-checked-row" : ""), onSubmit: handleSubmit(function () { }), onDoubleClick: onEditModeClick, onClick: function () { return setFocusedRow(data); }, "data-edit-mode": data.mode, ref: dragProvided.innerRef }, dragProvided.draggableProps, { style: __assign({}, dragProvided.draggableProps.style) }, { children: [(options === null || options === void 0 ? void 0 : options.enabledRowOrder) && (_jsx(RowChangeOrderCell, { mode: data.mode, dragHandleProps: dragProvided.dragHandleProps })), (options === null || options === void 0 ? void 0 : options.showRowNumber) && _jsx(RowNumberCell, { index: index }), (options === null || options === void 0 ? void 0 : options.enabledRowCheck) && (_jsx(RowCheckCell, { data: data, checked: data.checked, setDataSource: setDataSource, setValue: setValue })), lastNode &&
+    var GetAutoFocus = React.useCallback(function (field) {
+        var focusabled = false;
+        if (data.mode === "c") {
+            var editables = lastNode.filter(function (x) { return x.editable === true || x.editable === undefined; });
+            if (editables.length === 0) {
+                return false;
+            }
+            else {
+                return editables[0].field === field;
+            }
+        }
+        else if (data.mode === "u") {
+            var updatables = lastNode.filter(function (x) { return x.updatable === true || x.updatable === undefined; });
+            if (updatables.length === 0) {
+                return false;
+            }
+            else {
+                return updatables[0].field === field;
+            }
+        }
+        else {
+            focusabled = false;
+        }
+        return focusabled;
+    }, [lastNode, data]);
+    return (_jsxs("tr", __assign({ className: "devs-dt-row".concat((focusedRow === null || focusedRow === void 0 ? void 0 : focusedRow.rowId) === data.rowId ? " devs-dt-focused-row" : "").concat(data.checked === true ? " devs-dt-checked-row" : ""), onSubmit: handleSubmit(function () { }), onDoubleClick: onEditModeClick, onClick: function () { return setFocusedRow(data); }, "data-edit-mode": data.mode, ref: dragProvided.innerRef }, dragProvided.draggableProps, { style: __assign({}, dragProvided.draggableProps.style) }, { children: [(options === null || options === void 0 ? void 0 : options.enabledRowOrder) && (_jsx(RowChangeOrderCell, { mode: data.mode, dragHandleProps: dragProvided.dragHandleProps })), (options === null || options === void 0 ? void 0 : options.showRowNumber) && _jsx(RowNumberCell, { index: index }), (options === null || options === void 0 ? void 0 : options.enabledRowCheck) && (_jsx(RowCheckCell, { data: data, checked: data.checked, setDataSource: setDataSource, setValue: setValue })), lastNode &&
                 lastNode.map(function (col, index) {
                     var _a;
-                    var autoFocus = false;
-                    var editables = lastNode.filter(function (x) { return x.editable === true || x.editable === undefined; });
-                    var updatables = lastNode.filter(function (x) { return x.updatable === true || x.updatable === undefined; });
-                    var myEditableIndex = editables.findIndex(function (x) { return x.field === col.field; });
-                    var myUpdatableIndex = updatables.findIndex(function (x) { return x.field === col.field; });
-                    if (data.mode === "c") {
-                        autoFocus = myEditableIndex === 0;
-                    }
-                    else if (data.mode === "u") {
-                        autoFocus = myUpdatableIndex === 0;
-                    }
-                    else {
-                        autoFocus = false;
-                    }
-                    return (_jsx(DevsDtCell, { register: register, control: control, col: col, mode: data.mode, defaultValue: data[col.field], error: errors.hasOwnProperty(col.field), autoFocus: autoFocus, row: data, merge: (_a = data._merge) === null || _a === void 0 ? void 0 : _a[col.field] }, "".concat(rowKey, "-").concat(col.field)));
+                    return (_jsx(DevsDtCell, { register: register, control: control, col: col, mode: data.mode, defaultValue: data[col.field], error: errors.hasOwnProperty(col.field), autoFocus: GetAutoFocus(col.field), row: data, merge: (_a = data._merge) === null || _a === void 0 ? void 0 : _a[col.field] }, "".concat(rowKey, "-").concat(col.field)));
                 })] })));
 }
 export default React.memo(DevsDtRow);

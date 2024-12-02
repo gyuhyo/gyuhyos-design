@@ -14,19 +14,19 @@ export interface IDataTableSorterProps {
 export interface IDataTableProviderProps extends IDataTableProps {
   children: React.ReactNode;
   formsRef: React.MutableRefObject<IFormsRef>;
-  focusedRow: null | IDataSource;
   setFocusedRow: React.Dispatch<React.SetStateAction<null | IDataSource>>;
-  focusedCell: null | string;
   setFocusedCell: React.Dispatch<React.SetStateAction<null | string>>;
+  focusedRow?: null | IDataSource;
+  focusedCell?: null | string;
 }
 
 export interface IDataTableContextProps extends IDataTableProps {
   keyField?: string;
   formsRef: React.MutableRefObject<IFormsRef>;
-  focusedRow: null | IDataSource;
   setFocusedRow: React.Dispatch<React.SetStateAction<null | IDataSource>>;
-  focusedCell: null | string;
   setFocusedCell: React.Dispatch<React.SetStateAction<null | string>>;
+  focusedRow?: null | IDataSource;
+  focusedCell?: null | string;
   sorter: IDataTableSorterProps;
   setSorter: React.Dispatch<React.SetStateAction<IDataTableSorterProps>>;
 }
