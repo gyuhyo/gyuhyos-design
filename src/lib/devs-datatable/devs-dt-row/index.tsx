@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SetStateAction } from "react";
 import {
   Control,
   FieldValues,
@@ -16,6 +16,7 @@ import {
   DraggableProvidedDragHandleProps,
   DraggableStateSnapshot,
 } from "@hello-pangea/dnd";
+import { useMessage } from "../../alert-message/context/message-context";
 
 type TDevsDtRow = {
   data: IDataSource;
@@ -50,7 +51,8 @@ const RowCheckCell: React.FC<{
   checked: boolean;
   setDataSource: React.Dispatch<React.SetStateAction<any[]>>;
   setValue: UseFormSetValue<FieldValues>;
-}> = ({ data, checked, setDataSource, setValue }) => {
+  multipleRowCheck?: boolean;
+}> = ({ data, checked, setDataSource, setValue, multipleRowCheck }) => {
   return (
     <td
       className="devs-dt-cell devs-dt-sticky-col"
@@ -61,11 +63,27 @@ const RowCheckCell: React.FC<{
         checked={checked || false}
         onChange={() => {
           setValue("checked", !checked);
-          setDataSource((prev) =>
-            prev.map((p) =>
+          setDataSource((prev) => {
+            if (checked === false && multipleRowCheck === false) {
+              return prev.map((p) =>
+                p.rowId === data.rowId
+                  ? { ...p, checked: true }
+                  : { ...p, checked: false }
+              );
+            }
+
+            if (checked === true && data.mode !== "c") {
+              return prev.map((p) =>
+                p.rowId === data.rowId
+                  ? { ...p, checked: false, mode: "r" }
+                  : { ...p }
+              );
+            }
+
+            return prev.map((p) =>
               p.rowId === data.rowId ? { ...p, checked: !checked } : { ...p }
-            )
-          );
+            );
+          });
         }}
       />
     </td>
@@ -100,6 +118,7 @@ function DevsDtRow({
   dragProvided,
   dragSnapshot,
 }: TDevsDtRow) {
+  const { showMessage } = useMessage();
   const {
     columns,
     keyField,
@@ -109,7 +128,9 @@ function DevsDtRow({
     focusedRow,
     setFocusedRow,
     focusedCell,
+    editCount,
   } = useDt();
+
   const form = useForm({
     defaultValues: data,
   });
@@ -138,13 +159,43 @@ function DevsDtRow({
     if (options?.readonly === true) return;
 
     if (data.mode === "r") {
-      setDataSource((prev) =>
-        prev.map((p) => {
-          return p.rowId === data.rowId
-            ? { ...p, mode: "u", checked: true }
-            : { ...p };
-        })
-      );
+      if (options?.multipleEdit === false) {
+        if (editCount > 0) {
+          showMessage({
+            title: "경고",
+            type: "warnning",
+            message:
+              "다른 데이터를 수정할 경우 기존 데이터 수정이 중단되며 복구할 수 없습니다.\n\n현재 데이터 수정을 중단 하시겠습니까?",
+            onOkClick: () =>
+              setDataSource((prev) => {
+                return prev
+                  .filter((x) => x.mode !== "c")
+                  .map((p) => {
+                    return p.rowId === data.rowId
+                      ? { ...p, mode: "u", checked: true }
+                      : { ...p, mode: "r", checked: false };
+                  });
+              }),
+            onCancelClick: () => {},
+          });
+        } else {
+          setDataSource((prev) =>
+            prev.map((p) => {
+              return p.rowId === data.rowId
+                ? { ...p, mode: "u", checked: true }
+                : { ...p };
+            })
+          );
+        }
+      } else {
+        setDataSource((prev) =>
+          prev.map((p) => {
+            return p.rowId === data.rowId
+              ? { ...p, mode: "u", checked: true }
+              : { ...p };
+          })
+        );
+      }
     }
   };
 
@@ -207,10 +258,11 @@ function DevsDtRow({
           checked={data.checked}
           setDataSource={setDataSource}
           setValue={setValue}
+          multipleRowCheck={options.multipleRowCheck}
         />
       )}
       {lastNode &&
-        lastNode.map((col, index) => {
+        lastNode.map((col, idx) => {
           return (
             <DevsDtCell
               key={`${rowKey}-${col.field}`}
@@ -222,7 +274,9 @@ function DevsDtRow({
               error={errors.hasOwnProperty(col.field)}
               autoFocus={GetAutoFocus(col.field)}
               row={data}
+              setValue={setValue}
               merge={data._merge?.[col.field]}
+              rowIndex={index}
             />
           );
         })}

@@ -24,12 +24,12 @@ import { jsxs as _jsxs } from "@emotion/react/jsx-runtime";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 var Button = function (props) {
-    var children = props.children, _a = props.compact, compact = _a === void 0 ? false : _a, _b = props.rounded, rounded = _b === void 0 ? true : _b, _c = props.border, border = _c === void 0 ? false : _c, _d = props.bgColor, bgColor = _d === void 0 ? "#dadada" : _d, _e = props.color, color = _e === void 0 ? "#000" : _e, anotherProps = __rest(props, ["children", "compact", "rounded", "border", "bgColor", "color"]);
+    var children = props.children, _a = props.compact, compact = _a === void 0 ? false : _a, _b = props.rounded, rounded = _b === void 0 ? true : _b, _c = props.border, border = _c === void 0 ? false : _c, _d = props.borderColor, borderColor = _d === void 0 ? "#cecece" : _d, _e = props.bgColor, bgColor = _e === void 0 ? "#eeeeee" : _e, _f = props.color, color = _f === void 0 ? "#000" : _f, anotherProps = __rest(props, ["children", "compact", "rounded", "border", "borderColor", "bgColor", "color"]);
     return (_jsxs("button", __assign({ ref: props.btnref, css: css({
             padding: compact ? "0px 7px" : "5px 20px",
-            borderRadius: rounded ? 2 : 0,
-            background: "linear-gradient(180deg, ".concat(bgColor, "95 0%, ").concat(bgColor, " 50%, ").concat(bgColor, "95 100%)"),
-            border: border ? "1px solid #ddd" : undefined,
+            borderRadius: rounded ? 5 : 0,
+            background: "linear-gradient(180deg, ".concat(bgColor, "90 0%, ").concat(bgColor, " 50%, ").concat(bgColor, "90 100%)"),
+            border: border ? "1px solid ".concat(borderColor) : undefined,
             color: color,
             "&:hover": {
                 cursor: "pointer",

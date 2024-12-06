@@ -33,17 +33,19 @@ export const useInitDt = ({
 
   const hiddenLastColumnBorder = () => {
     const lastColumn = table.current!.querySelectorAll(
-      ".devs-dt-thead .devs-dt-th:nth-last-child(3), .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child"
+      ".devs-dt-thead .devs-dt-row:first-child .devs-dt-th:nth-last-child(3), .devs-dt-thead .devs-dt-row:not(:first-child) .devs-dt-th:last-child, .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child"
     );
 
     for (let el of lastColumn) {
+      if (el.classList.contains("devs-dt-no-hidden-border")) continue;
+
       el.classList.add("devs-dt-hidden-border");
     }
   };
 
   const visibleLastColumnBorder = () => {
     const lastColumn = table.current!.querySelectorAll(
-      ".devs-dt-thead .devs-dt-th:nth-last-child(3), .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child"
+      ".devs-dt-thead .devs-dt-row:first-child .devs-dt-th:nth-last-child(3), .devs-dt-thead .devs-dt-row:not(:first-child) .devs-dt-th:last-child, .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child"
     );
 
     for (let el of lastColumn) {
@@ -97,10 +99,12 @@ export const useInitDt = ({
       setLeft += theadStickyCols[cell].getBoundingClientRect()?.width;
     }
 
-    // last sticky col shadow 설정
-    theadStickyCols[theadStickyCols.length - 1].classList.add(
-      "devs-dt-sticky-col-last"
-    );
+    if (theadStickyCols.length > 0) {
+      // last sticky col shadow 설정
+      theadStickyCols[theadStickyCols.length - 1].classList.add(
+        "devs-dt-sticky-col-last"
+      );
+    }
 
     const tbodyRows = tbody.current.querySelectorAll(".devs-dt-row");
 

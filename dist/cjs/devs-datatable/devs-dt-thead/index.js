@@ -150,18 +150,26 @@ function DevsDtTHead(_a) {
         document.addEventListener("mousemove", handleMouseMove);
         document.addEventListener("mouseup", handleMouseUp);
     }, [handleMouseMove, handleMouseUp]);
-    function generateTableRows(columns) {
-        var maxDepth = Math.max.apply(Math, __spreadArray([], __read(columns.map(calculateDepth)), false));
+    function generateTableRows(allColumns) {
+        var maxDepth = Math.max.apply(Math, __spreadArray([], __read(allColumns.map(calculateDepth)), false));
         var rows = Array.from({ length: maxDepth }, function () { return []; });
+        var idx = 0;
         function fillRows(columns, depth) {
-            columns.forEach(function (column) {
-                var _a;
+            columns.forEach(function (column, index) {
+                var _a, _b;
                 var rowspan = column.children ? 1 : maxDepth - depth;
                 var colspan = calculateWidth(column);
                 var defaultClassString = "devs-dt-cell devs-dt-th";
                 var classString = column.sticky
                     ? "".concat(defaultClassString, " devs-dt-sticky-col")
                     : defaultClassString;
+                if (depth > 1 &&
+                    columns.length - 1 === index &&
+                    allColumns.length > idx) {
+                    classString = classString + " devs-dt-no-hidden-border";
+                }
+                if (depth === 1)
+                    idx++;
                 rows[depth].push((0, jsx_runtime_1.jsxs)("th", __assign({ className: classString, rowSpan: rowspan, colSpan: colspan, "data-col": true, "data-sortable": column.children === undefined &&
                         (column.sortable === undefined || column.sortable === true), "data-sorted": sorter.field === column.field, onClick: function (e) {
                         if (column.children === undefined &&
@@ -180,15 +188,12 @@ function DevsDtTHead(_a) {
                                     : "asc",
                             }); });
                         }
-                    }, style: {
-                        "--width": "".concat(column.children !== undefined
+                    }, style: __assign({ "--width": "".concat(column.children !== undefined
                             ? "auto"
-                            : ((_a = column.width) !== null && _a !== void 0 ? _a : 100) + "px"),
-                        cursor: column.children === undefined &&
+                            : ((_a = column.width) !== null && _a !== void 0 ? _a : 100) + "px"), cursor: column.children === undefined &&
                             (column.sortable === undefined || column.sortable === true)
                             ? "pointer"
-                            : "inherit",
-                    } }, { children: [(0, jsx_runtime_1.jsxs)("div", __assign({ style: {
+                            : "inherit" }, (_b = column.style) === null || _b === void 0 ? void 0 : _b.call(column, { target: "tbody", value: null, row: null })) }, { children: [(0, jsx_runtime_1.jsxs)("div", __assign({ style: {
                                 width: "100%",
                                 display: "flex",
                                 flexDirection: "row",
@@ -206,7 +211,7 @@ function DevsDtTHead(_a) {
                 }
             });
         }
-        fillRows(columns, 0);
+        fillRows(allColumns, 0);
         return rows;
     }
     return ((0, jsx_runtime_1.jsx)("div", __assign({ ref: thead, className: "devs-dt-thead-wrapper" }, { children: (0, jsx_runtime_1.jsx)("table", __assign({ ref: theadRef, className: "devs-dt-table devs-dt-table-fixed" }, { children: (0, jsx_runtime_1.jsx)("thead", __assign({ className: "devs-dt-thead" }, { children: rows.map(function (row, rowIndex) {

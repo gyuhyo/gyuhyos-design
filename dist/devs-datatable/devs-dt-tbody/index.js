@@ -74,66 +74,63 @@ function DevsDtTBody(_a) {
     };
     var lastNode = React.useMemo(function () { return getLastNodes(columns); }, [columns]);
     var sortDataSource = React.useCallback(function (d) {
-        var _a;
+        var findSorterField = columns.find(function (col) { return col.field === sorter.field; });
         var newRows = d.filter(function (x) { return x.mode === "c"; });
+        var nullRows = (findSorterField === null || findSorterField === void 0 ? void 0 : findSorterField.isNotNullSort) === true
+            ? d.filter(function (x) {
+                return x[sorter.field] === "" ||
+                    x[sorter.field] === null ||
+                    x[sorter.field] === undefined;
+            })
+            : [];
         if (sorter.field === null || sorter.field === undefined) {
             return __spreadArray(__spreadArray([], __read(newRows), false), __read(d
                 .filter(function (x) { return x.mode !== "c"; })
                 .sort(function (a, b) { return a.originIndex - b.originIndex; })), false);
         }
-        var isNumberField = ((_a = columns.find(function (x) { return x.field === sorter.field; })) === null || _a === void 0 ? void 0 : _a.type) === "number";
         var sortedDataSource = d
-            .filter(function (x) { return x.mode !== "c"; })
-            .sort(function (a, b) {
-            if (!isNumberField) {
-                if (sorter.type === "desc") {
-                    if (a[sorter.field] === b[sorter.field]) {
-                        return a.originIndex - b.originIndex;
-                    }
-                    else {
-                        if (a[sorter.field] > b[sorter.field]) {
-                            return -1;
-                        }
-                        else {
-                            return 1;
-                        }
-                    }
-                }
-                if (a[sorter.field] === b[sorter.field]) {
-                    return a.originIndex - b.originIndex;
-                }
-                else {
-                    if (a[sorter.field] > b[sorter.field]) {
-                        return 1;
-                    }
-                    else {
-                        return -1;
-                    }
-                }
+            .filter(function (x) {
+            if ((findSorterField === null || findSorterField === void 0 ? void 0 : findSorterField.isNotNullSort) === true) {
+                return (x.mode !== "c" &&
+                    x[sorter.field] !== "" &&
+                    x[sorter.field] !== null &&
+                    x[sorter.field] !== undefined);
             }
+            return x.mode !== "c";
+        })
+            .sort(function (a, b) {
             if (sorter.type === "desc") {
                 if (a[sorter.field] === b[sorter.field]) {
                     return a.originIndex - b.originIndex;
                 }
                 else {
-                    return b[sorter.field] - a[sorter.field];
+                    if (a[sorter.field] > b[sorter.field]) {
+                        return -1;
+                    }
+                    else {
+                        return 1;
+                    }
                 }
             }
             if (a[sorter.field] === b[sorter.field]) {
                 return a.originIndex - b.originIndex;
             }
             else {
-                return a[sorter.field] - b[sorter.field];
+                if (a[sorter.field] > b[sorter.field]) {
+                    return 1;
+                }
+                else {
+                    return -1;
+                }
             }
         });
-        return __spreadArray(__spreadArray([], __read(newRows), false), __read(sortedDataSource), false);
+        return __spreadArray(__spreadArray(__spreadArray([], __read(newRows), false), __read(sortedDataSource), false), __read(nullRows), false);
     }, [sorter, columns]);
     var mergedDataSource = React.useMemo(function () {
         var e_1, _a, e_2, _b, _c, _d, _e;
         if (dataSource.length === 0 ||
             (dataSource.length > 0 && !dataSource[0].hasOwnProperty("mode")))
             return;
-        var end = false;
         var copyDataSource = JSON.parse(JSON.stringify(sortDataSource(dataSource)));
         try {
             for (var copyDataSource_1 = __values(copyDataSource), copyDataSource_1_1 = copyDataSource_1.next(); !copyDataSource_1_1.done; copyDataSource_1_1 = copyDataSource_1.next()) {
@@ -152,13 +149,15 @@ function DevsDtTBody(_a) {
         try {
             for (var isMergedField_1 = __values(isMergedField), isMergedField_1_1 = isMergedField_1.next(); !isMergedField_1_1.done; isMergedField_1_1 = isMergedField_1.next()) {
                 var d = isMergedField_1_1.value;
+                var end = false;
                 for (var i = 0; i < copyDataSource.length - 1; i++) {
                     copyDataSource[i]["_merge"] = __assign(__assign({}, copyDataSource[i]["_merge"]), (_c = {}, _c[d.field] = {
                         rowSpan: 1,
                         hidden: false,
                     }, _c));
-                    if (copyDataSource[i].mode === "c" || copyDataSource[i].mode === "u")
+                    if (copyDataSource[i].mode === "c" || copyDataSource[i].mode === "u") {
                         continue;
+                    }
                     for (var j = i + 1; j < copyDataSource.length; j++) {
                         if (copyDataSource[i][d.field] !== copyDataSource[j][d.field] ||
                             copyDataSource[j]["mode"] === "c" ||

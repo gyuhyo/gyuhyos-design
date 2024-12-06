@@ -1,4 +1,6 @@
+import { SetStateAction } from "react";
 import { IDataSource } from "./component";
+import { UseFormSetValue } from "react-hook-form";
 
 export interface IDataTableSelectorOptionsProps {
   value: string;
@@ -29,27 +31,47 @@ export interface IDataTableColumn {
   }) => boolean;
   render?: ({
     value,
-    rowData,
+    row,
     index,
   }: {
     value?: any;
-    rowData: IDataSource;
+    row: IDataSource;
     index?: number;
   }) => any;
   editor?: ({
     value,
-    rowData,
+    row,
     index,
     onChange,
   }: {
     value?: any;
-    rowData: IDataSource;
+    row: IDataSource;
     index?: number;
     onChange: (...event: any[]) => void;
   }) => any;
+  onChange?: ({
+    value,
+    row,
+    index,
+    setDataSource,
+  }: {
+    value: any;
+    row: IDataSource;
+    index: number;
+    setDataSource: React.Dispatch<SetStateAction<IDataSource[]>>;
+    setValue: UseFormSetValue<IDataSource>;
+  }) => void;
   inputOptions?: any;
-  style?: React.CSSProperties;
+  style?: ({
+    value,
+    row,
+  }: {
+    target: string;
+    value?: any;
+    row?: IDataSource | null;
+  }) => React.CSSProperties;
   sortable?: boolean;
+  isNotNullSort?: boolean;
   editable?: boolean;
   updatable?: boolean;
   options?: IDataTableSelectorOptionsProps[];

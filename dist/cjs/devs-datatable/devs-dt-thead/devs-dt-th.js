@@ -53,10 +53,7 @@ var DevsDtTh = function (_a) {
     var classString = col.sticky
         ? "".concat(defaultClassString, " devs-dt-sticky-col")
         : defaultClassString;
-    return ((0, jsx_runtime_1.jsxs)("th", __assign({ className: classString, style: {
-            position: "relative",
-            "--width": "".concat((_b = col.width) !== null && _b !== void 0 ? _b : 100, "px"),
-        } }, { children: [col.title, (0, jsx_runtime_1.jsx)("div", { style: {
+    return ((0, jsx_runtime_1.jsxs)("th", __assign({ className: classString, style: __assign({ position: "relative", "--width": "".concat((_b = col.width) !== null && _b !== void 0 ? _b : 100, "px") }, col.style) }, { children: [col.title, (0, jsx_runtime_1.jsx)("div", { style: {
                     position: "absolute",
                     top: 0,
                     right: 0,

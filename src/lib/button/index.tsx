@@ -15,6 +15,7 @@ export interface ButtonProps
   compact?: boolean;
   rounded?: boolean;
   border?: boolean;
+  borderColor?: string;
   icon?: JSX.Element;
 }
 
@@ -24,7 +25,8 @@ const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
     compact = false,
     rounded = true,
     border = false,
-    bgColor = "#dadada",
+    borderColor = "#cecece",
+    bgColor = "#eeeeee",
     color = "#000",
     ...anotherProps
   } = props;
@@ -33,9 +35,9 @@ const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
       ref={props.btnref}
       css={css({
         padding: compact ? "0px 7px" : "5px 20px",
-        borderRadius: rounded ? 2 : 0,
-        background: `linear-gradient(180deg, ${bgColor}95 0%, ${bgColor} 50%, ${bgColor}95 100%)`,
-        border: border ? "1px solid #ddd" : undefined,
+        borderRadius: rounded ? 5 : 0,
+        background: `linear-gradient(180deg, ${bgColor}90 0%, ${bgColor} 50%, ${bgColor}90 100%)`,
+        border: border ? `1px solid ${borderColor}` : undefined,
         color: color,
         "&:hover": {
           cursor: "pointer",

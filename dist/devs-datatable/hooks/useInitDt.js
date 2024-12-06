@@ -52,10 +52,12 @@ export var useInitDt = function (_a) {
     };
     var hiddenLastColumnBorder = function () {
         var e_4, _a;
-        var lastColumn = table.current.querySelectorAll(".devs-dt-thead .devs-dt-th:nth-last-child(3), .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child");
+        var lastColumn = table.current.querySelectorAll(".devs-dt-thead .devs-dt-row:first-child .devs-dt-th:nth-last-child(3), .devs-dt-thead .devs-dt-row:not(:first-child) .devs-dt-th:last-child, .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child");
         try {
             for (var lastColumn_1 = __values(lastColumn), lastColumn_1_1 = lastColumn_1.next(); !lastColumn_1_1.done; lastColumn_1_1 = lastColumn_1.next()) {
                 var el = lastColumn_1_1.value;
+                if (el.classList.contains("devs-dt-no-hidden-border"))
+                    continue;
                 el.classList.add("devs-dt-hidden-border");
             }
         }
@@ -69,7 +71,7 @@ export var useInitDt = function (_a) {
     };
     var visibleLastColumnBorder = function () {
         var e_5, _a;
-        var lastColumn = table.current.querySelectorAll(".devs-dt-thead .devs-dt-th:nth-last-child(3), .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child");
+        var lastColumn = table.current.querySelectorAll(".devs-dt-thead .devs-dt-row:first-child .devs-dt-th:nth-last-child(3), .devs-dt-thead .devs-dt-row:not(:first-child) .devs-dt-th:last-child, .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child");
         try {
             for (var lastColumn_2 = __values(lastColumn), lastColumn_2_1 = lastColumn_2.next(); !lastColumn_2_1.done; lastColumn_2_1 = lastColumn_2.next()) {
                 var el = lastColumn_2_1.value;
@@ -122,8 +124,10 @@ export var useInitDt = function (_a) {
             theadStickyCols[cell].style.left = "".concat(setLeft, "px");
             setLeft += (_c = theadStickyCols[cell].getBoundingClientRect()) === null || _c === void 0 ? void 0 : _c.width;
         }
-        // last sticky col shadow 설정
-        theadStickyCols[theadStickyCols.length - 1].classList.add("devs-dt-sticky-col-last");
+        if (theadStickyCols.length > 0) {
+            // last sticky col shadow 설정
+            theadStickyCols[theadStickyCols.length - 1].classList.add("devs-dt-sticky-col-last");
+        }
         var tbodyRows = tbody.current.querySelectorAll(".devs-dt-row");
         try {
             // body sticky col 설정

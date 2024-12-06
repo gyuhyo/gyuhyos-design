@@ -7,6 +7,7 @@ import {
 } from "../_types";
 import { useForm } from "react-hook-form";
 import uuid from "react-uuid";
+import { MessageProvider } from "../../alert-message/context/message-context";
 
 const DevsDtContext = React.createContext<IDataTableContextProps | undefined>(
   undefined
@@ -56,6 +57,11 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
     });
   }, [JSON.stringify(props.dataSource)]);
 
+  const editCount = React.useMemo(() => {
+    return props.dataSource.filter((x) => x.mode === "u" || x.mode === "c")
+      .length;
+  }, [JSON.stringify(props.dataSource)]);
+
   return (
     <DevsDtContext.Provider
       value={{
@@ -70,20 +76,23 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
         setFocusedRow: props.setFocusedRow,
         focusedCell: props.focusedCell,
         setFocusedCell: props.setFocusedCell,
+        editCount: editCount,
         sorter,
         setSorter,
       }}
     >
-      <div
-        style={{
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          position: "relative",
-        }}
-      >
-        {props.children}
-      </div>
+      <MessageProvider>
+        <div
+          style={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            position: "relative",
+          }}
+        >
+          {props.children}
+        </div>
+      </MessageProvider>
     </DevsDtContext.Provider>
   );
 };

@@ -44,7 +44,19 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
 
   const sortDataSource = React.useCallback(
     (d: IDataSource[]): IDataSource[] => {
+      const findSorterField = columns.find(
+        (col) => col.field === sorter.field!
+      );
       const newRows = d.filter((x) => x.mode === "c");
+      const nullRows =
+        findSorterField?.isNotNullSort === true
+          ? d.filter(
+              (x) =>
+                x[sorter.field!] === "" ||
+                x[sorter.field!] === null ||
+                x[sorter.field!] === undefined
+            )
+          : [];
 
       if (sorter.field === null || sorter.field === undefined) {
         return [
@@ -57,52 +69,44 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
         ];
       }
 
-      const isNumberField =
-        columns.find((x) => x.field === sorter.field)?.type === "number";
-
       const sortedDataSource = d
-        .filter((x) => x.mode !== "c")
-        .sort((a: IDataSource, b: IDataSource) => {
-          if (!isNumberField) {
-            if (sorter.type === "desc") {
-              if (a[sorter.field!] === b[sorter.field!]) {
-                return a.originIndex - b.originIndex;
-              } else {
-                if (a[sorter.field!] > b[sorter.field!]) {
-                  return -1;
-                } else {
-                  return 1;
-                }
-              }
-            }
-
-            if (a[sorter.field!] === b[sorter.field!]) {
-              return a.originIndex - b.originIndex;
-            } else {
-              if (a[sorter.field!] > b[sorter.field!]) {
-                return 1;
-              } else {
-                return -1;
-              }
-            }
+        .filter((x) => {
+          if (findSorterField?.isNotNullSort === true) {
+            return (
+              x.mode !== "c" &&
+              x[sorter.field!] !== "" &&
+              x[sorter.field!] !== null &&
+              x[sorter.field!] !== undefined
+            );
           }
 
+          return x.mode !== "c";
+        })
+        .sort((a: IDataSource, b: IDataSource) => {
           if (sorter.type === "desc") {
             if (a[sorter.field!] === b[sorter.field!]) {
               return a.originIndex - b.originIndex;
             } else {
-              return b[sorter.field!] - a[sorter.field!];
+              if (a[sorter.field!] > b[sorter.field!]) {
+                return -1;
+              } else {
+                return 1;
+              }
             }
           }
 
           if (a[sorter.field!] === b[sorter.field!]) {
             return a.originIndex - b.originIndex;
           } else {
-            return a[sorter.field!] - b[sorter.field!];
+            if (a[sorter.field!] > b[sorter.field!]) {
+              return 1;
+            } else {
+              return -1;
+            }
           }
         });
 
-      return [...newRows, ...sortedDataSource];
+      return [...newRows, ...sortedDataSource, ...nullRows];
     },
     [sorter, columns]
   );
@@ -114,7 +118,6 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
     )
       return;
 
-    let end = false;
     const copyDataSource = JSON.parse(
       JSON.stringify(sortDataSource(dataSource))
     );
@@ -126,6 +129,8 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
     const isMergedField = lastNode.filter((x) => x.merge === true);
 
     for (let d of isMergedField) {
+      let end = false;
+
       for (let i = 0; i < copyDataSource.length - 1; i++) {
         copyDataSource[i]["_merge"] = {
           ...copyDataSource[i]["_merge"],
@@ -135,8 +140,9 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
           },
         };
 
-        if (copyDataSource[i].mode === "c" || copyDataSource[i].mode === "u")
+        if (copyDataSource[i].mode === "c" || copyDataSource[i].mode === "u") {
           continue;
+        }
 
         for (let j = i + 1; j < copyDataSource.length; j++) {
           if (
@@ -171,6 +177,7 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
               hidden: false,
             },
           };
+
           copyDataSource[j]["_merge"] = {
             ...copyDataSource[j]["_merge"],
             [d.field]: { rowSpan: 1, hidden: true },

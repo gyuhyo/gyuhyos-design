@@ -28,6 +28,7 @@ var __read = (this && this.__read) || function (o, n) {
 import { jsx as _jsx } from "@emotion/react/jsx-runtime";
 import React from "react";
 import uuid from "react-uuid";
+import { MessageProvider } from "../../alert-message/context/message-context";
 var DevsDtContext = React.createContext(undefined);
 var DevsDtProviderComponent = function (props) {
     var _a;
@@ -58,6 +59,10 @@ var DevsDtProviderComponent = function (props) {
             });
         });
     }, [JSON.stringify(props.dataSource)]);
+    var editCount = React.useMemo(function () {
+        return props.dataSource.filter(function (x) { return x.mode === "u" || x.mode === "c"; })
+            .length;
+    }, [JSON.stringify(props.dataSource)]);
     return (_jsx(DevsDtContext.Provider, __assign({ value: {
             columns: props.columns,
             setColumns: props.setColumns,
@@ -70,14 +75,15 @@ var DevsDtProviderComponent = function (props) {
             setFocusedRow: props.setFocusedRow,
             focusedCell: props.focusedCell,
             setFocusedCell: props.setFocusedCell,
+            editCount: editCount,
             sorter: sorter,
             setSorter: setSorter,
-        } }, { children: _jsx("div", __assign({ style: {
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                position: "relative",
-            } }, { children: props.children })) })));
+        } }, { children: _jsx(MessageProvider, { children: _jsx("div", __assign({ style: {
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    position: "relative",
+                } }, { children: props.children })) }) })));
 };
 export var DevsDtProvider = React.memo(DevsDtProviderComponent);
 export var useDt = function () {

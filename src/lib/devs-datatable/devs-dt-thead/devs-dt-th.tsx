@@ -53,6 +53,7 @@ const DevsDtTh = ({ col }: { col: IDataTableColumn }) => {
         {
           position: "relative",
           "--width": `${col.width ?? 100}px`,
+          ...col.style,
         } as React.CSSProperties
       }
     >

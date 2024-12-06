@@ -30,7 +30,8 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
-        columnGap: 3,
+        alignItems: "center",
+        columnGap: 7,
       }}
     >
       {props.buttons?.custom !== undefined && props.buttons.custom}
@@ -42,7 +43,7 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
               <Button
                 border={true}
                 compact
-                style={{ padding: "5px 7px" }}
+                style={{ padding: "5px 7px", lineHeight: "26px" }}
                 onClick={() =>
                   ButtonEventBeforeShowLoading(props.buttons?.onSearchClick)
                 }
@@ -67,7 +68,7 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
               <Button
                 border={true}
                 compact
-                style={{ padding: "5px 7px" }}
+                style={{ padding: "5px 7px", lineHeight: "26px" }}
                 onClick={props.buttons?.onAddClick}
               >
                 <svg
@@ -90,7 +91,7 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
               <Button
                 border={true}
                 compact
-                style={{ padding: "5px 7px" }}
+                style={{ padding: "5px 7px", lineHeight: "26px" }}
                 onClick={props.buttons?.onSaveClick}
               >
                 <svg
@@ -118,7 +119,7 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
               <Button
                 border={true}
                 compact
-                style={{ padding: "5px 7px" }}
+                style={{ padding: "5px 7px", lineHeight: "26px" }}
                 bgColor="#df4873"
                 color="#fff"
                 onClick={props.buttons?.onDeleteClick}
@@ -143,7 +144,7 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
               <Button
                 border={true}
                 compact
-                style={{ padding: "5px 7px" }}
+                style={{ padding: "5px 7px", lineHeight: "26px" }}
                 onClick={props.buttons?.onCancelClick}
               >
                 <svg
@@ -165,7 +166,11 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
               <Button
                 border={true}
                 compact
-                style={{ padding: "5px 7px", position: "relative" }}
+                style={{
+                  padding: "5px 7px",
+                  lineHeight: "26px",
+                  position: "relative",
+                }}
                 onClick={props.buttons?.onExportClick}
               >
                 <svg

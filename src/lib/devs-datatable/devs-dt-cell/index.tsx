@@ -11,6 +11,7 @@ import {
   Controller,
   FieldValues,
   UseFormRegister,
+  UseFormSetValue,
 } from "react-hook-form";
 import { IDataSource, IDataTableColumn } from "../_types";
 import { DatePicker, InputNumber, Select } from "antd";
@@ -33,10 +34,12 @@ type TDevsDtCell = {
   error: boolean;
   autoFocus: boolean;
   row: IDataSource;
+  rowIndex: number;
   merge?: {
     rowSpan: number;
     hidden: boolean;
   };
+  setValue: UseFormSetValue<IDataSource>;
 };
 
 function DevsDtCell({
@@ -49,9 +52,62 @@ function DevsDtCell({
   autoFocus,
   row,
   merge,
+  setValue,
+  rowIndex,
 }: TDevsDtCell) {
-  const { focusedRow, focusedCell, setFocusedCell } = useDt();
+  const { focusedRow, focusedCell, setFocusedCell, setDataSource, setColumns } =
+    useDt();
   const cellRef = React.useRef<HTMLTableCellElement>(null);
+  const divRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const updateColumnWidth = (
+      columns: IDataTableColumn[],
+      targetField: string,
+      newWidth: number
+    ): IDataTableColumn[] => {
+      return columns.map((column) => {
+        // 컬럼이 자식 컬럼을 가지는 경우
+        if (column.children) {
+          return {
+            ...column,
+            children: updateColumnWidth(column.children, targetField, newWidth),
+          };
+        }
+
+        // field가 일치하는 컬럼을 찾아서 width 업데이트
+        if (column.field === targetField) {
+          return { ...column, width: newWidth };
+        }
+
+        return column;
+      });
+    };
+
+    const checkOverflow = () => {
+      const tdElement = cellRef.current;
+      const divElement = divRef.current;
+
+      if (!tdElement || !divElement) return;
+
+      // td의 실제 너비
+      const tdWidth = tdElement.getBoundingClientRect().width;
+
+      // div의 콘텐츠 너비
+      const contentWidth = divElement.scrollWidth;
+
+      // 콘텐츠가 td보다 크다면
+      if (contentWidth > tdWidth && contentWidth > (col.width ?? 100)) {
+        setColumns((prev) =>
+          updateColumnWidth(prev, col.field, contentWidth + 12)
+        );
+      }
+    };
+
+    // 초기에 한 번 실행
+    checkOverflow();
+  }, []);
+
   const classString = React.useMemo(() => {
     var classes: string[] = [];
 
@@ -90,6 +146,7 @@ function DevsDtCell({
     if (index > -1) {
       classes.splice(index, 1);
     }
+
     if (focusedRow === row && focusedCell === col.field && index === -1) {
       classes.push("devs-dt-focused-cell");
     }
@@ -110,7 +167,18 @@ function DevsDtCell({
               size="small"
               placeholder="날짜 선택"
               defaultValue={defaultValue ? dayjs(defaultValue) : null}
-              onChange={(_, v) => onChange(v)}
+              onChange={(_, v) => {
+                onChange(v);
+                if (col.onChange !== undefined) {
+                  col.onChange({
+                    value: v,
+                    row: row,
+                    index: rowIndex,
+                    setDataSource: setDataSource,
+                    setValue: setValue,
+                  });
+                }
+              }}
               autoFocus={autoFocus}
               {...col.inputOptions}
             />
@@ -129,7 +197,19 @@ function DevsDtCell({
           render={({ field: { onChange } }) => (
             <Select
               size="small"
-              onChange={onChange}
+              showSearch={true}
+              onChange={(v) => {
+                onChange(v);
+                if (col.onChange !== undefined) {
+                  col.onChange({
+                    value: v,
+                    row: row,
+                    index: rowIndex,
+                    setDataSource: setDataSource,
+                    setValue: setValue,
+                  });
+                }
+              }}
               defaultValue={defaultValue || null}
               autoFocus={autoFocus}
               {...col.inputOptions}
@@ -156,7 +236,18 @@ function DevsDtCell({
           render={({ field: { onChange } }) => (
             <InputNumber
               size="small"
-              onChange={onChange}
+              onChange={(v) => {
+                onChange(v);
+                if (col.onChange !== undefined) {
+                  col.onChange({
+                    value: v,
+                    row: row,
+                    index: rowIndex,
+                    setDataSource: setDataSource,
+                    setValue: setValue,
+                  });
+                }
+              }}
               defaultValue={defaultValue || null}
               autoFocus={autoFocus}
               {...col.inputOptions}
@@ -171,6 +262,17 @@ function DevsDtCell({
         <textarea
           {...register(col.field, {
             required: col.required,
+            onChange: (e) => {
+              if (col.onChange !== undefined) {
+                col.onChange({
+                  value: e.target.value,
+                  row: row,
+                  index: rowIndex,
+                  setDataSource: setDataSource,
+                  setValue: setValue,
+                });
+              }
+            },
           })}
           defaultValue={defaultValue || null}
           autoFocus={autoFocus}
@@ -189,8 +291,8 @@ function DevsDtCell({
           render={({ field: { onChange } }) =>
             col.editor!({
               value: defaultValue,
-              rowData: row,
-              index: -1,
+              row: row,
+              index: rowIndex,
               onChange,
             })
           }
@@ -202,14 +304,26 @@ function DevsDtCell({
       <input
         {...register(col.field, {
           required: col.required,
+          onChange: (e) => {
+            if (col.onChange !== undefined) {
+              col.onChange({
+                value: e.target.value,
+                row: row,
+                index: rowIndex,
+                setDataSource: setDataSource,
+                setValue: setValue,
+              });
+            }
+          },
         })}
         type="text"
         defaultValue={defaultValue || null}
         autoFocus={autoFocus}
+        autoComplete="off"
         {...col.inputOptions}
       />
     );
-  }, [col, autoFocus, defaultValue]);
+  }, [col, autoFocus, defaultValue, row, rowIndex]);
 
   const Cell = React.useMemo(() => {
     if (
@@ -219,9 +333,15 @@ function DevsDtCell({
       (mode === "c" && col.editable === false)
     ) {
       if (col.render !== undefined) {
-        return col.render({ value: defaultValue, rowData: row, index: -1 });
+        return col.render({ value: defaultValue, row: row, index: rowIndex });
       } else {
-        return <span>{defaultValue}</span>;
+        return (
+          <span>
+            {col.type === "number"
+              ? defaultValue?.toLocaleString()
+              : defaultValue}
+          </span>
+        );
       }
     } else {
       return cellComp;
@@ -263,12 +383,14 @@ function DevsDtCell({
         {
           "--width": col.width ? `${col.width}px` : `100px`,
           textAlign: col.align ?? "left",
-          ...col.style,
+          ...col.style?.({ target: "thead", value: defaultValue, row: row }),
         } as React.CSSProperties
       }
     >
       <div
+        ref={divRef}
         style={{
+          position: "relative",
           overflow: "hidden",
           whiteSpace: "pre",
           textOverflow: "ellipsis",
@@ -276,10 +398,12 @@ function DevsDtCell({
           width: "100%",
           height: "100%",
           alignContent: "center",
+          zIndex: 2,
         }}
       >
         {Cell}
       </div>
+      <div className="devs-dt-bg-cell" />
     </td>
   );
 }

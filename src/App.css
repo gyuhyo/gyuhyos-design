@@ -4,12 +4,12 @@ body {
   padding: 0px;
   left: 0;
   top: 0;
-  overflow: hidden;
   min-height: 100vh;
   min-width: 100vw;
   height: 100vh;
   width: 100vw;
   font-size: 0.95rem;
+  overflow: hidden;
 }
 
 * {

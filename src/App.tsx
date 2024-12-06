@@ -14,6 +14,7 @@ const dummyData = [
     "4": "Batch A",
     "5": "Category X",
     "6": "2024-12-01",
+    "112": 1,
   },
   {
     "1": "Group 1",
@@ -22,6 +23,7 @@ const dummyData = [
     "4": "Batch A",
     "5": "Category Y",
     "6": "2024-12-02",
+    "112": 3,
   },
   {
     "1": "Group 1",
@@ -30,6 +32,7 @@ const dummyData = [
     "4": "Batch A",
     "5": "Category Z",
     "6": "2024-12-03",
+    "112": 2,
   },
   {
     "1": "Group 2",
@@ -58,7 +61,7 @@ const dummyData = [
   {
     "1": "Group 3",
     "2": "Option C",
-    "3": "2024-11-05",
+
     "4": "Batch C",
     "5": "Category X",
     "6": "2024-12-07",
@@ -66,7 +69,7 @@ const dummyData = [
   {
     "1": "Group 3",
     "2": "Option C",
-    "3": "2024-11-05",
+
     "4": "Batch C",
     "5": "Category Y",
     "6": "2024-12-08",
@@ -74,7 +77,7 @@ const dummyData = [
   {
     "1": "Group 3",
     "2": "Option C",
-    "3": "2024-11-05",
+
     "4": "Batch C",
     "5": "Category Z",
     "6": "2024-12-09",
@@ -104,6 +107,7 @@ function App() {
   const { showMessage } = useMessage();
   const tb = React.useRef<any>(null);
   const tb2 = React.useRef<any>(null);
+  const [dataSource, setDataSource] = React.useState<IDataSource[]>(dummyData);
   const [columns, setColumns] = React.useState<IDataTableColumn[]>([
     {
       key: true,
@@ -113,43 +117,20 @@ function App() {
       required: true,
       resizing: false,
       merge: true,
-      mergeOptions: ({ prev, curr, next }) => {
-        if (curr["3"] === "2024-11-02") {
-          return false;
-        }
-        return true;
-      },
       updatable: false,
     },
     {
-      field: "mergedheader",
-      title: "merge",
-      children: [
-        {
-          field: "2",
-          title: "2",
-          type: "select",
-          sticky: true,
-          options: [
-            { value: "0", label: "0" },
-            { value: "1", label: "1" },
-            { value: "2", label: "2" },
-          ],
-        },
-        {
-          field: "3",
-          title: "3",
-          width: 150,
-          type: "date",
-          required: true,
-        },
-      ],
+      key: true,
+      field: "112",
+      title: "1",
+      width: 200,
+      type: "number",
+      isNotNullSort: true,
     },
     {
       field: "4",
       title: "4",
       width: 200,
-      required: true,
       merge: true,
     },
     {
@@ -163,14 +144,84 @@ function App() {
       ],
     },
     {
+      field: "mergedheader",
+      title: "merge",
+      style: () => ({
+        borderRight: "2px solid #000",
+        color: "red",
+      }),
+      children: [
+        {
+          field: "11",
+          title: "1",
+          type: "select",
+          options: [
+            { value: "0", label: "0" },
+            { value: "1", label: "1" },
+            { value: "2", label: "2" },
+          ],
+        },
+        {
+          field: "2",
+          title: "2",
+          type: "select",
+          options: [
+            { value: "0", label: "0" },
+            { value: "1", label: "1" },
+            { value: "2", label: "2" },
+          ],
+        },
+        {
+          field: "3",
+          title: "3",
+          width: 150,
+          type: "date",
+          required: true,
+          style: () => ({
+            borderRight: "2px solid #000",
+            color: "red",
+          }),
+        },
+      ],
+    },
+    {
       field: "6",
       title: "6",
-      width: 150,
-      type: "date",
+      children: [
+        {
+          field: "111",
+          title: "1",
+          type: "select",
+          options: [
+            { value: "0", label: "0" },
+            { value: "1", label: "1" },
+            { value: "2", label: "2" },
+          ],
+        },
+        {
+          field: "22",
+          title: "2",
+          type: "select",
+          options: [
+            { value: "0", label: "0" },
+            { value: "1", label: "1" },
+            { value: "2", label: "2" },
+          ],
+        },
+        {
+          field: "33",
+          title: "3",
+          width: 150,
+          type: "date",
+          required: true,
+        },
+      ],
     },
   ]);
 
-  const [dataSource, setDataSource] = React.useState<IDataSource[]>(dummyData);
+  React.useEffect(() => {
+    console.log(dataSource);
+  }, [dataSource]);
 
   const handleAddClick = () => {
     setDataSource((prev) => {
@@ -264,9 +315,12 @@ function App() {
           console.log(row);
         }}
         options={{
+          readonly: false,
           showRowNumber: true,
           enabledRowOrder: true,
           enabledRowCheck: true,
+          multipleRowCheck: false,
+          multipleEdit: true,
           rowOrderEnd: (data) => {
             console.log(data);
           },

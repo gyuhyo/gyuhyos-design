@@ -187,19 +187,30 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
     [handleMouseMove, handleMouseUp]
   );
 
-  function generateTableRows(columns: IDataTableColumn[]) {
-    const maxDepth = Math.max(...columns.map(calculateDepth));
+  function generateTableRows(allColumns: IDataTableColumn[]) {
+    const maxDepth = Math.max(...allColumns.map(calculateDepth));
     const rows: JSX.Element[][] = Array.from({ length: maxDepth }, () => []);
+    let idx = 0;
 
     function fillRows(columns: IDataTableColumn[], depth: number) {
-      columns.forEach((column) => {
+      columns.forEach((column, index) => {
         const rowspan = column.children ? 1 : maxDepth - depth;
         const colspan = calculateWidth(column);
 
         const defaultClassString = "devs-dt-cell devs-dt-th";
-        const classString = column.sticky
+        let classString = column.sticky
           ? `${defaultClassString} devs-dt-sticky-col`
           : defaultClassString;
+
+        if (
+          depth > 1 &&
+          columns.length - 1 === index &&
+          allColumns.length > idx
+        ) {
+          classString = classString + " devs-dt-no-hidden-border";
+        }
+
+        if (depth === 1) idx++;
 
         rows[depth].push(
           <th
@@ -247,6 +258,7 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
                   (column.sortable === undefined || column.sortable === true)
                     ? "pointer"
                     : "inherit",
+                ...column.style?.({ target: "tbody", value: null, row: null }),
               } as React.CSSProperties
             }
           >
@@ -298,7 +310,7 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
       });
     }
 
-    fillRows(columns, 0);
+    fillRows(allColumns, 0);
     return rows;
   }
 

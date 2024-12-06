@@ -189,24 +189,33 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
             marginBottom: 7,
             flexWrap: "wrap",
             gap: "7px",
+            background:
+              "linear-gradient(180deg, rgb(231, 231, 231), rgb(215, 215, 215), rgb(231, 231, 231))",
+            border: "1px solid rgb(199, 199, 199)",
+
+            padding: "0.5rem 0.75rem",
           }}
         >
           <p style={{ fontSize: 18, fontWeight: "bold" }}>
             {props.title !== undefined && props.title !== "" && (
               <>&#x27a4; {props.title}</>
             )}
-            <span
-              style={{
-                fontSize: 12,
-                color: "#7a7a7a",
-                marginLeft:
-                  props.title !== undefined && props.title !== ""
-                    ? "7px"
-                    : "0px",
-              }}
-            >
-              (*) 입력 가능 (<span style={{ color: "red" }}>*</span>) 필수입력
-            </span>
+            {props.options?.readonly === undefined ||
+              (props.options.readonly === false && (
+                <span
+                  style={{
+                    fontSize: 12,
+                    color: "#7a7a7a",
+                    marginLeft:
+                      props.title !== undefined && props.title !== ""
+                        ? "7px"
+                        : "0px",
+                  }}
+                >
+                  (<span style={{ color: "#000" }}>*</span>) 입력 가능 (
+                  <span style={{ color: "red" }}>*</span>) 필수입력
+                </span>
+              ))}
           </p>
           <DevsDtButtons
             buttons={props.buttons}

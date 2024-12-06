@@ -34,6 +34,7 @@ exports.useDt = exports.DevsDtProvider = void 0;
 var jsx_runtime_1 = require("@emotion/react/jsx-runtime");
 var react_1 = __importDefault(require("react"));
 var react_uuid_1 = __importDefault(require("react-uuid"));
+var message_context_1 = require("../../alert-message/context/message-context");
 var DevsDtContext = react_1.default.createContext(undefined);
 var DevsDtProviderComponent = function (props) {
     var _a;
@@ -64,6 +65,10 @@ var DevsDtProviderComponent = function (props) {
             });
         });
     }, [JSON.stringify(props.dataSource)]);
+    var editCount = react_1.default.useMemo(function () {
+        return props.dataSource.filter(function (x) { return x.mode === "u" || x.mode === "c"; })
+            .length;
+    }, [JSON.stringify(props.dataSource)]);
     return ((0, jsx_runtime_1.jsx)(DevsDtContext.Provider, __assign({ value: {
             columns: props.columns,
             setColumns: props.setColumns,
@@ -76,14 +81,15 @@ var DevsDtProviderComponent = function (props) {
             setFocusedRow: props.setFocusedRow,
             focusedCell: props.focusedCell,
             setFocusedCell: props.setFocusedCell,
+            editCount: editCount,
             sorter: sorter,
             setSorter: setSorter,
-        } }, { children: (0, jsx_runtime_1.jsx)("div", __assign({ style: {
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                position: "relative",
-            } }, { children: props.children })) })));
+        } }, { children: (0, jsx_runtime_1.jsx)(message_context_1.MessageProvider, { children: (0, jsx_runtime_1.jsx)("div", __assign({ style: {
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    position: "relative",
+                } }, { children: props.children })) }) })));
 };
 exports.DevsDtProvider = react_1.default.memo(DevsDtProviderComponent);
 var useDt = function () {

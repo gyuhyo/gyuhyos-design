@@ -7,6 +7,7 @@ export interface ButtonProps extends React.DetailedHTMLProps<React.ButtonHTMLAtt
     compact?: boolean;
     rounded?: boolean;
     border?: boolean;
+    borderColor?: string;
     icon?: JSX.Element;
 }
 declare const Button: React.FC<ButtonProps>;
