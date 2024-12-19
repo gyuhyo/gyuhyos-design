@@ -46,16 +46,30 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
 
     props.setDataSource((prev) => {
       return props.dataSource.map((d, idx) => {
+        if (
+          props.options?.editType === undefined ||
+          props.options?.editType === "row"
+        ) {
+          return {
+            originIndex: idx,
+            rowId: uuid(),
+            mode: "r",
+            checked: false,
+            ...d,
+          };
+        }
+
         return {
           originIndex: idx,
           rowId: uuid(),
           mode: "r",
           checked: false,
+          editedCells: [],
           ...d,
         };
       });
     });
-  }, [JSON.stringify(props.dataSource)]);
+  }, [JSON.stringify(props.dataSource), props.options?.editType]);
 
   const editCount = React.useMemo(() => {
     return props.dataSource.filter((x) => x.mode === "u" || x.mode === "c")

@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import React from "react";
 import { IDataSource, IDataTableColumn } from "../_types";
 import { DraggableProvided, DraggableStateSnapshot } from "@hello-pangea/dnd";

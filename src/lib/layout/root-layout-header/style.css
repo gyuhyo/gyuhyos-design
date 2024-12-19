@@ -1,0 +1,94 @@
+.clickedMenu > ul {
+  visibility: visible !important;
+  opacity: 1 !important;
+  transition: ease-in-out 300ms;
+}
+
+html,
+body {
+  margin: 0px;
+  padding: 0px;
+  left: 0;
+  top: 0px !important;
+  min-height: 100vh;
+  min-width: 100vw;
+  height: 100vh;
+  width: 100vw;
+  font-size: 0.95rem;
+  overflow: hidden;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+*,
+::before,
+::after {
+  user-select: none;
+  text-decoration: none;
+  box-sizing: border-box;
+  border: none;
+}
+
+ul {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+input {
+  outline: none;
+}
+
+#google_translate_element {
+  display: none;
+}
+
+.skiptranslate {
+  display: none;
+}
+
+.menu-container::-webkit-scrollbar {
+  width: 10px !important;
+  height: 10px !important;
+}
+
+.menu-container::-webkit-scrollbar-thumb {
+  background-color: #b1b4b750 !important;
+  background-clip: padding-box !important;
+  border: 2px solid transparent !important;
+  border-radius: 20px !important;
+}
+
+.menu-container::-webkit-scrollbar-track {
+  background: linear-gradient(217deg, rgb(1 11 25), rgba(255, 0, 0, 0) 100%),
+    linear-gradient(127deg, rgb(85 109 124), rgba(0, 255, 0, 0) 100%),
+    linear-gradient(336deg, rgb(54 68 105), rgba(0, 0, 255, 0) 100%) !important;
+}
+
+[data-rfd-drag-handle-context-id=":rh:"] {
+  cursor: pointer !important;
+}
+
+[data-rfd-drag-handle-context-id=":rh:"]:active {
+  cursor: grab !important;
+}

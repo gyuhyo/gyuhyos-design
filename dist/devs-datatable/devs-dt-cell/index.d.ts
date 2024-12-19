@@ -1,5 +1,6 @@
+/** @jsxImportSource @emotion/react */
 import React from "react";
-import { Control, FieldValues, UseFormRegister, UseFormSetValue } from "react-hook-form";
+import { Control, FieldValues, UseFormGetValues, UseFormRegister, UseFormSetValue, UseFormTrigger } from "react-hook-form";
 import { IDataSource, IDataTableColumn } from "../_types";
 type TDevsDtCell = {
     col: IDataTableColumn;
@@ -16,7 +17,9 @@ type TDevsDtCell = {
         hidden: boolean;
     };
     setValue: UseFormSetValue<IDataSource>;
+    getValue: UseFormGetValues<IDataSource>;
+    trigger: UseFormTrigger<IDataSource>;
 };
-declare function DevsDtCell({ register, control, col, mode, defaultValue, error, autoFocus, row, merge, setValue, rowIndex, }: TDevsDtCell): import("@emotion/react/jsx-runtime").JSX.Element;
+declare function DevsDtCell({ register, control, col, mode, defaultValue, error, autoFocus, row, merge, setValue, getValue, rowIndex, trigger, }: TDevsDtCell): import("@emotion/react/jsx-runtime").JSX.Element;
 declare const _default: React.MemoExoticComponent<typeof DevsDtCell>;
 export default _default;

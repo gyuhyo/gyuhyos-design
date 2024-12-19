@@ -1,5 +1,6 @@
 import React, { SetStateAction } from "react";
 import { IDataTableColumn } from "./col";
+import { CSSInterpolation } from "@emotion/serialize";
 
 export interface IDataSource {
   [key: string]: any;
@@ -14,6 +15,27 @@ export interface IDataTableOptions {
   rowOrderEnd?: (data: IDataSource[]) => void;
   readonly?: boolean;
   editMode?: "default" | "popup" | "slider";
+  editType?: "row" | "cell";
+  cellEditClickType?: "click" | "doubleClick";
+  minWidth?: number;
+  rowEditable?: ({
+    index,
+    row,
+  }: {
+    index: number;
+    row: IDataSource;
+  }) => boolean;
+  rowStyle?: ({
+    index,
+    row,
+    nextRow,
+    prevRow,
+  }: {
+    index: number;
+    row: IDataSource;
+    nextRow: IDataSource;
+    prevRow: IDataSource;
+  }) => CSSInterpolation;
 }
 
 export interface IDataTableExportButtonProps {
@@ -24,17 +46,11 @@ export interface IDataTableExportButtonProps {
 }
 
 export interface IDataTableButtons {
-  isVisible?: boolean;
   custom?: JSX.Element;
-  isSearchVisible?: boolean;
   searchText?: string;
-  isAddVisible?: boolean;
   addText?: string;
-  isSaveVisible?: boolean;
   saveText?: string;
-  isDeleteVisible?: boolean;
   deleteText?: string;
-  isCancelVisible?: boolean;
   cancelText?: string;
   export?: IDataTableExportButtonProps;
   onSearchClick?: () => void;
@@ -46,7 +62,7 @@ export interface IDataTableButtons {
 }
 
 export interface IDataTableProps {
-  title?: string;
+  title?: any;
   id?: string;
   columns: IDataTableColumn[];
   setColumns: React.Dispatch<React.SetStateAction<IDataTableColumn[]>>;

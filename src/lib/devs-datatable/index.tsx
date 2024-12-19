@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import React from "react";
 import { IDataSource, IDataTableProps, IFormsRef } from "./_types";
 import { DevsDtProvider } from "./context/devs-dt-context";
@@ -6,6 +8,7 @@ import DevsDtButtons from "./devs-dt-component/buttons";
 import DevsDtTBody from "./devs-dt-tbody";
 import DevsDtTHead from "./devs-dt-thead";
 import { useInitDt } from "./hooks/useInitDt";
+import { css } from "@emotion/react";
 
 /**
  * @typedef {Object} DevsDataTableRef
@@ -26,7 +29,17 @@ interface DevsDataTableRef {
     getFocusedRow: null | IDataSource;
     getFocusedCell: null | { row: null | IDataSource; field: null | string };
     getCheckedRows: IDataSource[];
+    getCheckedRowsData: () => Promise<IDataSource[]>;
     addRow: (defaultValues?: IDataSource) => void;
+    setValue: ({
+      rowId,
+      field,
+      value,
+    }: {
+      rowId: string;
+      field: string;
+      value: any;
+    }) => void;
     focusedRow: (row: IDataSource) => void;
     focusedRowIndex: (index: number) => void;
     getFocusedRowIndex: null | number;
@@ -82,6 +95,16 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
       }
     }, [props.dataSource]);
 
+    const getCheckedRows = async () => {
+      await Promise.all(
+        Object.values(formsRef.current).map((form) => form.trigger("checked"))
+      );
+
+      return Object.values(formsRef.current)
+        .filter((form) => form.getValues("checked"))
+        .map((form) => form.getValues());
+    };
+
     React.useImperativeHandle(
       ref,
       (): DevsDataTableRef => ({
@@ -110,6 +133,8 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
 
             const allValid = validations.every((result) => result.valid);
 
+            console.log("allvalid", allValid);
+
             if (allValid) {
               const allData = validations.map((result) => result.data);
               return { valid: true, data: allData };
@@ -124,7 +149,10 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
           getFocusedRowIndex:
             focusedRow === null ? null : props.dataSource.indexOf(focusedRow),
           getFocusedCell: { row: focusedRow, field: focusedCell },
-          getCheckedRows: props.dataSource.filter((f) => f.checked === true),
+          getCheckedRows: Object.values(formsRef.current)
+            .filter((f) => f.getValues("checked"))
+            .map((x) => x.getValues()),
+          getCheckedRowsData: async () => await getCheckedRows(),
           focusedRowIndex: (index: number) => {
             if (props.dataSource.length > index) {
               setFocusedRow(props.dataSource[index]);
@@ -136,6 +164,16 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
               { checked: true, mode: "c", ...defaultValues },
               ...prev,
             ]),
+
+          setValue: ({ rowId, field, value }) => {
+            const form = formsRef.current[rowId];
+
+            if (form) {
+              console.log("find");
+              form.setValue(field, value);
+              form.trigger();
+            }
+          },
         },
       }),
       [props.dataSource, props.options, focusedRow, focusedCell]
@@ -180,50 +218,78 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
             </div>
           </div>
         )}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: 7,
-            flexWrap: "wrap",
-            gap: "7px",
-            background:
-              "linear-gradient(180deg, rgb(231, 231, 231), rgb(215, 215, 215), rgb(231, 231, 231))",
-            border: "1px solid rgb(199, 199, 199)",
+        {(props.title !== undefined ||
+          (typeof props.title === "string" && props.title !== "") ||
+          props.buttons?.onAddClick !== undefined ||
+          props.buttons?.onSearchClick !== undefined ||
+          props.buttons?.onSaveClick !== undefined ||
+          props.buttons?.onCancelClick !== undefined ||
+          props.buttons?.onDeleteClick !== undefined ||
+          props.buttons?.custom !== undefined) && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 7,
+              flexWrap: "wrap",
+              gap: "7px",
+              background:
+                "linear-gradient(180deg, rgb(231, 231, 231), rgb(215, 215, 215), rgb(231, 231, 231))",
+              border: "1px solid rgb(199, 199, 199)",
 
-            padding: "0.5rem 0.75rem",
-          }}
+              padding: "0.5rem 0.75rem",
+            }}
+          >
+            <div
+              css={css({
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "start",
+                alignItems: "center",
+                columnGap: 7,
+              })}
+            >
+              {props.title !== undefined &&
+              props.title !== undefined &&
+              typeof props.title === "string" &&
+              props.title !== "" ? (
+                <p style={{ fontSize: 18, fontWeight: "bold" }}>
+                  &#x27a4; {props.title}
+                </p>
+              ) : (
+                props.title
+              )}
+              {props.options?.readonly === undefined ||
+                (props.options.readonly === false && (
+                  <span
+                    style={{
+                      fontSize: 12,
+                      color: "#7a7a7a",
+                      marginLeft:
+                        props.title !== undefined && props.title !== ""
+                          ? "7px"
+                          : "0px",
+                    }}
+                  >
+                    (<span style={{ color: "#000" }}>*</span>) 입력 가능 (
+                    <span style={{ color: "red" }}>*</span>) 필수입력
+                  </span>
+                ))}
+            </div>
+            <DevsDtButtons
+              buttons={props.buttons}
+              options={props.options}
+              setInnerLoading={setInnerLoading}
+            />
+          </div>
+        )}
+        <div
+          ref={table}
+          className="dev-table-wrapper"
+          css={css({ minWidth: props.options?.minWidth ?? 0 })}
         >
-          <p style={{ fontSize: 18, fontWeight: "bold" }}>
-            {props.title !== undefined && props.title !== "" && (
-              <>&#x27a4; {props.title}</>
-            )}
-            {props.options?.readonly === undefined ||
-              (props.options.readonly === false && (
-                <span
-                  style={{
-                    fontSize: 12,
-                    color: "#7a7a7a",
-                    marginLeft:
-                      props.title !== undefined && props.title !== ""
-                        ? "7px"
-                        : "0px",
-                  }}
-                >
-                  (<span style={{ color: "#000" }}>*</span>) 입력 가능 (
-                  <span style={{ color: "red" }}>*</span>) 필수입력
-                </span>
-              ))}
-          </p>
-          <DevsDtButtons
-            buttons={props.buttons}
-            options={props.options}
-            setInnerLoading={setInnerLoading}
-          />
-        </div>
-        <div ref={table} className="dev-table-wrapper">
           <DevsDtTHead thead={thead} setHeaderWidth={setHeaderWidth} />
           <DevsDtTBody tbody={tbody} headerWidth={headerWidth} />
         </div>

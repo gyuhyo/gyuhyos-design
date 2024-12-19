@@ -37,13 +37,13 @@ var react_uuid_1 = __importDefault(require("react-uuid"));
 var message_context_1 = require("../../alert-message/context/message-context");
 var DevsDtContext = react_1.default.createContext(undefined);
 var DevsDtProviderComponent = function (props) {
-    var _a;
+    var _a, _b;
     var keyField = (_a = props.columns.find(function (col) { return col.key; })) === null || _a === void 0 ? void 0 : _a.field;
-    var _b = __read(react_1.default.useState(false), 2), isSetUUID = _b[0], setIsSetUUID = _b[1];
-    var _c = __read(react_1.default.useState({
+    var _c = __read(react_1.default.useState(false), 2), isSetUUID = _c[0], setIsSetUUID = _c[1];
+    var _d = __read(react_1.default.useState({
         field: null,
         type: "asc",
-    }), 2), sorter = _c[0], setSorter = _c[1];
+    }), 2), sorter = _d[0], setSorter = _d[1];
     react_1.default.useEffect(function () {
         if (props.setColumns !== undefined) {
             props.setColumns(function (prevCols) {
@@ -61,10 +61,15 @@ var DevsDtProviderComponent = function (props) {
         });
         props.setDataSource(function (prev) {
             return props.dataSource.map(function (d, idx) {
-                return __assign({ originIndex: idx, rowId: (0, react_uuid_1.default)(), mode: "r", checked: false }, d);
+                var _a, _b;
+                if (((_a = props.options) === null || _a === void 0 ? void 0 : _a.editType) === undefined ||
+                    ((_b = props.options) === null || _b === void 0 ? void 0 : _b.editType) === "row") {
+                    return __assign({ originIndex: idx, rowId: (0, react_uuid_1.default)(), mode: "r", checked: false }, d);
+                }
+                return __assign({ originIndex: idx, rowId: (0, react_uuid_1.default)(), mode: "r", checked: false, editedCells: [] }, d);
             });
         });
-    }, [JSON.stringify(props.dataSource)]);
+    }, [JSON.stringify(props.dataSource), (_b = props.options) === null || _b === void 0 ? void 0 : _b.editType]);
     var editCount = react_1.default.useMemo(function () {
         return props.dataSource.filter(function (x) { return x.mode === "u" || x.mode === "c"; })
             .length;

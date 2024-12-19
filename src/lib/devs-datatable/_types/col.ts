@@ -1,6 +1,6 @@
 import { SetStateAction } from "react";
 import { IDataSource } from "./component";
-import { UseFormSetValue } from "react-hook-form";
+import { UseFormGetValues, UseFormSetValue } from "react-hook-form";
 
 export interface IDataTableSelectorOptionsProps {
   value: string;
@@ -20,6 +20,18 @@ export interface IDataTableColumn {
   type?: "date" | "select" | "number" | "textarea";
   align?: string;
   merge?: boolean;
+  autoFocus?: (mode: string) => boolean;
+  defaultValue?: ({
+    value,
+    row,
+    index,
+    getValue,
+  }: {
+    value: any;
+    row: IDataSource;
+    index: number;
+    getValue: UseFormGetValues<IDataSource>;
+  }) => any;
   mergeOptions?: ({
     prev,
     curr,
@@ -33,42 +45,54 @@ export interface IDataTableColumn {
     value,
     row,
     index,
+    getValue,
   }: {
     value?: any;
     row: IDataSource;
     index?: number;
+    getValue: UseFormGetValues<IDataSource>;
   }) => any;
   editor?: ({
     value,
     row,
     index,
     onChange,
+    getValue,
+    setValue,
   }: {
     value?: any;
     row: IDataSource;
     index?: number;
     onChange: (...event: any[]) => void;
+    getValue: UseFormGetValues<IDataSource>;
+    setValue: UseFormSetValue<IDataSource>;
   }) => any;
   onChange?: ({
     value,
     row,
     index,
     setDataSource,
+    setValue,
+    getValue,
   }: {
     value: any;
     row: IDataSource;
     index: number;
     setDataSource: React.Dispatch<SetStateAction<IDataSource[]>>;
     setValue: UseFormSetValue<IDataSource>;
+    getValue: UseFormGetValues<IDataSource>;
   }) => void;
   inputOptions?: any;
   style?: ({
+    target,
     value,
     row,
+    getValue,
   }: {
     target: string;
     value?: any;
     row?: IDataSource | null;
+    getValue?: UseFormGetValues<IDataSource>;
   }) => React.CSSProperties;
   sortable?: boolean;
   isNotNullSort?: boolean;

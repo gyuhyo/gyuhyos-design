@@ -30,5 +30,5 @@ export interface MessageContextTypes extends MessageContextProps, MessageShowPro
     onCloseClick: (e?: MouseEvent<HTMLDivElement>) => void;
 }
 export interface MessageClicentProps {
-    showMessage: ({ type, title, message, okCaption, cancelCaption, isOkButtonVisible, onOkClick, isCancelButtonVisible, onCancelClick, isCloseButtonVisible, onCloseClick, footerStart, }: MessageShowProps) => void;
+    showMessage: ({ type, title, message, okCaption, cancelCaption, isOkButtonVisible, onOkClick, isCancelButtonVisible, onCancelClick, isCloseButtonVisible, onCloseClick, footerStart, }: MessageShowProps) => Promise<boolean>;
 }

@@ -23,22 +23,25 @@ const RowNumberCell: React.FC<{ maxDepth: number }> = ({ maxDepth }) => {
 const RowCheckCell: React.FC<{
   setDataSource: React.Dispatch<React.SetStateAction<any[]>>;
   maxDepth: number;
-}> = ({ setDataSource, maxDepth }) => {
+  isMultipleCheck: boolean | undefined;
+}> = ({ setDataSource, maxDepth, isMultipleCheck }) => {
   return (
     <th
       className="devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-th-bottom-border"
       style={{ "--width": "30px" } as React.CSSProperties}
       rowSpan={maxDepth}
     >
-      <input
-        name="allCheck"
-        type="checkbox"
-        onChange={(e) => {
-          setDataSource((prev) =>
-            prev.map((p) => ({ ...p, checked: e.target.checked }))
-          );
-        }}
-      />
+      {(isMultipleCheck === undefined || isMultipleCheck === true) && (
+        <input
+          name="allCheck"
+          type="checkbox"
+          onChange={(e) => {
+            setDataSource((prev) =>
+              prev.map((p) => ({ ...p, checked: e.target.checked }))
+            );
+          }}
+        />
+      )}
     </th>
   );
 };
@@ -187,6 +190,45 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
     [handleMouseMove, handleMouseUp]
   );
 
+  const checkOverflow = (col: IDataTableColumn) => {
+    const { width, field } = col;
+
+    const targetTds = document.querySelectorAll(
+      `.devs-dt-tbody tr td[data-field='${field}']`
+    );
+
+    let maxWidth = width ?? 100;
+
+    for (let td of targetTds) {
+      const div = td.querySelector("div:first-child");
+
+      if (!div) continue;
+
+      // div의 콘텐츠 너비
+      const contentWidth = div.scrollWidth;
+
+      maxWidth = contentWidth > maxWidth ? contentWidth : maxWidth;
+    }
+
+    setColumns((prev) => updateColumnWidth(prev, field, maxWidth + 12));
+    //const tdElement = cellRef.current;
+
+    //if (!tdElement || !divElement) return;
+
+    // // td의 실제 너비
+    // const tdWidth = tdElement.getBoundingClientRect().width;
+
+    // // div의 콘텐츠 너비
+    // const contentWidth = divElement.scrollWidth;
+
+    // // 콘텐츠가 td보다 크다면
+    // if (contentWidth > tdWidth && contentWidth > (col.width ?? 100)) {
+    //   setColumns((prev) =>
+    //     updateColumnWidth(prev, col.field, contentWidth + 12)
+    //   );
+    // }
+  };
+
   function generateTableRows(allColumns: IDataTableColumn[]) {
     const maxDepth = Math.max(...allColumns.map(calculateDepth));
     const rows: JSX.Element[][] = Array.from({ length: maxDepth }, () => []);
@@ -258,7 +300,7 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
                   (column.sortable === undefined || column.sortable === true)
                     ? "pointer"
                     : "inherit",
-                ...column.style?.({ target: "tbody", value: null, row: null }),
+                ...column.style?.({ target: "thead", value: null, row: null }),
               } as React.CSSProperties
             }
           >
@@ -299,6 +341,7 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
                   className={"devs-dt-resize-col"}
                   onMouseDown={(e) => handleMouseDown(e, column)}
                   onClick={(e) => e.stopPropagation()}
+                  onDoubleClick={() => checkOverflow(column)}
                 />
               )}
           </th>
@@ -332,6 +375,7 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
                     <RowCheckCell
                       setDataSource={setDataSource}
                       maxDepth={maxDepth}
+                      isMultipleCheck={options.multipleRowCheck}
                     />
                   )}
                   {row}

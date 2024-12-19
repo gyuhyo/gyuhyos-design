@@ -128,6 +128,7 @@ function DevsDtTBody(_a) {
     }, [sorter, columns]);
     var mergedDataSource = React.useMemo(function () {
         var e_1, _a, e_2, _b, _c, _d, _e;
+        var _f, _g;
         if (dataSource.length === 0 ||
             (dataSource.length > 0 && !dataSource[0].hasOwnProperty("mode")))
             return;
@@ -155,13 +156,16 @@ function DevsDtTBody(_a) {
                         rowSpan: 1,
                         hidden: false,
                     }, _c));
-                    if (copyDataSource[i].mode === "c" || copyDataSource[i].mode === "u") {
+                    if (copyDataSource[i].mode === "c" ||
+                        copyDataSource[i].mode === "u" ||
+                        ((_f = copyDataSource[i].editedCells) === null || _f === void 0 ? void 0 : _f.includes(d.field))) {
                         continue;
                     }
                     for (var j = i + 1; j < copyDataSource.length; j++) {
                         if (copyDataSource[i][d.field] !== copyDataSource[j][d.field] ||
                             copyDataSource[j]["mode"] === "c" ||
-                            copyDataSource[j]["mode"] === "u") {
+                            copyDataSource[j]["mode"] === "u" ||
+                            ((_g = copyDataSource[j].editedCells) === null || _g === void 0 ? void 0 : _g.includes(d.field))) {
                             i = j - 1;
                             break;
                         }

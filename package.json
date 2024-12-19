@@ -1,6 +1,6 @@
 {
   "name": "gyuhyos-design",
-  "version": "0.1.81",
+  "version": "0.3.34",
   "description": "Copyright Gyuhyos Design Components",
   "license": "MIT",
   "author": {
@@ -33,11 +33,13 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "dayjs": "^1.11.13",
-    "react-hook-form": "^7.52.2",
+    "react-hook-form": "^7.54.1",
+    "react-is": "^19.0.0",
     "react-scripts": "5.0.1",
     "react-uuid": "^2.0.0",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "zustand": "^5.0.2"
   },
   "resolutions": {
     "@types/react": "^18.3.12",
@@ -80,6 +82,7 @@
   },
   "type": "module",
   "devDependencies": {
+    "@types/react-is": "^19.0.0",
     "antd": "^5.21.6",
     "copyfiles": "^2.4.1",
     "react": "^18.0.0",

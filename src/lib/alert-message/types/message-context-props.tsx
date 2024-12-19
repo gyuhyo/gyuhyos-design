@@ -49,5 +49,5 @@ export interface MessageClicentProps {
     isCloseButtonVisible,
     onCloseClick,
     footerStart,
-  }: MessageShowProps) => void;
+  }: MessageShowProps) => Promise<boolean>;
 }

@@ -140,7 +140,11 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
           },
         };
 
-        if (copyDataSource[i].mode === "c" || copyDataSource[i].mode === "u") {
+        if (
+          copyDataSource[i].mode === "c" ||
+          copyDataSource[i].mode === "u" ||
+          copyDataSource[i].editedCells?.includes(d.field)
+        ) {
           continue;
         }
 
@@ -148,7 +152,8 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
           if (
             copyDataSource[i][d.field] !== copyDataSource[j][d.field] ||
             copyDataSource[j]["mode"] === "c" ||
-            copyDataSource[j]["mode"] === "u"
+            copyDataSource[j]["mode"] === "u" ||
+            copyDataSource[j].editedCells?.includes(d.field)
           ) {
             i = j - 1;
             break;

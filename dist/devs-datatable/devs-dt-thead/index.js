@@ -34,6 +34,17 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
 import { jsx as _jsx, jsxs as _jsxs } from "@emotion/react/jsx-runtime";
 import React from "react";
 import { useDt } from "../context/devs-dt-context";
@@ -42,12 +53,12 @@ var RowNumberCell = function (_a) {
     return (_jsx("th", __assign({ className: "devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-th-bottom-border", style: { "--width": "50px" }, rowSpan: maxDepth }, { children: "No" })));
 };
 var RowCheckCell = function (_a) {
-    var setDataSource = _a.setDataSource, maxDepth = _a.maxDepth;
-    return (_jsx("th", __assign({ className: "devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-th-bottom-border", style: { "--width": "30px" }, rowSpan: maxDepth }, { children: _jsx("input", { name: "allCheck", type: "checkbox", onChange: function (e) {
+    var setDataSource = _a.setDataSource, maxDepth = _a.maxDepth, isMultipleCheck = _a.isMultipleCheck;
+    return (_jsx("th", __assign({ className: "devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-th-bottom-border", style: { "--width": "30px" }, rowSpan: maxDepth }, { children: (isMultipleCheck === undefined || isMultipleCheck === true) && (_jsx("input", { name: "allCheck", type: "checkbox", onChange: function (e) {
                 setDataSource(function (prev) {
                     return prev.map(function (p) { return (__assign(__assign({}, p), { checked: e.target.checked })); });
                 });
-            } }) })));
+            } })) })));
 };
 // 트리의 깊이 계산
 function calculateDepth(column) {
@@ -145,6 +156,43 @@ function DevsDtTHead(_a) {
         document.addEventListener("mousemove", handleMouseMove);
         document.addEventListener("mouseup", handleMouseUp);
     }, [handleMouseMove, handleMouseUp]);
+    var checkOverflow = function (col) {
+        var e_1, _a;
+        var width = col.width, field = col.field;
+        var targetTds = document.querySelectorAll(".devs-dt-tbody tr td[data-field='".concat(field, "']"));
+        var maxWidth = width !== null && width !== void 0 ? width : 100;
+        try {
+            for (var targetTds_1 = __values(targetTds), targetTds_1_1 = targetTds_1.next(); !targetTds_1_1.done; targetTds_1_1 = targetTds_1.next()) {
+                var td = targetTds_1_1.value;
+                var div = td.querySelector("div:first-child");
+                if (!div)
+                    continue;
+                // div의 콘텐츠 너비
+                var contentWidth = div.scrollWidth;
+                maxWidth = contentWidth > maxWidth ? contentWidth : maxWidth;
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (targetTds_1_1 && !targetTds_1_1.done && (_a = targetTds_1.return)) _a.call(targetTds_1);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        setColumns(function (prev) { return updateColumnWidth(prev, field, maxWidth + 12); });
+        //const tdElement = cellRef.current;
+        //if (!tdElement || !divElement) return;
+        // // td의 실제 너비
+        // const tdWidth = tdElement.getBoundingClientRect().width;
+        // // div의 콘텐츠 너비
+        // const contentWidth = divElement.scrollWidth;
+        // // 콘텐츠가 td보다 크다면
+        // if (contentWidth > tdWidth && contentWidth > (col.width ?? 100)) {
+        //   setColumns((prev) =>
+        //     updateColumnWidth(prev, col.field, contentWidth + 12)
+        //   );
+        // }
+    };
     function generateTableRows(allColumns) {
         var maxDepth = Math.max.apply(Math, __spreadArray([], __read(allColumns.map(calculateDepth)), false));
         var rows = Array.from({ length: maxDepth }, function () { return []; });
@@ -188,7 +236,7 @@ function DevsDtTHead(_a) {
                             : ((_a = column.width) !== null && _a !== void 0 ? _a : 100) + "px"), cursor: column.children === undefined &&
                             (column.sortable === undefined || column.sortable === true)
                             ? "pointer"
-                            : "inherit" }, (_b = column.style) === null || _b === void 0 ? void 0 : _b.call(column, { target: "tbody", value: null, row: null })) }, { children: [_jsxs("div", __assign({ style: {
+                            : "inherit" }, (_b = column.style) === null || _b === void 0 ? void 0 : _b.call(column, { target: "thead", value: null, row: null })) }, { children: [_jsxs("div", __assign({ style: {
                                 width: "100%",
                                 display: "flex",
                                 flexDirection: "row",
@@ -200,7 +248,7 @@ function DevsDtTHead(_a) {
                                                 : "") }), _jsx("span", { className: "desc_ico".concat(sorter.field === column.field && sorter.type === "desc"
                                                 ? " sorter_active"
                                                 : "") })] }))] })), column.children === undefined &&
-                            (column.resizing === undefined || column.resizing === true) && (_jsx("div", { className: "devs-dt-resize-col", onMouseDown: function (e) { return handleMouseDown(e, column); }, onClick: function (e) { return e.stopPropagation(); } }))] }), "col-".concat(column.field)));
+                            (column.resizing === undefined || column.resizing === true) && (_jsx("div", { className: "devs-dt-resize-col", onMouseDown: function (e) { return handleMouseDown(e, column); }, onClick: function (e) { return e.stopPropagation(); }, onDoubleClick: function () { return checkOverflow(column); } }))] }), "col-".concat(column.field)));
                 if (column.children) {
                     fillRows(column.children, depth + 1);
                 }
@@ -211,7 +259,7 @@ function DevsDtTHead(_a) {
     }
     return (_jsx("div", __assign({ ref: thead, className: "devs-dt-thead-wrapper" }, { children: _jsx("table", __assign({ ref: theadRef, className: "devs-dt-table devs-dt-table-fixed" }, { children: _jsx("thead", __assign({ className: "devs-dt-thead" }, { children: rows.map(function (row, rowIndex) {
                     if (rowIndex === 0) {
-                        return (_jsxs("tr", __assign({ className: "devs-dt-row" }, { children: [(options === null || options === void 0 ? void 0 : options.enabledRowOrder) && (_jsx(RowChangeOrderCell, { maxDepth: maxDepth })), (options === null || options === void 0 ? void 0 : options.showRowNumber) && (_jsx(RowNumberCell, { maxDepth: maxDepth })), (options === null || options === void 0 ? void 0 : options.enabledRowCheck) && (_jsx(RowCheckCell, { setDataSource: setDataSource, maxDepth: maxDepth })), row, _jsx("th", { className: "devs-dt-cell devs-dt-th devs-dt-empty-header", rowSpan: maxDepth }), _jsx("th", { className: "devs-dt-cell devs-dt-th devs-dt-scrollbar-header", rowSpan: maxDepth })] }), rowIndex));
+                        return (_jsxs("tr", __assign({ className: "devs-dt-row" }, { children: [(options === null || options === void 0 ? void 0 : options.enabledRowOrder) && (_jsx(RowChangeOrderCell, { maxDepth: maxDepth })), (options === null || options === void 0 ? void 0 : options.showRowNumber) && (_jsx(RowNumberCell, { maxDepth: maxDepth })), (options === null || options === void 0 ? void 0 : options.enabledRowCheck) && (_jsx(RowCheckCell, { setDataSource: setDataSource, maxDepth: maxDepth, isMultipleCheck: options.multipleRowCheck })), row, _jsx("th", { className: "devs-dt-cell devs-dt-th devs-dt-empty-header", rowSpan: maxDepth }), _jsx("th", { className: "devs-dt-cell devs-dt-th devs-dt-scrollbar-header", rowSpan: maxDepth })] }), rowIndex));
                     }
                     else {
                         return (_jsx("tr", __assign({ className: "devs-dt-row" }, { children: row }), rowIndex));

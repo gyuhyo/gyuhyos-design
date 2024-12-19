@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import React, { SetStateAction } from "react";
 import {
   Control,
@@ -17,6 +19,7 @@ import {
   DraggableStateSnapshot,
 } from "@hello-pangea/dnd";
 import { useMessage } from "../../alert-message/context/message-context";
+import { css } from "@emotion/react";
 
 type TDevsDtRow = {
   data: IDataSource;
@@ -129,10 +132,12 @@ function DevsDtRow({
     setFocusedRow,
     focusedCell,
     editCount,
+    dataSource,
   } = useDt();
 
   const form = useForm({
     defaultValues: data,
+    mode: "all",
   });
 
   const {
@@ -141,8 +146,19 @@ function DevsDtRow({
     handleSubmit,
     formState: { errors },
     setValue,
+    getValues,
     reset,
+    watch,
+    trigger,
   } = form;
+
+  const prevRow = React.useMemo(() => {
+    return dataSource[index - 1];
+  }, [dataSource[index - 1]]);
+
+  const nextRow = React.useMemo(() => {
+    return dataSource[index + 1];
+  }, [dataSource[index + 1]]);
 
   React.useEffect(() => {
     if (!Object.keys(formsRef.current).includes(rowKey)) {
@@ -157,8 +173,12 @@ function DevsDtRow({
 
   const onEditModeClick = () => {
     if (options?.readonly === true) return;
+    if (!(options?.rowEditable?.({ index, row: data }) ?? true)) return;
 
-    if (data.mode === "r") {
+    if (
+      data.mode === "r" &&
+      (options?.editType === undefined || options?.editType === "row")
+    ) {
       if (options?.multipleEdit === false) {
         if (editCount > 0) {
           showMessage({
@@ -243,7 +263,17 @@ function DevsDtRow({
       data-edit-mode={data.mode}
       ref={dragProvided.innerRef}
       {...dragProvided.draggableProps}
-      style={{ ...dragProvided.draggableProps.style }}
+      style={{
+        ...dragProvided.draggableProps.style,
+      }}
+      css={css(
+        options?.rowStyle?.({
+          index: index,
+          row: data,
+          prevRow: prevRow,
+          nextRow: nextRow,
+        })
+      )}
     >
       {options?.enabledRowOrder && (
         <RowChangeOrderCell
@@ -272,11 +302,13 @@ function DevsDtRow({
               mode={data.mode}
               defaultValue={data[col.field]}
               error={errors.hasOwnProperty(col.field)}
-              autoFocus={GetAutoFocus(col.field)}
+              autoFocus={col.autoFocus?.(data.mode) ?? GetAutoFocus(col.field)}
               row={data}
               setValue={setValue}
               merge={data._merge?.[col.field]}
               rowIndex={index}
+              getValue={getValues}
+              trigger={trigger}
             />
           );
         })}

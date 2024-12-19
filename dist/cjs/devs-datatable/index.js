@@ -76,6 +76,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsx_runtime_1 = require("@emotion/react/jsx-runtime");
+/** @jsxImportSource @emotion/react */
 var react_1 = __importDefault(require("react"));
 var devs_dt_context_1 = require("./context/devs-dt-context");
 require("./dev.datatable.style.css");
@@ -83,18 +84,19 @@ var buttons_1 = __importDefault(require("./devs-dt-component/buttons"));
 var devs_dt_tbody_1 = __importDefault(require("./devs-dt-tbody"));
 var devs_dt_thead_1 = __importDefault(require("./devs-dt-thead"));
 var useInitDt_1 = require("./hooks/useInitDt");
+var react_2 = require("@emotion/react");
 // DevsDataTable 컴포넌트 타입 설정 및 구현
 var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
-    var _a;
-    var _b = __read(react_1.default.useState(0), 2), headerWidth = _b[0], setHeaderWidth = _b[1];
-    var _c = __read(react_1.default.useState(false), 2), innerLoading = _c[0], setInnerLoading = _c[1];
-    var _d = __read(react_1.default.useState(null), 2), focusedCell = _d[0], setFocusedCell = _d[1];
-    var _e = __read(react_1.default.useState(null), 2), focusedRow = _e[0], setFocusedRow = _e[1];
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    var _k = __read(react_1.default.useState(0), 2), headerWidth = _k[0], setHeaderWidth = _k[1];
+    var _l = __read(react_1.default.useState(false), 2), innerLoading = _l[0], setInnerLoading = _l[1];
+    var _m = __read(react_1.default.useState(null), 2), focusedCell = _m[0], setFocusedCell = _m[1];
+    var _o = __read(react_1.default.useState(null), 2), focusedRow = _o[0], setFocusedRow = _o[1];
     var formsRef = react_1.default.useRef({});
     var table = react_1.default.useRef(null);
     var thead = react_1.default.useRef(null);
     var tbody = react_1.default.useRef(null);
-    var _f = __read(react_1.default.useState(false), 2), DtForceUpdate = _f[1];
+    var _p = __read(react_1.default.useState(false), 2), DtForceUpdate = _p[1];
     var init = (0, useInitDt_1.useInitDt)({
         table: table,
         tbody: tbody,
@@ -122,6 +124,18 @@ var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
             allCheck.checked = false;
         }
     }, [props.dataSource]);
+    var getCheckedRows = function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, Promise.all(Object.values(formsRef.current).map(function (form) { return form.trigger("checked"); }))];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/, Object.values(formsRef.current)
+                            .filter(function (form) { return form.getValues("checked"); })
+                            .map(function (form) { return form.getValues(); })];
+            }
+        });
+    }); };
     react_1.default.useImperativeHandle(ref, function () { return ({
         api: {
             onValidationCheck: function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -166,7 +180,15 @@ var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
             getFocusedRow: focusedRow,
             getFocusedRowIndex: focusedRow === null ? null : props.dataSource.indexOf(focusedRow),
             getFocusedCell: { row: focusedRow, field: focusedCell },
-            getCheckedRows: props.dataSource.filter(function (f) { return f.checked === true; }),
+            getCheckedRows: Object.values(formsRef.current)
+                .filter(function (f) { return f.getValues("checked"); })
+                .map(function (x) { return x.getValues(); }),
+            getCheckedRowsData: function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, getCheckedRows()];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            }); }); },
             focusedRowIndex: function (index) {
                 if (props.dataSource.length > index) {
                     setFocusedRow(props.dataSource[index]);
@@ -177,6 +199,13 @@ var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
                 return props.setDataSource(function (prev) { return __spreadArray([
                     __assign({ checked: true, mode: "c" }, defaultValues)
                 ], __read(prev), false); });
+            },
+            setValue: function (_a) {
+                var rowId = _a.rowId, field = _a.field, value = _a.value;
+                var form = formsRef.current[rowId];
+                if (form) {
+                    form.setValue(field, value);
+                }
             },
         },
     }); }, [props.dataSource, props.options, focusedRow, focusedCell]);
@@ -194,7 +223,14 @@ var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
     }, [focusedCell, focusedRow]);
     if (!init)
         return (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: "loading..." });
-    return ((0, jsx_runtime_1.jsxs)(devs_dt_context_1.DevsDtProvider, __assign({ columns: props.columns, setColumns: props.setColumns, dataSource: props.dataSource, setDataSource: props.setDataSource, options: props.options, formsRef: formsRef, focusedRow: focusedRow, setFocusedRow: setFocusedRow, focusedCell: focusedCell, setFocusedCell: setFocusedCell }, { children: [(props.loading === true || innerLoading === true) && ((0, jsx_runtime_1.jsx)("div", __assign({ className: "loader-backdrop" }, { children: (0, jsx_runtime_1.jsxs)("div", __assign({ className: "loader-container" }, { children: [(0, jsx_runtime_1.jsx)("span", { className: "spinner" }), (0, jsx_runtime_1.jsx)("span", __assign({ style: { fontWeight: "bold" } }, { children: "\uB370\uC774\uD130 \uBD88\uB7EC\uC624\uB294 \uC911..." }))] })) }))), (0, jsx_runtime_1.jsxs)("div", __assign({ style: {
+    return ((0, jsx_runtime_1.jsxs)(devs_dt_context_1.DevsDtProvider, __assign({ columns: props.columns, setColumns: props.setColumns, dataSource: props.dataSource, setDataSource: props.setDataSource, options: props.options, formsRef: formsRef, focusedRow: focusedRow, setFocusedRow: setFocusedRow, focusedCell: focusedCell, setFocusedCell: setFocusedCell }, { children: [(props.loading === true || innerLoading === true) && ((0, jsx_runtime_1.jsx)("div", __assign({ className: "loader-backdrop" }, { children: (0, jsx_runtime_1.jsxs)("div", __assign({ className: "loader-container" }, { children: [(0, jsx_runtime_1.jsx)("span", { className: "spinner" }), (0, jsx_runtime_1.jsx)("span", __assign({ style: { fontWeight: "bold" } }, { children: "\uB370\uC774\uD130 \uBD88\uB7EC\uC624\uB294 \uC911..." }))] })) }))), (props.title !== undefined ||
+                (typeof props.title === "string" && props.title !== "") ||
+                ((_a = props.buttons) === null || _a === void 0 ? void 0 : _a.onAddClick) !== undefined ||
+                ((_b = props.buttons) === null || _b === void 0 ? void 0 : _b.onSearchClick) !== undefined ||
+                ((_c = props.buttons) === null || _c === void 0 ? void 0 : _c.onSaveClick) !== undefined ||
+                ((_d = props.buttons) === null || _d === void 0 ? void 0 : _d.onCancelClick) !== undefined ||
+                ((_e = props.buttons) === null || _e === void 0 ? void 0 : _e.onDeleteClick) !== undefined ||
+                ((_f = props.buttons) === null || _f === void 0 ? void 0 : _f.custom) !== undefined) && ((0, jsx_runtime_1.jsxs)("div", __assign({ style: {
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "space-between",
@@ -205,13 +241,22 @@ var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
                     background: "linear-gradient(180deg, rgb(231, 231, 231), rgb(215, 215, 215), rgb(231, 231, 231))",
                     border: "1px solid rgb(199, 199, 199)",
                     padding: "0.5rem 0.75rem",
-                } }, { children: [(0, jsx_runtime_1.jsxs)("p", __assign({ style: { fontSize: 18, fontWeight: "bold" } }, { children: [props.title !== undefined && props.title !== "" && ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: ["\u27A4 ", props.title] })), ((_a = props.options) === null || _a === void 0 ? void 0 : _a.readonly) === undefined ||
+                } }, { children: [(0, jsx_runtime_1.jsxs)("div", __assign({ css: (0, react_2.css)({
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "start",
+                            alignItems: "center",
+                            columnGap: 7,
+                        }) }, { children: [props.title !== undefined &&
+                                props.title !== undefined &&
+                                typeof props.title === "string" &&
+                                props.title !== "" ? ((0, jsx_runtime_1.jsxs)("p", __assign({ style: { fontSize: 18, fontWeight: "bold" } }, { children: ["\u27A4 ", props.title] }))) : (props.title), ((_g = props.options) === null || _g === void 0 ? void 0 : _g.readonly) === undefined ||
                                 (props.options.readonly === false && ((0, jsx_runtime_1.jsxs)("span", __assign({ style: {
                                         fontSize: 12,
                                         color: "#7a7a7a",
                                         marginLeft: props.title !== undefined && props.title !== ""
                                             ? "7px"
                                             : "0px",
-                                    } }, { children: ["(", (0, jsx_runtime_1.jsx)("span", __assign({ style: { color: "#000" } }, { children: "*" })), ") \uC785\uB825 \uAC00\uB2A5 (", (0, jsx_runtime_1.jsx)("span", __assign({ style: { color: "red" } }, { children: "*" })), ") \uD544\uC218\uC785\uB825"] }))))] })), (0, jsx_runtime_1.jsx)(buttons_1.default, { buttons: props.buttons, options: props.options, setInnerLoading: setInnerLoading })] })), (0, jsx_runtime_1.jsxs)("div", __assign({ ref: table, className: "dev-table-wrapper" }, { children: [(0, jsx_runtime_1.jsx)(devs_dt_thead_1.default, { thead: thead, setHeaderWidth: setHeaderWidth }), (0, jsx_runtime_1.jsx)(devs_dt_tbody_1.default, { tbody: tbody, headerWidth: headerWidth })] }))] })));
+                                    } }, { children: ["(", (0, jsx_runtime_1.jsx)("span", __assign({ style: { color: "#000" } }, { children: "*" })), ") \uC785\uB825 \uAC00\uB2A5 (", (0, jsx_runtime_1.jsx)("span", __assign({ style: { color: "red" } }, { children: "*" })), ") \uD544\uC218\uC785\uB825"] }))))] })), (0, jsx_runtime_1.jsx)(buttons_1.default, { buttons: props.buttons, options: props.options, setInnerLoading: setInnerLoading })] }))), (0, jsx_runtime_1.jsxs)("div", __assign({ ref: table, className: "dev-table-wrapper", css: (0, react_2.css)({ minWidth: (_j = (_h = props.options) === null || _h === void 0 ? void 0 : _h.minWidth) !== null && _j !== void 0 ? _j : 0 }) }, { children: [(0, jsx_runtime_1.jsx)(devs_dt_thead_1.default, { thead: thead, setHeaderWidth: setHeaderWidth }), (0, jsx_runtime_1.jsx)(devs_dt_tbody_1.default, { tbody: tbody, headerWidth: headerWidth })] }))] })));
 });
 exports.default = react_1.default.memo(DevsDataTable);

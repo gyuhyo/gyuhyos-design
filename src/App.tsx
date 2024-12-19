@@ -6,6 +6,8 @@ import { IDataSource, IDataTableColumn } from "./lib/devs-datatable/_types";
 import DevsDataTable from "./lib/devs-datatable";
 import { DatePicker } from "antd";
 
+const LayerPopup = React.lazy(() => import("./lib/layer-popup/index"));
+
 const dummyData = [
   {
     "1": "Group 1",
@@ -103,27 +105,26 @@ function generateDummyData() {
   return data;
 }
 
-function App() {
+const App: React.FC<{}> = () => {
   const { showMessage } = useMessage();
   const tb = React.useRef<any>(null);
   const tb2 = React.useRef<any>(null);
+  const [focusedRow, setFocusedRow] = React.useState<IDataSource | null>(null);
+  const [isLayerPopOpen, setIsLayerPopOpen] = React.useState<boolean>(false);
   const [dataSource, setDataSource] = React.useState<IDataSource[]>(dummyData);
   const [columns, setColumns] = React.useState<IDataTableColumn[]>([
     {
       key: true,
       field: "1",
       title: "1",
-      width: 200,
       required: true,
       resizing: false,
       merge: true,
-      updatable: false,
     },
     {
       key: true,
       field: "112",
       title: "1",
-      width: 200,
       type: "number",
       isNotNullSort: true,
     },
@@ -174,7 +175,6 @@ function App() {
         {
           field: "3",
           title: "3",
-          width: 150,
           type: "date",
           required: true,
           style: () => ({
@@ -219,10 +219,6 @@ function App() {
     },
   ]);
 
-  React.useEffect(() => {
-    console.log(dataSource);
-  }, [dataSource]);
-
   const handleAddClick = () => {
     setDataSource((prev) => {
       return [{ checked: true, mode: "c" }, ...prev];
@@ -232,7 +228,9 @@ function App() {
   const handleSaveClick = async () => {
     if (!tb.current) return;
 
-    const { valid, data } = await tb.current.api.onValidationCheck();
+    //setIsLayerPopOpen(true);
+
+    const { data, valid } = await tb.current.api.onValidationCheck();
     console.log(valid);
 
     if (!valid) {
@@ -246,17 +244,16 @@ function App() {
       return;
     }
 
-    showMessage({
-      title: "저장 완료",
-      type: "success",
-      message: "저장되었습니다.",
-      isCancelButtonVisible: false,
-      onOkClick: (e: any) => {
-        dummyData[0]["1"] = "123123";
-        setDataSource(dummyData);
-      },
-    });
-    console.log(data);
+    // await showMessage({
+    //   title: "저장 완료",
+    //   type: "success",
+    //   message: "저장되었습니다.",
+    //   isCancelButtonVisible: false,
+    //   onOkClick: (e: any) => {
+    //     dummyData[0]["1"] = "123123";
+    //     setDataSource(dummyData);
+    //   },
+    // });
   };
 
   const handleDeleteClick = async () => {
@@ -306,13 +303,27 @@ function App() {
       />*/}
       <DevsDataTable
         ref={tb}
-        title="생산 계획 등록"
+        title={
+          <Button
+            onClick={() => {
+              if (focusedRow) {
+                tb.current.api.setValue({
+                  rowId: focusedRow.rowId,
+                  field: "1",
+                  value: "123",
+                });
+              }
+            }}
+          >
+            123
+          </Button>
+        }
         columns={columns}
         setColumns={setColumns}
         dataSource={dataSource}
         setDataSource={setDataSource}
         focusedRowChanged={(row) => {
-          console.log(row);
+          setFocusedRow(row);
         }}
         options={{
           readonly: false,
@@ -324,9 +335,23 @@ function App() {
           rowOrderEnd: (data) => {
             console.log(data);
           },
+          rowEditable: ({ index, row }) => {
+            if (index === 2) return false;
+
+            return true;
+          },
+          rowStyle: ({ index, row, prevRow, nextRow }) => {
+            if (index > 0 && index < dataSource.length - 1) {
+              return {
+                "& .devs-dt-cell": {
+                  borderBottom: "2px solid #000",
+                },
+              };
+            }
+            return {};
+          },
         }}
         buttons={{
-          isVisible: true,
           export: {
             visible: true,
             excel: true,
@@ -338,8 +363,20 @@ function App() {
           onDeleteClick: handleDeleteClick,
         }}
       />
+      {isLayerPopOpen && (
+        <React.Suspense>
+          <LayerPopup
+            title={"test"}
+            width={1200}
+            footer={<>asd</>}
+            onCloseClick={() => setIsLayerPopOpen(false)}
+          >
+            품목
+          </LayerPopup>
+        </React.Suspense>
+      )}
     </div>
   );
-}
+};
 
 export default App;

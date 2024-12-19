@@ -9,7 +9,33 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 import { jsx as _jsx, jsxs as _jsxs } from "@emotion/react/jsx-runtime";
+/** @jsxImportSource @emotion/react */
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import advancedFormat from "dayjs/plugin/advancedFormat";
@@ -30,8 +56,14 @@ dayjs.extend(weekYear);
 dayjs.locale("ko");
 function DevsDtCell(_a) {
     var _b, _c, _d, _e, _f, _g, _h;
-    var register = _a.register, control = _a.control, col = _a.col, mode = _a.mode, defaultValue = _a.defaultValue, error = _a.error, autoFocus = _a.autoFocus, row = _a.row, merge = _a.merge, setValue = _a.setValue, rowIndex = _a.rowIndex;
-    var _j = useDt(), focusedRow = _j.focusedRow, focusedCell = _j.focusedCell, setFocusedCell = _j.setFocusedCell, setDataSource = _j.setDataSource, setColumns = _j.setColumns;
+    var register = _a.register, control = _a.control, col = _a.col, mode = _a.mode, defaultValue = _a.defaultValue, error = _a.error, autoFocus = _a.autoFocus, row = _a.row, merge = _a.merge, setValue = _a.setValue, getValue = _a.getValue, rowIndex = _a.rowIndex, trigger = _a.trigger;
+    var _j = useDt(), focusedRow = _j.focusedRow, focusedCell = _j.focusedCell, setFocusedCell = _j.setFocusedCell, setDataSource = _j.setDataSource, setColumns = _j.setColumns, options = _j.options;
+    var isCellEdit = React.useMemo(function () {
+        var _a;
+        if ((options === null || options === void 0 ? void 0 : options.editType) === undefined || (options === null || options === void 0 ? void 0 : options.editType) === "row")
+            return false;
+        return (_a = row.editedCells) === null || _a === void 0 ? void 0 : _a.includes(col.field);
+    }, [options === null || options === void 0 ? void 0 : options.editType, row]);
     var cellRef = React.useRef(null);
     var divRef = React.useRef(null);
     React.useEffect(function () {
@@ -107,11 +139,35 @@ function DevsDtCell(_a) {
         }
         return classes.join(" ");
     }, [col.sticky, error, focusedCell, focusedRow]);
+    var getDefaultValue = function (val) {
+        if (col.defaultValue !== undefined) {
+            return col.defaultValue({
+                row: row,
+                value: defaultValue,
+                index: rowIndex,
+                getValue: getValue,
+            });
+        }
+        return val;
+    };
     var cellComp = React.useMemo(function () {
-        if (col.type === "date") {
-            return (_jsx(Controller, { control: control, name: col.field, defaultValue: defaultValue ? dayjs(defaultValue) : null, rules: { required: col.required }, render: function (_a) {
+        if (col.editor !== undefined) {
+            return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue || null), rules: { required: col.required }, render: function (_a) {
                     var onChange = _a.field.onChange;
-                    return (_jsx(DatePicker, __assign({ size: "small", placeholder: "\uB0A0\uC9DC \uC120\uD0DD", defaultValue: defaultValue ? dayjs(defaultValue) : null, onChange: function (_, v) {
+                    return col.editor({
+                        value: defaultValue,
+                        row: row,
+                        index: rowIndex,
+                        onChange: onChange,
+                        setValue: setValue,
+                        getValue: getValue,
+                    });
+                } }));
+        }
+        if (col.type === "date") {
+            return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(dayjs(defaultValue) || null), rules: { required: col.required }, render: function (_a) {
+                    var onChange = _a.field.onChange;
+                    return (_jsx(DatePicker, __assign({ size: "small", placeholder: "\uB0A0\uC9DC \uC120\uD0DD", defaultValue: getDefaultValue(dayjs(defaultValue) || null), onChange: function (_, v) {
                             onChange(v);
                             if (col.onChange !== undefined) {
                                 col.onChange({
@@ -120,13 +176,14 @@ function DevsDtCell(_a) {
                                     index: rowIndex,
                                     setDataSource: setDataSource,
                                     setValue: setValue,
+                                    getValue: getValue,
                                 });
                             }
-                        }, autoFocus: autoFocus }, col.inputOptions)));
+                        }, autoFocus: (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click" ? true : autoFocus }, col.inputOptions)));
                 } }));
         }
         if (col.type === "select") {
-            return (_jsx(Controller, { control: control, name: col.field, defaultValue: defaultValue || null, rules: { required: col.required }, render: function (_a) {
+            return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue || null), rules: { required: col.required }, render: function (_a) {
                     var onChange = _a.field.onChange;
                     return (_jsx(Select, __assign({ size: "small", showSearch: true, onChange: function (v) {
                             onChange(v);
@@ -137,16 +194,19 @@ function DevsDtCell(_a) {
                                     index: rowIndex,
                                     setDataSource: setDataSource,
                                     setValue: setValue,
+                                    getValue: getValue,
                                 });
                             }
-                        }, defaultValue: defaultValue || null, autoFocus: autoFocus }, col.inputOptions, { children: col.options &&
+                        }, defaultValue: getDefaultValue(defaultValue || null), autoFocus: (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click" ? true : autoFocus }, col.inputOptions, { children: col.options &&
                             col.options.map(function (op) { return (_jsx(Select.Option, __assign({ value: op.value }, { children: op.label }), op.value)); }) })));
                 } }));
         }
         if (col.type === "number") {
-            return (_jsx(Controller, { control: control, name: col.field, defaultValue: defaultValue || null, rules: { required: col.required }, render: function (_a) {
+            return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue || null), rules: { required: col.required }, render: function (_a) {
                     var onChange = _a.field.onChange;
-                    return (_jsx(InputNumber, __assign({ size: "small", onChange: function (v) {
+                    return (_jsx(InputNumber, __assign({ size: "small", onBlur: function (e) {
+                            onChange(e.target.value);
+                        }, onChange: function (v) {
                             onChange(v);
                             if (col.onChange !== undefined) {
                                 col.onChange({
@@ -155,9 +215,10 @@ function DevsDtCell(_a) {
                                     index: rowIndex,
                                     setDataSource: setDataSource,
                                     setValue: setValue,
+                                    getValue: getValue,
                                 });
                             }
-                        }, defaultValue: defaultValue || null, autoFocus: autoFocus }, col.inputOptions)));
+                        }, defaultValue: getDefaultValue(defaultValue || null), autoFocus: (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click" ? true : autoFocus }, col.inputOptions)));
                 } }));
         }
         if (col.type === "textarea") {
@@ -171,21 +232,11 @@ function DevsDtCell(_a) {
                             index: rowIndex,
                             setDataSource: setDataSource,
                             setValue: setValue,
+                            getValue: getValue,
                         });
                     }
                 },
-            }), { defaultValue: defaultValue || null, autoFocus: autoFocus }, col.inputOptions)));
-        }
-        if (col.editor !== undefined) {
-            return (_jsx(Controller, { control: control, name: col.field, defaultValue: defaultValue || null, rules: { required: col.required }, render: function (_a) {
-                    var onChange = _a.field.onChange;
-                    return col.editor({
-                        value: defaultValue,
-                        row: row,
-                        index: rowIndex,
-                        onChange: onChange,
-                    });
-                } }));
+            }), { defaultValue: getDefaultValue(defaultValue || null), autoFocus: (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click" ? true : autoFocus }, col.inputOptions)));
         }
         return (_jsx("input", __assign({}, register(col.field, {
             required: col.required,
@@ -197,33 +248,87 @@ function DevsDtCell(_a) {
                         index: rowIndex,
                         setDataSource: setDataSource,
                         setValue: setValue,
+                        getValue: getValue,
                     });
                 }
             },
-        }), { type: "text", defaultValue: defaultValue || null, autoFocus: autoFocus, autoComplete: "off" }, col.inputOptions)));
+        }), { type: "text", defaultValue: getDefaultValue(defaultValue || null), autoFocus: (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click" ? true : autoFocus, autoComplete: "off" }, col.inputOptions)));
     }, [col, autoFocus, defaultValue, row, rowIndex]);
+    var GetCell = function () {
+        if (col.render !== undefined) {
+            return col.render({
+                value: defaultValue,
+                row: row,
+                index: rowIndex,
+                getValue: getValue,
+            });
+        }
+        else {
+            return (_jsx("span", { children: getDefaultValue(col.type === "number"
+                    ? defaultValue === null || defaultValue === void 0 ? void 0 : defaultValue.toLocaleString()
+                    : defaultValue) }));
+        }
+    };
     var Cell = React.useMemo(function () {
-        if (mode === undefined ||
+        var rowEditCheck = mode === undefined ||
             mode === "r" ||
             (mode === "u" && col.updatable === false) ||
-            (mode === "c" && col.editable === false)) {
-            if (col.render !== undefined) {
-                return col.render({ value: defaultValue, row: row, index: rowIndex });
+            (mode === "c" && col.editable === false);
+        var cellEditCheck = (options === null || options === void 0 ? void 0 : options.editType) === "cell" && isCellEdit === false;
+        if ((options === null || options === void 0 ? void 0 : options.editType) === undefined || (options === null || options === void 0 ? void 0 : options.editType) === "row") {
+            if (rowEditCheck) {
+                return GetCell();
             }
             else {
-                return (_jsx("span", { children: col.type === "number"
-                        ? defaultValue === null || defaultValue === void 0 ? void 0 : defaultValue.toLocaleString()
-                        : defaultValue }));
+                return cellComp;
             }
         }
         else {
-            return cellComp;
+            if (cellEditCheck) {
+                return GetCell();
+            }
+            else {
+                return cellComp;
+            }
         }
-    }, [defaultValue, row, col, mode]);
+    }, [defaultValue, row, col, mode, isCellEdit]);
+    var onCellEditChange = React.useCallback(function (clickType) {
+        var _a, _b;
+        if ((options === null || options === void 0 ? void 0 : options.readonly) === true ||
+            col.editable === false ||
+            col.updatable === false)
+            return;
+        if (clickType === "doubleClick" && (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click")
+            return;
+        if (clickType === "click" &&
+            ((options === null || options === void 0 ? void 0 : options.cellEditClickType) === undefined ||
+                (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "doubleClick"))
+            return;
+        if (!((_b = (_a = options === null || options === void 0 ? void 0 : options.rowEditable) === null || _a === void 0 ? void 0 : _a.call(options, { index: rowIndex, row: row })) !== null && _b !== void 0 ? _b : true))
+            return;
+        if ((options === null || options === void 0 ? void 0 : options.editType) === "cell" && isCellEdit === false) {
+            setValue("editedCells", __spreadArray(__spreadArray([], __read(row.editedCells), false), [col.field], false));
+            setDataSource(function (prev) {
+                return prev.map(function (x) {
+                    if (x.rowId === row.rowId) {
+                        return __assign(__assign({}, x), { checked: true, editedCells: __spreadArray(__spreadArray([], __read(x.editedCells), false), [col.field], false) });
+                    }
+                    return x;
+                });
+            });
+        }
+    }, [options, isCellEdit]);
     if (merge !== undefined && merge.hidden === true) {
         return (_jsx("td", { ref: cellRef, className: classString, rowSpan: 0, "data-hidden": true, "data-width": col.width, style: __assign({ display: "none", "--width": col.width ? "".concat(col.width, "px") : "100px", textAlign: (_b = col.align) !== null && _b !== void 0 ? _b : "left" }, col.style) }));
     }
-    return (_jsxs("td", __assign({ ref: cellRef, className: classString, rowSpan: merge === null || merge === void 0 ? void 0 : merge.rowSpan, "data-hidden": false, "data-width": (_c = col.width) !== null && _c !== void 0 ? _c : 100, "data-editable": (_d = col.editable) !== null && _d !== void 0 ? _d : true, "data-updatable": (_e = col.updatable) !== null && _e !== void 0 ? _e : true, "data-required": (_f = col.required) !== null && _f !== void 0 ? _f : false, onClick: function () { return setFocusedCell(col.field); }, style: __assign({ "--width": col.width ? "".concat(col.width, "px") : "100px", textAlign: (_g = col.align) !== null && _g !== void 0 ? _g : "left" }, (_h = col.style) === null || _h === void 0 ? void 0 : _h.call(col, { target: "thead", value: defaultValue, row: row })) }, { children: [_jsx("div", __assign({ ref: divRef, style: {
+    return (_jsxs("td", __assign({ ref: cellRef, className: classString, rowSpan: merge === null || merge === void 0 ? void 0 : merge.rowSpan, "data-field": col.field, "data-hidden": false, "data-width": (_c = col.width) !== null && _c !== void 0 ? _c : 100, "data-edit-mode": isCellEdit, "data-editable": (_d = col.editable) !== null && _d !== void 0 ? _d : true, "data-updatable": (_e = col.updatable) !== null && _e !== void 0 ? _e : true, "data-required": (_f = col.required) !== null && _f !== void 0 ? _f : false, onClick: function () {
+            setFocusedCell(col.field);
+            onCellEditChange("click");
+        }, onDoubleClick: function () { return onCellEditChange("doubleClick"); }, style: __assign({ "--width": col.width ? "".concat(col.width, "px") : "100px", textAlign: (_g = col.align) !== null && _g !== void 0 ? _g : "left" }, (_h = col.style) === null || _h === void 0 ? void 0 : _h.call(col, {
+            target: "tbody",
+            value: defaultValue,
+            row: row,
+        })) }, { children: [_jsx("div", __assign({ ref: divRef, style: {
                     position: "relative",
                     overflow: "hidden",
                     whiteSpace: "pre",

@@ -15,11 +15,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsx_runtime_1 = require("@emotion/react/jsx-runtime");
+/** @jsxImportSource @emotion/react */
 var react_1 = __importDefault(require("react"));
 var react_hook_form_1 = require("react-hook-form");
 var devs_dt_context_1 = require("../context/devs-dt-context");
 var devs_dt_cell_1 = __importDefault(require("../devs-dt-cell"));
 var message_context_1 = require("../../alert-message/context/message-context");
+var react_2 = require("@emotion/react");
 var RowNumberCell = function (_a) {
     var index = _a.index;
     return ((0, jsx_runtime_1.jsx)("td", __assign({ className: "devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-index-cell", style: { "--width": "50px" } }, { children: index + 1 })));
@@ -55,13 +57,21 @@ var RowChangeOrderCell = function (_a) {
         } }, dragHandleProps, { children: mode !== "c" && "\u2195" })));
 };
 function DevsDtRow(_a) {
+    var _b;
     var data = _a.data, index = _a.index, rowKey = _a.rowKey, lastNode = _a.lastNode, dragProvided = _a.dragProvided, dragSnapshot = _a.dragSnapshot;
     var showMessage = (0, message_context_1.useMessage)().showMessage;
-    var _b = (0, devs_dt_context_1.useDt)(), columns = _b.columns, keyField = _b.keyField, setDataSource = _b.setDataSource, options = _b.options, formsRef = _b.formsRef, focusedRow = _b.focusedRow, setFocusedRow = _b.setFocusedRow, focusedCell = _b.focusedCell, editCount = _b.editCount;
+    var _c = (0, devs_dt_context_1.useDt)(), columns = _c.columns, keyField = _c.keyField, setDataSource = _c.setDataSource, options = _c.options, formsRef = _c.formsRef, focusedRow = _c.focusedRow, setFocusedRow = _c.setFocusedRow, focusedCell = _c.focusedCell, editCount = _c.editCount, dataSource = _c.dataSource;
     var form = (0, react_hook_form_1.useForm)({
         defaultValues: data,
+        mode: "all",
     });
-    var control = form.control, register = form.register, handleSubmit = form.handleSubmit, errors = form.formState.errors, setValue = form.setValue, reset = form.reset;
+    var control = form.control, register = form.register, handleSubmit = form.handleSubmit, errors = form.formState.errors, setValue = form.setValue, getValues = form.getValues, reset = form.reset, watch = form.watch, trigger = form.trigger;
+    var prevRow = react_1.default.useMemo(function () {
+        return dataSource[index - 1];
+    }, [dataSource[index - 1]]);
+    var nextRow = react_1.default.useMemo(function () {
+        return dataSource[index + 1];
+    }, [dataSource[index + 1]]);
     react_1.default.useEffect(function () {
         if (!Object.keys(formsRef.current).includes(rowKey)) {
             formsRef.current[rowKey] = form;
@@ -72,9 +82,13 @@ function DevsDtRow(_a) {
         setValue("checked", data.checked);
     }, [data.mode, data.checked]);
     var onEditModeClick = function () {
+        var _a, _b;
         if ((options === null || options === void 0 ? void 0 : options.readonly) === true)
             return;
-        if (data.mode === "r") {
+        if (!((_b = (_a = options === null || options === void 0 ? void 0 : options.rowEditable) === null || _a === void 0 ? void 0 : _a.call(options, { index: index, row: data })) !== null && _b !== void 0 ? _b : true))
+            return;
+        if (data.mode === "r" &&
+            ((options === null || options === void 0 ? void 0 : options.editType) === undefined || (options === null || options === void 0 ? void 0 : options.editType) === "row")) {
             if ((options === null || options === void 0 ? void 0 : options.multipleEdit) === false) {
                 if (editCount > 0) {
                     showMessage({
@@ -138,10 +152,15 @@ function DevsDtRow(_a) {
         }
         return focusabled;
     }, [lastNode, data]);
-    return ((0, jsx_runtime_1.jsxs)("tr", __assign({ className: "devs-dt-row".concat((focusedRow === null || focusedRow === void 0 ? void 0 : focusedRow.rowId) === data.rowId ? " devs-dt-focused-row" : "").concat(data.checked === true ? " devs-dt-checked-row" : ""), onSubmit: handleSubmit(function () { }), onDoubleClick: onEditModeClick, onClick: function () { return setFocusedRow(data); }, "data-edit-mode": data.mode, ref: dragProvided.innerRef }, dragProvided.draggableProps, { style: __assign({}, dragProvided.draggableProps.style) }, { children: [(options === null || options === void 0 ? void 0 : options.enabledRowOrder) && ((0, jsx_runtime_1.jsx)(RowChangeOrderCell, { mode: data.mode, dragHandleProps: dragProvided.dragHandleProps })), (options === null || options === void 0 ? void 0 : options.showRowNumber) && (0, jsx_runtime_1.jsx)(RowNumberCell, { index: index }), (options === null || options === void 0 ? void 0 : options.enabledRowCheck) && ((0, jsx_runtime_1.jsx)(RowCheckCell, { data: data, checked: data.checked, setDataSource: setDataSource, setValue: setValue, multipleRowCheck: options.multipleRowCheck })), lastNode &&
+    return ((0, jsx_runtime_1.jsxs)("tr", __assign({ className: "devs-dt-row".concat((focusedRow === null || focusedRow === void 0 ? void 0 : focusedRow.rowId) === data.rowId ? " devs-dt-focused-row" : "").concat(data.checked === true ? " devs-dt-checked-row" : ""), onSubmit: handleSubmit(function () { }), onDoubleClick: onEditModeClick, onClick: function () { return setFocusedRow(data); }, "data-edit-mode": data.mode, ref: dragProvided.innerRef }, dragProvided.draggableProps, { style: __assign({}, dragProvided.draggableProps.style), css: (0, react_2.css)((_b = options === null || options === void 0 ? void 0 : options.rowStyle) === null || _b === void 0 ? void 0 : _b.call(options, {
+            index: index,
+            row: data,
+            prevRow: prevRow,
+            nextRow: nextRow,
+        })) }, { children: [(options === null || options === void 0 ? void 0 : options.enabledRowOrder) && ((0, jsx_runtime_1.jsx)(RowChangeOrderCell, { mode: data.mode, dragHandleProps: dragProvided.dragHandleProps })), (options === null || options === void 0 ? void 0 : options.showRowNumber) && (0, jsx_runtime_1.jsx)(RowNumberCell, { index: index }), (options === null || options === void 0 ? void 0 : options.enabledRowCheck) && ((0, jsx_runtime_1.jsx)(RowCheckCell, { data: data, checked: data.checked, setDataSource: setDataSource, setValue: setValue, multipleRowCheck: options.multipleRowCheck })), lastNode &&
                 lastNode.map(function (col, idx) {
-                    var _a;
-                    return ((0, jsx_runtime_1.jsx)(devs_dt_cell_1.default, { register: register, control: control, col: col, mode: data.mode, defaultValue: data[col.field], error: errors.hasOwnProperty(col.field), autoFocus: GetAutoFocus(col.field), row: data, setValue: setValue, merge: (_a = data._merge) === null || _a === void 0 ? void 0 : _a[col.field], rowIndex: index }, "".concat(rowKey, "-").concat(col.field)));
+                    var _a, _b, _c;
+                    return ((0, jsx_runtime_1.jsx)(devs_dt_cell_1.default, { register: register, control: control, col: col, mode: data.mode, defaultValue: data[col.field], error: errors.hasOwnProperty(col.field), autoFocus: (_b = (_a = col.autoFocus) === null || _a === void 0 ? void 0 : _a.call(col, data.mode)) !== null && _b !== void 0 ? _b : GetAutoFocus(col.field), row: data, setValue: setValue, merge: (_c = data._merge) === null || _c === void 0 ? void 0 : _c[col.field], rowIndex: index, getValue: getValues, trigger: trigger }, "".concat(rowKey, "-").concat(col.field)));
                 })] })));
 }
 exports.default = react_1.default.memo(DevsDtRow);
