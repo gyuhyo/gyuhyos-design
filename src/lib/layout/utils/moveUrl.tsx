@@ -3,7 +3,10 @@ let defaultTitle = "";
 export const setDefaultTitle = (title: string) => (defaultTitle = title);
 
 export const moveUrl = (url: string, title: string) => {
-  const assignTitle = defaultTitle === "" ? "" : `${defaultTitle} `;
+  const assignTitle =
+    typeof window === undefined || defaultTitle === ""
+      ? ""
+      : `${defaultTitle} `;
   window.history.pushState(
     { gm: url },
     `${assignTitle}MES - ${title}`,

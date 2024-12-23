@@ -228,7 +228,7 @@ const App: React.FC<{}> = () => {
   const handleSaveClick = async () => {
     if (!tb.current) return;
 
-    //setIsLayerPopOpen(true);
+    setIsLayerPopOpen(true);
 
     const { data, valid } = await tb.current.api.onValidationCheck();
     console.log(valid);
@@ -331,7 +331,7 @@ const App: React.FC<{}> = () => {
           enabledRowOrder: true,
           enabledRowCheck: true,
           multipleRowCheck: false,
-          multipleEdit: true,
+          multipleEdit: false,
           rowOrderEnd: (data) => {
             console.log(data);
           },

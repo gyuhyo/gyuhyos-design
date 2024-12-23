@@ -87,9 +87,11 @@ function SideSettingSliderContainer() {
                                     }) }, { children: [_jsx(Button, __assign({ bgColor: "#df4873", color: "#fff", onClick: onFontSizeDown, compact: true, rounded: false }, { children: "-" })), _jsx("p", __assign({ css: css({
                                                 padding: "0px 7px",
                                                 background: "#fff",
-                                            }) }, { children: fontSize.toFixed(2) })), _jsx(Button, __assign({ bgColor: "#1f619d", color: "#fff", onClick: onFontSizeUp, compact: true, rounded: false }, { children: "+" }))] }))] })), _jsx(Button, __assign({ bgColor: "#df4873", color: "#fff", onClick: function () {
-                                window.sessionStorage.removeItem("menu-storage");
-                                window.location.reload();
-                            }, rounded: false }, { children: "\uC138\uC158 \uC0AD\uC81C" }))] }))] })) })));
+                                            }) }, { children: fontSize.toFixed(2) })), _jsx(Button, __assign({ bgColor: "#1f619d", color: "#fff", onClick: onFontSizeUp, compact: true, rounded: false }, { children: "+" }))] }))] })), _jsxs("div", { children: [_jsx(Button, __assign({ bgColor: "#df4873", color: "#fff", onClick: function () {
+                                        window.sessionStorage.removeItem("menu-storage");
+                                        window.location.reload();
+                                    }, style: {
+                                        width: "100%",
+                                    }, rounded: false }, { children: "\uC138\uC158 \uC0AD\uC81C" })), _jsx("p", __assign({ style: { marginTop: 7, fontSize: 11 } }, { children: "\uC5C5\uB370\uC774\uD2B8\uB85C \uC778\uD55C \uBA54\uB274\uAC00 \uC62C\uBC14\uB974\uAC8C \uC791\uB3D9\uD558\uC9C0 \uC54A\uC744\uB54C \uD074\uB9AD" }))] })] }))] })) })));
 }
 export default SideSettingSliderContainer;

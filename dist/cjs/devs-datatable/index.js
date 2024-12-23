@@ -163,6 +163,7 @@ var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
                         case 2:
                             validations = _a.sent();
                             allValid = validations.every(function (result) { return result.valid; });
+                            console.log("allvalid", allValid);
                             if (allValid) {
                                 allData = validations.map(function (result) { return result.data; });
                                 return [2 /*return*/, { valid: true, data: allData }];
@@ -204,7 +205,9 @@ var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
                 var rowId = _a.rowId, field = _a.field, value = _a.value;
                 var form = formsRef.current[rowId];
                 if (form) {
+                    console.log("find");
                     form.setValue(field, value);
+                    form.trigger();
                 }
             },
         },

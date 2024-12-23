@@ -62,11 +62,28 @@ function SideMenuItemGroup({ group, isShow }: SideMenuItemGroupProps) {
               className={`fa-${
                 group.iconType === undefined ? "solid" : group.iconType
               } fa-${group.iconName}`}
-              css={css({
-                width: "21px",
-                fontSize: "21px",
-                marginRight: 20,
-              })}
+              css={css([
+                {
+                  width: "21px",
+                  fontSize: "21px",
+                  marginRight: 20,
+                },
+                !isShow && {
+                  "&:hover": {
+                    "&::after": {
+                      content: `'${group.title}'`,
+                      position: "fixed",
+                      left: "60px",
+                      background: "#000",
+                      color: "#fff",
+                      fontSize: "12px",
+                      padding: "7px 3px",
+                      transform: "background-color 200ms linear",
+                      zIndex: 1,
+                    },
+                  },
+                },
+              ])}
             />
           )}
           {group.title}

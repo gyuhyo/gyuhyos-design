@@ -85,7 +85,7 @@ const LayerPopupHeader: React.FC<LayerPopupHeaderProps> = React.memo(
 
       if (
         container &&
-        props.isMaximized &&
+        !props.isMaximized &&
         !container.classList.contains("softResizing")
       ) {
         container.classList.add("softResizing");

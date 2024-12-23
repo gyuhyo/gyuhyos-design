@@ -38,7 +38,6 @@ const TabPanelContentDynamicComponent: React.FC<any> = React.memo(() => {
 
       contentRef.current.scrollTo({
         left: findIndex * contentRef.current.clientWidth,
-        behavior: "smooth",
       });
     };
 
