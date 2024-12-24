@@ -58,7 +58,6 @@ var TabPanelContentDynamicComponent = React.memo(function () {
             var findIndex = openedMenus.findIndex(function (f) { return f.group === selectedMenu.gr && f.key === selectedMenu.mn; });
             contentRef.current.scrollTo({
                 left: findIndex * contentRef.current.clientWidth,
-                behavior: "smooth",
             });
         };
         moveToCurrentContent();

@@ -62,11 +62,28 @@ function SideMenuItemGroup(_a) {
                     else {
                         openMenu(group);
                     }
-                } }, { children: [_jsxs("span", { children: [group.iconName !== undefined && (_jsx("i", { className: "fa-".concat(group.iconType === undefined ? "solid" : group.iconType, " fa-").concat(group.iconName), css: css({
-                                    width: "21px",
-                                    fontSize: "21px",
-                                    marginRight: 20,
-                                }) })), group.title] }), group.children !== undefined && group.children.length > 0 && (_jsx("i", { className: "fa-solid fa-angle-down", css: css({
+                } }, { children: [_jsxs("span", { children: [group.iconName !== undefined && (_jsx("i", { className: "fa-".concat(group.iconType === undefined ? "solid" : group.iconType, " fa-").concat(group.iconName), css: css([
+                                    {
+                                        width: "21px",
+                                        fontSize: "21px",
+                                        marginRight: 20,
+                                    },
+                                    !isShow && {
+                                        "&:hover": {
+                                            "&::after": {
+                                                content: "'".concat(group.title, "'"),
+                                                position: "fixed",
+                                                left: "60px",
+                                                background: "#000",
+                                                color: "#fff",
+                                                fontSize: "12px",
+                                                padding: "7px 3px",
+                                                transform: "background-color 200ms linear",
+                                                zIndex: 1,
+                                            },
+                                        },
+                                    },
+                                ]) })), group.title] }), group.children !== undefined && group.children.length > 0 && (_jsx("i", { className: "fa-solid fa-angle-down", css: css({
                             transform: groupOpened ? "rotate(180deg)" : "rotate(0deg)",
                             transition: "transform 200ms ease-in-out",
                         }) }))] })), _jsx("ul", __assign({ css: css({

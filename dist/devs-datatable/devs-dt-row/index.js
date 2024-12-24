@@ -23,7 +23,8 @@ var RowNumberCell = function (_a) {
 };
 var RowCheckCell = function (_a) {
     var data = _a.data, checked = _a.checked, setDataSource = _a.setDataSource, setValue = _a.setValue, multipleRowCheck = _a.multipleRowCheck;
-    return (_jsx("td", __assign({ className: "devs-dt-cell devs-dt-sticky-col", style: { "--width": "30px" } }, { children: _jsx("input", { type: "checkbox", checked: checked || false, onChange: function () {
+    return (_jsx("td", __assign({ className: "devs-dt-cell devs-dt-sticky-col", style: { "--width": "30px" } }, { children: _jsx("input", { type: "checkbox", checked: checked || false, style: { cursor: "pointer" }, onChange: function (e) {
+                e.stopPropagation();
                 setValue("checked", !checked);
                 setDataSource(function (prev) {
                     if (checked === false && multipleRowCheck === false) {
@@ -51,6 +52,17 @@ var RowChangeOrderCell = function (_a) {
             cursor: mode !== "c" ? "grab" : "unset !important",
         } }, dragHandleProps, { children: mode !== "c" && "\u2195" })));
 };
+var RowExpandCell = function (_a) {
+    var setDataSource = _a.setDataSource, data = _a.data, index = _a.index;
+    return (_jsx("td", __assign({ className: "devs-dt-cell devs-dt-th devs-dt-sticky-col", style: { "--width": "30px", cursor: "pointer" }, onClick: function (e) {
+            e.stopPropagation();
+            setDataSource(function (prev) {
+                return prev.map(function (p) {
+                    return p.rowId === data.rowId ? __assign(__assign({}, p), { expand: !p.expand }) : __assign({}, p);
+                });
+            });
+        } }, { children: _jsx("button", { className: "expand_ico2 ".concat(data.expand ? "expand_ico_active2" : "") }) })));
+};
 function DevsDtRow(_a) {
     var _b;
     var data = _a.data, index = _a.index, rowKey = _a.rowKey, lastNode = _a.lastNode, dragProvided = _a.dragProvided, dragSnapshot = _a.dragSnapshot;
@@ -76,8 +88,9 @@ function DevsDtRow(_a) {
         setValue("mode", data.mode);
         setValue("checked", data.checked);
     }, [data.mode, data.checked]);
-    var onEditModeClick = function () {
+    var onEditModeClick = function (e) {
         var _a, _b;
+        console.log(e.target);
         if ((options === null || options === void 0 ? void 0 : options.readonly) === true)
             return;
         if (!((_b = (_a = options === null || options === void 0 ? void 0 : options.rowEditable) === null || _a === void 0 ? void 0 : _a.call(options, { index: index, row: data })) !== null && _b !== void 0 ? _b : true))
@@ -152,7 +165,7 @@ function DevsDtRow(_a) {
             row: data,
             prevRow: prevRow,
             nextRow: nextRow,
-        })) }, { children: [(options === null || options === void 0 ? void 0 : options.enabledRowOrder) && (_jsx(RowChangeOrderCell, { mode: data.mode, dragHandleProps: dragProvided.dragHandleProps })), (options === null || options === void 0 ? void 0 : options.showRowNumber) && _jsx(RowNumberCell, { index: index }), (options === null || options === void 0 ? void 0 : options.enabledRowCheck) && (_jsx(RowCheckCell, { data: data, checked: data.checked, setDataSource: setDataSource, setValue: setValue, multipleRowCheck: options.multipleRowCheck })), lastNode &&
+        })) }, { children: [(options === null || options === void 0 ? void 0 : options.enabledRowOrder) && (_jsx(RowChangeOrderCell, { mode: data.mode, dragHandleProps: dragProvided.dragHandleProps })), (options === null || options === void 0 ? void 0 : options.enabledExpand) && (_jsx(RowExpandCell, { setDataSource: setDataSource, data: data, index: index })), (options === null || options === void 0 ? void 0 : options.showRowNumber) && _jsx(RowNumberCell, { index: index }), (options === null || options === void 0 ? void 0 : options.enabledRowCheck) && (_jsx(RowCheckCell, { data: data, checked: data.checked, setDataSource: setDataSource, setValue: setValue, multipleRowCheck: options.multipleRowCheck })), lastNode &&
                 lastNode.map(function (col, idx) {
                     var _a, _b, _c;
                     return (_jsx(DevsDtCell, { register: register, control: control, col: col, mode: data.mode, defaultValue: data[col.field], error: errors.hasOwnProperty(col.field), autoFocus: (_b = (_a = col.autoFocus) === null || _a === void 0 ? void 0 : _a.call(col, data.mode)) !== null && _b !== void 0 ? _b : GetAutoFocus(col.field), row: data, setValue: setValue, merge: (_c = data._merge) === null || _c === void 0 ? void 0 : _c[col.field], rowIndex: index, getValue: getValues, trigger: trigger }, "".concat(rowKey, "-").concat(col.field)));

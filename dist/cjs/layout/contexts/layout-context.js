@@ -62,10 +62,11 @@ var LayoutProvider = function (_a) {
         if (!authUrl) {
             throw new Error("Please Add Auth Url From LayoutProvider Props.");
         }
-        if (path !== authUrl &&
+        if (!path.includes("popup") &&
+            path !== authUrl &&
             (user === undefined || user === null) &&
             process.env.NODE_ENV !== "production" &&
-            window.location.port !== "3000") {
+            window.location.port !== "3001") {
             window.sessionStorage.removeItem("menu-storage");
             window.sessionStorage.removeItem("user-storage");
             window.location.href = authUrl;
@@ -152,12 +153,12 @@ var LayoutProvider = function (_a) {
             gtCombo.dispatchEvent(new Event("change"));
         }
     };
-    if (path === authUrl) {
+    if (path === authUrl || path.includes("popup")) {
         return (0, jsx_runtime_1.jsx)(react_1.default.Fragment, { children: children });
     }
     if ((user === undefined || user === null) &&
         process.env.NODE_ENV !== "production" &&
-        window.location.port !== "3000") {
+        window.location.port !== "3001") {
         return (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {});
     }
     return ((0, jsx_runtime_1.jsxs)(LayoutContext.Provider, __assign({ value: {

@@ -8,6 +8,8 @@ export interface IDataSource {
 
 export interface IDataTableOptions {
   showRowNumber?: boolean;
+  enabledExpand?: boolean;
+  expandContent?: (row: IDataSource) => React.ReactNode;
   enabledRowCheck?: boolean;
   multipleRowCheck?: boolean;
   enabledRowOrder?: boolean;

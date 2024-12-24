@@ -1,6 +1,6 @@
 {
   "name": "gyuhyos-design",
-  "version": "0.3.34",
+  "version": "0.3.41",
   "description": "Copyright Gyuhyos Design Components",
   "license": "MIT",
   "author": {
@@ -53,14 +53,15 @@
     "react-dom": "^18.0.0 || ^17.0.0"
   },
   "scripts": {
-    "dev": "react-scripts start",
+    "dev": "set PORT=3001 && react-scripts start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prepare:win32": "rmdir /s /q dist && mkdir dist && tsc && copyfiles -u 2 \"src/lib/**/*.css\" dist && tsc --module commonjs --outDir ./dist/cjs",
     "prepare:mac": "rm -rf dist && mkdir dist && tsc && copyfiles -u 2 \"src/lib/**/*.css\" dist && tsc --module commonjs --outDir ./dist/cjs",
-    "prepare": "npm run prepare:mac || npm run prepare:win32"
+    "prepare": "npm run prepare:mac || npm run prepare:win32",
+    "auto-publish": "npm version patch && npm publish"
   },
   "eslintConfig": {
     "extends": [

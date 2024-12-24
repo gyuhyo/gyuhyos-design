@@ -20,7 +20,7 @@ import TabPanelContainer from "../../tab-panel/tab-panel-container";
 function RootLayout() {
     var _a = useLayout(), menuType = _a.menuType, calculWidth = _a.calculWidth;
     var pathName = window.location.pathname;
-    if (pathName === "/auth")
+    if (pathName === "/auth" || pathName.includes("popup"))
         return _jsx(_Fragment, {});
     return (_jsxs("div", __assign({ css: css({
             width: "100vw",
@@ -36,7 +36,6 @@ function RootLayout() {
                             height: "30px",
                             flex: "none",
                             background: "linear-gradient(180deg, #d8d8d8, #ddd, #fff)",
-                            borderBottom: "2px solid #d3d3d3",
                             display: "flex",
                             flexDirection: "row",
                             justifyContent: "space-between",

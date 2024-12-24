@@ -20,7 +20,7 @@ root.render(
       <LayoutProvider
         onAuthRefreshClick={() => {}}
         authUrl="/auth"
-        menuType="slide"
+        menuType="multiple"
         menus={[
           {
             main: true,

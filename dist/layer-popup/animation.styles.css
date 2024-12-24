@@ -82,6 +82,10 @@ div[data-name="layer-popup-container"] {
 }
 
 div[data-name="layer-popup-container"].softResizing {
+  -webkit-transition-property: width, height, top, left;
+  -webkit-transition-duration: 200ms;
+  -webkit-transition-timing-function: ease-in;
+
   transition-property: width, height, top, left;
   transition-duration: 200ms;
   transition-timing-function: ease-in;

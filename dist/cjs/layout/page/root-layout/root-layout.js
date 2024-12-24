@@ -25,7 +25,7 @@ var tab_panel_container_1 = __importDefault(require("../../tab-panel/tab-panel-c
 function RootLayout() {
     var _a = (0, layout_context_1.useLayout)(), menuType = _a.menuType, calculWidth = _a.calculWidth;
     var pathName = window.location.pathname;
-    if (pathName === "/auth")
+    if (pathName === "/auth" || pathName.includes("popup"))
         return (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {});
     return ((0, jsx_runtime_1.jsxs)("div", __assign({ css: (0, react_1.css)({
             width: "100vw",
@@ -41,7 +41,6 @@ function RootLayout() {
                             height: "30px",
                             flex: "none",
                             background: "linear-gradient(180deg, #d8d8d8, #ddd, #fff)",
-                            borderBottom: "2px solid #d3d3d3",
                             display: "flex",
                             flexDirection: "row",
                             justifyContent: "space-between",

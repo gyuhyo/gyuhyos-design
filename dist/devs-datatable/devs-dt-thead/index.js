@@ -52,6 +52,16 @@ var RowNumberCell = function (_a) {
     var maxDepth = _a.maxDepth;
     return (_jsx("th", __assign({ className: "devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-th-bottom-border", style: { "--width": "50px" }, rowSpan: maxDepth }, { children: "No" })));
 };
+var RowExpandCell = React.memo(function (_a) {
+    var maxDepth = _a.maxDepth, setDataSource = _a.setDataSource;
+    var _b = __read(React.useState(false), 2), isExpand = _b[0], setIsExpand = _b[1];
+    return (_jsx("th", __assign({ className: "devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-th-bottom-border", style: { "--width": "30px", cursor: "pointer" }, rowSpan: maxDepth, onClick: function () {
+            setIsExpand(!isExpand);
+            setDataSource(function (prev) {
+                return prev.map(function (p) { return (__assign(__assign({}, p), { expand: !isExpand })); });
+            });
+        } }, { children: _jsx("button", { className: "expand_ico2 ".concat(isExpand ? "expand_ico_active2" : "") }) })));
+});
 var RowCheckCell = function (_a) {
     var setDataSource = _a.setDataSource, maxDepth = _a.maxDepth, isMultipleCheck = _a.isMultipleCheck;
     return (_jsx("th", __assign({ className: "devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-th-bottom-border", style: { "--width": "30px" }, rowSpan: maxDepth }, { children: (isMultipleCheck === undefined || isMultipleCheck === true) && (_jsx("input", { name: "allCheck", type: "checkbox", onChange: function (e) {
@@ -259,7 +269,7 @@ function DevsDtTHead(_a) {
     }
     return (_jsx("div", __assign({ ref: thead, className: "devs-dt-thead-wrapper" }, { children: _jsx("table", __assign({ ref: theadRef, className: "devs-dt-table devs-dt-table-fixed" }, { children: _jsx("thead", __assign({ className: "devs-dt-thead" }, { children: rows.map(function (row, rowIndex) {
                     if (rowIndex === 0) {
-                        return (_jsxs("tr", __assign({ className: "devs-dt-row" }, { children: [(options === null || options === void 0 ? void 0 : options.enabledRowOrder) && (_jsx(RowChangeOrderCell, { maxDepth: maxDepth })), (options === null || options === void 0 ? void 0 : options.showRowNumber) && (_jsx(RowNumberCell, { maxDepth: maxDepth })), (options === null || options === void 0 ? void 0 : options.enabledRowCheck) && (_jsx(RowCheckCell, { setDataSource: setDataSource, maxDepth: maxDepth, isMultipleCheck: options.multipleRowCheck })), row, _jsx("th", { className: "devs-dt-cell devs-dt-th devs-dt-empty-header", rowSpan: maxDepth }), _jsx("th", { className: "devs-dt-cell devs-dt-th devs-dt-scrollbar-header", rowSpan: maxDepth })] }), rowIndex));
+                        return (_jsxs("tr", __assign({ className: "devs-dt-row" }, { children: [(options === null || options === void 0 ? void 0 : options.enabledRowOrder) && (_jsx(RowChangeOrderCell, { maxDepth: maxDepth })), (options === null || options === void 0 ? void 0 : options.enabledExpand) && (_jsx(RowExpandCell, { maxDepth: maxDepth, setDataSource: setDataSource })), (options === null || options === void 0 ? void 0 : options.showRowNumber) && (_jsx(RowNumberCell, { maxDepth: maxDepth })), (options === null || options === void 0 ? void 0 : options.enabledRowCheck) && (_jsx(RowCheckCell, { setDataSource: setDataSource, maxDepth: maxDepth, isMultipleCheck: options.multipleRowCheck })), row, _jsx("th", { className: "devs-dt-cell devs-dt-th devs-dt-empty-header", rowSpan: maxDepth }), _jsx("th", { className: "devs-dt-cell devs-dt-th devs-dt-scrollbar-header", rowSpan: maxDepth })] }), rowIndex));
                     }
                     else {
                         return (_jsx("tr", __assign({ className: "devs-dt-row" }, { children: row }), rowIndex));

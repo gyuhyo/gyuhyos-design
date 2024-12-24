@@ -58,9 +58,9 @@ var DevsDtProviderComponent = function (props) {
                 var _a, _b;
                 if (((_a = props.options) === null || _a === void 0 ? void 0 : _a.editType) === undefined ||
                     ((_b = props.options) === null || _b === void 0 ? void 0 : _b.editType) === "row") {
-                    return __assign({ originIndex: idx, rowId: uuid(), mode: "r", checked: false }, d);
+                    return __assign({ originIndex: idx, rowId: uuid(), mode: "r", checked: false, expand: false }, d);
                 }
-                return __assign({ originIndex: idx, rowId: uuid(), mode: "r", checked: false, editedCells: [] }, d);
+                return __assign({ originIndex: idx, rowId: uuid(), mode: "r", checked: false, expand: false, editedCells: [] }, d);
             });
         });
     }, [JSON.stringify(props.dataSource), (_b = props.options) === null || _b === void 0 ? void 0 : _b.editType]);

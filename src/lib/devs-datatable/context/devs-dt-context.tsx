@@ -55,6 +55,7 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
             rowId: uuid(),
             mode: "r",
             checked: false,
+            expand: false,
             ...d,
           };
         }
@@ -64,6 +65,7 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
           rowId: uuid(),
           mode: "r",
           checked: false,
+          expand: false,
           editedCells: [],
           ...d,
         };

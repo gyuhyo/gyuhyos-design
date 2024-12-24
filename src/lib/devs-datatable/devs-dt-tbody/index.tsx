@@ -42,6 +42,15 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
 
   const lastNode = React.useMemo(() => getLastNodes(columns), [columns]);
 
+  const nodeCount = React.useMemo(() => {
+    const fixedCount =
+      (options?.enabledExpand ? 1 : 0) +
+      (options?.enabledRowCheck ? 1 : 0) +
+      (options?.showRowNumber ? 1 : 0) +
+      (options?.enabledRowOrder ? 1 : 0);
+    return lastNode.length + fixedCount;
+  }, [lastNode, options]);
+
   const sortDataSource = React.useCallback(
     (d: IDataSource[]): IDataSource[] => {
       const findSorterField = columns.find(
@@ -143,6 +152,7 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
         if (
           copyDataSource[i].mode === "c" ||
           copyDataSource[i].mode === "u" ||
+          copyDataSource[i].expand === true ||
           copyDataSource[i].editedCells?.includes(d.field)
         ) {
           continue;
@@ -153,6 +163,7 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
             copyDataSource[i][d.field] !== copyDataSource[j][d.field] ||
             copyDataSource[j]["mode"] === "c" ||
             copyDataSource[j]["mode"] === "u" ||
+            copyDataSource[j].expand === true ||
             copyDataSource[j].editedCells?.includes(d.field)
           ) {
             i = j - 1;
@@ -304,15 +315,31 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
                               }
                             }
                             return (
-                              <DevsDtRow
-                                key={row.rowId}
-                                index={index}
-                                rowKey={row.rowId}
-                                data={row}
-                                lastNode={lastNode}
-                                dragProvided={provided2}
-                                dragSnapshot={snapshot}
-                              />
+                              <React.Fragment key={row.rowId}>
+                                <DevsDtRow
+                                  key={row.rowId}
+                                  index={index}
+                                  rowKey={row.rowId}
+                                  data={row}
+                                  lastNode={lastNode}
+                                  dragProvided={provided2}
+                                  dragSnapshot={snapshot}
+                                />
+                                {row.expand && (
+                                  <tr>
+                                    <td
+                                      className="devs-dt-cell devs-dt-td"
+                                      style={{
+                                        padding: "7px",
+                                        height: "0px",
+                                      }}
+                                      colSpan={nodeCount}
+                                    >
+                                      {options?.expandContent?.(row)}
+                                    </td>
+                                  </tr>
+                                )}
+                              </React.Fragment>
                             );
                           }}
                         </Draggable>

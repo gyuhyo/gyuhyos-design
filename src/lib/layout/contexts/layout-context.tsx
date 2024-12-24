@@ -58,10 +58,11 @@ export const LayoutProvider: React.FC<{
     }
 
     if (
+      !path.includes("popup") &&
       path !== authUrl &&
       (user === undefined || user === null) &&
       process.env.NODE_ENV !== "production" &&
-      window.location.port !== "3000"
+      window.location.port !== "3001"
     ) {
       window.sessionStorage.removeItem("menu-storage");
       window.sessionStorage.removeItem("user-storage");
@@ -171,14 +172,14 @@ export const LayoutProvider: React.FC<{
     }
   };
 
-  if (path === authUrl) {
+  if (path === authUrl || path.includes("popup")) {
     return <React.Fragment>{children}</React.Fragment>;
   }
 
   if (
     (user === undefined || user === null) &&
     process.env.NODE_ENV !== "production" &&
-    window.location.port !== "3000"
+    window.location.port !== "3001"
   ) {
     return <></>;
   }

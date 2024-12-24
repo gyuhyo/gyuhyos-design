@@ -1,7 +1,7 @@
 import React from "react";
 import { useDt } from "../context/devs-dt-context";
 import DevsDtTh from "./devs-dt-th";
-import { IDataTableColumn } from "../_types";
+import { IDataSource, IDataTableColumn } from "../_types";
 
 type TDevsDtThead = {
   thead: React.RefObject<HTMLDivElement>;
@@ -19,6 +19,30 @@ const RowNumberCell: React.FC<{ maxDepth: number }> = ({ maxDepth }) => {
     </th>
   );
 };
+
+const RowExpandCell: React.FC<{
+  maxDepth: number;
+  setDataSource: React.Dispatch<React.SetStateAction<IDataSource[]>>;
+}> = React.memo(({ maxDepth, setDataSource }) => {
+  const [isExpand, setIsExpand] = React.useState(false);
+  return (
+    <th
+      className="devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-th-bottom-border"
+      style={{ "--width": "30px", cursor: "pointer" } as React.CSSProperties}
+      rowSpan={maxDepth}
+      onClick={() => {
+        setIsExpand(!isExpand);
+        setDataSource((prev) => {
+          return prev.map((p) => ({ ...p, expand: !isExpand }));
+        });
+      }}
+    >
+      <button
+        className={`expand_ico2 ${isExpand ? "expand_ico_active2" : ""}`}
+      ></button>
+    </th>
+  );
+});
 
 const RowCheckCell: React.FC<{
   setDataSource: React.Dispatch<React.SetStateAction<any[]>>;
@@ -367,6 +391,12 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
                 <tr className="devs-dt-row" key={rowIndex}>
                   {options?.enabledRowOrder && (
                     <RowChangeOrderCell maxDepth={maxDepth} />
+                  )}
+                  {options?.enabledExpand && (
+                    <RowExpandCell
+                      maxDepth={maxDepth}
+                      setDataSource={setDataSource}
+                    />
                   )}
                   {options?.showRowNumber && (
                     <RowNumberCell maxDepth={maxDepth} />

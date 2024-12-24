@@ -10,7 +10,7 @@ function RootLayout() {
   const { menuType, calculWidth } = useLayout();
   const pathName = window.location.pathname;
 
-  if (pathName === "/auth") return <></>;
+  if (pathName === "/auth" || pathName.includes("popup")) return <></>;
 
   return (
     <div
@@ -44,7 +44,6 @@ function RootLayout() {
             height: "30px",
             flex: "none",
             background: "linear-gradient(180deg, #d8d8d8, #ddd, #fff)",
-            borderBottom: "2px solid #d3d3d3",
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",

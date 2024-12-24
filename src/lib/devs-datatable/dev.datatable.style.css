@@ -518,3 +518,66 @@
 .desc_ico.sorter_active {
   border-top-color: #434343;
 }
+
+.expand_ico::after {
+  content: "+";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  font-size: 1.7rem;
+}
+
+.expand_ico.expand_ico_active::after {
+  content: "-";
+}
+
+.expand_ico2 {
+  position: relative;
+  width: 17px;
+  height: 17px;
+  border-radius: 3px;
+  border: 1px solid #bbb;
+  vertical-align: middle;
+  margin-bottom: 1px !important;
+}
+
+.expand_ico2:hover {
+  border-color: #0897f7;
+  transition: border 200ms linear;
+  cursor: pointer;
+}
+
+.expand_ico2::before,
+.expand_ico2::after {
+  position: absolute;
+  background: currentcolor;
+  transition: transform 0.3s ease-out;
+  content: "";
+}
+
+.expand_ico2::before {
+  transform: rotate(-180deg);
+
+  top: 7px;
+  inset-inline-end: calc(4px - 1px);
+  inset-inline-start: calc(4px - 1px);
+  height: 1px;
+}
+
+.expand_ico2::after {
+  transform: rotate(0deg);
+
+  top: calc(4px - 1px);
+  bottom: calc(4px - 1px);
+  inset-inline-start: 7px;
+  width: 1px;
+}
+
+.expand_ico2.expand_ico_active2::after {
+  transform: rotate(90deg) !important;
+}
+
+.expand_ico2.expand_ico_active2::before {
+  transform: rotate(0deg) !important;
+}

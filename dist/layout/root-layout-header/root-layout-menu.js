@@ -119,7 +119,7 @@ var RootLayoutMenu = React.memo(function () {
         };
         var onMenuClick = function (e) {
             var target = e.currentTarget; // 이벤트가 바인딩된 요소
-            target.classList.add("clickedMenu");
+            target.classList.toggle("clickedMenu");
             var handleClickOutside = function (event) {
                 // 클릭한 요소가 현재 메뉴의 자식인지 확인
                 if (!target.contains(event.target) ||

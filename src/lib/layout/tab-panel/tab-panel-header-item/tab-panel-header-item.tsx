@@ -105,6 +105,10 @@ function TabPanelHeaderItem({
         css={css({
           width: "100%",
           textAlign: "left",
+          cursor: "pointer !important",
+          "&:active": {
+            cursor: "grab !important",
+          },
         })}
       >
         {menu.title}
@@ -117,7 +121,7 @@ function TabPanelHeaderItem({
             color: "#f40077",
             fontFamily: "cursive",
             WebkitTextStrokeWidth: "medium",
-            cursor: "pointer",
+            cursor: "pointer !important",
             "&:hover": {
               background: "#fbdcdc",
               borderRadius: "7px",

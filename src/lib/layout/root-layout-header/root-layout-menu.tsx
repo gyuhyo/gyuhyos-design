@@ -109,7 +109,7 @@ const RootLayoutMenu: React.FC<any> = React.memo(() => {
 
     const onMenuClick = (e: any) => {
       const target = e.currentTarget as HTMLLIElement; // 이벤트가 바인딩된 요소
-      target.classList.add("clickedMenu");
+      target.classList.toggle("clickedMenu");
 
       const handleClickOutside = (event: MouseEvent) => {
         // 클릭한 요소가 현재 메뉴의 자식인지 확인

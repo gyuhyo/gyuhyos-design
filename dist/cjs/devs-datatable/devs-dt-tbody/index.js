@@ -78,6 +78,13 @@ function DevsDtTBody(_a) {
         return lastNodes;
     };
     var lastNode = react_1.default.useMemo(function () { return getLastNodes(columns); }, [columns]);
+    var nodeCount = react_1.default.useMemo(function () {
+        var fixedCount = ((options === null || options === void 0 ? void 0 : options.enabledExpand) ? 1 : 0) +
+            ((options === null || options === void 0 ? void 0 : options.enabledRowCheck) ? 1 : 0) +
+            ((options === null || options === void 0 ? void 0 : options.showRowNumber) ? 1 : 0) +
+            ((options === null || options === void 0 ? void 0 : options.enabledRowOrder) ? 1 : 0);
+        return lastNode.length + fixedCount;
+    }, [lastNode, options]);
     var sortDataSource = react_1.default.useCallback(function (d) {
         var findSorterField = columns.find(function (col) { return col.field === sorter.field; });
         var newRows = d.filter(function (x) { return x.mode === "c"; });
@@ -163,6 +170,7 @@ function DevsDtTBody(_a) {
                     }, _c));
                     if (copyDataSource[i].mode === "c" ||
                         copyDataSource[i].mode === "u" ||
+                        copyDataSource[i].expand === true ||
                         ((_f = copyDataSource[i].editedCells) === null || _f === void 0 ? void 0 : _f.includes(d.field))) {
                         continue;
                     }
@@ -170,6 +178,7 @@ function DevsDtTBody(_a) {
                         if (copyDataSource[i][d.field] !== copyDataSource[j][d.field] ||
                             copyDataSource[j]["mode"] === "c" ||
                             copyDataSource[j]["mode"] === "u" ||
+                            copyDataSource[j].expand === true ||
                             ((_g = copyDataSource[j].editedCells) === null || _g === void 0 ? void 0 : _g.includes(d.field))) {
                             i = j - 1;
                             break;
@@ -245,6 +254,7 @@ function DevsDtTBody(_a) {
                                     .filter(function (f) { return f.rowId; })
                                     .map(function (row, index) {
                                     return ((0, jsx_runtime_1.jsx)(dnd_1.Draggable, __assign({ draggableId: row.rowId, index: index, isDragDisabled: !(options === null || options === void 0 ? void 0 : options.enabledRowOrder) || row.mode === "c" }, { children: function (provided2, snapshot) {
+                                            var _a;
                                             var style = provided2.draggableProps.style;
                                             if (style !== undefined) {
                                                 var transform = provided2.draggableProps.style.transform;
@@ -254,7 +264,10 @@ function DevsDtTBody(_a) {
                                                         "translate(0px," + t;
                                                 }
                                             }
-                                            return ((0, jsx_runtime_1.jsx)(devs_dt_row_1.default, { index: index, rowKey: row.rowId, data: row, lastNode: lastNode, dragProvided: provided2, dragSnapshot: snapshot }, row.rowId));
+                                            return ((0, jsx_runtime_1.jsxs)(react_1.default.Fragment, { children: [(0, jsx_runtime_1.jsx)(devs_dt_row_1.default, { index: index, rowKey: row.rowId, data: row, lastNode: lastNode, dragProvided: provided2, dragSnapshot: snapshot }, row.rowId), row.expand && ((0, jsx_runtime_1.jsx)("tr", { children: (0, jsx_runtime_1.jsx)("td", __assign({ className: "devs-dt-cell devs-dt-td", style: {
+                                                                padding: "7px",
+                                                                height: "0px",
+                                                            }, colSpan: nodeCount }, { children: (_a = options === null || options === void 0 ? void 0 : options.expandContent) === null || _a === void 0 ? void 0 : _a.call(options, row) })) }))] }, row.rowId));
                                         } }), row.rowId));
                                 }), provided.placeholder] })) }))); } })) })) })));
 }

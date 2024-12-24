@@ -64,7 +64,9 @@ const RowCheckCell: React.FC<{
       <input
         type="checkbox"
         checked={checked || false}
-        onChange={() => {
+        style={{ cursor: "pointer" }}
+        onChange={(e) => {
+          e.stopPropagation();
           setValue("checked", !checked);
           setDataSource((prev) => {
             if (checked === false && multipleRowCheck === false) {
@@ -109,6 +111,31 @@ const RowChangeOrderCell: React.FC<{
       {...dragHandleProps}
     >
       {mode !== "c" && "\u2195"}
+    </td>
+  );
+};
+
+const RowExpandCell: React.FC<{
+  setDataSource: React.Dispatch<React.SetStateAction<any[]>>;
+  data: IDataSource;
+  index: number;
+}> = ({ setDataSource, data, index }) => {
+  return (
+    <td
+      className="devs-dt-cell devs-dt-th devs-dt-sticky-col"
+      style={{ "--width": "30px", cursor: "pointer" } as React.CSSProperties}
+      onClick={(e) => {
+        e.stopPropagation();
+        setDataSource((prev) => {
+          return prev.map((p) =>
+            p.rowId === data.rowId ? { ...p, expand: !p.expand } : { ...p }
+          );
+        });
+      }}
+    >
+      <button
+        className={`expand_ico2 ${data.expand ? "expand_ico_active2" : ""}`}
+      ></button>
     </td>
   );
 };
@@ -171,7 +198,8 @@ function DevsDtRow({
     setValue("checked", data.checked);
   }, [data.mode, data.checked]);
 
-  const onEditModeClick = () => {
+  const onEditModeClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
+    console.log(e.target);
     if (options?.readonly === true) return;
     if (!(options?.rowEditable?.({ index, row: data }) ?? true)) return;
 
@@ -279,6 +307,13 @@ function DevsDtRow({
         <RowChangeOrderCell
           mode={data.mode}
           dragHandleProps={dragProvided.dragHandleProps}
+        />
+      )}
+      {options?.enabledExpand && (
+        <RowExpandCell
+          setDataSource={setDataSource}
+          data={data}
+          index={index}
         />
       )}
       {options?.showRowNumber && <RowNumberCell index={index} />}

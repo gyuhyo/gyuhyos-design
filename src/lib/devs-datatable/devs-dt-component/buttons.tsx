@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "../../button";
 import { IDataTableButtons, IDataTableOptions } from "../_types";
+import { useDt } from "../context/devs-dt-context";
 
 interface IDataTableButtonsProps {
   options?: IDataTableOptions | undefined;
@@ -9,6 +10,7 @@ interface IDataTableButtonsProps {
 }
 
 const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
+  const { setDataSource } = useDt();
   const ButtonEventBeforeShowLoading = (event: any) => {
     props.setInnerLoading(true);
 
@@ -40,9 +42,12 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
           border={true}
           compact
           style={{ padding: "2px 7px", lineHeight: "26px" }}
-          onClick={() =>
-            ButtonEventBeforeShowLoading(props.buttons?.onSearchClick)
-          }
+          onClick={() => {
+            ButtonEventBeforeShowLoading(props.buttons?.onSearchClick);
+            setDataSource((prev) =>
+              prev.map((x) => ({ ...x, checked: false }))
+            );
+          }}
         >
           <svg
             stroke="currentColor"
@@ -136,7 +141,12 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
           border={true}
           compact
           style={{ padding: "2px 7px", lineHeight: "26px" }}
-          onClick={props.buttons?.onCancelClick}
+          onClick={() => {
+            (props.buttons?.onCancelClick as Function)();
+            setDataSource((prev) =>
+              prev.map((x) => ({ ...x, checked: false }))
+            );
+          }}
         >
           <svg
             stroke="currentColor"

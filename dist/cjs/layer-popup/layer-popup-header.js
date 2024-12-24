@@ -88,7 +88,7 @@ var LayerPopupHeader = react_1.default.memo(function (props) {
             return;
         var container = document.querySelector("div[data-name='layer-popup-container']");
         if (container &&
-            props.isMaximized &&
+            !props.isMaximized &&
             !container.classList.contains("softResizing")) {
             container.classList.add("softResizing");
         }

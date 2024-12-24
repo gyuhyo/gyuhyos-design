@@ -330,8 +330,14 @@ const App: React.FC<{}> = () => {
           showRowNumber: true,
           enabledRowOrder: true,
           enabledRowCheck: true,
-          multipleRowCheck: false,
-          multipleEdit: false,
+          enabledExpand: true,
+          expandContent: (row) => {
+            return (
+              <div>
+                <p>123</p>
+              </div>
+            );
+          },
           rowOrderEnd: (data) => {
             console.log(data);
           },

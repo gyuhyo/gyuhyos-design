@@ -13,7 +13,7 @@ var sideMenuContainerStyle = function (_a) {
         transition: "width 300ms ease-in-out",
         background: bgColor,
         color: "#fff",
-        zIndex: 1,
+        zIndex: 4,
     });
 };
 exports.sideMenuContainerStyle = sideMenuContainerStyle;
