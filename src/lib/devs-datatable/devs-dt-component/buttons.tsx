@@ -10,7 +10,7 @@ interface IDataTableButtonsProps {
 }
 
 const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
-  const { setDataSource } = useDt();
+  const { setDataSource, setFocusedRow, setFocusedCell } = useDt();
   const ButtonEventBeforeShowLoading = (event: any) => {
     props.setInnerLoading(true);
 
@@ -47,6 +47,8 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
             setDataSource((prev) =>
               prev.map((x) => ({ ...x, checked: false }))
             );
+            setFocusedRow(null);
+            setFocusedCell(null);
           }}
         >
           <svg
@@ -91,7 +93,11 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
           border={true}
           compact
           style={{ padding: "2px 7px", lineHeight: "26px" }}
-          onClick={props.buttons?.onSaveClick}
+          onClick={() => {
+            ButtonEventBeforeShowLoading(props.buttons?.onSaveClick);
+            setFocusedRow(null);
+            setFocusedCell(null);
+          }}
         >
           <svg
             stroke="currentColor"
@@ -119,7 +125,11 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
           style={{ padding: "2px 7px", lineHeight: "26px" }}
           bgColor="#df4873"
           color="#fff"
-          onClick={props.buttons?.onDeleteClick}
+          onClick={() => {
+            ButtonEventBeforeShowLoading(props.buttons?.onDeleteClick);
+            setFocusedRow(null);
+            setFocusedCell(null);
+          }}
         >
           <svg
             stroke="currentColor"
@@ -142,10 +152,12 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
           compact
           style={{ padding: "2px 7px", lineHeight: "26px" }}
           onClick={() => {
-            (props.buttons?.onCancelClick as Function)();
+            ButtonEventBeforeShowLoading(props.buttons?.onCancelClick);
             setDataSource((prev) =>
               prev.map((x) => ({ ...x, checked: false }))
             );
+            setFocusedRow(null);
+            setFocusedCell(null);
           }}
         >
           <svg

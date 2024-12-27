@@ -89,8 +89,8 @@ var hiddenAlert = (0, react_1.css)({
     transition: "opacity 200ms ease-in-out, visibility 0ms ease-in-out 200ms",
 });
 var AlertMessage = function (props) {
-    var _a = __read(React.useState(true), 2), isShowState = _a[0], setIsShowState = _a[1];
     var setIsShow = props.setIsShow, type = props.type, title = props.title, message = props.message, okCaption = props.okCaption, cancelCaption = props.cancelCaption, isOkButtonVisible = props.isOkButtonVisible, onOkClick = props.onOkClick, isCancelButtonVisible = props.isCancelButtonVisible, onCancelClick = props.onCancelClick, isCloseButtonVisible = props.isCloseButtonVisible, onCloseClick = props.onCloseClick, footerStart = props.footerStart;
+    var _a = __read(React.useState(true), 2), isShowState = _a[0], setIsShowState = _a[1];
     var closeAlert = function () {
         setIsShowState(false);
         var timer = setTimeout(function () {

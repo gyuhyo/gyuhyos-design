@@ -133,8 +133,8 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
     }); };
     React.useImperativeHandle(ref, function () { return ({
         api: {
-            onValidationCheck: function () { return __awaiter(void 0, void 0, void 0, function () {
-                var forms, validations, allValid, allData, allData;
+            validate: function () { return __awaiter(void 0, void 0, void 0, function () {
+                var forms, validations, allValid, allData, allDataBlankToNull, allData;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -158,10 +158,66 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
                         case 2:
                             validations = _a.sent();
                             allValid = validations.every(function (result) { return result.valid; });
-                            console.log("allvalid", allValid);
                             if (allValid) {
                                 allData = validations.map(function (result) { return result.data; });
-                                return [2 /*return*/, { valid: true, data: allData }];
+                                allDataBlankToNull = allData.map(function (data) {
+                                    return Object.fromEntries(Object.entries(data).map(function (_a) {
+                                        var _b = __read(_a, 2), key = _b[0], value = _b[1];
+                                        return [
+                                            key,
+                                            value === "" ? null : value !== null && value !== void 0 ? value : null,
+                                        ];
+                                    }));
+                                });
+                                return [2 /*return*/, { valid: true, data: allDataBlankToNull }];
+                            }
+                            else {
+                                allData = validations
+                                    .filter(function (f) { return !f.valid; })
+                                    .map(function (result) { return result.data; });
+                                return [2 /*return*/, { valid: false, data: allData }];
+                            }
+                            return [2 /*return*/];
+                    }
+                });
+            }); },
+            onValidationCheck: function () { return __awaiter(void 0, void 0, void 0, function () {
+                var forms, validations, allValid, allData, allDataBlankToNull, allData;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            forms = Object.values(formsRef.current);
+                            return [4 /*yield*/, Promise.all(forms.map(function (form) { return __awaiter(void 0, void 0, void 0, function () {
+                                    return __generator(this, function (_a) {
+                                        return [2 /*return*/, new Promise(function (resolve) { return resolve(form.clearErrors()); })];
+                                    });
+                                }); }))];
+                        case 1:
+                            _a.sent();
+                            return [4 /*yield*/, Promise.all(forms
+                                    .filter(function (f) { return f.getValues("checked"); })
+                                    .map(function (form) { return __awaiter(void 0, void 0, void 0, function () {
+                                    return __generator(this, function (_a) {
+                                        return [2 /*return*/, new Promise(function (resolve) {
+                                                return form.handleSubmit(function (data) { return resolve({ valid: true, data: data }); }, function (error) { return resolve({ valid: false, data: error }); })();
+                                            })];
+                                    });
+                                }); }))];
+                        case 2:
+                            validations = _a.sent();
+                            allValid = validations.every(function (result) { return result.valid; });
+                            if (allValid) {
+                                allData = validations.map(function (result) { return result.data; });
+                                allDataBlankToNull = allData.map(function (data) {
+                                    return Object.fromEntries(Object.entries(data).map(function (_a) {
+                                        var _b = __read(_a, 2), key = _b[0], value = _b[1];
+                                        return [
+                                            key,
+                                            value === "" ? null : value !== null && value !== void 0 ? value : null,
+                                        ];
+                                    }));
+                                });
+                                return [2 /*return*/, { valid: true, data: allDataBlankToNull }];
                             }
                             else {
                                 allData = validations
@@ -229,6 +285,8 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
                 ((_d = props.buttons) === null || _d === void 0 ? void 0 : _d.onCancelClick) !== undefined ||
                 ((_e = props.buttons) === null || _e === void 0 ? void 0 : _e.onDeleteClick) !== undefined ||
                 ((_f = props.buttons) === null || _f === void 0 ? void 0 : _f.custom) !== undefined) && (_jsxs("div", __assign({ style: {
+                    flex: "none",
+                    minHeight: "50px",
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "space-between",

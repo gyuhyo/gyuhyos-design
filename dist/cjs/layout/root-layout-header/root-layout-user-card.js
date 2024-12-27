@@ -25,9 +25,10 @@ var root_layout_user_sign_time_1 = __importDefault(require("./root-layout-user-s
 var layout_context_1 = require("../contexts/layout-context");
 var RootLayoutUserCard = react_1.default.memo(function () {
     var signOut = (0, user_store_1.useUserStore)(function (state) { return state.signOut; });
+    var signIn = (0, user_store_1.useUserStore)(function (state) { return state.signIn; });
     var user = (0, user_store_1.useUserStore)(function (state) { return state.me; });
     var showMessage = (0, message_context_1.useMessage)().showMessage;
-    var _a = (0, layout_context_1.useLayout)(), onAuthRefreshClick = _a.onAuthRefreshClick, languages = _a.languages, handleLanguageChange = _a.handleLanguageChange;
+    var _a = (0, layout_context_1.useLayout)(), refreshTokenUrl = _a.refreshTokenUrl, languages = _a.languages, handleLanguageChange = _a.handleLanguageChange;
     var onSignOutClick = function () {
         showMessage({
             title: "로그아웃 확인",
@@ -41,9 +42,20 @@ var RootLayoutUserCard = react_1.default.memo(function () {
         var _a;
         if (!user.refreshToken)
             return;
-        onAuthRefreshClick({
-            refreshToken: user.refreshToken,
-            login24h: (_a = user.login24h) !== null && _a !== void 0 ? _a : false,
+        fetch(refreshTokenUrl, {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer ".concat(user.accessToken),
+            },
+            body: JSON.stringify({
+                refreshToken: user.refreshToken,
+                login24h: (_a = user.login24h) !== null && _a !== void 0 ? _a : false,
+            }),
+        })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+            signIn(data.data);
         });
     }, [user]);
     return ((0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("div", __assign({ css: (0, react_2.css)({

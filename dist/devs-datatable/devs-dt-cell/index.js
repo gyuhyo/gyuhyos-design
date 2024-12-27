@@ -46,7 +46,10 @@ import weekYear from "dayjs/plugin/weekYear";
 import React from "react";
 import { Controller, } from "react-hook-form";
 import { DatePicker, InputNumber, Select } from "antd";
+import "dayjs/locale/ko";
 import { useDt } from "../context/devs-dt-context";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 dayjs.extend(customParseFormat);
 dayjs.extend(advancedFormat);
 dayjs.extend(weekday);
@@ -54,6 +57,9 @@ dayjs.extend(localeData);
 dayjs.extend(weekOfYear);
 dayjs.extend(weekYear);
 dayjs.locale("ko");
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Seoul");
 function DevsDtCell(_a) {
     var _b, _c, _d, _e, _f, _g, _h;
     var register = _a.register, control = _a.control, col = _a.col, mode = _a.mode, defaultValue = _a.defaultValue, error = _a.error, autoFocus = _a.autoFocus, row = _a.row, merge = _a.merge, setValue = _a.setValue, getValue = _a.getValue, rowIndex = _a.rowIndex, trigger = _a.trigger;
@@ -165,9 +171,27 @@ function DevsDtCell(_a) {
                 } }));
         }
         if (col.type === "date") {
-            return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(dayjs(defaultValue) || null), rules: { required: col.required }, render: function (_a) {
+            return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), rules: { required: col.required }, render: function (_a) {
                     var onChange = _a.field.onChange;
-                    return (_jsx(DatePicker, __assign({ size: "small", placeholder: "\uB0A0\uC9DC \uC120\uD0DD", defaultValue: getDefaultValue(dayjs(defaultValue) || null), onChange: function (_, v) {
+                    return (_jsx(DatePicker, __assign({ size: "small", placeholder: "\uB0A0\uC9DC \uC120\uD0DD", defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), onChange: function (_, v) {
+                            onChange(v);
+                            if (col.onChange !== undefined) {
+                                col.onChange({
+                                    value: v,
+                                    row: row,
+                                    index: rowIndex,
+                                    setDataSource: setDataSource,
+                                    setValue: setValue,
+                                    getValue: getValue,
+                                });
+                            }
+                        }, autoFocus: (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click" ? true : autoFocus }, col.inputOptions)));
+                } }));
+        }
+        if (col.type === "datetime") {
+            return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), rules: { required: col.required }, render: function (_a) {
+                    var onChange = _a.field.onChange;
+                    return (_jsx(DatePicker, __assign({ size: "small", placeholder: "\uB0A0\uC9DC/\uC2DC\uAC04 \uC120\uD0DD", defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), showTime: true, onChange: function (_, v) {
                             onChange(v);
                             if (col.onChange !== undefined) {
                                 col.onChange({
@@ -204,9 +228,7 @@ function DevsDtCell(_a) {
         if (col.type === "number") {
             return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue || null), rules: { required: col.required }, render: function (_a) {
                     var onChange = _a.field.onChange;
-                    return (_jsx(InputNumber, __assign({ size: "small", onBlur: function (e) {
-                            onChange(e.target.value);
-                        }, onChange: function (v) {
+                    return (_jsx(InputNumber, __assign({ size: "small", onChange: function (v) {
                             onChange(v);
                             if (col.onChange !== undefined) {
                                 col.onChange({
@@ -255,6 +277,7 @@ function DevsDtCell(_a) {
         }), { type: "text", defaultValue: getDefaultValue(defaultValue || null), autoFocus: (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click" ? true : autoFocus, autoComplete: "off" }, col.inputOptions)));
     }, [col, autoFocus, defaultValue, row, rowIndex]);
     var GetCell = function () {
+        var _a, _b;
         if (col.render !== undefined) {
             return col.render({
                 value: defaultValue,
@@ -264,9 +287,25 @@ function DevsDtCell(_a) {
             });
         }
         else {
-            return (_jsx("span", { children: getDefaultValue(col.type === "number"
-                    ? defaultValue === null || defaultValue === void 0 ? void 0 : defaultValue.toLocaleString()
-                    : defaultValue) }));
+            if (col.type === "number") {
+                return _jsx("span", { children: defaultValue === null || defaultValue === void 0 ? void 0 : defaultValue.toLocaleString() });
+            }
+            if (col.type === "date") {
+                if (defaultValue && dayjs(defaultValue).isValid()) {
+                    return (_jsx("span", { children: dayjs(defaultValue).tz("Asia/Seoul").format("YYYY-MM-DD") }));
+                }
+            }
+            if (col.type === "datetime") {
+                if (defaultValue && dayjs(defaultValue).isValid()) {
+                    return (_jsx("span", { children: dayjs(defaultValue)
+                            .tz("Asia/Seoul")
+                            .format("YYYY-MM-DD HH:mm:ss") }));
+                }
+            }
+            if (col.type === "select") {
+                return (_jsx("span", { children: (_b = (_a = col.options) === null || _a === void 0 ? void 0 : _a.find(function (op) { return op.value === defaultValue; })) === null || _b === void 0 ? void 0 : _b.label }));
+            }
+            return _jsx("span", { children: defaultValue });
         }
     };
     var Cell = React.useMemo(function () {
@@ -293,10 +332,16 @@ function DevsDtCell(_a) {
         }
     }, [defaultValue, row, col, mode, isCellEdit]);
     var onCellEditChange = React.useCallback(function (clickType) {
-        var _a, _b;
+        var _a, _b, _c;
         if ((options === null || options === void 0 ? void 0 : options.readonly) === true ||
             col.editable === false ||
             col.updatable === false)
+            return;
+        if (((_a = options === null || options === void 0 ? void 0 : options.onBeforeCellEdit) === null || _a === void 0 ? void 0 : _a.call(options, {
+            index: rowIndex,
+            row: row,
+            value: defaultValue,
+        })) === false)
             return;
         if (clickType === "doubleClick" && (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click")
             return;
@@ -304,7 +349,7 @@ function DevsDtCell(_a) {
             ((options === null || options === void 0 ? void 0 : options.cellEditClickType) === undefined ||
                 (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "doubleClick"))
             return;
-        if (!((_b = (_a = options === null || options === void 0 ? void 0 : options.rowEditable) === null || _a === void 0 ? void 0 : _a.call(options, { index: rowIndex, row: row })) !== null && _b !== void 0 ? _b : true))
+        if (!((_c = (_b = options === null || options === void 0 ? void 0 : options.rowEditable) === null || _b === void 0 ? void 0 : _b.call(options, { index: rowIndex, row: row })) !== null && _c !== void 0 ? _c : true))
             return;
         if ((options === null || options === void 0 ? void 0 : options.editType) === "cell" && isCellEdit === false) {
             setValue("editedCells", __spreadArray(__spreadArray([], __read(row.editedCells), false), [col.field], false));

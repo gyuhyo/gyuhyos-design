@@ -19,8 +19,10 @@ import {
 } from "react-hook-form";
 import { IDataSource, IDataTableColumn } from "../_types";
 import { DatePicker, InputNumber, Select } from "antd";
+import "dayjs/locale/ko";
 import { useDt } from "../context/devs-dt-context";
-
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 dayjs.extend(customParseFormat);
 dayjs.extend(advancedFormat);
 dayjs.extend(weekday);
@@ -28,6 +30,9 @@ dayjs.extend(localeData);
 dayjs.extend(weekOfYear);
 dayjs.extend(weekYear);
 dayjs.locale("ko");
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Seoul");
 
 type TDevsDtCell = {
   col: IDataTableColumn;
@@ -214,13 +219,57 @@ function DevsDtCell({
         <Controller
           control={control}
           name={col.field}
-          defaultValue={getDefaultValue(dayjs(defaultValue) || null)}
+          defaultValue={getDefaultValue(
+            defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null
+          )}
           rules={{ required: col.required }}
           render={({ field: { onChange } }) => (
             <DatePicker
               size="small"
               placeholder="날짜 선택"
-              defaultValue={getDefaultValue(dayjs(defaultValue) || null)}
+              defaultValue={getDefaultValue(
+                defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null
+              )}
+              onChange={(_, v) => {
+                onChange(v);
+                if (col.onChange !== undefined) {
+                  col.onChange({
+                    value: v,
+                    row: row,
+                    index: rowIndex,
+                    setDataSource: setDataSource,
+                    setValue: setValue,
+                    getValue,
+                  });
+                }
+              }}
+              autoFocus={
+                options?.cellEditClickType === "click" ? true : autoFocus
+              }
+              {...col.inputOptions}
+            />
+          )}
+        />
+      );
+    }
+
+    if (col.type === "datetime") {
+      return (
+        <Controller
+          control={control}
+          name={col.field}
+          defaultValue={getDefaultValue(
+            defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null
+          )}
+          rules={{ required: col.required }}
+          render={({ field: { onChange } }) => (
+            <DatePicker
+              size="small"
+              placeholder="날짜/시간 선택"
+              defaultValue={getDefaultValue(
+                defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null
+              )}
+              showTime={true}
               onChange={(_, v) => {
                 onChange(v);
                 if (col.onChange !== undefined) {
@@ -296,9 +345,6 @@ function DevsDtCell({
           render={({ field: { onChange } }) => (
             <InputNumber
               size="small"
-              onBlur={(e) => {
-                onChange(e.target.value);
-              }}
               onChange={(v) => {
                 onChange(v);
                 if (col.onChange !== undefined) {
@@ -383,15 +429,41 @@ function DevsDtCell({
         getValue,
       });
     } else {
-      return (
-        <span>
-          {getDefaultValue(
-            col.type === "number"
-              ? defaultValue?.toLocaleString()
-              : defaultValue
-          )}
-        </span>
-      );
+      if (col.type === "number") {
+        return <span>{defaultValue?.toLocaleString()}</span>;
+      }
+
+      if (col.type === "date") {
+        if (defaultValue && dayjs(defaultValue).isValid()) {
+          return (
+            <span>
+              {dayjs(defaultValue).tz("Asia/Seoul").format("YYYY-MM-DD")}
+            </span>
+          );
+        }
+      }
+
+      if (col.type === "datetime") {
+        if (defaultValue && dayjs(defaultValue).isValid()) {
+          return (
+            <span>
+              {dayjs(defaultValue)
+                .tz("Asia/Seoul")
+                .format("YYYY-MM-DD HH:mm:ss")}
+            </span>
+          );
+        }
+      }
+
+      if (col.type === "select") {
+        return (
+          <span>
+            {col.options?.find((op) => op.value === defaultValue)?.label}
+          </span>
+        );
+      }
+
+      return <span>{defaultValue}</span>;
     }
   };
 
@@ -425,6 +497,15 @@ function DevsDtCell({
         options?.readonly === true ||
         col.editable === false ||
         col.updatable === false
+      )
+        return;
+
+      if (
+        options?.onBeforeCellEdit?.({
+          index: rowIndex,
+          row: row,
+          value: defaultValue,
+        }) === false
       )
         return;
 

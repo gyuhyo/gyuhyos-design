@@ -199,9 +199,9 @@ function DevsDtRow({
   }, [data.mode, data.checked]);
 
   const onEditModeClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
-    console.log(e.target);
     if (options?.readonly === true) return;
     if (!(options?.rowEditable?.({ index, row: data }) ?? true)) return;
+    if (options?.onBeforeRowEdit?.({ index, row: data }) === false) return;
 
     if (
       data.mode === "r" &&

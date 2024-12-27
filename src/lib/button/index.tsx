@@ -27,7 +27,7 @@ const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
     border = false,
     borderColor = "#cecece",
     bgColor = "#eeeeee",
-    color = "#000",
+    color,
     ...anotherProps
   } = props;
   return (
@@ -38,7 +38,7 @@ const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
         borderRadius: rounded ? 5 : 0,
         background: `linear-gradient(180deg, ${bgColor}90 0%, ${bgColor} 50%, ${bgColor}90 100%)`,
         border: border ? `1px solid ${borderColor}` : undefined,
-        color: color,
+        color: color ? `${color} !important` : "#000",
         "&:hover": {
           cursor: "pointer",
           background: `linear-gradient(180deg, ${bgColor}${(95 * 0.9).toFixed(

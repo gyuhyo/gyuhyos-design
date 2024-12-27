@@ -259,10 +259,14 @@ function DevsDtTBody(_a) {
                                                         "translate(0px," + t;
                                                 }
                                             }
-                                            return (_jsxs(React.Fragment, { children: [_jsx(DevsDtRow, { index: index, rowKey: row.rowId, data: row, lastNode: lastNode, dragProvided: provided2, dragSnapshot: snapshot }, row.rowId), row.expand && (_jsx("tr", { children: _jsx("td", __assign({ className: "devs-dt-cell devs-dt-td", style: {
+                                            return (_jsxs(React.Fragment, { children: [_jsx(DevsDtRow, { index: index, rowKey: row.rowId, data: row, lastNode: lastNode, dragProvided: provided2, dragSnapshot: snapshot }, row.rowId), (options === null || options === void 0 ? void 0 : options.enabledExpand) === true && (_jsx("tr", __assign({ style: {
+                                                            display: row.expand
+                                                                ? "table-row"
+                                                                : "none",
+                                                        } }, { children: _jsx("td", __assign({ className: "devs-dt-cell devs-dt-td", style: {
                                                                 padding: "7px",
                                                                 height: "0px",
-                                                            }, colSpan: nodeCount }, { children: (_a = options === null || options === void 0 ? void 0 : options.expandContent) === null || _a === void 0 ? void 0 : _a.call(options, row) })) }))] }, row.rowId));
+                                                            }, colSpan: nodeCount }, { children: (_a = options === null || options === void 0 ? void 0 : options.expandContent) === null || _a === void 0 ? void 0 : _a.call(options, row) })) })))] }, row.rowId));
                                         } }), row.rowId));
                                 }), provided.placeholder] })) }))); } })) })) })));
 }

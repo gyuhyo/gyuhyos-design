@@ -325,8 +325,14 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
                                   dragProvided={provided2}
                                   dragSnapshot={snapshot}
                                 />
-                                {row.expand && (
-                                  <tr>
+                                {options?.enabledExpand === true && (
+                                  <tr
+                                    style={{
+                                      display: row.expand
+                                        ? "table-row"
+                                        : "none",
+                                    }}
+                                  >
                                     <td
                                       className="devs-dt-cell devs-dt-td"
                                       style={{

@@ -7,6 +7,7 @@ import {
 } from "../types/side-menu-item-props";
 import { useMenuStore } from "../stores/menu-store";
 import Button from "../../button";
+import { useMessage } from "../../alert-message/context/message-context";
 
 interface Color3DTextComponentProps {
   errorNo: Number;
@@ -44,7 +45,7 @@ interface PageErrorLayoutProps {
 }
 
 const PageErrorLayout: React.FC<PageErrorLayoutProps> = ({ menu, errorNo }) => {
-  // const { showMessage } = useMessage();
+  const { showMessage } = useMessage();
   const closeMenu = useMenuStore((state) => state.closeMenu);
   const closeCheckRef = React.useRef<HTMLInputElement>(null);
 
@@ -104,23 +105,19 @@ const PageErrorLayout: React.FC<PageErrorLayoutProps> = ({ menu, errorNo }) => {
             bgColor="#df4873"
             color="#fff"
             css={css({ height: 30, width: 200 })}
-            onClick={
-              () => {}
-              // showMessage({
-              //   title: "탭 닫기",
-              //   message: "현재 탭을 닫으시겠습니까?",
-              //   onOkClick: (e) => {
-              //     closeMenu(menu);
-              //   },
-              // })
-            }
+            onClick={() => {
+              showMessage({
+                title: "탭 닫기",
+                message: "현재 탭을 닫으시겠습니까?",
+                onOkClick: () => closeMenu(menu),
+              });
+            }}
           >
-            탭 닫기
+            현재 페이지 닫기
           </Button>
         </div>
       </div>
     </div>
   );
 };
-
 export default PageErrorLayout;

@@ -20,9 +20,10 @@ import RootLayoutUserSignTime from "./root-layout-user-sign-time";
 import { useLayout } from "../contexts/layout-context";
 var RootLayoutUserCard = React.memo(function () {
     var signOut = useUserStore(function (state) { return state.signOut; });
+    var signIn = useUserStore(function (state) { return state.signIn; });
     var user = useUserStore(function (state) { return state.me; });
     var showMessage = useMessage().showMessage;
-    var _a = useLayout(), onAuthRefreshClick = _a.onAuthRefreshClick, languages = _a.languages, handleLanguageChange = _a.handleLanguageChange;
+    var _a = useLayout(), refreshTokenUrl = _a.refreshTokenUrl, languages = _a.languages, handleLanguageChange = _a.handleLanguageChange;
     var onSignOutClick = function () {
         showMessage({
             title: "로그아웃 확인",
@@ -36,9 +37,20 @@ var RootLayoutUserCard = React.memo(function () {
         var _a;
         if (!user.refreshToken)
             return;
-        onAuthRefreshClick({
-            refreshToken: user.refreshToken,
-            login24h: (_a = user.login24h) !== null && _a !== void 0 ? _a : false,
+        fetch(refreshTokenUrl, {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer ".concat(user.accessToken),
+            },
+            body: JSON.stringify({
+                refreshToken: user.refreshToken,
+                login24h: (_a = user.login24h) !== null && _a !== void 0 ? _a : false,
+            }),
+        })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+            signIn(data.data);
         });
     }, [user]);
     return (_jsxs("div", { children: [_jsx("div", __assign({ css: css({

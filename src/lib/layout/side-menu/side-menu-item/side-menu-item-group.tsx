@@ -45,11 +45,11 @@ function SideMenuItemGroup({ group, isShow }: SideMenuItemGroupProps) {
           },
         })}
         onClick={() => {
-          if (!isShow) {
-            window.sideMenu(true);
-          }
-
           if (group.children !== undefined && group.children.length > 0) {
+            if (!isShow) {
+              window.sideMenu(true);
+            }
+
             setGroupOpened(!groupOpened);
           } else {
             openMenu(group);

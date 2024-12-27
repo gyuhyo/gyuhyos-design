@@ -15,6 +15,10 @@ import "./dev.datatable.style.css";
  */
 interface DevsDataTableRef {
     api: {
+        validate: () => Promise<{
+            valid: boolean;
+            data?: any;
+        }>;
         onValidationCheck: () => Promise<{
             valid: boolean;
             data?: any;

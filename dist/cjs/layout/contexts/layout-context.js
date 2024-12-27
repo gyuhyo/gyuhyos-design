@@ -33,6 +33,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -49,30 +65,53 @@ var languages = [
 ];
 var LayoutContext = (0, react_1.createContext)(undefined);
 var LayoutProvider = function (_a) {
-    var children = _a.children, menus = _a.menus, onAuthRefreshClick = _a.onAuthRefreshClick, authUrl = _a.authUrl, _b = _a.menuType, menuType = _b === void 0 ? "slide" : _b;
-    var path = window.location.pathname;
-    var user = (0, user_store_1.useUserStore)(function (state) { return state.me.userNo; });
+    var children = _a.children, menus = _a.menus, refreshTokenUrl = _a.refreshTokenUrl, authUrl = _a.authUrl, _b = _a.menuType, menuType = _b === void 0 ? "slide" : _b;
+    var _c = __read(react_1.default.useState(false), 2), isLoaded = _c[0], setIsLoaded = _c[1];
+    var _d = __read(react_1.default.useState(false), 2), isClient = _d[0], setIsClient = _d[1]; // 클라이언트 체크
+    var path = isClient ? window.location.pathname : ""; // 클라이언트에서만 접근
+    var user = (0, user_store_1.useUserStore)(function (state) { var _a; return (_a = state.me) === null || _a === void 0 ? void 0 : _a.userNo; });
     var setInitialMenus = (0, menu_store_1.useMenuStore)(function (state) { return state.setInitialMenus; });
     var calculWidth = react_1.default.useMemo(function () {
         return menuType === "slide" || menuType === "multiple"
             ? "calc(100vw - 55px)"
             : "100vw";
     }, [menuType]);
+    // 클라이언트 체크
     react_1.default.useEffect(function () {
-        if (!authUrl) {
-            throw new Error("Please Add Auth Url From LayoutProvider Props.");
+        setIsClient(true);
+    }, []);
+    react_1.default.useEffect(function () {
+        if (!isClient)
+            return;
+        var handleLoad = function () {
+            setIsLoaded(true);
+        };
+        if (document.readyState === "complete") {
+            handleLoad();
         }
+        else {
+            window.addEventListener("load", handleLoad);
+            return function () { return window.removeEventListener("load", handleLoad); };
+        }
+    }, [isClient]);
+    react_1.default.useEffect(function () {
+        console.log("접근 1");
+        if (!isClient || !authUrl)
+            return;
+        console.log("접근 2");
+        console.log(path, !path.includes("popup"), path !== authUrl, user === undefined || user === null, process.env.NODE_ENV !== "production", window.location.port !== "3001");
         if (!path.includes("popup") &&
             path !== authUrl &&
-            (user === undefined || user === null) &&
-            process.env.NODE_ENV !== "production" &&
-            window.location.port !== "3001") {
+            (user === undefined || user === null)) {
+            console.log("접근 3");
             window.sessionStorage.removeItem("menu-storage");
             window.sessionStorage.removeItem("user-storage");
             window.location.href = authUrl;
         }
-    }, [user, authUrl]);
+    }, [user, authUrl, path, isClient]);
     react_1.default.useEffect(function () {
+        if (!isClient)
+            return;
         if (menus === undefined || menus.length === 0) {
             throw new Error("메뉴가 등록되지 않았습니다.\n메뉴를 먼저 등록 후 레이아웃을 사용해 주세요.");
         }
@@ -84,86 +123,65 @@ var LayoutProvider = function (_a) {
             throw new Error("반드시 한개의 메인 메뉴가 존재해야 합니다.");
         }
         setInitialMenus(menus);
-    }, [menus]);
+    }, [menus, isClient]);
     react_1.default.useEffect(function () {
-        var loadScript = function () {
-            var script = document.createElement("script");
-            script.src = "https://kit.fontawesome.com/a220dac585.js";
-            script.crossOrigin = "anonymous";
-            document.head.appendChild(script);
-            return function () {
-                if (document.head.contains(script)) {
-                    document.head.removeChild(script);
-                }
-            };
+        if (!isLoaded || !isClient)
+            return;
+        var script = document.createElement("script");
+        script.src = "https://kit.fontawesome.com/a220dac585.js";
+        script.crossOrigin = "anonymous";
+        document.head.appendChild(script);
+        return function () {
+            if (document.head.contains(script)) {
+                document.head.removeChild(script);
+            }
         };
-        if (document.readyState === "complete") {
-            loadScript();
-        }
-        else {
-            window.addEventListener("load", loadScript);
-            return function () { return window.removeEventListener("load", loadScript); };
-        }
-    }, []);
+    }, [isLoaded, isClient]);
     react_1.default.useEffect(function () {
+        if (!isLoaded || !isClient)
+            return;
         var deleteCookie = function (name) {
             document.cookie = "".concat(name, "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;");
         };
-        var loadScript = function () {
-            deleteCookie("googtrans");
-            var addGoogleTranslateScript = document.createElement("script");
-            addGoogleTranslateScript.src =
-                "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-            document.body.appendChild(addGoogleTranslateScript);
-            window.googleTranslateElementInit = function () {
-                new window.google.translate.TranslateElement({
-                    pageLanguage: "ko",
-                    includedLanguages: "ko,en",
-                    autoDisplay: true,
-                }, "google_translate_element");
-            };
-            return function () {
-                if (document.body.contains(addGoogleTranslateScript)) {
-                    document.body.removeChild(addGoogleTranslateScript);
-                }
-            };
+        deleteCookie("googtrans");
+        var addGoogleTranslateScript = document.createElement("script");
+        addGoogleTranslateScript.src =
+            "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+        document.body.appendChild(addGoogleTranslateScript);
+        window.googleTranslateElementInit = function () {
+            new window.google.translate.TranslateElement({
+                pageLanguage: "ko",
+                includedLanguages: "ko,en",
+                autoDisplay: true,
+            }, "google_translate_element");
         };
-        if (document.readyState === "complete") {
-            loadScript();
-        }
-        else {
-            window.addEventListener("load", loadScript);
-            return function () { return window.removeEventListener("load", loadScript); };
-        }
-    }, []);
+        return function () {
+            if (document.body.contains(addGoogleTranslateScript)) {
+                document.body.removeChild(addGoogleTranslateScript);
+            }
+        };
+    }, [isLoaded, isClient]);
     var handleLanguageChange = function (lang) {
+        if (!isClient)
+            return;
         var html = document.querySelector("html");
         html === null || html === void 0 ? void 0 : html.removeAttribute("translate");
         var value = lang.code;
         var gtCombo = document.querySelector(".goog-te-combo");
         if (gtCombo) {
-            console.dir(gtCombo);
-            if (value === "ko") {
-                gtCombo.value = value;
-                gtCombo.dispatchEvent(new Event("change"));
-            }
-            else {
-                gtCombo.value = value;
-            }
+            gtCombo.value = value;
             gtCombo.dispatchEvent(new Event("change"));
         }
     };
-    if (path === authUrl || path.includes("popup")) {
+    if (!isClient || path === authUrl || path.includes("popup")) {
         return (0, jsx_runtime_1.jsx)(react_1.default.Fragment, { children: children });
     }
-    if ((user === undefined || user === null) &&
-        process.env.NODE_ENV !== "production" &&
-        window.location.port !== "3001") {
-        return (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {});
+    if (!isLoaded || user === undefined || user === null) {
+        return null;
     }
     return ((0, jsx_runtime_1.jsxs)(LayoutContext.Provider, __assign({ value: {
             menuType: menuType,
-            onAuthRefreshClick: onAuthRefreshClick,
+            refreshTokenUrl: refreshTokenUrl,
             calculWidth: calculWidth,
             languages: languages,
             handleLanguageChange: handleLanguageChange,

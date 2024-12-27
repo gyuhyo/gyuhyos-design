@@ -26,9 +26,9 @@ var useUserStore = (0, zustand_1.create)()((0, middleware_1.persist)(function (s
     },
     signOut: function () {
         set((0, immer_1.produce)(function (state) {
-            state.me = initialState;
             window.sessionStorage.removeItem("menu-storage");
             window.sessionStorage.removeItem("user-storage");
+            state.me = initialState;
         }));
     },
 }); }, {

@@ -2,16 +2,19 @@ import { produce } from "immer";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { moveUrl } from "../utils/moveUrl";
+import { useUserStore } from "./user-store";
 var useMenuStore = create(persist(function (set) { return ({
     menus: [],
     setInitialMenus: function (initialMenus) {
         set(produce(function (state) {
+            var userStore = useUserStore.getState();
             state.menus = initialMenus;
             var menus = initialMenus.flatMap(function (x) {
                 return x.children === undefined ? x : x.children;
             });
             var mainMenu = menus.find(function (x) { return x.main === true; });
-            if (!state.openedMenus.find(function (x) { return x.key === mainMenu.key; })) {
+            if (userStore.me.userNo !== undefined &&
+                !state.openedMenus.find(function (x) { return x.key === mainMenu.key; })) {
                 state.openedMenus.push(Object.assign(mainMenu, { hasClose: false }));
                 moveUrl("".concat(mainMenu.group, "/").concat(mainMenu.key), mainMenu.title);
                 state.selectedMenu = { gr: mainMenu.group, mn: mainMenu.key };

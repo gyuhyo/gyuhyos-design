@@ -89,11 +89,12 @@ function DevsDtRow(_a) {
         setValue("checked", data.checked);
     }, [data.mode, data.checked]);
     var onEditModeClick = function (e) {
-        var _a, _b;
-        console.log(e.target);
+        var _a, _b, _c;
         if ((options === null || options === void 0 ? void 0 : options.readonly) === true)
             return;
         if (!((_b = (_a = options === null || options === void 0 ? void 0 : options.rowEditable) === null || _a === void 0 ? void 0 : _a.call(options, { index: index, row: data })) !== null && _b !== void 0 ? _b : true))
+            return;
+        if (((_c = options === null || options === void 0 ? void 0 : options.onBeforeRowEdit) === null || _c === void 0 ? void 0 : _c.call(options, { index: index, row: data })) === false)
             return;
         if (data.mode === "r" &&
             ((options === null || options === void 0 ? void 0 : options.editType) === undefined || (options === null || options === void 0 ? void 0 : options.editType) === "row")) {

@@ -18,6 +18,15 @@ export interface IDataTableOptions {
     editType?: "row" | "cell";
     cellEditClickType?: "click" | "doubleClick";
     minWidth?: number;
+    onBeforeRowEdit?: ({ index, row, }: {
+        index: number;
+        row: IDataSource;
+    }) => boolean;
+    onBeforeCellEdit?: ({ index, row, value, }: {
+        index: number;
+        row: IDataSource;
+        value: any;
+    }) => boolean;
     rowEditable?: ({ index, row, }: {
         index: number;
         row: IDataSource;

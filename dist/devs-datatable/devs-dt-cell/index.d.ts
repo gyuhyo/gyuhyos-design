@@ -2,6 +2,7 @@
 import React from "react";
 import { Control, FieldValues, UseFormGetValues, UseFormRegister, UseFormSetValue, UseFormTrigger } from "react-hook-form";
 import { IDataSource, IDataTableColumn } from "../_types";
+import "dayjs/locale/ko";
 type TDevsDtCell = {
     col: IDataTableColumn;
     mode: string;

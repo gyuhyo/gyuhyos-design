@@ -5,16 +5,19 @@ var immer_1 = require("immer");
 var zustand_1 = require("zustand");
 var middleware_1 = require("zustand/middleware");
 var moveUrl_1 = require("../utils/moveUrl");
+var user_store_1 = require("./user-store");
 var useMenuStore = (0, zustand_1.create)((0, middleware_1.persist)(function (set) { return ({
     menus: [],
     setInitialMenus: function (initialMenus) {
         set((0, immer_1.produce)(function (state) {
+            var userStore = user_store_1.useUserStore.getState();
             state.menus = initialMenus;
             var menus = initialMenus.flatMap(function (x) {
                 return x.children === undefined ? x : x.children;
             });
             var mainMenu = menus.find(function (x) { return x.main === true; });
-            if (!state.openedMenus.find(function (x) { return x.key === mainMenu.key; })) {
+            if (userStore.me.userNo !== undefined &&
+                !state.openedMenus.find(function (x) { return x.key === mainMenu.key; })) {
                 state.openedMenus.push(Object.assign(mainMenu, { hasClose: false }));
                 (0, moveUrl_1.moveUrl)("".concat(mainMenu.group, "/").concat(mainMenu.key), mainMenu.title);
                 state.selectedMenu = { gr: mainMenu.group, mn: mainMenu.key };

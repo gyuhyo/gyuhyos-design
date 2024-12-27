@@ -264,10 +264,14 @@ function DevsDtTBody(_a) {
                                                         "translate(0px," + t;
                                                 }
                                             }
-                                            return ((0, jsx_runtime_1.jsxs)(react_1.default.Fragment, { children: [(0, jsx_runtime_1.jsx)(devs_dt_row_1.default, { index: index, rowKey: row.rowId, data: row, lastNode: lastNode, dragProvided: provided2, dragSnapshot: snapshot }, row.rowId), row.expand && ((0, jsx_runtime_1.jsx)("tr", { children: (0, jsx_runtime_1.jsx)("td", __assign({ className: "devs-dt-cell devs-dt-td", style: {
+                                            return ((0, jsx_runtime_1.jsxs)(react_1.default.Fragment, { children: [(0, jsx_runtime_1.jsx)(devs_dt_row_1.default, { index: index, rowKey: row.rowId, data: row, lastNode: lastNode, dragProvided: provided2, dragSnapshot: snapshot }, row.rowId), (options === null || options === void 0 ? void 0 : options.enabledExpand) === true && ((0, jsx_runtime_1.jsx)("tr", __assign({ style: {
+                                                            display: row.expand
+                                                                ? "table-row"
+                                                                : "none",
+                                                        } }, { children: (0, jsx_runtime_1.jsx)("td", __assign({ className: "devs-dt-cell devs-dt-td", style: {
                                                                 padding: "7px",
                                                                 height: "0px",
-                                                            }, colSpan: nodeCount }, { children: (_a = options === null || options === void 0 ? void 0 : options.expandContent) === null || _a === void 0 ? void 0 : _a.call(options, row) })) }))] }, row.rowId));
+                                                            }, colSpan: nodeCount }, { children: (_a = options === null || options === void 0 ? void 0 : options.expandContent) === null || _a === void 0 ? void 0 : _a.call(options, row) })) })))] }, row.rowId));
                                         } }), row.rowId));
                                 }), provided.placeholder] })) }))); } })) })) })));
 }

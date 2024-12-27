@@ -38,8 +38,6 @@ const hiddenAlert = css({
 });
 
 const AlertMessage: React.FC<MessageContextTypes> = (props) => {
-  const [isShowState, setIsShowState] = React.useState(true);
-
   const {
     setIsShow,
     type,
@@ -55,6 +53,8 @@ const AlertMessage: React.FC<MessageContextTypes> = (props) => {
     onCloseClick,
     footerStart,
   } = props;
+
+  const [isShowState, setIsShowState] = React.useState(true);
 
   const closeAlert = () => {
     setIsShowState(false);

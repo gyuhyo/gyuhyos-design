@@ -53,10 +53,10 @@ function SideMenuItemGroup(_a) {
                         cursor: "pointer",
                     },
                 }), onClick: function () {
-                    if (!isShow) {
-                        window.sideMenu(true);
-                    }
                     if (group.children !== undefined && group.children.length > 0) {
+                        if (!isShow) {
+                            window.sideMenu(true);
+                        }
                         setGroupOpened(!groupOpened);
                     }
                     else {

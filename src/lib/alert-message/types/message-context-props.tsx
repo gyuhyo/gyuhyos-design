@@ -18,6 +18,7 @@ export interface MessageShowProps {
   isCloseButtonVisible?: boolean;
   onCloseClick?: (e?: MouseEvent<HTMLDivElement>) => void;
   footerStart?: React.ReactNode;
+  duration?: number;
 }
 
 export interface MessageContextTypes

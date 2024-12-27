@@ -15,6 +15,7 @@ import { css } from "@emotion/react";
 import * as React from "react";
 import { useMenuStore } from "../stores/menu-store";
 import Button from "../../button";
+import { useMessage } from "../../alert-message/context/message-context";
 var Color3DTextComponent = function (_a) {
     var errorNo = _a.errorNo, color = _a.color;
     return (_jsx(React.Fragment, { children: _jsxs("h1", __assign({ css: css({
@@ -31,7 +32,7 @@ var Color3DTextComponent = function (_a) {
 };
 var PageErrorLayout = function (_a) {
     var menu = _a.menu, errorNo = _a.errorNo;
-    // const { showMessage } = useMessage();
+    var showMessage = useMessage().showMessage;
     var closeMenu = useMenuStore(function (state) { return state.closeMenu; });
     var closeCheckRef = React.useRef(null);
     var error = {
@@ -72,6 +73,12 @@ var PageErrorLayout = function (_a) {
                 padding: "20px 40px",
                 borderRadius: "5px",
                 boxShadow: "7px 7px 11px #aaaaaa60",
-            }) }, { children: [_jsxs("div", { children: [_jsx(Color3DTextComponent, { errorNo: errorNo, color: errorMessage.color }), _jsx("h4", { children: errorMessage.message })] }), _jsx("div", __assign({ css: css({ alignSelf: "center" }) }, { children: _jsx(Button, __assign({ bgColor: "#df4873", color: "#fff", css: css({ height: 30, width: 200 }), onClick: function () { } }, { children: "\uD0ED \uB2EB\uAE30" })) }))] })) })));
+            }) }, { children: [_jsxs("div", { children: [_jsx(Color3DTextComponent, { errorNo: errorNo, color: errorMessage.color }), _jsx("h4", { children: errorMessage.message })] }), _jsx("div", __assign({ css: css({ alignSelf: "center" }) }, { children: _jsx(Button, __assign({ bgColor: "#df4873", color: "#fff", css: css({ height: 30, width: 200 }), onClick: function () {
+                            showMessage({
+                                title: "탭 닫기",
+                                message: "현재 탭을 닫으시겠습니까?",
+                                onOkClick: function () { return closeMenu(menu); },
+                            });
+                        } }, { children: "\uD604\uC7AC \uD398\uC774\uC9C0 \uB2EB\uAE30" })) }))] })) })));
 };
 export default PageErrorLayout;

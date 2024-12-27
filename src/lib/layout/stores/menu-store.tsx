@@ -6,6 +6,7 @@ import {
   SideMenuItemsProps,
 } from "../types/side-menu-item-props";
 import { moveUrl } from "../utils/moveUrl";
+import { useUserStore } from "./user-store";
 
 interface MenuStoreProps {
   menus: SideMenuItemsProps[];
@@ -32,6 +33,7 @@ const useMenuStore = create(
       setInitialMenus: (initialMenus: SideMenuItemsProps[]) => {
         set(
           produce((state: MenuStoreProps) => {
+            const userStore = useUserStore.getState();
             state.menus = initialMenus;
             const menus = initialMenus.flatMap((x) =>
               x.children === undefined ? x : x.children
@@ -40,7 +42,10 @@ const useMenuStore = create(
               (x) => x.main === true
             ) as SideMenuItemsChildProps;
 
-            if (!state.openedMenus.find((x) => x.key === mainMenu.key)) {
+            if (
+              userStore.me.userNo !== undefined &&
+              !state.openedMenus.find((x) => x.key === mainMenu.key)
+            ) {
               state.openedMenus.push(
                 Object.assign(mainMenu, { hasClose: false })
               );

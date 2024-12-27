@@ -15,7 +15,7 @@ export interface IDataTableColumn {
     required?: boolean;
     sticky?: boolean;
     resizing?: boolean;
-    type?: "date" | "select" | "number" | "textarea";
+    type?: "date" | "select" | "number" | "textarea" | "datetime";
     align?: string;
     merge?: boolean;
     autoFocus?: (mode: string) => boolean;

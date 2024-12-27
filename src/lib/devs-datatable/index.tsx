@@ -25,6 +25,7 @@ import { css } from "@emotion/react";
 // 1. DevsDataTable Ref 타입 정의
 interface DevsDataTableRef {
   api: {
+    validate: () => Promise<{ valid: boolean; data?: any }>;
     onValidationCheck: () => Promise<{ valid: boolean; data?: any }>;
     getFocusedRow: null | IDataSource;
     getFocusedCell: null | { row: null | IDataSource; field: null | string };
@@ -109,6 +110,48 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
       ref,
       (): DevsDataTableRef => ({
         api: {
+          validate: async () => {
+            const forms = Object.values(formsRef.current);
+            await Promise.all(
+              forms.map(async (form) => {
+                return new Promise((resolve) => resolve(form.clearErrors()));
+              })
+            );
+
+            const validations: { valid: boolean; data: any }[] =
+              await Promise.all(
+                forms
+                  .filter((f) => f.getValues("checked"))
+                  .map(async (form) => {
+                    return new Promise((resolve) =>
+                      form.handleSubmit(
+                        (data) => resolve({ valid: true, data }),
+                        (error) => resolve({ valid: false, data: error })
+                      )()
+                    );
+                  })
+              );
+
+            const allValid = validations.every((result) => result.valid);
+
+            if (allValid) {
+              const allData = validations.map((result) => result.data);
+              const allDataBlankToNull = allData.map((data) =>
+                Object.fromEntries(
+                  Object.entries(data).map(([key, value]) => [
+                    key,
+                    value === "" ? null : value ?? null,
+                  ])
+                )
+              );
+              return { valid: true, data: allDataBlankToNull };
+            } else {
+              const allData = validations
+                .filter((f) => !f.valid)
+                .map((result) => result.data);
+              return { valid: false, data: allData };
+            }
+          },
           onValidationCheck: async () => {
             const forms = Object.values(formsRef.current);
             await Promise.all(
@@ -133,11 +176,17 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
 
             const allValid = validations.every((result) => result.valid);
 
-            console.log("allvalid", allValid);
-
             if (allValid) {
               const allData = validations.map((result) => result.data);
-              return { valid: true, data: allData };
+              const allDataBlankToNull = allData.map((data) =>
+                Object.fromEntries(
+                  Object.entries(data).map(([key, value]) => [
+                    key,
+                    value === "" ? null : value ?? null,
+                  ])
+                )
+              );
+              return { valid: true, data: allDataBlankToNull };
             } else {
               const allData = validations
                 .filter((f) => !f.valid)
@@ -228,6 +277,8 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
           props.buttons?.custom !== undefined) && (
           <div
             style={{
+              flex: "none",
+              minHeight: "50px",
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",

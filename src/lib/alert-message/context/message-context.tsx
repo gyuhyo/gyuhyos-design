@@ -44,6 +44,7 @@ export const MessageProvider = React.memo(
               removeMessage(Date.now().toString());
             },
             footerStart: props.footerStart ?? undefined,
+            duration: props.duration,
           },
         ]);
       });
@@ -78,6 +79,7 @@ export const MessageProvider = React.memo(
             isCloseButtonVisible={msg.isCancelButtonVisible!}
             onCloseClick={msg.onCloseClick!}
             footerStart={msg.footerStart}
+            duration={msg.duration}
           />
         ))}
       </MessageContext.Provider>

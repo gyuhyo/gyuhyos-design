@@ -18,7 +18,7 @@ root.render(
   <React.StrictMode>
     <MessageProvider>
       <LayoutProvider
-        onAuthRefreshClick={() => {}}
+        refreshTokenUrl="/auth/refresh"
         authUrl="/auth"
         menuType="multiple"
         menus={[

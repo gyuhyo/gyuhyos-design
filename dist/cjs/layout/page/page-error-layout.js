@@ -43,6 +43,7 @@ var react_1 = require("@emotion/react");
 var React = __importStar(require("react"));
 var menu_store_1 = require("../stores/menu-store");
 var button_1 = __importDefault(require("../../button"));
+var message_context_1 = require("../../alert-message/context/message-context");
 var Color3DTextComponent = function (_a) {
     var errorNo = _a.errorNo, color = _a.color;
     return ((0, jsx_runtime_1.jsx)(React.Fragment, { children: (0, jsx_runtime_1.jsxs)("h1", __assign({ css: (0, react_1.css)({
@@ -59,7 +60,7 @@ var Color3DTextComponent = function (_a) {
 };
 var PageErrorLayout = function (_a) {
     var menu = _a.menu, errorNo = _a.errorNo;
-    // const { showMessage } = useMessage();
+    var showMessage = (0, message_context_1.useMessage)().showMessage;
     var closeMenu = (0, menu_store_1.useMenuStore)(function (state) { return state.closeMenu; });
     var closeCheckRef = React.useRef(null);
     var error = {
@@ -100,6 +101,12 @@ var PageErrorLayout = function (_a) {
                 padding: "20px 40px",
                 borderRadius: "5px",
                 boxShadow: "7px 7px 11px #aaaaaa60",
-            }) }, { children: [(0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)(Color3DTextComponent, { errorNo: errorNo, color: errorMessage.color }), (0, jsx_runtime_1.jsx)("h4", { children: errorMessage.message })] }), (0, jsx_runtime_1.jsx)("div", __assign({ css: (0, react_1.css)({ alignSelf: "center" }) }, { children: (0, jsx_runtime_1.jsx)(button_1.default, __assign({ bgColor: "#df4873", color: "#fff", css: (0, react_1.css)({ height: 30, width: 200 }), onClick: function () { } }, { children: "\uD0ED \uB2EB\uAE30" })) }))] })) })));
+            }) }, { children: [(0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)(Color3DTextComponent, { errorNo: errorNo, color: errorMessage.color }), (0, jsx_runtime_1.jsx)("h4", { children: errorMessage.message })] }), (0, jsx_runtime_1.jsx)("div", __assign({ css: (0, react_1.css)({ alignSelf: "center" }) }, { children: (0, jsx_runtime_1.jsx)(button_1.default, __assign({ bgColor: "#df4873", color: "#fff", css: (0, react_1.css)({ height: 30, width: 200 }), onClick: function () {
+                            showMessage({
+                                title: "탭 닫기",
+                                message: "현재 탭을 닫으시겠습니까?",
+                                onOkClick: function () { return closeMenu(menu); },
+                            });
+                        } }, { children: "\uD604\uC7AC \uD398\uC774\uC9C0 \uB2EB\uAE30" })) }))] })) })));
 };
 exports.default = PageErrorLayout;

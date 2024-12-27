@@ -11,13 +11,7 @@ interface languagesProps {
 }
 
 interface LayoutContextProps {
-  onAuthRefreshClick: ({
-    refreshToken,
-    login24h,
-  }: {
-    refreshToken: string;
-    login24h: boolean;
-  }) => void;
+  refreshTokenUrl: string;
   menuType?: "slide" | "header" | "multiple";
   calculWidth: string;
   languages: languagesProps[];
@@ -33,44 +27,70 @@ const LayoutContext = createContext<LayoutContextProps | undefined>(undefined);
 
 export const LayoutProvider: React.FC<{
   children: React.ReactNode;
-  onAuthRefreshClick: ({
-    refreshToken,
-    login24h,
-  }: {
-    refreshToken: string;
-    login24h: boolean;
-  }) => void;
   menus: SideMenuItemsProps[];
   authUrl: string;
+  refreshTokenUrl: string;
   menuType?: "slide" | "header" | "multiple";
-}> = ({ children, menus, onAuthRefreshClick, authUrl, menuType = "slide" }) => {
-  const path = window.location.pathname;
-  const user = useUserStore((state) => state.me.userNo);
+}> = ({ children, menus, refreshTokenUrl, authUrl, menuType = "slide" }) => {
+  const [isLoaded, setIsLoaded] = React.useState(false);
+  const [isClient, setIsClient] = React.useState(false); // 클라이언트 체크
+  const path = isClient ? window.location.pathname : ""; // 클라이언트에서만 접근
+  const user = useUserStore((state) => state.me?.userNo);
   const setInitialMenus = useMenuStore((state) => state.setInitialMenus);
+
   const calculWidth = React.useMemo(() => {
     return menuType === "slide" || menuType === "multiple"
       ? "calc(100vw - 55px)"
       : "100vw";
   }, [menuType]);
-  React.useEffect(() => {
-    if (!authUrl) {
-      throw new Error("Please Add Auth Url From LayoutProvider Props.");
-    }
 
+  // 클라이언트 체크
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  React.useEffect(() => {
+    if (!isClient) return;
+
+    const handleLoad = () => {
+      setIsLoaded(true);
+    };
+
+    if (document.readyState === "complete") {
+      handleLoad();
+    } else {
+      window.addEventListener("load", handleLoad);
+      return () => window.removeEventListener("load", handleLoad);
+    }
+  }, [isClient]);
+
+  React.useEffect(() => {
+    console.log("접근 1");
+    if (!isClient || !authUrl) return;
+    console.log("접근 2");
+    console.log(
+      path,
+      !path.includes("popup"),
+      path !== authUrl,
+      user === undefined || user === null,
+      process.env.NODE_ENV !== "production",
+      window.location.port !== "3001"
+    );
     if (
       !path.includes("popup") &&
       path !== authUrl &&
-      (user === undefined || user === null) &&
-      process.env.NODE_ENV !== "production" &&
-      window.location.port !== "3001"
+      (user === undefined || user === null)
     ) {
+      console.log("접근 3");
       window.sessionStorage.removeItem("menu-storage");
       window.sessionStorage.removeItem("user-storage");
       window.location.href = authUrl;
     }
-  }, [user, authUrl]);
+  }, [user, authUrl, path, isClient]);
 
   React.useEffect(() => {
+    if (!isClient) return;
+
     if (menus === undefined || menus.length === 0) {
       throw new Error(
         "메뉴가 등록되지 않았습니다.\n메뉴를 먼저 등록 후 레이아웃을 사용해 주세요."
@@ -87,71 +107,59 @@ export const LayoutProvider: React.FC<{
     }
 
     setInitialMenus(menus);
-  }, [menus]);
+  }, [menus, isClient]);
 
   React.useEffect(() => {
-    const loadScript = () => {
-      const script = document.createElement("script");
-      script.src = "https://kit.fontawesome.com/a220dac585.js";
-      script.crossOrigin = "anonymous";
+    if (!isLoaded || !isClient) return;
 
-      document.head.appendChild(script);
+    const script = document.createElement("script");
+    script.src = "https://kit.fontawesome.com/a220dac585.js";
+    script.crossOrigin = "anonymous";
 
-      return () => {
-        if (document.head.contains(script)) {
-          document.head.removeChild(script);
-        }
-      };
+    document.head.appendChild(script);
+
+    return () => {
+      if (document.head.contains(script)) {
+        document.head.removeChild(script);
+      }
     };
-
-    if (document.readyState === "complete") {
-      loadScript();
-    } else {
-      window.addEventListener("load", loadScript);
-      return () => window.removeEventListener("load", loadScript);
-    }
-  }, []);
+  }, [isLoaded, isClient]);
 
   React.useEffect(() => {
+    if (!isLoaded || !isClient) return;
+
     const deleteCookie = (name: string) => {
       document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
     };
 
-    const loadScript = () => {
-      deleteCookie("googtrans");
+    deleteCookie("googtrans");
 
-      const addGoogleTranslateScript = document.createElement("script");
-      addGoogleTranslateScript.src =
-        "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-      document.body.appendChild(addGoogleTranslateScript);
+    const addGoogleTranslateScript = document.createElement("script");
+    addGoogleTranslateScript.src =
+      "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    document.body.appendChild(addGoogleTranslateScript);
 
-      window.googleTranslateElementInit = () => {
-        new window.google.translate.TranslateElement(
-          {
-            pageLanguage: "ko",
-            includedLanguages: "ko,en",
-            autoDisplay: true,
-          },
-          "google_translate_element"
-        );
-      };
-
-      return () => {
-        if (document.body.contains(addGoogleTranslateScript)) {
-          document.body.removeChild(addGoogleTranslateScript);
-        }
-      };
+    window.googleTranslateElementInit = () => {
+      new window.google.translate.TranslateElement(
+        {
+          pageLanguage: "ko",
+          includedLanguages: "ko,en",
+          autoDisplay: true,
+        },
+        "google_translate_element"
+      );
     };
 
-    if (document.readyState === "complete") {
-      loadScript();
-    } else {
-      window.addEventListener("load", loadScript);
-      return () => window.removeEventListener("load", loadScript);
-    }
-  }, []);
+    return () => {
+      if (document.body.contains(addGoogleTranslateScript)) {
+        document.body.removeChild(addGoogleTranslateScript);
+      }
+    };
+  }, [isLoaded, isClient]);
 
   const handleLanguageChange = (lang: languagesProps) => {
+    if (!isClient) return;
+
     const html = document.querySelector("html");
     html?.removeAttribute("translate");
 
@@ -161,34 +169,24 @@ export const LayoutProvider: React.FC<{
       ".goog-te-combo"
     ) as HTMLSelectElement;
     if (gtCombo) {
-      console.dir(gtCombo);
-      if (value === "ko") {
-        gtCombo.value = value;
-        gtCombo.dispatchEvent(new Event("change"));
-      } else {
-        gtCombo.value = value;
-      }
+      gtCombo.value = value;
       gtCombo.dispatchEvent(new Event("change"));
     }
   };
 
-  if (path === authUrl || path.includes("popup")) {
+  if (!isClient || path === authUrl || path.includes("popup")) {
     return <React.Fragment>{children}</React.Fragment>;
   }
 
-  if (
-    (user === undefined || user === null) &&
-    process.env.NODE_ENV !== "production" &&
-    window.location.port !== "3001"
-  ) {
-    return <></>;
+  if (!isLoaded || user === undefined || user === null) {
+    return null;
   }
 
   return (
     <LayoutContext.Provider
       value={{
         menuType,
-        onAuthRefreshClick,
+        refreshTokenUrl,
         calculWidth,
         languages,
         handleLanguageChange,

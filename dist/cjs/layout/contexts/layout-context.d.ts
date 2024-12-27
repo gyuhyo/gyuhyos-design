@@ -6,10 +6,7 @@ interface languagesProps {
     flag: string;
 }
 interface LayoutContextProps {
-    onAuthRefreshClick: ({ refreshToken, login24h, }: {
-        refreshToken: string;
-        login24h: boolean;
-    }) => void;
+    refreshTokenUrl: string;
     menuType?: "slide" | "header" | "multiple";
     calculWidth: string;
     languages: languagesProps[];
@@ -17,12 +14,9 @@ interface LayoutContextProps {
 }
 export declare const LayoutProvider: React.FC<{
     children: React.ReactNode;
-    onAuthRefreshClick: ({ refreshToken, login24h, }: {
-        refreshToken: string;
-        login24h: boolean;
-    }) => void;
     menus: SideMenuItemsProps[];
     authUrl: string;
+    refreshTokenUrl: string;
     menuType?: "slide" | "header" | "multiple";
 }>;
 export declare const useLayout: () => LayoutContextProps;

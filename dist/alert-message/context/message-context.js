@@ -76,6 +76,7 @@ export var MessageProvider = React.memo(function (_a) {
                             removeMessage(Date.now().toString());
                         },
                         footerStart: (_h = props.footerStart) !== null && _h !== void 0 ? _h : undefined,
+                        duration: props.duration,
                     },
                 ], false);
             });
@@ -90,7 +91,7 @@ export var MessageProvider = React.memo(function (_a) {
                             return current.filter(function (m) { return m.alertID !== msg.alertID; });
                         });
                     }
-                }, type: msg.type, title: msg.title, message: msg.message, okCaption: msg.okCaption, cancelCaption: msg.cancelCaption, isOkButtonVisible: msg.isOkButtonVisible, onOkClick: msg.onOkClick, isCancelButtonVisible: msg.isCancelButtonVisible, onCancelClick: msg.onCancelClick, isCloseButtonVisible: msg.isCancelButtonVisible, onCloseClick: msg.onCloseClick, footerStart: msg.footerStart }, msg.alertID)); })] })));
+                }, type: msg.type, title: msg.title, message: msg.message, okCaption: msg.okCaption, cancelCaption: msg.cancelCaption, isOkButtonVisible: msg.isOkButtonVisible, onOkClick: msg.onOkClick, isCancelButtonVisible: msg.isCancelButtonVisible, onCancelClick: msg.onCancelClick, isCloseButtonVisible: msg.isCancelButtonVisible, onCloseClick: msg.onCloseClick, footerStart: msg.footerStart, duration: msg.duration }, msg.alertID)); })] })));
 });
 export var useMessage = function () {
     var context = useContext(MessageContext);

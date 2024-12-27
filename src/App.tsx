@@ -17,6 +17,7 @@ const dummyData = [
     "5": "Category X",
     "6": "2024-12-01",
     "112": 1,
+    "33": null,
   },
   {
     "1": "Group 1",
@@ -79,7 +80,9 @@ const dummyData = [
   {
     "1": "Group 3",
     "2": "Option C",
-
+    "6": null,
+  },
+  {
     "4": "Batch C",
     "5": "Category Z",
     "6": "2024-12-09",
@@ -212,7 +215,7 @@ const App: React.FC<{}> = () => {
           field: "33",
           title: "3",
           width: 150,
-          type: "date",
+          type: "datetime",
           required: true,
         },
       ],
@@ -231,7 +234,7 @@ const App: React.FC<{}> = () => {
     setIsLayerPopOpen(true);
 
     const { data, valid } = await tb.current.api.onValidationCheck();
-    console.log(valid);
+    console.log(data);
 
     if (!valid) {
       showMessage({
@@ -331,10 +334,17 @@ const App: React.FC<{}> = () => {
           enabledRowOrder: true,
           enabledRowCheck: true,
           enabledExpand: true,
+          onBeforeRowEdit: ({ index, row }) => {
+            if (index > 3) return false;
+            return true;
+          },
           expandContent: (row) => {
             return (
-              <div>
-                <p>123</p>
+              <div
+                onLoad={() => console.log(row)}
+                style={{ width: "100%", height: "100%" }}
+              >
+                <input type="text" style={{ width: "100%", height: "100%" }} />
               </div>
             );
           },

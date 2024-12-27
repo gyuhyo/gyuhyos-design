@@ -62,9 +62,9 @@ const useUserStore = create<IUserStore>()(
       signOut: () => {
         set(
           produce((state) => {
-            state.me = initialState;
             window.sessionStorage.removeItem("menu-storage");
             window.sessionStorage.removeItem("user-storage");
+            state.me = initialState;
           })
         );
       },

@@ -10,9 +10,10 @@ import { useLayout } from "../contexts/layout-context";
 
 const RootLayoutUserCard: React.FC<any> = React.memo(() => {
   const signOut = useUserStore((state) => state.signOut);
+  const signIn = useUserStore((state) => state.signIn);
   const user = useUserStore((state) => state.me);
   const { showMessage } = useMessage();
-  const { onAuthRefreshClick, languages, handleLanguageChange } = useLayout();
+  const { refreshTokenUrl, languages, handleLanguageChange } = useLayout();
 
   const onSignOutClick = () => {
     showMessage({
@@ -27,10 +28,21 @@ const RootLayoutUserCard: React.FC<any> = React.memo(() => {
   const onRefreshClick = React.useCallback(() => {
     if (!user.refreshToken) return;
 
-    onAuthRefreshClick({
-      refreshToken: user.refreshToken,
-      login24h: user.login24h ?? false,
-    });
+    fetch(refreshTokenUrl, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+      body: JSON.stringify({
+        refreshToken: user.refreshToken,
+        login24h: user.login24h ?? false,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        signIn(data.data);
+      });
   }, [user]);
 
   return (
