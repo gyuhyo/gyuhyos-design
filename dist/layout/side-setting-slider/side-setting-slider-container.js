@@ -32,9 +32,11 @@ import { sideSettingSliderContainerStyle } from "./side-setting-slider-style";
 import { css } from "@emotion/react";
 import Button from "../../button";
 import Backdrop from "../backdrop/backdrop";
+import { useLayout } from "../contexts/layout-context";
 function SideSettingSliderContainer() {
     var _a = __read(React.useState(0.95), 2), fontSize = _a[0], setFontSize = _a[1];
     var _b = __read(React.useState(false), 2), isShow = _b[0], setIsShow = _b[1];
+    var customSettings = useLayout().customSettings;
     React.useEffect(function () {
         if (typeof window !== "undefined") {
             window.sideSetting = setIsShow;
@@ -92,6 +94,6 @@ function SideSettingSliderContainer() {
                                         window.location.reload();
                                     }, style: {
                                         width: "100%",
-                                    }, rounded: false }, { children: "\uC138\uC158 \uC0AD\uC81C" })), _jsx("p", __assign({ style: { marginTop: 7, fontSize: 11 } }, { children: "\uC5C5\uB370\uC774\uD2B8\uB85C \uC778\uD55C \uBA54\uB274\uAC00 \uC62C\uBC14\uB974\uAC8C \uC791\uB3D9\uD558\uC9C0 \uC54A\uC744\uB54C \uD074\uB9AD" }))] })] }))] })) })));
+                                    }, rounded: false }, { children: "\uC138\uC158 \uC0AD\uC81C" })), _jsx("p", __assign({ style: { marginTop: 7, fontSize: 11 } }, { children: "\uC5C5\uB370\uC774\uD2B8\uB85C \uC778\uD55C \uBA54\uB274\uAC00 \uC62C\uBC14\uB974\uAC8C \uC791\uB3D9\uD558\uC9C0 \uC54A\uC744\uB54C \uD074\uB9AD" }))] }), customSettings] }))] })) })));
 }
 export default SideSettingSliderContainer;

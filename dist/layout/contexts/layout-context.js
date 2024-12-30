@@ -36,7 +36,7 @@ var languages = [
 ];
 var LayoutContext = createContext(undefined);
 export var LayoutProvider = function (_a) {
-    var children = _a.children, menus = _a.menus, refreshTokenUrl = _a.refreshTokenUrl, authUrl = _a.authUrl, _b = _a.menuType, menuType = _b === void 0 ? "slide" : _b;
+    var children = _a.children, menus = _a.menus, refreshTokenUrl = _a.refreshTokenUrl, authUrl = _a.authUrl, _b = _a.menuType, menuType = _b === void 0 ? "slide" : _b, customSettings = _a.customSettings;
     var _c = __read(React.useState(false), 2), isLoaded = _c[0], setIsLoaded = _c[1];
     var _d = __read(React.useState(false), 2), isClient = _d[0], setIsClient = _d[1]; // 클라이언트 체크
     var path = isClient ? window.location.pathname : ""; // 클라이언트에서만 접근
@@ -66,15 +66,13 @@ export var LayoutProvider = function (_a) {
         }
     }, [isClient]);
     React.useEffect(function () {
-        console.log("접근 1");
         if (!isClient || !authUrl)
             return;
-        console.log("접근 2");
-        console.log(path, !path.includes("popup"), path !== authUrl, user === undefined || user === null, process.env.NODE_ENV !== "production", window.location.port !== "3001");
         if (!path.includes("popup") &&
             path !== authUrl &&
             (user === undefined || user === null)) {
-            console.log("접근 3");
+            if (window.location.port === "3001")
+                return;
             window.sessionStorage.removeItem("menu-storage");
             window.sessionStorage.removeItem("user-storage");
             window.location.href = authUrl;
@@ -144,11 +142,13 @@ export var LayoutProvider = function (_a) {
             gtCombo.dispatchEvent(new Event("change"));
         }
     };
-    if (!isClient || path === authUrl || path.includes("popup")) {
-        return _jsx(React.Fragment, { children: children });
-    }
-    if (!isLoaded || user === undefined || user === null) {
-        return null;
+    if (window.location.port !== "3001") {
+        if (!isClient || path === authUrl || path.includes("popup")) {
+            return _jsx(React.Fragment, { children: children });
+        }
+        if (!isLoaded || user === undefined || user === null) {
+            return null;
+        }
     }
     return (_jsxs(LayoutContext.Provider, __assign({ value: {
             menuType: menuType,
@@ -156,6 +156,7 @@ export var LayoutProvider = function (_a) {
             calculWidth: calculWidth,
             languages: languages,
             handleLanguageChange: handleLanguageChange,
+            customSettings: customSettings,
         } }, { children: [_jsx("div", { id: "google_translate_element" }), _jsx(RootLayout, {})] })));
 };
 export var useLayout = function () {

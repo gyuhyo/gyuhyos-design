@@ -19,8 +19,34 @@ import PageErrorLayout from "../../page/page-error-layout";
 import { useLayout } from "../../contexts/layout-context";
 var TabPanelContentDynamicComponent = React.memo(function () {
     var contentRef = React.useRef(null);
+    var isFirstRef = React.useRef({});
     var _a = useMenuStore(), menus = _a.menus, openedMenus = _a.openedMenus, selectedMenu = _a.selectedMenu, openedMenuSetComponent = _a.openedMenuSetComponent;
     var calculWidth = useLayout().calculWidth;
+    React.useEffect(function () {
+        if (!isFirstRef.current)
+            return;
+        var openedMenusKeys = openedMenus.map(function (menu) { return "".concat(menu.group, "-").concat(menu.key); });
+        var isRefMenusKeys = Object.keys(isFirstRef.current);
+        var hasFirstMenu = isRefMenusKeys.filter(function (key) {
+            return openedMenusKeys.includes(key);
+        });
+        var prevIsFirstRef = {};
+        hasFirstMenu.forEach(function (key) {
+            prevIsFirstRef[key] = isFirstRef.current[key];
+        });
+        isFirstRef.current = prevIsFirstRef;
+        openedMenus.forEach(function (menu) {
+            if (!isFirstRef.current.hasOwnProperty("".concat(menu.group, "-").concat(menu.key))) {
+                isFirstRef.current["".concat(menu.group, "-").concat(menu.key)] = true;
+            }
+        });
+    }, [openedMenus]);
+    React.useEffect(function () {
+        var gr = selectedMenu.gr, mn = selectedMenu.mn;
+        if (gr === "" || mn === "")
+            return;
+        isFirstRef.current["".concat(gr, "-").concat(mn)] = false;
+    }, [selectedMenu]);
     React.useEffect(function () {
         if (typeof window === "undefined")
             return;
@@ -77,18 +103,19 @@ var TabPanelContentDynamicComponent = React.memo(function () {
         }) }, { children: openedMenus &&
             openedMenus.map(function (menu) {
                 var group = menu.group, key = menu.key, Component = menu.component;
+                var isActive = selectedMenu.gr === group && selectedMenu.mn === key;
+                if (!isActive && isFirstRef.current["".concat(group, "-").concat(key)])
+                    return (_jsx("div", { css: tabPanelFullContentCss, style: {
+                            visibility: isActive ? "visible" : "hidden",
+                        }, "data-is-view": isActive }, "".concat(group, "/").concat(key)));
                 if (Component && isValidElementType(Component)) {
                     return (_jsx("div", __assign({ css: tabPanelFullContentCss, style: {
-                            visibility: selectedMenu.gr === group && selectedMenu.mn === key
-                                ? "visible"
-                                : "hidden",
-                        }, "data-is-view": selectedMenu.gr === group && selectedMenu.mn === key }, { children: _jsx(Component, {}) }), "".concat(group, "/").concat(key)));
+                            visibility: isActive ? "visible" : "hidden",
+                        }, "data-is-view": isActive }, { children: _jsx(Component, {}) }), "".concat(group, "/").concat(key)));
                 }
                 return (_jsx("div", __assign({ css: tabPanelFullContentCss, style: {
-                        visibility: selectedMenu.gr === group && selectedMenu.mn === key
-                            ? "visible"
-                            : "hidden",
-                    }, "data-is-view": selectedMenu.gr === group && selectedMenu.mn === key }, { children: _jsx(PageErrorLayout, { menu: menu, errorNo: 404 }) }), "".concat(group, "/").concat(key)));
+                        visibility: isActive ? "visible" : "hidden",
+                    }, "data-is-view": isActive }, { children: _jsx(PageErrorLayout, { menu: menu, errorNo: 404 }) }), "".concat(group, "/").concat(key)));
             }) })));
 });
 export default TabPanelContentDynamicComponent;

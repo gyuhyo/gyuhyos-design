@@ -4,17 +4,13 @@ import { css } from "@emotion/react";
 import * as React from "react";
 import SideMenuItem from "./side-menu-item";
 import { useMenuStore } from "../../stores/menu-store";
-
-interface SideMenuGroupsProps {
-  key: string;
-  title: string;
-  iconType?: "solid" | "regular" | "light" | "thin";
-  iconName?: string;
-  children?: SideMenuGroupsProps[];
-}
+import {
+  SideMenuItemsChildProps,
+  SideMenuItemsProps,
+} from "../../types/side-menu-item-props";
 
 interface SideMenuItemGroupProps {
-  group: SideMenuGroupsProps;
+  group: SideMenuItemsProps;
   isShow: boolean;
 }
 

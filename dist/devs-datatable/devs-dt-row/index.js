@@ -72,7 +72,7 @@ function DevsDtRow(_a) {
         defaultValues: data,
         mode: "all",
     });
-    var control = form.control, register = form.register, handleSubmit = form.handleSubmit, errors = form.formState.errors, setValue = form.setValue, getValues = form.getValues, reset = form.reset, watch = form.watch, trigger = form.trigger;
+    var control = form.control, register = form.register, handleSubmit = form.handleSubmit, errors = form.formState.errors, setValue = form.setValue, getValues = form.getValues, setFocus = form.setFocus, reset = form.reset, watch = form.watch, trigger = form.trigger;
     var prevRow = React.useMemo(function () {
         return dataSource[index - 1];
     }, [dataSource[index - 1]]);

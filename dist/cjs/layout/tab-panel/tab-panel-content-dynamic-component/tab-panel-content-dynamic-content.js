@@ -47,8 +47,34 @@ var page_error_layout_1 = __importDefault(require("../../page/page-error-layout"
 var layout_context_1 = require("../../contexts/layout-context");
 var TabPanelContentDynamicComponent = React.memo(function () {
     var contentRef = React.useRef(null);
+    var isFirstRef = React.useRef({});
     var _a = (0, menu_store_1.useMenuStore)(), menus = _a.menus, openedMenus = _a.openedMenus, selectedMenu = _a.selectedMenu, openedMenuSetComponent = _a.openedMenuSetComponent;
     var calculWidth = (0, layout_context_1.useLayout)().calculWidth;
+    React.useEffect(function () {
+        if (!isFirstRef.current)
+            return;
+        var openedMenusKeys = openedMenus.map(function (menu) { return "".concat(menu.group, "-").concat(menu.key); });
+        var isRefMenusKeys = Object.keys(isFirstRef.current);
+        var hasFirstMenu = isRefMenusKeys.filter(function (key) {
+            return openedMenusKeys.includes(key);
+        });
+        var prevIsFirstRef = {};
+        hasFirstMenu.forEach(function (key) {
+            prevIsFirstRef[key] = isFirstRef.current[key];
+        });
+        isFirstRef.current = prevIsFirstRef;
+        openedMenus.forEach(function (menu) {
+            if (!isFirstRef.current.hasOwnProperty("".concat(menu.group, "-").concat(menu.key))) {
+                isFirstRef.current["".concat(menu.group, "-").concat(menu.key)] = true;
+            }
+        });
+    }, [openedMenus]);
+    React.useEffect(function () {
+        var gr = selectedMenu.gr, mn = selectedMenu.mn;
+        if (gr === "" || mn === "")
+            return;
+        isFirstRef.current["".concat(gr, "-").concat(mn)] = false;
+    }, [selectedMenu]);
     React.useEffect(function () {
         if (typeof window === "undefined")
             return;
@@ -105,18 +131,19 @@ var TabPanelContentDynamicComponent = React.memo(function () {
         }) }, { children: openedMenus &&
             openedMenus.map(function (menu) {
                 var group = menu.group, key = menu.key, Component = menu.component;
+                var isActive = selectedMenu.gr === group && selectedMenu.mn === key;
+                if (!isActive && isFirstRef.current["".concat(group, "-").concat(key)])
+                    return ((0, jsx_runtime_1.jsx)("div", { css: tabPanelFullContentCss, style: {
+                            visibility: isActive ? "visible" : "hidden",
+                        }, "data-is-view": isActive }, "".concat(group, "/").concat(key)));
                 if (Component && (0, react_is_1.isValidElementType)(Component)) {
                     return ((0, jsx_runtime_1.jsx)("div", __assign({ css: tabPanelFullContentCss, style: {
-                            visibility: selectedMenu.gr === group && selectedMenu.mn === key
-                                ? "visible"
-                                : "hidden",
-                        }, "data-is-view": selectedMenu.gr === group && selectedMenu.mn === key }, { children: (0, jsx_runtime_1.jsx)(Component, {}) }), "".concat(group, "/").concat(key)));
+                            visibility: isActive ? "visible" : "hidden",
+                        }, "data-is-view": isActive }, { children: (0, jsx_runtime_1.jsx)(Component, {}) }), "".concat(group, "/").concat(key)));
                 }
                 return ((0, jsx_runtime_1.jsx)("div", __assign({ css: tabPanelFullContentCss, style: {
-                        visibility: selectedMenu.gr === group && selectedMenu.mn === key
-                            ? "visible"
-                            : "hidden",
-                    }, "data-is-view": selectedMenu.gr === group && selectedMenu.mn === key }, { children: (0, jsx_runtime_1.jsx)(page_error_layout_1.default, { menu: menu, errorNo: 404 }) }), "".concat(group, "/").concat(key)));
+                        visibility: isActive ? "visible" : "hidden",
+                    }, "data-is-view": isActive }, { children: (0, jsx_runtime_1.jsx)(page_error_layout_1.default, { menu: menu, errorNo: 404 }) }), "".concat(group, "/").concat(key)));
             }) })));
 });
 exports.default = TabPanelContentDynamicComponent;

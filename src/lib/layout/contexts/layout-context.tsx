@@ -16,6 +16,7 @@ interface LayoutContextProps {
   calculWidth: string;
   languages: languagesProps[];
   handleLanguageChange: (lang: languagesProps) => void;
+  customSettings?: React.ReactNode;
 }
 
 const languages = [
@@ -31,7 +32,15 @@ export const LayoutProvider: React.FC<{
   authUrl: string;
   refreshTokenUrl: string;
   menuType?: "slide" | "header" | "multiple";
-}> = ({ children, menus, refreshTokenUrl, authUrl, menuType = "slide" }) => {
+  customSettings?: React.ReactNode;
+}> = ({
+  children,
+  menus,
+  refreshTokenUrl,
+  authUrl,
+  menuType = "slide",
+  customSettings,
+}) => {
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [isClient, setIsClient] = React.useState(false); // 클라이언트 체크
   const path = isClient ? window.location.pathname : ""; // 클라이언트에서만 접근
@@ -65,23 +74,13 @@ export const LayoutProvider: React.FC<{
   }, [isClient]);
 
   React.useEffect(() => {
-    console.log("접근 1");
     if (!isClient || !authUrl) return;
-    console.log("접근 2");
-    console.log(
-      path,
-      !path.includes("popup"),
-      path !== authUrl,
-      user === undefined || user === null,
-      process.env.NODE_ENV !== "production",
-      window.location.port !== "3001"
-    );
     if (
       !path.includes("popup") &&
       path !== authUrl &&
       (user === undefined || user === null)
     ) {
-      console.log("접근 3");
+      if (window.location.port === "3001") return;
       window.sessionStorage.removeItem("menu-storage");
       window.sessionStorage.removeItem("user-storage");
       window.location.href = authUrl;
@@ -174,12 +173,14 @@ export const LayoutProvider: React.FC<{
     }
   };
 
-  if (!isClient || path === authUrl || path.includes("popup")) {
-    return <React.Fragment>{children}</React.Fragment>;
-  }
+  if (window.location.port !== "3001") {
+    if (!isClient || path === authUrl || path.includes("popup")) {
+      return <React.Fragment>{children}</React.Fragment>;
+    }
 
-  if (!isLoaded || user === undefined || user === null) {
-    return null;
+    if (!isLoaded || user === undefined || user === null) {
+      return null;
+    }
   }
 
   return (
@@ -190,6 +191,7 @@ export const LayoutProvider: React.FC<{
         calculWidth,
         languages,
         handleLanguageChange,
+        customSettings,
       }}
     >
       <div id="google_translate_element"></div>

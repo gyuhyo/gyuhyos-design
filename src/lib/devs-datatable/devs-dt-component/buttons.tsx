@@ -2,6 +2,7 @@ import React from "react";
 import Button from "../../button";
 import { IDataTableButtons, IDataTableOptions } from "../_types";
 import { useDt } from "../context/devs-dt-context";
+import ContextMenu from "../../context-menu";
 
 interface IDataTableButtonsProps {
   options?: IDataTableOptions | undefined;

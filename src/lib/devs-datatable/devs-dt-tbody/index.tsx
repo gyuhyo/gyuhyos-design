@@ -10,6 +10,7 @@ import {
   Droppable,
   DropResult,
 } from "@hello-pangea/dnd";
+import useDtUtils from "../hooks/useDtUtils";
 
 type TDevsDtTBody = {
   tbody: React.RefObject<HTMLDivElement>;
@@ -20,6 +21,7 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
   const { columns, dataSource, setDataSource, options, formsRef, sorter } =
     useDt();
   const [isDrop, setIsDrop] = React.useState(false);
+  useDtUtils();
 
   const keyField: string | undefined = React.useMemo(() => {
     return columns.find((col) => col.key)?.field;

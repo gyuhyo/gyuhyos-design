@@ -16,22 +16,33 @@ import * as React from "react";
 import TabPanelContent from "./tab-panel-content/tab-panel-content";
 import TabPanelHeader from "./tab-panel-header/tab-panel-header";
 import { TabPanelLoading } from "./tab-panel-components/loading";
+import ContextMenu from "../../context-menu";
+import { useMessage } from "../../alert-message/context/message-context";
+import { useMenuStore } from "../stores/menu-store";
 var TabPanelContentDynamicComponent = React.lazy(function () {
     return import("./tab-panel-content-dynamic-component/tab-panel-content-dynamic-content");
 });
 function TabPanelContainer() {
-    // React.useEffect(() => {
-    //   document.addEventListener("keydown", (event) => {
-    //     if (event.key === "Tab") {
-    //       event.preventDefault(); // Tab 키의 기본 동작 막기
-    //     }
-    //   });
-    // }, []);
+    var closeAllTabls = useMenuStore().closeAllTabls;
+    var showMessage = useMessage().showMessage;
+    var onCloseAllTabls = function () {
+        showMessage({
+            title: "탭 모두 닫기",
+            message: "탭 페이지를 모두 닫으시겠습니까?",
+            okCaption: "닫기",
+            onOkClick: function () { return closeAllTabls(); },
+        });
+    };
     return (_jsxs("div", __assign({ css: css({
             height: "100%",
             display: "flex",
             flexDirection: "column",
             position: "relative",
-        }) }, { children: [_jsx(TabPanelLoading, {}), _jsx(TabPanelHeader, {}), _jsx(TabPanelContent, { children: _jsx(TabPanelContentDynamicComponent, {}) })] })));
+        }) }, { children: [_jsx(TabPanelLoading, {}), _jsx(ContextMenu, __assign({ list: [
+                    {
+                        label: "탭 모두 닫기",
+                        onClick: onCloseAllTabls,
+                    },
+                ] }, { children: _jsx(TabPanelHeader, {}) })), _jsx(TabPanelContent, { children: _jsx(TabPanelContentDynamicComponent, {}) })] })));
 }
 export default React.memo(TabPanelContainer);

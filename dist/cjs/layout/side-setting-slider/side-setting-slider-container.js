@@ -60,9 +60,11 @@ var side_setting_slider_style_1 = require("./side-setting-slider-style");
 var react_1 = require("@emotion/react");
 var button_1 = __importDefault(require("../../button"));
 var backdrop_1 = __importDefault(require("../backdrop/backdrop"));
+var layout_context_1 = require("../contexts/layout-context");
 function SideSettingSliderContainer() {
     var _a = __read(React.useState(0.95), 2), fontSize = _a[0], setFontSize = _a[1];
     var _b = __read(React.useState(false), 2), isShow = _b[0], setIsShow = _b[1];
+    var customSettings = (0, layout_context_1.useLayout)().customSettings;
     React.useEffect(function () {
         if (typeof window !== "undefined") {
             window.sideSetting = setIsShow;
@@ -120,6 +122,6 @@ function SideSettingSliderContainer() {
                                         window.location.reload();
                                     }, style: {
                                         width: "100%",
-                                    }, rounded: false }, { children: "\uC138\uC158 \uC0AD\uC81C" })), (0, jsx_runtime_1.jsx)("p", __assign({ style: { marginTop: 7, fontSize: 11 } }, { children: "\uC5C5\uB370\uC774\uD2B8\uB85C \uC778\uD55C \uBA54\uB274\uAC00 \uC62C\uBC14\uB974\uAC8C \uC791\uB3D9\uD558\uC9C0 \uC54A\uC744\uB54C \uD074\uB9AD" }))] })] }))] })) })));
+                                    }, rounded: false }, { children: "\uC138\uC158 \uC0AD\uC81C" })), (0, jsx_runtime_1.jsx)("p", __assign({ style: { marginTop: 7, fontSize: 11 } }, { children: "\uC5C5\uB370\uC774\uD2B8\uB85C \uC778\uD55C \uBA54\uB274\uAC00 \uC62C\uBC14\uB974\uAC8C \uC791\uB3D9\uD558\uC9C0 \uC54A\uC744\uB54C \uD074\uB9AD" }))] }), customSettings] }))] })) })));
 }
 exports.default = SideSettingSliderContainer;

@@ -65,7 +65,7 @@ var languages = [
 ];
 var LayoutContext = (0, react_1.createContext)(undefined);
 var LayoutProvider = function (_a) {
-    var children = _a.children, menus = _a.menus, refreshTokenUrl = _a.refreshTokenUrl, authUrl = _a.authUrl, _b = _a.menuType, menuType = _b === void 0 ? "slide" : _b;
+    var children = _a.children, menus = _a.menus, refreshTokenUrl = _a.refreshTokenUrl, authUrl = _a.authUrl, _b = _a.menuType, menuType = _b === void 0 ? "slide" : _b, customSettings = _a.customSettings;
     var _c = __read(react_1.default.useState(false), 2), isLoaded = _c[0], setIsLoaded = _c[1];
     var _d = __read(react_1.default.useState(false), 2), isClient = _d[0], setIsClient = _d[1]; // 클라이언트 체크
     var path = isClient ? window.location.pathname : ""; // 클라이언트에서만 접근
@@ -95,15 +95,13 @@ var LayoutProvider = function (_a) {
         }
     }, [isClient]);
     react_1.default.useEffect(function () {
-        console.log("접근 1");
         if (!isClient || !authUrl)
             return;
-        console.log("접근 2");
-        console.log(path, !path.includes("popup"), path !== authUrl, user === undefined || user === null, process.env.NODE_ENV !== "production", window.location.port !== "3001");
         if (!path.includes("popup") &&
             path !== authUrl &&
             (user === undefined || user === null)) {
-            console.log("접근 3");
+            if (window.location.port === "3001")
+                return;
             window.sessionStorage.removeItem("menu-storage");
             window.sessionStorage.removeItem("user-storage");
             window.location.href = authUrl;
@@ -173,11 +171,13 @@ var LayoutProvider = function (_a) {
             gtCombo.dispatchEvent(new Event("change"));
         }
     };
-    if (!isClient || path === authUrl || path.includes("popup")) {
-        return (0, jsx_runtime_1.jsx)(react_1.default.Fragment, { children: children });
-    }
-    if (!isLoaded || user === undefined || user === null) {
-        return null;
+    if (window.location.port !== "3001") {
+        if (!isClient || path === authUrl || path.includes("popup")) {
+            return (0, jsx_runtime_1.jsx)(react_1.default.Fragment, { children: children });
+        }
+        if (!isLoaded || user === undefined || user === null) {
+            return null;
+        }
     }
     return ((0, jsx_runtime_1.jsxs)(LayoutContext.Provider, __assign({ value: {
             menuType: menuType,
@@ -185,6 +185,7 @@ var LayoutProvider = function (_a) {
             calculWidth: calculWidth,
             languages: languages,
             handleLanguageChange: handleLanguageChange,
+            customSettings: customSettings,
         } }, { children: [(0, jsx_runtime_1.jsx)("div", { id: "google_translate_element" }), (0, jsx_runtime_1.jsx)(root_layout_1.default, {})] })));
 };
 exports.LayoutProvider = LayoutProvider;

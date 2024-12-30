@@ -5,6 +5,9 @@ import * as React from "react";
 import TabPanelContent from "./tab-panel-content/tab-panel-content";
 import TabPanelHeader from "./tab-panel-header/tab-panel-header";
 import { TabPanelLoading } from "./tab-panel-components/loading";
+import ContextMenu from "../../context-menu";
+import { useMessage } from "../../alert-message/context/message-context";
+import { useMenuStore } from "../stores/menu-store";
 
 const TabPanelContentDynamicComponent = React.lazy(
   () =>
@@ -13,13 +16,17 @@ const TabPanelContentDynamicComponent = React.lazy(
     )
 );
 function TabPanelContainer() {
-  // React.useEffect(() => {
-  //   document.addEventListener("keydown", (event) => {
-  //     if (event.key === "Tab") {
-  //       event.preventDefault(); // Tab 키의 기본 동작 막기
-  //     }
-  //   });
-  // }, []);
+  const { closeAllTabls } = useMenuStore();
+  const { showMessage } = useMessage();
+
+  const onCloseAllTabls = () => {
+    showMessage({
+      title: "탭 모두 닫기",
+      message: "탭 페이지를 모두 닫으시겠습니까?",
+      okCaption: "닫기",
+      onOkClick: () => closeAllTabls(),
+    });
+  };
   return (
     <div
       css={css({
@@ -30,7 +37,16 @@ function TabPanelContainer() {
       })}
     >
       <TabPanelLoading />
-      <TabPanelHeader />
+      <ContextMenu
+        list={[
+          {
+            label: "탭 모두 닫기",
+            onClick: onCloseAllTabls,
+          },
+        ]}
+      >
+        <TabPanelHeader />
+      </ContextMenu>
       <TabPanelContent>
         <TabPanelContentDynamicComponent />
       </TabPanelContent>

@@ -174,6 +174,7 @@ function DevsDtRow({
     formState: { errors },
     setValue,
     getValues,
+    setFocus,
     reset,
     watch,
     trigger,

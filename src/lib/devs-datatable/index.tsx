@@ -9,6 +9,7 @@ import DevsDtTBody from "./devs-dt-tbody";
 import DevsDtTHead from "./devs-dt-thead";
 import { useInitDt } from "./hooks/useInitDt";
 import { css } from "@emotion/react";
+import useDtUtils from "./hooks/useDtUtils";
 
 /**
  * @typedef {Object} DevsDataTableRef
@@ -218,7 +219,6 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
             const form = formsRef.current[rowId];
 
             if (form) {
-              console.log("find");
               form.setValue(field, value);
               form.trigger();
             }
@@ -293,27 +293,25 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
               padding: "0.5rem 0.75rem",
             }}
           >
-            <div
-              css={css({
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "start",
-                alignItems: "center",
-                columnGap: 7,
-              })}
-            >
-              {props.title !== undefined &&
-              props.title !== undefined &&
-              typeof props.title === "string" &&
-              props.title !== "" ? (
-                <p style={{ fontSize: 18, fontWeight: "bold" }}>
-                  &#x27a4; {props.title}
-                </p>
-              ) : (
-                props.title
-              )}
-              {props.options?.readonly === undefined ||
-                (props.options.readonly === false && (
+            {props.title !== undefined && (
+              <div
+                css={css({
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "start",
+                  alignItems: "center",
+                  columnGap: 7,
+                })}
+              >
+                {typeof props.title === "string" && props.title !== "" ? (
+                  <p style={{ fontSize: 18, fontWeight: "bold" }}>
+                    &#x27a4; {props.title}
+                  </p>
+                ) : (
+                  props.title
+                )}
+                {(props.options?.readonly === undefined ||
+                  props.options.readonly === false) && (
                   <span
                     style={{
                       fontSize: 12,
@@ -327,13 +325,21 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
                     (<span style={{ color: "#000" }}>*</span>) 입력 가능 (
                     <span style={{ color: "red" }}>*</span>) 필수입력
                   </span>
-                ))}
-            </div>
-            <DevsDtButtons
-              buttons={props.buttons}
-              options={props.options}
-              setInnerLoading={setInnerLoading}
-            />
+                )}
+              </div>
+            )}
+            {(props.buttons?.onAddClick !== undefined ||
+              props.buttons?.onSearchClick !== undefined ||
+              props.buttons?.onSaveClick !== undefined ||
+              props.buttons?.onCancelClick !== undefined ||
+              props.buttons?.onDeleteClick !== undefined ||
+              props.buttons?.custom !== undefined) && (
+              <DevsDtButtons
+                buttons={props.buttons}
+                options={props.options}
+                setInnerLoading={setInnerLoading}
+              />
+            )}
           </div>
         )}
         <div

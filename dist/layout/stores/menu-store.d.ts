@@ -12,6 +12,7 @@ interface MenuStoreProps {
     openedMenuSetComponent: (mns: SideMenuItemsChildProps[]) => void;
     closeMenu: (menu: SideMenuItemsProps | SideMenuItemsChildProps) => void | undefined;
     menuOrderChanges: (openedMenus: SideMenuItemsChildProps[]) => void;
+    closeAllTabls: () => void;
 }
 declare const useMenuStore: import("zustand").UseBoundStore<Omit<import("zustand").StoreApi<MenuStoreProps>, "persist"> & {
     persist: {

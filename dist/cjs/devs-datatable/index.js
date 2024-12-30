@@ -87,16 +87,16 @@ var useInitDt_1 = require("./hooks/useInitDt");
 var react_2 = require("@emotion/react");
 // DevsDataTable 컴포넌트 타입 설정 및 구현
 var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
-    var _k = __read(react_1.default.useState(0), 2), headerWidth = _k[0], setHeaderWidth = _k[1];
-    var _l = __read(react_1.default.useState(false), 2), innerLoading = _l[0], setInnerLoading = _l[1];
-    var _m = __read(react_1.default.useState(null), 2), focusedCell = _m[0], setFocusedCell = _m[1];
-    var _o = __read(react_1.default.useState(null), 2), focusedRow = _o[0], setFocusedRow = _o[1];
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
+    var _r = __read(react_1.default.useState(0), 2), headerWidth = _r[0], setHeaderWidth = _r[1];
+    var _s = __read(react_1.default.useState(false), 2), innerLoading = _s[0], setInnerLoading = _s[1];
+    var _t = __read(react_1.default.useState(null), 2), focusedCell = _t[0], setFocusedCell = _t[1];
+    var _u = __read(react_1.default.useState(null), 2), focusedRow = _u[0], setFocusedRow = _u[1];
     var formsRef = react_1.default.useRef({});
     var table = react_1.default.useRef(null);
     var thead = react_1.default.useRef(null);
     var tbody = react_1.default.useRef(null);
-    var _p = __read(react_1.default.useState(false), 2), DtForceUpdate = _p[1];
+    var _v = __read(react_1.default.useState(false), 2), DtForceUpdate = _v[1];
     var init = (0, useInitDt_1.useInitDt)({
         table: table,
         tbody: tbody,
@@ -261,7 +261,6 @@ var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
                 var rowId = _a.rowId, field = _a.field, value = _a.value;
                 var form = formsRef.current[rowId];
                 if (form) {
-                    console.log("find");
                     form.setValue(field, value);
                     form.trigger();
                 }
@@ -302,22 +301,24 @@ var DevsDataTable = react_1.default.forwardRef(function (props, ref) {
                     background: "linear-gradient(180deg, rgb(231, 231, 231), rgb(215, 215, 215), rgb(231, 231, 231))",
                     border: "1px solid rgb(199, 199, 199)",
                     padding: "0.5rem 0.75rem",
-                } }, { children: [(0, jsx_runtime_1.jsxs)("div", __assign({ css: (0, react_2.css)({
+                } }, { children: [props.title !== undefined && ((0, jsx_runtime_1.jsxs)("div", __assign({ css: (0, react_2.css)({
                             display: "flex",
                             flexDirection: "row",
                             justifyContent: "start",
                             alignItems: "center",
                             columnGap: 7,
-                        }) }, { children: [props.title !== undefined &&
-                                props.title !== undefined &&
-                                typeof props.title === "string" &&
-                                props.title !== "" ? ((0, jsx_runtime_1.jsxs)("p", __assign({ style: { fontSize: 18, fontWeight: "bold" } }, { children: ["\u27A4 ", props.title] }))) : (props.title), ((_g = props.options) === null || _g === void 0 ? void 0 : _g.readonly) === undefined ||
-                                (props.options.readonly === false && ((0, jsx_runtime_1.jsxs)("span", __assign({ style: {
-                                        fontSize: 12,
-                                        color: "#7a7a7a",
-                                        marginLeft: props.title !== undefined && props.title !== ""
-                                            ? "7px"
-                                            : "0px",
-                                    } }, { children: ["(", (0, jsx_runtime_1.jsx)("span", __assign({ style: { color: "#000" } }, { children: "*" })), ") \uC785\uB825 \uAC00\uB2A5 (", (0, jsx_runtime_1.jsx)("span", __assign({ style: { color: "red" } }, { children: "*" })), ") \uD544\uC218\uC785\uB825"] }))))] })), (0, jsx_runtime_1.jsx)(buttons_1.default, { buttons: props.buttons, options: props.options, setInnerLoading: setInnerLoading })] }))), (0, jsx_runtime_1.jsxs)("div", __assign({ ref: table, className: "dev-table-wrapper", css: (0, react_2.css)({ minWidth: (_j = (_h = props.options) === null || _h === void 0 ? void 0 : _h.minWidth) !== null && _j !== void 0 ? _j : 0 }) }, { children: [(0, jsx_runtime_1.jsx)(devs_dt_thead_1.default, { thead: thead, setHeaderWidth: setHeaderWidth }), (0, jsx_runtime_1.jsx)(devs_dt_tbody_1.default, { tbody: tbody, headerWidth: headerWidth })] }))] })));
+                        }) }, { children: [typeof props.title === "string" && props.title !== "" ? ((0, jsx_runtime_1.jsxs)("p", __assign({ style: { fontSize: 18, fontWeight: "bold" } }, { children: ["\u27A4 ", props.title] }))) : (props.title), (((_g = props.options) === null || _g === void 0 ? void 0 : _g.readonly) === undefined ||
+                                props.options.readonly === false) && ((0, jsx_runtime_1.jsxs)("span", __assign({ style: {
+                                    fontSize: 12,
+                                    color: "#7a7a7a",
+                                    marginLeft: props.title !== undefined && props.title !== ""
+                                        ? "7px"
+                                        : "0px",
+                                } }, { children: ["(", (0, jsx_runtime_1.jsx)("span", __assign({ style: { color: "#000" } }, { children: "*" })), ") \uC785\uB825 \uAC00\uB2A5 (", (0, jsx_runtime_1.jsx)("span", __assign({ style: { color: "red" } }, { children: "*" })), ") \uD544\uC218\uC785\uB825"] })))] }))), (((_h = props.buttons) === null || _h === void 0 ? void 0 : _h.onAddClick) !== undefined ||
+                        ((_j = props.buttons) === null || _j === void 0 ? void 0 : _j.onSearchClick) !== undefined ||
+                        ((_k = props.buttons) === null || _k === void 0 ? void 0 : _k.onSaveClick) !== undefined ||
+                        ((_l = props.buttons) === null || _l === void 0 ? void 0 : _l.onCancelClick) !== undefined ||
+                        ((_m = props.buttons) === null || _m === void 0 ? void 0 : _m.onDeleteClick) !== undefined ||
+                        ((_o = props.buttons) === null || _o === void 0 ? void 0 : _o.custom) !== undefined) && ((0, jsx_runtime_1.jsx)(buttons_1.default, { buttons: props.buttons, options: props.options, setInnerLoading: setInnerLoading }))] }))), (0, jsx_runtime_1.jsxs)("div", __assign({ ref: table, className: "dev-table-wrapper", css: (0, react_2.css)({ minWidth: (_q = (_p = props.options) === null || _p === void 0 ? void 0 : _p.minWidth) !== null && _q !== void 0 ? _q : 0 }) }, { children: [(0, jsx_runtime_1.jsx)(devs_dt_thead_1.default, { thead: thead, setHeaderWidth: setHeaderWidth }), (0, jsx_runtime_1.jsx)(devs_dt_tbody_1.default, { tbody: tbody, headerWidth: headerWidth })] }))] })));
 });
 exports.default = react_1.default.memo(DevsDataTable);

@@ -51,10 +51,12 @@ import { useDt } from "../context/devs-dt-context";
 import DevsDtRow from "../devs-dt-row";
 import EmptySvg from "../assets/empty.svg";
 import { DragDropContext, Draggable, Droppable, } from "@hello-pangea/dnd";
+import useDtUtils from "../hooks/useDtUtils";
 function DevsDtTBody(_a) {
     var tbody = _a.tbody, headerWidth = _a.headerWidth;
     var _b = useDt(), columns = _b.columns, dataSource = _b.dataSource, setDataSource = _b.setDataSource, options = _b.options, formsRef = _b.formsRef, sorter = _b.sorter;
     var _c = __read(React.useState(false), 2), isDrop = _c[0], setIsDrop = _c[1];
+    useDtUtils();
     var keyField = React.useMemo(function () {
         var _a;
         return (_a = columns.find(function (col) { return col.key; })) === null || _a === void 0 ? void 0 : _a.field;

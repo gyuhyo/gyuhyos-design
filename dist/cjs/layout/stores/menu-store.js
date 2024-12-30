@@ -89,6 +89,14 @@ var useMenuStore = (0, zustand_1.create)((0, middleware_1.persist)(function (set
             state.openedMenus = openedMenus;
         }));
     },
+    closeAllTabls: function () {
+        set((0, immer_1.produce)(function (state) {
+            state.openedMenus = state.openedMenus.filter(function (x) { return x.main === true; });
+            var _a = state.openedMenus.filter(function (x) { return x.main === true; })[0], group = _a.group, key = _a.key;
+            state.selectedMenu = { gr: group, mn: key };
+            (0, moveUrl_1.moveUrl)("".concat(group, "/").concat(key), "MES");
+        }));
+    },
 }); }, {
     name: "menu-storage",
     partialize: function (state) { return ({

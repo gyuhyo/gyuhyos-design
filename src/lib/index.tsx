@@ -32,3 +32,5 @@ export type {
 export { moveUrl, setDefaultTitle } from "./layout/utils/moveUrl";
 export { default as LayerPopup } from "./layer-popup";
 export type { LayoutPopupProps } from "./layer-popup";
+export { default as ContextMenu } from "./context-menu";
+export type { ContextMenuProps } from "./context-menu";

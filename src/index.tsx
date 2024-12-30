@@ -21,6 +21,11 @@ root.render(
         refreshTokenUrl="/auth/refresh"
         authUrl="/auth"
         menuType="multiple"
+        customSettings={
+          <React.Fragment>
+            <div>123</div>
+          </React.Fragment>
+        }
         menus={[
           {
             main: true,

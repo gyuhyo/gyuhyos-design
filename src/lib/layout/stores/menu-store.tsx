@@ -24,6 +24,7 @@ interface MenuStoreProps {
     menu: SideMenuItemsProps | SideMenuItemsChildProps
   ) => void | undefined;
   menuOrderChanges: (openedMenus: SideMenuItemsChildProps[]) => void;
+  closeAllTabls: () => void;
 }
 
 const useMenuStore = create(
@@ -141,6 +142,20 @@ const useMenuStore = create(
         set(
           produce((state: MenuStoreProps) => {
             state.openedMenus = openedMenus;
+          })
+        );
+      },
+      closeAllTabls: () => {
+        set(
+          produce((state: MenuStoreProps) => {
+            state.openedMenus = state.openedMenus.filter(
+              (x) => x.main === true
+            );
+            const { group, key } = state.openedMenus.filter(
+              (x) => x.main === true
+            )[0];
+            state.selectedMenu = { gr: group, mn: key };
+            moveUrl(`${group}/${key}`, "MES");
           })
         );
       },

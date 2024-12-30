@@ -10,9 +10,7 @@ import {
 import { css } from "@emotion/react";
 
 function SideMenuItemContainer({ isShow }: { isShow: boolean }) {
-  const items = useMenuStore<(SideMenuItemsProps | SideMenuItemsChildProps)[]>(
-    (state) => state.menus
-  );
+  const items = useMenuStore<SideMenuItemsProps[]>((state) => state.menus);
 
   return (
     <ul

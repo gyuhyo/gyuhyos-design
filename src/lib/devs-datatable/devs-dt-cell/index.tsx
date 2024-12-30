@@ -172,7 +172,11 @@ function DevsDtCell({
       classes.splice(index, 1);
     }
 
-    if (focusedRow === row && focusedCell === col.field && index === -1) {
+    if (
+      focusedRow?.rowId === row.rowId &&
+      focusedCell === col.field &&
+      index === -1
+    ) {
       classes.push("devs-dt-focused-cell");
     }
 

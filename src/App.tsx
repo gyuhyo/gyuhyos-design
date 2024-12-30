@@ -122,7 +122,6 @@ const App: React.FC<{}> = () => {
       title: "1",
       required: true,
       resizing: false,
-      merge: true,
     },
     {
       key: true,

@@ -56,10 +56,12 @@ var devs_dt_context_1 = require("../context/devs-dt-context");
 var devs_dt_row_1 = __importDefault(require("../devs-dt-row"));
 var empty_svg_1 = __importDefault(require("../assets/empty.svg"));
 var dnd_1 = require("@hello-pangea/dnd");
+var useDtUtils_1 = __importDefault(require("../hooks/useDtUtils"));
 function DevsDtTBody(_a) {
     var tbody = _a.tbody, headerWidth = _a.headerWidth;
     var _b = (0, devs_dt_context_1.useDt)(), columns = _b.columns, dataSource = _b.dataSource, setDataSource = _b.setDataSource, options = _b.options, formsRef = _b.formsRef, sorter = _b.sorter;
     var _c = __read(react_1.default.useState(false), 2), isDrop = _c[0], setIsDrop = _c[1];
+    (0, useDtUtils_1.default)();
     var keyField = react_1.default.useMemo(function () {
         var _a;
         return (_a = columns.find(function (col) { return col.key; })) === null || _a === void 0 ? void 0 : _a.field;

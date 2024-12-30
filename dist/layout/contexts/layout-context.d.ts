@@ -11,6 +11,7 @@ interface LayoutContextProps {
     calculWidth: string;
     languages: languagesProps[];
     handleLanguageChange: (lang: languagesProps) => void;
+    customSettings?: React.ReactNode;
 }
 export declare const LayoutProvider: React.FC<{
     children: React.ReactNode;
@@ -18,6 +19,7 @@ export declare const LayoutProvider: React.FC<{
     authUrl: string;
     refreshTokenUrl: string;
     menuType?: "slide" | "header" | "multiple";
+    customSettings?: React.ReactNode;
 }>;
 export declare const useLayout: () => LayoutContextProps;
 export {};

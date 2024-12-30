@@ -13,6 +13,10 @@ import { useLayout } from "../../contexts/layout-context";
 
 const TabPanelContentDynamicComponent: React.FC<any> = React.memo(() => {
   const contentRef = React.useRef<HTMLDivElement>(null);
+  const isFirstRef = React.useRef<{
+    [key: string]: boolean;
+  }>({});
+
   const {
     menus,
     openedMenus,
@@ -25,6 +29,41 @@ const TabPanelContentDynamicComponent: React.FC<any> = React.memo(() => {
     openedMenuSetComponent: (mns: SideMenuItemsChildProps[]) => void;
   } = useMenuStore();
   const { calculWidth } = useLayout();
+
+  React.useEffect(() => {
+    if (!isFirstRef.current) return;
+
+    const openedMenusKeys = openedMenus.map(
+      (menu) => `${menu.group}-${menu.key}`
+    );
+
+    const isRefMenusKeys = Object.keys(isFirstRef.current);
+
+    const hasFirstMenu = isRefMenusKeys.filter((key) =>
+      openedMenusKeys.includes(key)
+    );
+
+    const prevIsFirstRef: { [key: string]: boolean } = {};
+    hasFirstMenu.forEach((key) => {
+      prevIsFirstRef[key] = isFirstRef.current[key];
+    });
+
+    isFirstRef.current = prevIsFirstRef;
+
+    openedMenus.forEach((menu) => {
+      if (!isFirstRef.current.hasOwnProperty(`${menu.group}-${menu.key}`)) {
+        isFirstRef.current[`${menu.group}-${menu.key}`] = true;
+      }
+    });
+  }, [openedMenus]);
+
+  React.useEffect(() => {
+    const { gr, mn } = selectedMenu;
+
+    if (gr === "" || mn === "") return;
+
+    isFirstRef.current[`${gr}-${mn}`] = false;
+  }, [selectedMenu]);
 
   React.useEffect(() => {
     if (typeof window === "undefined") return;
@@ -101,6 +140,19 @@ const TabPanelContentDynamicComponent: React.FC<any> = React.memo(() => {
       {openedMenus &&
         openedMenus.map((menu) => {
           const { group, key, component: Component } = menu;
+          const isActive = selectedMenu.gr === group && selectedMenu.mn === key;
+
+          if (!isActive && isFirstRef.current[`${group}-${key}`])
+            return (
+              <div
+                key={`${group}/${key}`}
+                css={tabPanelFullContentCss}
+                style={{
+                  visibility: isActive ? "visible" : "hidden",
+                }}
+                data-is-view={isActive}
+              ></div>
+            );
 
           if (Component && isValidElementType(Component)) {
             return (
@@ -108,14 +160,9 @@ const TabPanelContentDynamicComponent: React.FC<any> = React.memo(() => {
                 key={`${group}/${key}`}
                 css={tabPanelFullContentCss}
                 style={{
-                  visibility:
-                    selectedMenu.gr === group && selectedMenu.mn === key
-                      ? "visible"
-                      : "hidden",
+                  visibility: isActive ? "visible" : "hidden",
                 }}
-                data-is-view={
-                  selectedMenu.gr === group && selectedMenu.mn === key
-                }
+                data-is-view={isActive}
               >
                 <Component />
               </div>
@@ -127,14 +174,9 @@ const TabPanelContentDynamicComponent: React.FC<any> = React.memo(() => {
               key={`${group}/${key}`}
               css={tabPanelFullContentCss}
               style={{
-                visibility:
-                  selectedMenu.gr === group && selectedMenu.mn === key
-                    ? "visible"
-                    : "hidden",
+                visibility: isActive ? "visible" : "hidden",
               }}
-              data-is-view={
-                selectedMenu.gr === group && selectedMenu.mn === key
-              }
+              data-is-view={isActive}
             >
               <PageErrorLayout menu={menu} errorNo={404} />
             </div>

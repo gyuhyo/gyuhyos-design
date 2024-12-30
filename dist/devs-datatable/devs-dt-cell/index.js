@@ -140,7 +140,9 @@ function DevsDtCell(_a) {
         if (index > -1) {
             classes.splice(index, 1);
         }
-        if (focusedRow === row && focusedCell === col.field && index === -1) {
+        if ((focusedRow === null || focusedRow === void 0 ? void 0 : focusedRow.rowId) === row.rowId &&
+            focusedCell === col.field &&
+            index === -1) {
             classes.push("devs-dt-focused-cell");
         }
         return classes.join(" ");

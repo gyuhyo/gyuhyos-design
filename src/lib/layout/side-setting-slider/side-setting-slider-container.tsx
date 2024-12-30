@@ -5,9 +5,11 @@ import { sideSettingSliderContainerStyle } from "./side-setting-slider-style";
 import { css } from "@emotion/react";
 import Button from "../../button";
 import Backdrop from "../backdrop/backdrop";
+import { useLayout } from "../contexts/layout-context";
 function SideSettingSliderContainer() {
   const [fontSize, setFontSize] = React.useState(0.95);
   const [isShow, setIsShow] = React.useState(false);
+  const { customSettings } = useLayout();
 
   React.useEffect(() => {
     if (typeof window !== "undefined") {
@@ -138,6 +140,7 @@ function SideSettingSliderContainer() {
               업데이트로 인한 메뉴가 올바르게 작동하지 않을때 클릭
             </p>
           </div>
+          {customSettings}
         </div>
       </div>
     </Backdrop>
