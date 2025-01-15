@@ -66,12 +66,13 @@ var ContextMenu = function (_a) {
                     borderRadius: "4px",
                     padding: "7px",
                     listStyle: "none",
-                    minWidth: "100px",
-                    boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
+                    minWidth: "150px",
+                    boxShadow: "1px 1px 13px 0 rgba(0, 0, 0, 0.2)",
                     cursor: "pointer",
                 }) }, { children: list.map(function (item) { return (_jsx("li", __assign({ onClick: item.onClick, css: css({
-                        padding: "7px",
+                        padding: "6px 7px",
                         borderRadius: "4px",
+                        fontSize: "13px",
                         "&:hover": {
                             backgroundColor: "#35ffbe",
                         },

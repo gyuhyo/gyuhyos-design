@@ -181,18 +181,6 @@ function TabPanelHeader() {
             });
         }
     };
-    React.useEffect(function () {
-        if (openedMenus.length === 0 || typeof window === "undefined")
-            return;
-        var pageUnloadMessage = function (e) {
-            e.preventDefault();
-            e.returnValue = "페이지를 벗어날 경우 작성중인 데이터가 지워집니다.";
-        };
-        window.addEventListener("beforeunload", pageUnloadMessage);
-        return function () {
-            window.removeEventListener("beforeunload", pageUnloadMessage);
-        };
-    }, [openedMenus]);
     var setRowOrderChange = React.useCallback(function (e) {
         setIsDrop(false);
         if (!e.destination)

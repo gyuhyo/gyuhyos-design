@@ -150,19 +150,6 @@ function TabPanelHeader() {
     }
   };
 
-  React.useEffect(() => {
-    if (openedMenus.length === 0 || typeof window === "undefined") return;
-    const pageUnloadMessage = (e: any) => {
-      e.preventDefault();
-      e.returnValue = "페이지를 벗어날 경우 작성중인 데이터가 지워집니다.";
-    };
-    window.addEventListener("beforeunload", pageUnloadMessage);
-
-    return () => {
-      window.removeEventListener("beforeunload", pageUnloadMessage);
-    };
-  }, [openedMenus]);
-
   const setRowOrderChange = React.useCallback(
     (e: DropResult<string>) => {
       setIsDrop(false);

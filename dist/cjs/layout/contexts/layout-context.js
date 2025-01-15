@@ -100,8 +100,6 @@ var LayoutProvider = function (_a) {
         if (!path.includes("popup") &&
             path !== authUrl &&
             (user === undefined || user === null)) {
-            if (window.location.port === "3001")
-                return;
             window.sessionStorage.removeItem("menu-storage");
             window.sessionStorage.removeItem("user-storage");
             window.location.href = authUrl;
@@ -171,13 +169,11 @@ var LayoutProvider = function (_a) {
             gtCombo.dispatchEvent(new Event("change"));
         }
     };
-    if (window.location.port !== "3001") {
-        if (!isClient || path === authUrl || path.includes("popup")) {
-            return (0, jsx_runtime_1.jsx)(react_1.default.Fragment, { children: children });
-        }
-        if (!isLoaded || user === undefined || user === null) {
-            return null;
-        }
+    if (!isClient || path === authUrl || path.includes("popup")) {
+        return (0, jsx_runtime_1.jsx)(react_1.default.Fragment, { children: children });
+    }
+    if (!isLoaded || user === undefined || user === null) {
+        return null;
     }
     return ((0, jsx_runtime_1.jsxs)(LayoutContext.Provider, __assign({ value: {
             menuType: menuType,

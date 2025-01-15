@@ -80,7 +80,6 @@ export const LayoutProvider: React.FC<{
       path !== authUrl &&
       (user === undefined || user === null)
     ) {
-      if (window.location.port === "3001") return;
       window.sessionStorage.removeItem("menu-storage");
       window.sessionStorage.removeItem("user-storage");
       window.location.href = authUrl;
@@ -173,14 +172,12 @@ export const LayoutProvider: React.FC<{
     }
   };
 
-  if (window.location.port !== "3001") {
-    if (!isClient || path === authUrl || path.includes("popup")) {
-      return <React.Fragment>{children}</React.Fragment>;
-    }
+  if (!isClient || path === authUrl || path.includes("popup")) {
+    return <React.Fragment>{children}</React.Fragment>;
+  }
 
-    if (!isLoaded || user === undefined || user === null) {
-      return null;
-    }
+  if (!isLoaded || user === undefined || user === null) {
+    return null;
   }
 
   return (
