@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.useUserStore = void 0;
 var immer_1 = require("immer");
 var zustand_1 = require("zustand");
-var middleware_1 = require("zustand/middleware");
+var persist_and_sync_1 = require("persist-and-sync");
 var initialState = {
     userNo: undefined,
     userType: undefined,
@@ -17,7 +17,7 @@ var initialState = {
     tokenInExpire: undefined,
     login24h: undefined,
 };
-var useUserStore = (0, zustand_1.create)()((0, middleware_1.persist)(function (set) { return ({
+var useUserStore = (0, zustand_1.create)()((0, persist_and_sync_1.persistNSync)(function (set) { return ({
     me: initialState,
     signIn: function (user) {
         set((0, immer_1.produce)(function (state) {
@@ -27,16 +27,14 @@ var useUserStore = (0, zustand_1.create)()((0, middleware_1.persist)(function (s
     signOut: function () {
         set((0, immer_1.produce)(function (state) {
             window.sessionStorage.removeItem("menu-storage");
-            window.sessionStorage.removeItem("user-storage");
+            window.localStorage.removeItem("user-storage");
             state.me = initialState;
         }));
     },
 }); }, {
     name: "user-storage",
-    partialize: function (state) { return ({
-        me: state.me,
-    }); },
-    storage: (0, middleware_1.createJSONStorage)(function () { return sessionStorage; }),
-    version: 0.001,
+    storage: "localStorage",
+    include: ["me"],
+    initDelay: 0,
 }));
 exports.useUserStore = useUserStore;

@@ -1,6 +1,8 @@
 import { produce } from "immer";
 import { create } from "zustand";
 import { createJSONStorage, persist, StateStorage } from "zustand/middleware";
+import { zusPersistNSync } from "./zusPersistNSync";
+import { persistNSync } from "persist-and-sync";
 
 export interface IUser {
   userNo: string | undefined;
@@ -49,21 +51,21 @@ const initialState: IUser = {
 };
 
 const useUserStore = create<IUserStore>()(
-  persist(
-    (set) => ({
+  persistNSync(
+    (set: any) => ({
       me: initialState,
-      signIn: (user) => {
+      signIn: (user: IUser) => {
         set(
-          produce((state) => {
+          produce((state: IUserStore) => {
             state.me = user;
           })
         );
       },
       signOut: () => {
         set(
-          produce((state) => {
+          produce((state: IUserStore) => {
             window.sessionStorage.removeItem("menu-storage");
-            window.sessionStorage.removeItem("user-storage");
+            window.localStorage.removeItem("user-storage");
             state.me = initialState;
           })
         );
@@ -71,11 +73,9 @@ const useUserStore = create<IUserStore>()(
     }),
     {
       name: "user-storage",
-      partialize: (state) => ({
-        me: state.me,
-      }),
-      storage: createJSONStorage(() => sessionStorage),
-      version: 0.001,
+      storage: "localStorage",
+      include: ["me"],
+      initDelay: 0,
     }
   )
 );

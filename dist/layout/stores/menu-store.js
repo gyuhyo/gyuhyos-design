@@ -55,8 +55,8 @@ var useMenuStore = create(persist(function (set) { return ({
             var closeTabIndex = state.openedMenus.findIndex(function (s) { return s.key === menu.key; });
             var sameKey = ((_a = state.selectedMenu) === null || _a === void 0 ? void 0 : _a.gr) === menu.group &&
                 ((_b = state.selectedMenu) === null || _b === void 0 ? void 0 : _b.mn) === menu.key;
-            if (state.openedMenus.find(function (s) { return s.key === menu.key; })) {
-                state.openedMenus = state.openedMenus.filter(function (s) { return s.key !== menu.key; });
+            if (state.openedMenus.find(function (s) { return s.group === menu.group && s.key === menu.key; })) {
+                state.openedMenus = state.openedMenus.filter(function (s) { return "".concat(s.group, ":").concat(s.key) !== "".concat(menu.group, ":").concat(menu.key); });
             }
             if (state.openedMenus.length === 0) {
                 moveUrl("/", "MES");

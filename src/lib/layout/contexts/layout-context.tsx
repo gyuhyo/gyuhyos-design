@@ -3,6 +3,7 @@ import RootLayout from "../page/root-layout/root-layout";
 import { SideMenuItemsProps } from "../types/side-menu-item-props";
 import { useMenuStore } from "../stores/menu-store";
 import { useUserStore } from "../stores/user-store";
+import { useGyudAccess } from "../../access-context";
 
 interface languagesProps {
   code: string;
@@ -41,6 +42,7 @@ export const LayoutProvider: React.FC<{
   menuType = "slide",
   customSettings,
 }) => {
+  const isAccess = useGyudAccess();
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [isClient, setIsClient] = React.useState(false); // 클라이언트 체크
   const path = isClient ? window.location.pathname : ""; // 클라이언트에서만 접근
@@ -81,7 +83,7 @@ export const LayoutProvider: React.FC<{
       (user === undefined || user === null)
     ) {
       window.sessionStorage.removeItem("menu-storage");
-      window.sessionStorage.removeItem("user-storage");
+      window.localStorage.removeItem("user-storage");
       window.location.href = authUrl;
     }
   }, [user, authUrl, path, isClient]);
@@ -171,6 +173,10 @@ export const LayoutProvider: React.FC<{
       gtCombo.dispatchEvent(new Event("change"));
     }
   };
+
+  if (!isAccess) {
+    throw new Error("You do not have permission to use package 'gyud'.");
+  }
 
   if (!isClient || path === authUrl || path.includes("popup")) {
     return <React.Fragment>{children}</React.Fragment>;

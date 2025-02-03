@@ -123,6 +123,10 @@ var useInitDt = function (_a) {
         };
     }, [mounted]);
     if (mounted && tbody.current && thead.current) {
+        if (typeof window === "undefined")
+            return true;
+        if (window.screen.width <= 650)
+            return true;
         var theadStickyCols = thead.current.querySelectorAll(".devs-dt-row .devs-dt-sticky-col");
         var setLeft = 0;
         // head sticky col 설정

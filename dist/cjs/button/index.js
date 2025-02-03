@@ -25,8 +25,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var jsx_runtime_1 = require("@emotion/react/jsx-runtime");
 /** @jsxImportSource @emotion/react */
 var react_1 = require("@emotion/react");
+var access_context_1 = require("../access-context");
 var Button = function (props) {
     var children = props.children, _a = props.compact, compact = _a === void 0 ? false : _a, _b = props.rounded, rounded = _b === void 0 ? true : _b, _c = props.border, border = _c === void 0 ? false : _c, _d = props.borderColor, borderColor = _d === void 0 ? "#cecece" : _d, _e = props.bgColor, bgColor = _e === void 0 ? "#eeeeee" : _e, color = props.color, anotherProps = __rest(props, ["children", "compact", "rounded", "border", "borderColor", "bgColor", "color"]);
+    var isAccess = (0, access_context_1.useGyudAccess)();
+    if (isAccess && !isAccess.result) {
+        throw new Error("You do not have permission to use package 'gyud'.");
+    }
     return ((0, jsx_runtime_1.jsxs)("button", __assign({ ref: props.btnref, css: (0, react_1.css)({
             padding: compact ? "0px 7px" : "5px 20px",
             borderRadius: rounded ? 5 : 0,

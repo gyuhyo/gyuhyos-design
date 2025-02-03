@@ -20,6 +20,6 @@ import RootLayoutUserCard from "./root-layout-user-card";
 import "./style.css";
 function RootLayoutHeader() {
     var menuType = useLayout().menuType;
-    return (_jsxs("header", __assign({ css: rootLayoutHeaderStyle }, { children: [_jsx("img", { src: "http://sqw.iptime.org:8092/header_logo_left1.png", width: 60, height: 30 }), _jsx(RootLayoutMenu, {}), _jsx(RootLayoutUserCard, {})] })));
+    return (_jsxs("header", __assign({ css: rootLayoutHeaderStyle }, { children: [_jsx("div", { children: _jsx("img", { src: "http://sqw.iptime.org:8092/header_logo_left1.png", width: 60, height: 30 }) }), _jsx(RootLayoutMenu, {}), _jsx(RootLayoutUserCard, {})] })));
 }
 export default RootLayoutHeader;

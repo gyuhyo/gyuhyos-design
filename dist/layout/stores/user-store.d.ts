@@ -23,15 +23,5 @@ export interface IUserStore {
     signIn: TSetUser;
     signOut: () => void;
 }
-declare const useUserStore: import("zustand").UseBoundStore<Omit<import("zustand").StoreApi<IUserStore>, "persist"> & {
-    persist: {
-        setOptions: (options: Partial<import("zustand/middleware").PersistOptions<IUserStore, unknown>>) => void;
-        clearStorage: () => void;
-        rehydrate: () => void | Promise<void>;
-        hasHydrated: () => boolean;
-        onHydrate: (fn: (state: IUserStore) => void) => () => void;
-        onFinishHydration: (fn: (state: IUserStore) => void) => () => void;
-        getOptions: () => Partial<import("zustand/middleware").PersistOptions<IUserStore, unknown>>;
-    };
-}>;
+declare const useUserStore: import("zustand").UseBoundStore<import("zustand").StoreApi<IUserStore>>;
 export { useUserStore };

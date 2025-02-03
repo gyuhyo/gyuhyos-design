@@ -5,6 +5,7 @@ import {
   MessageShowProps,
 } from "../types/message-context-props";
 import AlertMessage from "..";
+import { useGyudAccess } from "../../access-context";
 
 const MessageContext = createContext<MessageClicentProps | undefined>(
   undefined
@@ -12,6 +13,7 @@ const MessageContext = createContext<MessageClicentProps | undefined>(
 
 export const MessageProvider = React.memo(
   ({ children }: { children: ReactNode }) => {
+    const isAccess = useGyudAccess();
     const [messages, setMessages] = useState<MessageShowProps[]>([]);
 
     const showMessage = (props: MessageShowProps): Promise<boolean> => {
@@ -53,6 +55,10 @@ export const MessageProvider = React.memo(
     const removeMessage = (alertID: string) => {
       setMessages((current) => current.filter((m) => m.alertID !== alertID));
     };
+
+    if (isAccess && !isAccess.result) {
+      throw new Error("You do not have permission to use package 'gyud'.");
+    }
 
     return (
       <MessageContext.Provider value={{ showMessage }}>

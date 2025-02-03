@@ -2,6 +2,7 @@
 
 import { css } from "@emotion/react";
 import * as React from "react";
+import { useGyudAccess } from "../access-context";
 
 export interface ButtonProps
   extends React.DetailedHTMLProps<
@@ -30,6 +31,12 @@ const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
     color,
     ...anotherProps
   } = props;
+  const isAccess = useGyudAccess();
+
+  if (isAccess && !isAccess.result) {
+    throw new Error("You do not have permission to use package 'gyud'.");
+  }
+
   return (
     <button
       ref={props.btnref}

@@ -29,9 +29,11 @@ import { jsx as _jsx } from "@emotion/react/jsx-runtime";
 import React from "react";
 import uuid from "react-uuid";
 import { MessageProvider } from "../../alert-message/context/message-context";
+import { useGyudAccess } from "../../access-context";
 var DevsDtContext = React.createContext(undefined);
 var DevsDtProviderComponent = function (props) {
     var _a, _b;
+    var isAccess = useGyudAccess();
     var keyField = (_a = props.columns.find(function (col) { return col.key; })) === null || _a === void 0 ? void 0 : _a.field;
     var _c = __read(React.useState(false), 2), isSetUUID = _c[0], setIsSetUUID = _c[1];
     var _d = __read(React.useState({
@@ -68,6 +70,9 @@ var DevsDtProviderComponent = function (props) {
         return props.dataSource.filter(function (x) { return x.mode === "u" || x.mode === "c"; })
             .length;
     }, [JSON.stringify(props.dataSource)]);
+    if (isAccess && !isAccess.result) {
+        throw new Error("You do not have permission to use package 'gyud'.");
+    }
     return (_jsx(DevsDtContext.Provider, __assign({ value: {
             columns: props.columns,
             setColumns: props.setColumns,

@@ -1,6 +1,8 @@
 let defaultTitle = "";
 
-export const setDefaultTitle = (title: string) => (defaultTitle = title);
+export const setDefaultTitle = (title: string) => {
+  defaultTitle = title.trim();
+};
 
 export const moveUrl = (url: string, title: string) => {
   const assignTitle =

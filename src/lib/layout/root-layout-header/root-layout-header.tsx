@@ -7,17 +7,18 @@ import { useLayout } from "../contexts/layout-context";
 import RootLayoutMenu from "./root-layout-menu";
 import RootLayoutUserCard from "./root-layout-user-card";
 import "./style.css";
-import { css } from "@emotion/react";
 
 function RootLayoutHeader() {
   const { menuType } = useLayout();
   return (
     <header css={rootLayoutHeaderStyle}>
-      <img
-        src="http://sqw.iptime.org:8092/header_logo_left1.png"
-        width={60}
-        height={30}
-      />
+      <div>
+        <img
+          src="http://sqw.iptime.org:8092/header_logo_left1.png"
+          width={60}
+          height={30}
+        />
+      </div>
       <RootLayoutMenu />
       <RootLayoutUserCard />
     </header>

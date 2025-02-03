@@ -34,8 +34,10 @@ import LayerPopupHeader from "./layer-popup-header";
 import LayerPopupBody from "./layer-popup-body";
 import LayerPopupFooter from "./layer-popup.footer";
 import LayerPopupResizingBox from "./layer-popup-resizing-box";
+import { useGyudAccess } from "../access-context";
 var LayerPopup = React.memo(function (props) {
     var _a, _b;
+    var isAccess = useGyudAccess();
     var backdropRef = React.useRef(null);
     // 팝업 위치 상태
     var _c = __read(React.useState({
@@ -68,6 +70,9 @@ var LayerPopup = React.memo(function (props) {
             }, 500);
         }
     };
+    if (isAccess && !isAccess.result) {
+        throw new Error("You do not have permission to use package 'gyud'.");
+    }
     return (_jsx("div", __assign({ ref: backdropRef, "data-name": "layer-popup-backdrop", css: layerPopupStyles, onClick: onBackdropClick }, { children: _jsxs("div", __assign({ "data-name": "layer-popup-container", style: {
                 top: "".concat(position.y, "px"),
                 left: "".concat(position.x, "px"),

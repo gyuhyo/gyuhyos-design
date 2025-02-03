@@ -59,6 +59,7 @@ var react_1 = __importStar(require("react"));
 var root_layout_1 = __importDefault(require("../page/root-layout/root-layout"));
 var menu_store_1 = require("../stores/menu-store");
 var user_store_1 = require("../stores/user-store");
+var access_context_1 = require("../../access-context");
 var languages = [
     { code: "ko", name: "한국어", flag: "kr" },
     { code: "en", name: "English", flag: "us" }, // 영어
@@ -66,6 +67,7 @@ var languages = [
 var LayoutContext = (0, react_1.createContext)(undefined);
 var LayoutProvider = function (_a) {
     var children = _a.children, menus = _a.menus, refreshTokenUrl = _a.refreshTokenUrl, authUrl = _a.authUrl, _b = _a.menuType, menuType = _b === void 0 ? "slide" : _b, customSettings = _a.customSettings;
+    var isAccess = (0, access_context_1.useGyudAccess)();
     var _c = __read(react_1.default.useState(false), 2), isLoaded = _c[0], setIsLoaded = _c[1];
     var _d = __read(react_1.default.useState(false), 2), isClient = _d[0], setIsClient = _d[1]; // 클라이언트 체크
     var path = isClient ? window.location.pathname : ""; // 클라이언트에서만 접근
@@ -101,7 +103,7 @@ var LayoutProvider = function (_a) {
             path !== authUrl &&
             (user === undefined || user === null)) {
             window.sessionStorage.removeItem("menu-storage");
-            window.sessionStorage.removeItem("user-storage");
+            window.localStorage.removeItem("user-storage");
             window.location.href = authUrl;
         }
     }, [user, authUrl, path, isClient]);
@@ -169,6 +171,9 @@ var LayoutProvider = function (_a) {
             gtCombo.dispatchEvent(new Event("change"));
         }
     };
+    if (!isAccess) {
+        throw new Error("You do not have permission to use package 'gyud'.");
+    }
     if (!isClient || path === authUrl || path.includes("popup")) {
         return (0, jsx_runtime_1.jsx)(react_1.default.Fragment, { children: children });
     }

@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import React from "react";
 import { IDataTableButtons, IDataTableOptions } from "../_types";
 interface IDataTableButtonsProps {

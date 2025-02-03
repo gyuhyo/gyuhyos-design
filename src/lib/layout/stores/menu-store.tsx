@@ -107,9 +107,13 @@ const useMenuStore = create(
               state.selectedMenu?.gr === menu.group &&
               state.selectedMenu?.mn === menu.key;
 
-            if (state.openedMenus.find((s) => s.key === menu.key)) {
+            if (
+              state.openedMenus.find(
+                (s) => s.group === menu.group && s.key === menu.key
+              )
+            ) {
               state.openedMenus = state.openedMenus.filter(
-                (s) => s.key !== menu.key
+                (s) => `${s.group}:${s.key}` !== `${menu.group}:${menu.key}`
               );
             }
 

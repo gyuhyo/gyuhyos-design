@@ -111,11 +111,14 @@ const RootLayoutUserCard: React.FC<any> = React.memo(() => {
       <div
         css={css({
           lineHeight: "30px",
-          display: "flex",
+          display: "none",
           flexDirection: "row",
           alignItems: "center",
           border: "1px solid #ddd",
           fontSize: "0.85rem",
+          "@media (min-width: 650px)": {
+            display: "flex",
+          },
         })}
       >
         <p

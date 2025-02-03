@@ -38,9 +38,11 @@ import { jsx as _jsx, jsxs as _jsxs } from "@emotion/react/jsx-runtime";
 /** @jsxImportSource @emotion/react */
 import React, { createContext, useContext, useState } from "react";
 import AlertMessage from "..";
+import { useGyudAccess } from "../../access-context";
 var MessageContext = createContext(undefined);
 export var MessageProvider = React.memo(function (_a) {
     var children = _a.children;
+    var isAccess = useGyudAccess();
     var _b = __read(useState([]), 2), messages = _b[0], setMessages = _b[1];
     var showMessage = function (props) {
         return new Promise(function (resolve) {
@@ -85,6 +87,9 @@ export var MessageProvider = React.memo(function (_a) {
     var removeMessage = function (alertID) {
         setMessages(function (current) { return current.filter(function (m) { return m.alertID !== alertID; }); });
     };
+    if (isAccess && !isAccess.result) {
+        throw new Error("You do not have permission to use package 'gyud'.");
+    }
     return (_jsxs(MessageContext.Provider, __assign({ value: { showMessage: showMessage } }, { children: [children, messages.map(function (msg) { return (_jsx(AlertMessage, { setIsShow: function (isVisible) {
                     if (!isVisible) {
                         setMessages(function (current) {

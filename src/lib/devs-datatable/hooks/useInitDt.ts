@@ -89,6 +89,9 @@ export const useInitDt = ({
   }, [mounted]);
 
   if (mounted && tbody.current && thead.current) {
+    if (typeof window === "undefined") return true;
+    if (window.screen.width <= 650) return true;
+
     const theadStickyCols: NodeListOf<HTMLDivElement> =
       thead.current.querySelectorAll(".devs-dt-row .devs-dt-sticky-col");
 

@@ -1,6 +1,6 @@
 import { produce } from "immer";
 import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { persistNSync } from "persist-and-sync";
 var initialState = {
     userNo: undefined,
     userType: undefined,
@@ -14,7 +14,7 @@ var initialState = {
     tokenInExpire: undefined,
     login24h: undefined,
 };
-var useUserStore = create()(persist(function (set) { return ({
+var useUserStore = create()(persistNSync(function (set) { return ({
     me: initialState,
     signIn: function (user) {
         set(produce(function (state) {
@@ -24,16 +24,14 @@ var useUserStore = create()(persist(function (set) { return ({
     signOut: function () {
         set(produce(function (state) {
             window.sessionStorage.removeItem("menu-storage");
-            window.sessionStorage.removeItem("user-storage");
+            window.localStorage.removeItem("user-storage");
             state.me = initialState;
         }));
     },
 }); }, {
     name: "user-storage",
-    partialize: function (state) { return ({
-        me: state.me,
-    }); },
-    storage: createJSONStorage(function () { return sessionStorage; }),
-    version: 0.001,
+    storage: "localStorage",
+    include: ["me"],
+    initDelay: 0,
 }));
 export { useUserStore };

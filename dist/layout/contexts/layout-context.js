@@ -30,6 +30,7 @@ import React, { createContext, useContext } from "react";
 import RootLayout from "../page/root-layout/root-layout";
 import { useMenuStore } from "../stores/menu-store";
 import { useUserStore } from "../stores/user-store";
+import { useGyudAccess } from "../../access-context";
 var languages = [
     { code: "ko", name: "한국어", flag: "kr" },
     { code: "en", name: "English", flag: "us" }, // 영어
@@ -37,6 +38,7 @@ var languages = [
 var LayoutContext = createContext(undefined);
 export var LayoutProvider = function (_a) {
     var children = _a.children, menus = _a.menus, refreshTokenUrl = _a.refreshTokenUrl, authUrl = _a.authUrl, _b = _a.menuType, menuType = _b === void 0 ? "slide" : _b, customSettings = _a.customSettings;
+    var isAccess = useGyudAccess();
     var _c = __read(React.useState(false), 2), isLoaded = _c[0], setIsLoaded = _c[1];
     var _d = __read(React.useState(false), 2), isClient = _d[0], setIsClient = _d[1]; // 클라이언트 체크
     var path = isClient ? window.location.pathname : ""; // 클라이언트에서만 접근
@@ -72,7 +74,7 @@ export var LayoutProvider = function (_a) {
             path !== authUrl &&
             (user === undefined || user === null)) {
             window.sessionStorage.removeItem("menu-storage");
-            window.sessionStorage.removeItem("user-storage");
+            window.localStorage.removeItem("user-storage");
             window.location.href = authUrl;
         }
     }, [user, authUrl, path, isClient]);
@@ -140,6 +142,9 @@ export var LayoutProvider = function (_a) {
             gtCombo.dispatchEvent(new Event("change"));
         }
     };
+    if (!isAccess) {
+        throw new Error("You do not have permission to use package 'gyud'.");
+    }
     if (!isClient || path === authUrl || path.includes("popup")) {
         return _jsx(React.Fragment, { children: children });
     }

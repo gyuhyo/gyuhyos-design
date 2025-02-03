@@ -9,7 +9,7 @@ exports.rootLayoutHeaderStyle = (0, react_1.css)({
     borderBottom: "1px solid #e3e3e3",
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "end",
     alignItems: "center",
     padding: "0px 12px",
     columnGap: "100px",
@@ -19,18 +19,24 @@ exports.rootLayoutHeaderStyle = (0, react_1.css)({
         columnGap: "14px",
         alignItems: "center",
     },
-    "& > div:first-of-type": {
+    "& > div:nth-of-type(1)": {
+        display: "none",
         flex: "none",
     },
     "& > div:nth-of-type(2)": {
         display: "none",
         flex: "1 1 0%",
-        justifyContent: "center",
     },
-    "& > div:last-of-type": {
-        justifyContent: "end",
+    "& > div:nth-of-type(3)": {
+        flex: "none",
     },
-    "@media (min-width: 1000px)": {
+    "@media (min-width: 650px)": {
+        justifyContent: "space-between",
+        "& > div:nth-of-type(1)": {
+            display: "flex",
+        },
+    },
+    "@media (min-width: 1200px)": {
         "& > div:nth-of-type(2)": {
             display: "flex",
         },

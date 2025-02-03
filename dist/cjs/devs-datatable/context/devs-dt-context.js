@@ -35,9 +35,11 @@ var jsx_runtime_1 = require("@emotion/react/jsx-runtime");
 var react_1 = __importDefault(require("react"));
 var react_uuid_1 = __importDefault(require("react-uuid"));
 var message_context_1 = require("../../alert-message/context/message-context");
+var access_context_1 = require("../../access-context");
 var DevsDtContext = react_1.default.createContext(undefined);
 var DevsDtProviderComponent = function (props) {
     var _a, _b;
+    var isAccess = (0, access_context_1.useGyudAccess)();
     var keyField = (_a = props.columns.find(function (col) { return col.key; })) === null || _a === void 0 ? void 0 : _a.field;
     var _c = __read(react_1.default.useState(false), 2), isSetUUID = _c[0], setIsSetUUID = _c[1];
     var _d = __read(react_1.default.useState({
@@ -74,6 +76,9 @@ var DevsDtProviderComponent = function (props) {
         return props.dataSource.filter(function (x) { return x.mode === "u" || x.mode === "c"; })
             .length;
     }, [JSON.stringify(props.dataSource)]);
+    if (isAccess && !isAccess.result) {
+        throw new Error("You do not have permission to use package 'gyud'.");
+    }
     return ((0, jsx_runtime_1.jsx)(DevsDtContext.Provider, __assign({ value: {
             columns: props.columns,
             setColumns: props.setColumns,

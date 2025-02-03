@@ -23,8 +23,13 @@ var __rest = (this && this.__rest) || function (s, e) {
 import { jsxs as _jsxs } from "@emotion/react/jsx-runtime";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
+import { useGyudAccess } from "../access-context";
 var Button = function (props) {
     var children = props.children, _a = props.compact, compact = _a === void 0 ? false : _a, _b = props.rounded, rounded = _b === void 0 ? true : _b, _c = props.border, border = _c === void 0 ? false : _c, _d = props.borderColor, borderColor = _d === void 0 ? "#cecece" : _d, _e = props.bgColor, bgColor = _e === void 0 ? "#eeeeee" : _e, color = props.color, anotherProps = __rest(props, ["children", "compact", "rounded", "border", "borderColor", "bgColor", "color"]);
+    var isAccess = useGyudAccess();
+    if (isAccess && !isAccess.result) {
+        throw new Error("You do not have permission to use package 'gyud'.");
+    }
     return (_jsxs("button", __assign({ ref: props.btnref, css: css({
             padding: compact ? "0px 7px" : "5px 20px",
             borderRadius: rounded ? 5 : 0,

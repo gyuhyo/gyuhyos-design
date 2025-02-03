@@ -81,11 +81,14 @@ var RootLayoutUserCard = React.memo(function () {
                     fontSize: "0.85rem",
                 }) }, { children: [_jsx(RootLayoutUserSignTime, {}), _jsx(Button, __assign({ bgColor: "#1f619d", color: "#fff", compact: true, rounded: false, onClick: onRefreshClick }, { children: "\uC5F0\uC7A5" })), _jsx(Button, __assign({ bgColor: "#df4873", color: "#fff", compact: true, rounded: false, border: false, onClick: onSignOutClick }, { children: "\uB85C\uADF8\uC544\uC6C3" }))] })), _jsxs("div", __assign({ css: css({
                     lineHeight: "30px",
-                    display: "flex",
+                    display: "none",
                     flexDirection: "row",
                     alignItems: "center",
                     border: "1px solid #ddd",
                     fontSize: "0.85rem",
+                    "@media (min-width: 650px)": {
+                        display: "flex",
+                    },
                 }) }, { children: [_jsx("p", __assign({ css: css({
                             padding: "0px 7px",
                             background: "#fff",

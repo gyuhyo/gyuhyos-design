@@ -1,5 +1,7 @@
 var defaultTitle = "";
-export var setDefaultTitle = function (title) { return (defaultTitle = title); };
+export var setDefaultTitle = function (title) {
+    defaultTitle = title.trim();
+};
 export var moveUrl = function (url, title) {
     var assignTitle = typeof window === undefined || defaultTitle === ""
         ? ""

@@ -8,12 +8,14 @@ import {
 import { useForm } from "react-hook-form";
 import uuid from "react-uuid";
 import { MessageProvider } from "../../alert-message/context/message-context";
+import { useGyudAccess } from "../../access-context";
 
 const DevsDtContext = React.createContext<IDataTableContextProps | undefined>(
   undefined
 );
 
 const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
+  const isAccess = useGyudAccess();
   const keyField: string | undefined = props.columns.find(
     (col) => col.key
   )?.field;
@@ -77,6 +79,10 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
     return props.dataSource.filter((x) => x.mode === "u" || x.mode === "c")
       .length;
   }, [JSON.stringify(props.dataSource)]);
+
+  if (isAccess && !isAccess.result) {
+    throw new Error("You do not have permission to use package 'gyud'.");
+  }
 
   return (
     <DevsDtContext.Provider

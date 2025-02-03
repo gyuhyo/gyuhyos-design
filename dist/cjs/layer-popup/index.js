@@ -39,8 +39,10 @@ var layer_popup_header_1 = __importDefault(require("./layer-popup-header"));
 var layer_popup_body_1 = __importDefault(require("./layer-popup-body"));
 var layer_popup_footer_1 = __importDefault(require("./layer-popup.footer"));
 var layer_popup_resizing_box_1 = __importDefault(require("./layer-popup-resizing-box"));
+var access_context_1 = require("../access-context");
 var LayerPopup = react_1.default.memo(function (props) {
     var _a, _b;
+    var isAccess = (0, access_context_1.useGyudAccess)();
     var backdropRef = react_1.default.useRef(null);
     // 팝업 위치 상태
     var _c = __read(react_1.default.useState({
@@ -73,6 +75,9 @@ var LayerPopup = react_1.default.memo(function (props) {
             }, 500);
         }
     };
+    if (isAccess && !isAccess.result) {
+        throw new Error("You do not have permission to use package 'gyud'.");
+    }
     return ((0, jsx_runtime_1.jsx)("div", __assign({ ref: backdropRef, "data-name": "layer-popup-backdrop", css: layer_popup_styles_1.layerPopupStyles, onClick: onBackdropClick }, { children: (0, jsx_runtime_1.jsxs)("div", __assign({ "data-name": "layer-popup-container", style: {
                 top: "".concat(position.y, "px"),
                 left: "".concat(position.x, "px"),
