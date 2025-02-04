@@ -481,6 +481,10 @@ function DevsDtCell({
     const cellEditCheck = options?.editType === "cell" && isCellEdit === false;
 
     if (options?.editType === undefined || options?.editType === "row") {
+      if (options?.editMode === "slider") {
+        return GetCell();
+      }
+
       if (rowEditCheck) {
         return GetCell();
       } else {

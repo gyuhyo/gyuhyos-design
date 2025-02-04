@@ -119,7 +119,7 @@ const App: React.FC<{}> = () => {
     {
       key: true,
       field: "1",
-      title: "1",
+      title: "1dwvdwdwv1edw1dwsd1v2wde1cfwdc1wcdsqcqdc",
       required: true,
       resizing: false,
     },
@@ -329,6 +329,7 @@ const App: React.FC<{}> = () => {
         }}
         options={{
           readonly: false,
+          editMode: "slider",
           showRowNumber: true,
           enabledRowOrder: true,
           enabledRowCheck: true,

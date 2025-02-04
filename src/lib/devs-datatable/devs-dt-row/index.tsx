@@ -160,6 +160,8 @@ function DevsDtRow({
     focusedCell,
     editCount,
     dataSource,
+    setSliderFormOpen,
+    focusedRowForm,
   } = useDt();
 
   const form = useForm({
@@ -205,7 +207,55 @@ function DevsDtRow({
     if (options?.onBeforeRowEdit?.({ index, row: data }) === false) return;
 
     if (
+      options?.editMode === "slider" &&
+      (options?.editType === undefined || options?.editType === "row")
+    ) {
+      if (options?.multipleEdit === false) {
+        if (editCount > 0) {
+          showMessage({
+            title: "경고",
+            type: "warnning",
+            message:
+              "다른 데이터를 수정할 경우 기존 데이터 수정이 중단되며 복구할 수 없습니다.\n\n현재 데이터 수정을 중단 하시겠습니까?",
+            onOkClick: () =>
+              setDataSource((prev) => {
+                return prev
+                  .filter((x) => x.mode !== "c")
+                  .map((p) => {
+                    return p.rowId === data.rowId
+                      ? { ...p, mode: "u", checked: true }
+                      : { ...p, mode: "r", checked: false };
+                  });
+              }),
+            onCancelClick: () => {},
+          });
+        } else {
+          focusedRowForm.current = form;
+          setSliderFormOpen(true);
+          setDataSource((prev) =>
+            prev.map((p) => {
+              return p.rowId === data.rowId
+                ? { ...p, mode: "u", checked: true }
+                : { ...p };
+            })
+          );
+        }
+      } else {
+        focusedRowForm.current = form;
+        setSliderFormOpen(true);
+        setDataSource((prev) =>
+          prev.map((p) => {
+            return p.rowId === data.rowId
+              ? { ...p, mode: "u", checked: true }
+              : { ...p };
+          })
+        );
+      }
+    }
+
+    if (
       data.mode === "r" &&
+      options?.editMode !== "slider" &&
       (options?.editType === undefined || options?.editType === "row")
     ) {
       if (options?.multipleEdit === false) {
@@ -288,7 +338,12 @@ function DevsDtRow({
       }${data.checked === true ? " devs-dt-checked-row" : ""}`}
       onSubmit={handleSubmit(() => {})}
       onDoubleClick={onEditModeClick}
-      onClick={() => setFocusedRow(data)}
+      onClick={() => {
+        setFocusedRow(data);
+        if (data.mode === "r") {
+          setSliderFormOpen(false);
+        }
+      }}
       data-edit-mode={data.mode}
       ref={dragProvided.innerRef}
       {...dragProvided.draggableProps}

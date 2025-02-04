@@ -10,6 +10,8 @@ import DevsDtTHead from "./devs-dt-thead";
 import { useInitDt } from "./hooks/useInitDt";
 import { css } from "@emotion/react";
 import useDtUtils from "./hooks/useDtUtils";
+import DevsDtHeader from "./devs-dt-header";
+import DevsDtSliderForm from "./devs-dt-slider-form/devs-dt-slider-form";
 
 /**
  * @typedef {Object} DevsDataTableRef
@@ -267,81 +269,12 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
             </div>
           </div>
         )}
-        {(props.title !== undefined ||
-          (typeof props.title === "string" && props.title !== "") ||
-          props.buttons?.onAddClick !== undefined ||
-          props.buttons?.onSearchClick !== undefined ||
-          props.buttons?.onSaveClick !== undefined ||
-          props.buttons?.onCancelClick !== undefined ||
-          props.buttons?.onDeleteClick !== undefined ||
-          props.buttons?.custom !== undefined) && (
-          <div
-            style={{
-              flex: "none",
-              minHeight: "50px",
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 7,
-              flexWrap: "wrap",
-              gap: "7px",
-              background:
-                "linear-gradient(180deg, rgb(231, 231, 231), rgb(215, 215, 215), rgb(231, 231, 231))",
-              border: "1px solid rgb(199, 199, 199)",
-
-              padding: "0.5rem 0.75rem",
-            }}
-          >
-            {props.title !== undefined && (
-              <div
-                css={css({
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "start",
-                  alignItems: "center",
-                  columnGap: 7,
-                })}
-              >
-                {typeof props.title === "string" && props.title !== "" ? (
-                  <p style={{ fontSize: 18, fontWeight: "bold" }}>
-                    &#x27a4; {props.title}
-                  </p>
-                ) : (
-                  props.title
-                )}
-                {(props.options?.readonly === undefined ||
-                  props.options.readonly === false) && (
-                  <span
-                    style={{
-                      fontSize: 12,
-                      color: "#7a7a7a",
-                      marginLeft:
-                        props.title !== undefined && props.title !== ""
-                          ? "7px"
-                          : "0px",
-                    }}
-                  >
-                    (<span style={{ color: "#000" }}>*</span>) 입력 가능 (
-                    <span style={{ color: "red" }}>*</span>) 필수입력
-                  </span>
-                )}
-              </div>
-            )}
-            {(props.buttons?.onAddClick !== undefined ||
-              props.buttons?.onSearchClick !== undefined ||
-              props.buttons?.onSaveClick !== undefined ||
-              props.buttons?.onCancelClick !== undefined ||
-              props.buttons?.onDeleteClick !== undefined ||
-              props.buttons?.custom !== undefined) && (
-              <DevsDtButtons
-                buttons={props.buttons}
-                options={props.options}
-                setInnerLoading={setInnerLoading}
-              />
-            )}
-          </div>
-        )}
+        <DevsDtHeader
+          title={props.title}
+          buttons={props.buttons}
+          options={props.options}
+          setInnerLoading={setInnerLoading}
+        />
         <div
           ref={table}
           className="dev-table-wrapper"
@@ -349,6 +282,7 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
         >
           <DevsDtTHead thead={thead} setHeaderWidth={setHeaderWidth} />
           <DevsDtTBody tbody={tbody} headerWidth={headerWidth} />
+          {props.options?.editMode === "slider" && <DevsDtSliderForm />}
         </div>
       </DevsDtProvider>
     );

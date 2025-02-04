@@ -19,7 +19,8 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
   const keyField: string | undefined = props.columns.find(
     (col) => col.key
   )?.field;
-  const [isSetUUID, setIsSetUUID] = React.useState(false);
+  const focusedRowForm = React.useRef(null);
+  const [sliderFormOpen, setSliderFormOpen] = React.useState(false);
   const [sorter, setSorter] = React.useState<IDataTableSorterProps>({
     field: null,
     type: "asc",
@@ -101,6 +102,9 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
         editCount: editCount,
         sorter,
         setSorter,
+        sliderFormOpen,
+        setSliderFormOpen,
+        focusedRowForm,
       }}
     >
       <MessageProvider>

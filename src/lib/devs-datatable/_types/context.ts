@@ -30,4 +30,11 @@ export interface IDataTableContextProps extends IDataTableProps {
   sorter: IDataTableSorterProps;
   setSorter: React.Dispatch<React.SetStateAction<IDataTableSorterProps>>;
   editCount: number;
+  sliderFormOpen: boolean;
+  setSliderFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  focusedRowForm: React.MutableRefObject<null | UseFormReturn<
+    IDataSource,
+    any,
+    undefined
+  >>;
 }
