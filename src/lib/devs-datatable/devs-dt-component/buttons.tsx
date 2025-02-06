@@ -6,6 +6,7 @@ import React from "react";
 import Button from "../../button";
 import { IDataTableButtons, IDataTableOptions } from "../_types";
 import { useDt } from "../context/devs-dt-context";
+import { Select } from "antd";
 
 interface IDataTableButtonsProps {
   options?: IDataTableOptions | undefined;
@@ -28,6 +29,7 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
     sliderFormOpen,
     setFocusedRowForm,
     setSliderFormOpen,
+    setEditMode,
   } = useDt();
   const ButtonEventBeforeShowLoading = (event: any) => {
     props.setInnerLoading(true);
@@ -77,6 +79,42 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
           })}
         >
           {props.buttons?.custom !== undefined && props.buttons.custom}
+          {props.options?.showEditModeSelector && (
+            <div
+              css={css({
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                background: "#fff",
+                border: "1px solid #d9d9d9",
+                borderRadius: "6px",
+              })}
+            >
+              <p
+                css={css({
+                  padding: "0px 11px",
+                  height: "100%",
+                  borderRight: "1px solid #d9d9d9",
+                })}
+              >
+                수정 모드
+              </p>
+              <div
+                css={css({
+                  "& .ant-select": { width: "100px" },
+                  "& .ant-select > .ant-select-selector": { border: "none" },
+                })}
+              >
+                <Select
+                  defaultValue={"grid"}
+                  onChange={(v: "grid" | "slider") => setEditMode(v)}
+                >
+                  <Select.Option value="grid">그리드</Select.Option>
+                  <Select.Option value="slider">슬라이더</Select.Option>
+                </Select>
+              </div>
+            </div>
+          )}
           {props.buttons?.onSearchClick !== undefined && (
             <Button
               border={true}

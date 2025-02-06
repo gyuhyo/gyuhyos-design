@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { Button, useMessage } from "./lib/index";
+import { Button, MesButton, useMessage } from "./lib/index";
 import uuid from "react-uuid";
 import { IDataSource, IDataTableColumn } from "./lib/devs-datatable/_types";
 import DevsDataTable from "./lib/devs-datatable";
@@ -135,7 +135,6 @@ const App: React.FC<{}> = () => {
       title: "4",
       width: 200,
       merge: true,
-      type: "textarea",
     },
     {
       field: "5",
@@ -286,32 +285,9 @@ const App: React.FC<{}> = () => {
         flexDirection: "column",
       }}
     >
-      {/*<DevsDataTable
-        ref={tb2}
-        title="생산 계획 등록"
-        columns={columns}
-        setColumns={setColumns}
-        dataSource={dataSource}
-        setDataSource={setDataSource}
-        options={{
-          showRowNumber: true,
-          enabledRowOrder: true,
-          rowOrderEnd: (data) => {
-            console.log(data);
-          },
-        }}
-        buttons={{
-          isVisible: true,
-          export: {
-            visible: true,
-            excel: true,
-            print: true,
-          },
-          onSaveClick: handleSaveClick,
-          onAddClick: handleAddClick,
-          onDeleteClick: handleDeleteClick,
-        }}
-      />*/}
+      <div style={{ width: "200px" }}>
+        <MesButton primary="blue">하이</MesButton>
+      </div>
       <DevsDataTable
         ref={tb}
         title={
@@ -337,8 +313,9 @@ const App: React.FC<{}> = () => {
           setFocusedRow(row);
         }}
         options={{
+          cellEditClickType: "click",
+          editType: "cell",
           readonly: false,
-          editMode: "slider",
           showRowNumber: true,
           enabledRowOrder: true,
           enabledRowCheck: true,

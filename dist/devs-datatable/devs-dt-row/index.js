@@ -11,12 +11,12 @@ var __assign = (this && this.__assign) || function () {
 };
 import { jsx as _jsx, jsxs as _jsxs } from "@emotion/react/jsx-runtime";
 /** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 import React from "react";
 import { useForm, } from "react-hook-form";
+import { useMessage } from "../../alert-message/context/message-context";
 import { useDt } from "../context/devs-dt-context";
 import DevsDtCell from "../devs-dt-cell";
-import { useMessage } from "../../alert-message/context/message-context";
-import { css } from "@emotion/react";
 var RowNumberCell = function (_a) {
     var index = _a.index;
     return (_jsx("td", __assign({ className: "devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-index-cell", style: { "--width": "50px" } }, { children: index + 1 })));
@@ -67,18 +67,18 @@ function DevsDtRow(_a) {
     var _b;
     var data = _a.data, index = _a.index, rowKey = _a.rowKey, lastNode = _a.lastNode, dragProvided = _a.dragProvided, dragSnapshot = _a.dragSnapshot;
     var showMessage = useMessage().showMessage;
-    var _c = useDt(), columns = _c.columns, keyField = _c.keyField, setDataSource = _c.setDataSource, options = _c.options, formsRef = _c.formsRef, focusedRow = _c.focusedRow, setFocusedRow = _c.setFocusedRow, focusedCell = _c.focusedCell, editCount = _c.editCount, dataSource = _c.dataSource, setSliderFormOpen = _c.setSliderFormOpen, setFocusedRowForm = _c.setFocusedRowForm;
+    var _c = useDt(), setDataSource = _c.setDataSource, options = _c.options, formsRef = _c.formsRef, focusedRow = _c.focusedRow, setFocusedRow = _c.setFocusedRow, editCount = _c.editCount, dataSource = _c.dataSource, setSliderFormOpen = _c.setSliderFormOpen, setFocusedRowForm = _c.setFocusedRowForm, buttons = _c.buttons, editMode = _c.editMode;
     var form = useForm({
         defaultValues: data,
-        mode: "all",
-        reValidateMode: "onSubmit",
+        mode: "onSubmit",
+        reValidateMode: "onChange",
         criteriaMode: "all",
         delayError: 200,
         progressive: true,
         shouldFocusError: true,
         shouldUseNativeValidation: true,
     });
-    var control = form.control, register = form.register, handleSubmit = form.handleSubmit, errors = form.formState.errors, setValue = form.setValue, getValues = form.getValues, setFocus = form.setFocus, reset = form.reset, watch = form.watch, trigger = form.trigger;
+    var control = form.control, register = form.register, errors = form.formState.errors, setValue = form.setValue, getValues = form.getValues, watch = form.watch, trigger = form.trigger;
     var prevRow = React.useMemo(function () {
         return dataSource[index - 1];
     }, [dataSource[index - 1]]);
@@ -94,6 +94,38 @@ function DevsDtRow(_a) {
         setValue("mode", data.mode);
         setValue("checked", data.checked);
     }, [data.mode, data.checked]);
+    var handleActionSliderForm = function () {
+        if ((options === null || options === void 0 ? void 0 : options.multipleEdit) === false) {
+            if (editCount > 0) {
+                showMessage({
+                    title: "경고",
+                    type: "warnning",
+                    message: "다른 데이터를 수정할 경우 기존 데이터 수정이 중단되며 복구할 수 없습니다.\n\n현재 데이터 수정을 중단 하시겠습니까?",
+                    onOkClick: function () {
+                        return setDataSource(function (prev) {
+                            return prev
+                                .filter(function (x) { return x.mode !== "c"; })
+                                .map(function (p) {
+                                return p.rowId === data.rowId
+                                    ? __assign(__assign({}, p), { mode: "u", checked: true }) : __assign(__assign({}, p), { mode: "r", checked: false });
+                            });
+                        });
+                    },
+                    onCancelClick: function () { },
+                });
+            }
+            else {
+                setFocusedRowForm(null);
+                setTimeout(function () { return setFocusedRowForm(form); }, 1);
+                setSliderFormOpen(true);
+            }
+        }
+        else {
+            setFocusedRowForm(null);
+            setTimeout(function () { return setFocusedRowForm(form); }, 1);
+            setSliderFormOpen(true);
+        }
+    };
     var onEditModeClick = function (e) {
         var _a, _b, _c;
         if ((options === null || options === void 0 ? void 0 : options.readonly) === true)
@@ -102,38 +134,15 @@ function DevsDtRow(_a) {
             return;
         if (((_c = options === null || options === void 0 ? void 0 : options.onBeforeRowEdit) === null || _c === void 0 ? void 0 : _c.call(options, { index: index, row: data })) === false)
             return;
+        console.log(options === null || options === void 0 ? void 0 : options.showEditModeSelector, editMode);
+        if ((options === null || options === void 0 ? void 0 : options.showEditModeSelector) && editMode === "slider") {
+            handleActionSliderForm();
+            return;
+        }
         if ((options === null || options === void 0 ? void 0 : options.editMode) === "slider" &&
             ((options === null || options === void 0 ? void 0 : options.editType) === undefined || (options === null || options === void 0 ? void 0 : options.editType) === "row")) {
-            if ((options === null || options === void 0 ? void 0 : options.multipleEdit) === false) {
-                if (editCount > 0) {
-                    showMessage({
-                        title: "경고",
-                        type: "warnning",
-                        message: "다른 데이터를 수정할 경우 기존 데이터 수정이 중단되며 복구할 수 없습니다.\n\n현재 데이터 수정을 중단 하시겠습니까?",
-                        onOkClick: function () {
-                            return setDataSource(function (prev) {
-                                return prev
-                                    .filter(function (x) { return x.mode !== "c"; })
-                                    .map(function (p) {
-                                    return p.rowId === data.rowId
-                                        ? __assign(__assign({}, p), { mode: "u", checked: true }) : __assign(__assign({}, p), { mode: "r", checked: false });
-                                });
-                            });
-                        },
-                        onCancelClick: function () { },
-                    });
-                }
-                else {
-                    setFocusedRowForm(null);
-                    setTimeout(function () { return setFocusedRowForm(form); }, 1);
-                    setSliderFormOpen(true);
-                }
-            }
-            else {
-                setFocusedRowForm(null);
-                setTimeout(function () { return setFocusedRowForm(form); }, 1);
-                setSliderFormOpen(true);
-            }
+            handleActionSliderForm();
+            return;
         }
         if (data.mode === "r" &&
             (options === null || options === void 0 ? void 0 : options.editMode) !== "slider" &&

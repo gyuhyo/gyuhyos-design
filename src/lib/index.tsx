@@ -10,8 +10,8 @@ export type {
   IDataTableContextProps,
   ICellProps,
 } from "./devs-datatable/_types";
-export { default as Button } from "./button";
-export type { ButtonProps } from "./button";
+export { default as Button, MesButton } from "./button";
+export type { ButtonProps, MesButtonProps } from "./button";
 export {
   useMessage,
   MessageProvider,

@@ -63,7 +63,7 @@ dayjs.tz.setDefault("Asia/Seoul");
 function DevsDtCell(_a) {
     var _b, _c, _d, _e, _f, _g, _h;
     var register = _a.register, control = _a.control, col = _a.col, mode = _a.mode, defaultValue = _a.defaultValue, error = _a.error, autoFocus = _a.autoFocus, row = _a.row, merge = _a.merge, setValue = _a.setValue, getValue = _a.getValue, rowIndex = _a.rowIndex, trigger = _a.trigger;
-    var _j = useDt(), focusedRow = _j.focusedRow, focusedCell = _j.focusedCell, setFocusedCell = _j.setFocusedCell, setDataSource = _j.setDataSource, setColumns = _j.setColumns, options = _j.options;
+    var _j = useDt(), focusedRow = _j.focusedRow, focusedCell = _j.focusedCell, setFocusedCell = _j.setFocusedCell, setDataSource = _j.setDataSource, setColumns = _j.setColumns, options = _j.options, editMode = _j.editMode;
     var isCellEdit = React.useMemo(function () {
         var _a;
         if ((options === null || options === void 0 ? void 0 : options.editType) === undefined || (options === null || options === void 0 ? void 0 : options.editType) === "row")

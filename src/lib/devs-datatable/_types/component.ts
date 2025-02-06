@@ -1,4 +1,4 @@
-import React, { SetStateAction } from "react";
+import React, { JSX } from "react";
 import { IDataTableColumn } from "./col";
 import { CSSInterpolation } from "@emotion/serialize";
 
@@ -7,6 +7,7 @@ export interface IDataSource {
 }
 
 export interface IDataTableOptions {
+  showEditModeSelector?: boolean;
   showRowNumber?: boolean;
   enabledExpand?: boolean;
   expandContent?: (row: IDataSource) => React.ReactNode;
@@ -79,6 +80,30 @@ export interface IDataTableButtons {
   onExportClick?: () => void;
 }
 
+export interface DevsDataTableRef {
+  api: {
+    validate: () => Promise<{ valid: boolean; data?: any }>;
+    onValidationCheck: () => Promise<{ valid: boolean; data?: any }>;
+    getFocusedRow: null | IDataSource;
+    getFocusedCell: null | { row: null | IDataSource; field: null | string };
+    getCheckedRows: IDataSource[];
+    getCheckedRowsData: () => Promise<IDataSource[]>;
+    addRow: (defaultValues?: IDataSource) => void;
+    setValue: ({
+      rowId,
+      field,
+      value,
+    }: {
+      rowId: string;
+      field: string;
+      value: any;
+    }) => void;
+    focusedRow: (row: IDataSource) => void;
+    focusedRowIndex: (index: number) => void;
+    getFocusedRowIndex: null | number;
+  };
+}
+
 export interface IDataTableProps {
   title?: any;
   id?: string;
@@ -97,4 +122,5 @@ export interface IDataTableProps {
   options?: IDataTableOptions;
   buttons?: IDataTableButtons;
   loading?: boolean;
+  ref?: React.Ref<DevsDataTableRef>;
 }

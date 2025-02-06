@@ -52,6 +52,7 @@ import styled from "@emotion/styled";
 import React from "react";
 import Button from "../../button";
 import { useDt } from "../context/devs-dt-context";
+import { Select } from "antd";
 var ButtonLabel = styled.span({
     display: "none",
     "@media (min-width: 650px)": {
@@ -59,8 +60,8 @@ var ButtonLabel = styled.span({
     },
 });
 var DevsDtButtons = function (props) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3;
-    var _4 = useDt(), setDataSource = _4.setDataSource, setFocusedRow = _4.setFocusedRow, setFocusedCell = _4.setFocusedCell, sliderFormOpen = _4.sliderFormOpen, setFocusedRowForm = _4.setFocusedRowForm, setSliderFormOpen = _4.setSliderFormOpen;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4;
+    var _5 = useDt(), setDataSource = _5.setDataSource, setFocusedRow = _5.setFocusedRow, setFocusedCell = _5.setFocusedCell, sliderFormOpen = _5.sliderFormOpen, setFocusedRowForm = _5.setFocusedRowForm, setSliderFormOpen = _5.setSliderFormOpen, setEditMode = _5.setEditMode;
     var ButtonEventBeforeShowLoading = function (event) {
         props.setInnerLoading(true);
         var timer = setTimeout(function () {
@@ -98,7 +99,21 @@ var DevsDtButtons = function (props) {
                         padding: "2px 7px",
                     },
                 },
-            }) }, { children: [((_g = props.buttons) === null || _g === void 0 ? void 0 : _g.custom) !== undefined && props.buttons.custom, ((_h = props.buttons) === null || _h === void 0 ? void 0 : _h.onSearchClick) !== undefined && (_jsxs(Button, __assign({ border: true, compact: true, onClick: function () { return __awaiter(void 0, void 0, void 0, function () {
+            }) }, { children: [((_g = props.buttons) === null || _g === void 0 ? void 0 : _g.custom) !== undefined && props.buttons.custom, ((_h = props.options) === null || _h === void 0 ? void 0 : _h.showEditModeSelector) && (_jsxs("div", __assign({ css: css({
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        background: "#fff",
+                        border: "1px solid #d9d9d9",
+                        borderRadius: "6px",
+                    }) }, { children: [_jsx("p", __assign({ css: css({
+                                padding: "0px 11px",
+                                height: "100%",
+                                borderRight: "1px solid #d9d9d9",
+                            }) }, { children: "\uC218\uC815 \uBAA8\uB4DC" })), _jsx("div", __assign({ css: css({
+                                "& .ant-select": { width: "100px" },
+                                "& .ant-select > .ant-select-selector": { border: "none" },
+                            }) }, { children: _jsxs(Select, __assign({ defaultValue: "grid", onChange: function (v) { return setEditMode(v); } }, { children: [_jsx(Select.Option, __assign({ value: "grid" }, { children: "\uADF8\uB9AC\uB4DC" })), _jsx(Select.Option, __assign({ value: "slider" }, { children: "\uC2AC\uB77C\uC774\uB354" }))] })) }))] }))), ((_j = props.buttons) === null || _j === void 0 ? void 0 : _j.onSearchClick) !== undefined && (_jsxs(Button, __assign({ border: true, compact: true, onClick: function () { return __awaiter(void 0, void 0, void 0, function () {
                         var _a;
                         return __generator(this, function (_b) {
                             switch (_b.label) {
@@ -120,7 +135,7 @@ var DevsDtButtons = function (props) {
                                     return [2 /*return*/];
                             }
                         });
-                    }); } }, { children: [_jsxs("svg", __assign({ stroke: "currentColor", fill: "currentColor", strokeWidth: "0", viewBox: "0 0 24 24", height: "1em", width: "1em", xmlns: "http://www.w3.org/2000/svg" }, { children: [_jsx("path", { fill: "none", d: "M0 0h24v24H0z" }), _jsx("path", { d: "M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" })] })), _jsx(ButtonLabel, { children: (_k = (_j = props.buttons) === null || _j === void 0 ? void 0 : _j.searchText) !== null && _k !== void 0 ? _k : "조회" })] }))), ((_l = props.buttons) === null || _l === void 0 ? void 0 : _l.onAddClick) !== undefined && (_jsxs(Button, __assign({ border: true, compact: true, onClick: function () { return __awaiter(void 0, void 0, void 0, function () {
+                    }); } }, { children: [_jsxs("svg", __assign({ stroke: "currentColor", fill: "currentColor", strokeWidth: "0", viewBox: "0 0 24 24", height: "1em", width: "1em", xmlns: "http://www.w3.org/2000/svg" }, { children: [_jsx("path", { fill: "none", d: "M0 0h24v24H0z" }), _jsx("path", { d: "M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" })] })), _jsx(ButtonLabel, { children: (_l = (_k = props.buttons) === null || _k === void 0 ? void 0 : _k.searchText) !== null && _l !== void 0 ? _l : "조회" })] }))), ((_m = props.buttons) === null || _m === void 0 ? void 0 : _m.onAddClick) !== undefined && (_jsxs(Button, __assign({ border: true, compact: true, onClick: function () { return __awaiter(void 0, void 0, void 0, function () {
                         var _a;
                         return __generator(this, function (_b) {
                             switch (_b.label) {
@@ -137,7 +152,7 @@ var DevsDtButtons = function (props) {
                                     return [2 /*return*/];
                             }
                         });
-                    }); } }, { children: [_jsxs("svg", __assign({ stroke: "currentColor", fill: "currentColor", strokeWidth: "0", viewBox: "0 0 24 24", height: "1em", width: "1em", xmlns: "http://www.w3.org/2000/svg" }, { children: [_jsx("path", { fill: "none", d: "M0 0h24v24H0z" }), _jsx("path", { d: "M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" })] })), _jsx(ButtonLabel, { children: (_o = (_m = props.buttons) === null || _m === void 0 ? void 0 : _m.addText) !== null && _o !== void 0 ? _o : "추가" })] }))), ((_p = props.buttons) === null || _p === void 0 ? void 0 : _p.onSaveClick) !== undefined && (_jsxs(Button, __assign({ border: true, compact: true, bgColor: "#22cb5f", color: "#ffffff", borderColor: "#03cf00", onClick: function () { return __awaiter(void 0, void 0, void 0, function () {
+                    }); } }, { children: [_jsxs("svg", __assign({ stroke: "currentColor", fill: "currentColor", strokeWidth: "0", viewBox: "0 0 24 24", height: "1em", width: "1em", xmlns: "http://www.w3.org/2000/svg" }, { children: [_jsx("path", { fill: "none", d: "M0 0h24v24H0z" }), _jsx("path", { d: "M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" })] })), _jsx(ButtonLabel, { children: (_p = (_o = props.buttons) === null || _o === void 0 ? void 0 : _o.addText) !== null && _p !== void 0 ? _p : "추가" })] }))), ((_q = props.buttons) === null || _q === void 0 ? void 0 : _q.onSaveClick) !== undefined && (_jsxs(Button, __assign({ border: true, compact: true, bgColor: "#22cb5f", color: "#ffffff", borderColor: "#03cf00", onClick: function () { return __awaiter(void 0, void 0, void 0, function () {
                         var _a;
                         return __generator(this, function (_b) {
                             switch (_b.label) {
@@ -156,9 +171,9 @@ var DevsDtButtons = function (props) {
                                     return [2 /*return*/];
                             }
                         });
-                    }); } }, { children: [_jsxs("svg", __assign({ stroke: "currentColor", fill: "currentColor", strokeWidth: "0", viewBox: "0 0 24 24", height: "1em", width: "1em", xmlns: "http://www.w3.org/2000/svg" }, { children: [_jsx("path", { fill: "none", d: "M0 0h24v24H0z" }), _jsx("path", { d: "M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z" })] })), _jsx(ButtonLabel, { children: ((_r = (_q = props.buttons) === null || _q === void 0 ? void 0 : _q.saveText) !== null && _r !== void 0 ? _r : ((_s = props.options) === null || _s === void 0 ? void 0 : _s.enabledRowCheck) === true)
+                    }); } }, { children: [_jsxs("svg", __assign({ stroke: "currentColor", fill: "currentColor", strokeWidth: "0", viewBox: "0 0 24 24", height: "1em", width: "1em", xmlns: "http://www.w3.org/2000/svg" }, { children: [_jsx("path", { fill: "none", d: "M0 0h24v24H0z" }), _jsx("path", { d: "M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z" })] })), _jsx(ButtonLabel, { children: ((_s = (_r = props.buttons) === null || _r === void 0 ? void 0 : _r.saveText) !== null && _s !== void 0 ? _s : ((_t = props.options) === null || _t === void 0 ? void 0 : _t.enabledRowCheck) === true)
                                 ? "선택 저장"
-                                : "저장" })] }))), ((_t = props.buttons) === null || _t === void 0 ? void 0 : _t.onDeleteClick) !== undefined && (_jsxs(Button, __assign({ border: true, compact: true, bgColor: "#df4873", borderColor: "#f15151", color: "#fff", onClick: function () { return __awaiter(void 0, void 0, void 0, function () {
+                                : "저장" })] }))), ((_u = props.buttons) === null || _u === void 0 ? void 0 : _u.onDeleteClick) !== undefined && (_jsxs(Button, __assign({ border: true, compact: true, bgColor: "#df4873", borderColor: "#f15151", color: "#fff", onClick: function () { return __awaiter(void 0, void 0, void 0, function () {
                         var _a;
                         return __generator(this, function (_b) {
                             switch (_b.label) {
@@ -177,7 +192,7 @@ var DevsDtButtons = function (props) {
                                     return [2 /*return*/];
                             }
                         });
-                    }); } }, { children: [_jsxs("svg", __assign({ stroke: "currentColor", fill: "currentColor", strokeWidth: "0", viewBox: "0 0 24 24", height: "1em", width: "1em", xmlns: "http://www.w3.org/2000/svg" }, { children: [_jsx("path", { fill: "none", d: "M0 0h24v24H0z" }), _jsx("path", { d: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" })] })), _jsx(ButtonLabel, { children: (_v = (_u = props.buttons) === null || _u === void 0 ? void 0 : _u.deleteText) !== null && _v !== void 0 ? _v : "선택 삭제" })] }))), ((_w = props.buttons) === null || _w === void 0 ? void 0 : _w.onCancelClick) !== undefined && (_jsxs(Button, __assign({ border: true, compact: true, onClick: function () { return __awaiter(void 0, void 0, void 0, function () {
+                    }); } }, { children: [_jsxs("svg", __assign({ stroke: "currentColor", fill: "currentColor", strokeWidth: "0", viewBox: "0 0 24 24", height: "1em", width: "1em", xmlns: "http://www.w3.org/2000/svg" }, { children: [_jsx("path", { fill: "none", d: "M0 0h24v24H0z" }), _jsx("path", { d: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" })] })), _jsx(ButtonLabel, { children: (_w = (_v = props.buttons) === null || _v === void 0 ? void 0 : _v.deleteText) !== null && _w !== void 0 ? _w : "선택 삭제" })] }))), ((_x = props.buttons) === null || _x === void 0 ? void 0 : _x.onCancelClick) !== undefined && (_jsxs(Button, __assign({ border: true, compact: true, onClick: function () { return __awaiter(void 0, void 0, void 0, function () {
                         var _a;
                         return __generator(this, function (_b) {
                             switch (_b.label) {
@@ -199,7 +214,7 @@ var DevsDtButtons = function (props) {
                                     return [2 /*return*/];
                             }
                         });
-                    }); } }, { children: [_jsxs("svg", __assign({ stroke: "currentColor", fill: "currentColor", strokeWidth: "0", viewBox: "0 0 24 24", height: "1em", width: "1em", xmlns: "http://www.w3.org/2000/svg" }, { children: [_jsx("path", { fill: "none", d: "M0 0h24v24H0z" }), _jsx("path", { d: "M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z" })] })), _jsx(ButtonLabel, { children: (_y = (_x = props.buttons) === null || _x === void 0 ? void 0 : _x.cancelText) !== null && _y !== void 0 ? _y : "취소" })] }))), ((_0 = (_z = props.buttons) === null || _z === void 0 ? void 0 : _z.export) === null || _0 === void 0 ? void 0 : _0.visible) === true && (_jsxs(Button, __assign({ border: true, compact: true, onClick: function () { return __awaiter(void 0, void 0, void 0, function () {
+                    }); } }, { children: [_jsxs("svg", __assign({ stroke: "currentColor", fill: "currentColor", strokeWidth: "0", viewBox: "0 0 24 24", height: "1em", width: "1em", xmlns: "http://www.w3.org/2000/svg" }, { children: [_jsx("path", { fill: "none", d: "M0 0h24v24H0z" }), _jsx("path", { d: "M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z" })] })), _jsx(ButtonLabel, { children: (_z = (_y = props.buttons) === null || _y === void 0 ? void 0 : _y.cancelText) !== null && _z !== void 0 ? _z : "취소" })] }))), ((_1 = (_0 = props.buttons) === null || _0 === void 0 ? void 0 : _0.export) === null || _1 === void 0 ? void 0 : _1.visible) === true && (_jsxs(Button, __assign({ border: true, compact: true, onClick: function () { return __awaiter(void 0, void 0, void 0, function () {
                         var _a;
                         return __generator(this, function (_b) {
                             switch (_b.label) {
@@ -216,6 +231,6 @@ var DevsDtButtons = function (props) {
                                     return [2 /*return*/];
                             }
                         });
-                    }); } }, { children: [_jsx("svg", __assign({ stroke: "currentColor", fill: "currentColor", strokeWidth: "0", viewBox: "0 0 576 512", height: "1em", width: "1em", xmlns: "http://www.w3.org/2000/svg" }, { children: _jsx("path", { d: "M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V288H216c-13.3 0-24 10.7-24 24s10.7 24 24 24H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zM384 336V288H494.1l-39-39c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l80 80c9.4 9.4 9.4 24.6 0 33.9l-80 80c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l39-39H384zm0-208H256V0L384 128z" }) })), _jsx(ButtonLabel, { children: (_3 = (_2 = (_1 = props.buttons) === null || _1 === void 0 ? void 0 : _1.export) === null || _2 === void 0 ? void 0 : _2.exportText) !== null && _3 !== void 0 ? _3 : "Export" })] })))] }))) }));
+                    }); } }, { children: [_jsx("svg", __assign({ stroke: "currentColor", fill: "currentColor", strokeWidth: "0", viewBox: "0 0 576 512", height: "1em", width: "1em", xmlns: "http://www.w3.org/2000/svg" }, { children: _jsx("path", { d: "M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V288H216c-13.3 0-24 10.7-24 24s10.7 24 24 24H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zM384 336V288H494.1l-39-39c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l80 80c9.4 9.4 9.4 24.6 0 33.9l-80 80c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l39-39H384zm0-208H256V0L384 128z" }) })), _jsx(ButtonLabel, { children: (_4 = (_3 = (_2 = props.buttons) === null || _2 === void 0 ? void 0 : _2.export) === null || _3 === void 0 ? void 0 : _3.exportText) !== null && _4 !== void 0 ? _4 : "Export" })] })))] }))) }));
 };
 export default DevsDtButtons;

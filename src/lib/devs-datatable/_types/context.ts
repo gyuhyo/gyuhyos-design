@@ -36,4 +36,8 @@ export interface IDataTableContextProps extends IDataTableProps {
   setFocusedRowForm: React.Dispatch<
     React.SetStateAction<null | UseFormReturn<IDataSource, any, undefined>>
   >;
+  editMode: undefined | "grid" | "slider";
+  setEditMode: React.Dispatch<
+    React.SetStateAction<undefined | "grid" | "slider">
+  >;
 }

@@ -1,4 +1,6 @@
-const EmptySvg = (): JSX.Element => {
+import React from "react";
+
+const EmptySvg = (): React.JSX.Element => {
   return (
     <div
       style={{

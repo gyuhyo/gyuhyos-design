@@ -23,6 +23,9 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
   const [focusedRowForm, setFocusedRowForm] =
     React.useState<null | UseFormReturn<IDataSource, any, undefined>>(null);
   const [sliderFormOpen, setSliderFormOpen] = React.useState(false);
+  const [editMode, setEditMode] = React.useState<undefined | "grid" | "slider">(
+    props.options?.showEditModeSelector ? "grid" : undefined
+  );
   const [sorter, setSorter] = React.useState<IDataTableSorterProps>({
     field: null,
     type: "asc",
@@ -108,6 +111,8 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
         setSliderFormOpen,
         focusedRowForm,
         setFocusedRowForm,
+        editMode,
+        setEditMode,
       }}
     >
       <MessageProvider>

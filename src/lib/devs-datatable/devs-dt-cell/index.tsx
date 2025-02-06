@@ -75,6 +75,7 @@ function DevsDtCell({
     setDataSource,
     setColumns,
     options,
+    editMode,
   } = useDt();
   const isCellEdit = React.useMemo(() => {
     if (options?.editType === undefined || options?.editType === "row")
@@ -526,6 +527,7 @@ function DevsDtCell({
           options?.cellEditClickType === "doubleClick")
       )
         return;
+
       if (!(options?.rowEditable?.({ index: rowIndex, row }) ?? true)) return;
 
       if (options?.editType === "cell" && isCellEdit === false) {

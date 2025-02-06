@@ -1,6 +1,12 @@
 /** @jsxImportSource @emotion/react */
 
-import React, { SetStateAction } from "react";
+import { css } from "@emotion/react";
+import {
+  DraggableProvided,
+  DraggableProvidedDragHandleProps,
+  DraggableStateSnapshot,
+} from "@hello-pangea/dnd";
+import React from "react";
 import {
   Control,
   FieldValues,
@@ -10,16 +16,10 @@ import {
   UseFormRegister,
   UseFormSetValue,
 } from "react-hook-form";
+import { useMessage } from "../../alert-message/context/message-context";
 import { IDataSource, IDataTableColumn } from "../_types";
 import { useDt } from "../context/devs-dt-context";
 import DevsDtCell from "../devs-dt-cell";
-import {
-  DraggableProvided,
-  DraggableProvidedDragHandleProps,
-  DraggableStateSnapshot,
-} from "@hello-pangea/dnd";
-import { useMessage } from "../../alert-message/context/message-context";
-import { css } from "@emotion/react";
 
 type TDevsDtRow = {
   data: IDataSource;
@@ -150,24 +150,23 @@ function DevsDtRow({
 }: TDevsDtRow) {
   const { showMessage } = useMessage();
   const {
-    columns,
-    keyField,
     setDataSource,
     options,
     formsRef,
     focusedRow,
     setFocusedRow,
-    focusedCell,
     editCount,
     dataSource,
     setSliderFormOpen,
     setFocusedRowForm,
+    buttons,
+    editMode,
   } = useDt();
 
   const form = useForm({
     defaultValues: data,
-    mode: "all",
-    reValidateMode: "onSubmit",
+    mode: "onSubmit",
+    reValidateMode: "onChange",
     criteriaMode: "all",
     delayError: 200,
     progressive: true,
@@ -178,12 +177,9 @@ function DevsDtRow({
   const {
     control,
     register,
-    handleSubmit,
     formState: { errors },
     setValue,
     getValues,
-    setFocus,
-    reset,
     watch,
     trigger,
   } = form;
@@ -207,44 +203,55 @@ function DevsDtRow({
     setValue("checked", data.checked);
   }, [data.mode, data.checked]);
 
-  const onEditModeClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
-    if (options?.readonly === true) return;
-    if (!(options?.rowEditable?.({ index, row: data }) ?? true)) return;
-    if (options?.onBeforeRowEdit?.({ index, row: data }) === false) return;
-
-    if (
-      options?.editMode === "slider" &&
-      (options?.editType === undefined || options?.editType === "row")
-    ) {
-      if (options?.multipleEdit === false) {
-        if (editCount > 0) {
-          showMessage({
-            title: "경고",
-            type: "warnning",
-            message:
-              "다른 데이터를 수정할 경우 기존 데이터 수정이 중단되며 복구할 수 없습니다.\n\n현재 데이터 수정을 중단 하시겠습니까?",
-            onOkClick: () =>
-              setDataSource((prev) => {
-                return prev
-                  .filter((x) => x.mode !== "c")
-                  .map((p) => {
-                    return p.rowId === data.rowId
-                      ? { ...p, mode: "u", checked: true }
-                      : { ...p, mode: "r", checked: false };
-                  });
-              }),
-            onCancelClick: () => {},
-          });
-        } else {
-          setFocusedRowForm(null);
-          setTimeout(() => setFocusedRowForm(form), 1);
-          setSliderFormOpen(true);
-        }
+  const handleActionSliderForm = () => {
+    if (options?.multipleEdit === false) {
+      if (editCount > 0) {
+        showMessage({
+          title: "경고",
+          type: "warnning",
+          message:
+            "다른 데이터를 수정할 경우 기존 데이터 수정이 중단되며 복구할 수 없습니다.\n\n현재 데이터 수정을 중단 하시겠습니까?",
+          onOkClick: () =>
+            setDataSource((prev) => {
+              return prev
+                .filter((x) => x.mode !== "c")
+                .map((p) => {
+                  return p.rowId === data.rowId
+                    ? { ...p, mode: "u", checked: true }
+                    : { ...p, mode: "r", checked: false };
+                });
+            }),
+          onCancelClick: () => {},
+        });
       } else {
         setFocusedRowForm(null);
         setTimeout(() => setFocusedRowForm(form), 1);
         setSliderFormOpen(true);
       }
+    } else {
+      setFocusedRowForm(null);
+      setTimeout(() => setFocusedRowForm(form), 1);
+      setSliderFormOpen(true);
+    }
+  };
+
+  const onEditModeClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
+    if (options?.readonly === true) return;
+    if (!(options?.rowEditable?.({ index, row: data }) ?? true)) return;
+    if (options?.onBeforeRowEdit?.({ index, row: data }) === false) return;
+
+    console.log(options?.showEditModeSelector, editMode);
+    if (options?.showEditModeSelector && editMode === "slider") {
+      handleActionSliderForm();
+      return;
+    }
+
+    if (
+      options?.editMode === "slider" &&
+      (options?.editType === undefined || options?.editType === "row")
+    ) {
+      handleActionSliderForm();
+      return;
     }
 
     if (

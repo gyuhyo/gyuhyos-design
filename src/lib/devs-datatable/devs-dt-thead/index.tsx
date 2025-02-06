@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 import { useDt } from "../context/devs-dt-context";
 import DevsDtTh from "./devs-dt-th";
 import { IDataSource, IDataTableColumn } from "../_types";

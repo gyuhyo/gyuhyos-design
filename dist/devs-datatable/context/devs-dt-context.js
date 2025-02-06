@@ -32,15 +32,16 @@ import { MessageProvider } from "../../alert-message/context/message-context";
 import { useGyudAccess } from "../../access-context";
 var DevsDtContext = React.createContext(undefined);
 var DevsDtProviderComponent = function (props) {
-    var _a, _b;
+    var _a, _b, _c;
     var isAccess = useGyudAccess();
     var keyField = (_a = props.columns.find(function (col) { return col.key; })) === null || _a === void 0 ? void 0 : _a.field;
-    var _c = __read(React.useState(null), 2), focusedRowForm = _c[0], setFocusedRowForm = _c[1];
-    var _d = __read(React.useState(false), 2), sliderFormOpen = _d[0], setSliderFormOpen = _d[1];
-    var _e = __read(React.useState({
+    var _d = __read(React.useState(null), 2), focusedRowForm = _d[0], setFocusedRowForm = _d[1];
+    var _e = __read(React.useState(false), 2), sliderFormOpen = _e[0], setSliderFormOpen = _e[1];
+    var _f = __read(React.useState(((_b = props.options) === null || _b === void 0 ? void 0 : _b.showEditModeSelector) ? "grid" : undefined), 2), editMode = _f[0], setEditMode = _f[1];
+    var _g = __read(React.useState({
         field: null,
         type: "asc",
-    }), 2), sorter = _e[0], setSorter = _e[1];
+    }), 2), sorter = _g[0], setSorter = _g[1];
     React.useEffect(function () {
         if (props.setColumns !== undefined) {
             props.setColumns(function (prevCols) {
@@ -66,7 +67,7 @@ var DevsDtProviderComponent = function (props) {
                 return __assign({ originIndex: idx, rowId: uuid(), mode: "r", checked: false, expand: false, editedCells: [] }, d);
             });
         });
-    }, [JSON.stringify(props.dataSource), (_b = props.options) === null || _b === void 0 ? void 0 : _b.editType]);
+    }, [JSON.stringify(props.dataSource), (_c = props.options) === null || _c === void 0 ? void 0 : _c.editType]);
     var editCount = React.useMemo(function () {
         return props.dataSource.filter(function (x) { return x.mode === "u" || x.mode === "c"; })
             .length;
@@ -93,6 +94,8 @@ var DevsDtProviderComponent = function (props) {
             setSliderFormOpen: setSliderFormOpen,
             focusedRowForm: focusedRowForm,
             setFocusedRowForm: setFocusedRowForm,
+            editMode: editMode,
+            setEditMode: setEditMode,
         } }, { children: _jsx(MessageProvider, { children: _jsx("div", __assign({ style: {
                     height: "100%",
                     display: "flex",

@@ -20,7 +20,7 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
-import { jsxs as _jsxs } from "@emotion/react/jsx-runtime";
+import { jsxs as _jsxs, jsx as _jsx } from "@emotion/react/jsx-runtime";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { useGyudAccess } from "../access-context";
@@ -50,5 +50,40 @@ var Button = function (props) {
             justifyContent: "center",
             alignItems: "center",
         }) }, anotherProps, { children: [props.icon && "".concat(props.icon, " "), props.children] })));
+};
+export var MesButton = function (props) {
+    var children = props.children, anotherProps = __rest(props, ["children"]);
+    var primaryProps = function () {
+        if (props.primary === undefined || props.primary === "default") {
+            return null;
+        }
+        if (props.primary === "green") {
+            return {
+                bgColor: "#22cb5f",
+                color: "#ffffff",
+                borderColor: "#03cf00",
+            };
+        }
+        if (props.primary === "red") {
+            return {
+                bgColor: "#df4873",
+                borderColor: "#ff7070",
+                color: "#ffffff",
+            };
+        }
+        if (props.primary === "blue") {
+            return {
+                bgColor: "#1f619d",
+                borderColor: "#396dff",
+                color: "#ffffff",
+            };
+        }
+    };
+    return (_jsx(Button, __assign({ border: true, compact: true, css: css({
+            padding: "3px 11px",
+            "@media (min-width: 650px)": {
+                padding: "5px 12px",
+            },
+        }) }, primaryProps(), anotherProps, { children: children })));
 };
 export default Button;
