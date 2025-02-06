@@ -161,12 +161,18 @@ function DevsDtRow({
     editCount,
     dataSource,
     setSliderFormOpen,
-    focusedRowForm,
+    setFocusedRowForm,
   } = useDt();
 
   const form = useForm({
     defaultValues: data,
     mode: "all",
+    reValidateMode: "onSubmit",
+    criteriaMode: "all",
+    delayError: 200,
+    progressive: true,
+    shouldFocusError: true,
+    shouldUseNativeValidation: true,
   });
 
   const {
@@ -230,26 +236,14 @@ function DevsDtRow({
             onCancelClick: () => {},
           });
         } else {
-          focusedRowForm.current = form;
+          setFocusedRowForm(null);
+          setTimeout(() => setFocusedRowForm(form), 1);
           setSliderFormOpen(true);
-          setDataSource((prev) =>
-            prev.map((p) => {
-              return p.rowId === data.rowId
-                ? { ...p, mode: "u", checked: true }
-                : { ...p };
-            })
-          );
         }
       } else {
-        focusedRowForm.current = form;
+        setFocusedRowForm(null);
+        setTimeout(() => setFocusedRowForm(form), 1);
         setSliderFormOpen(true);
-        setDataSource((prev) =>
-          prev.map((p) => {
-            return p.rowId === data.rowId
-              ? { ...p, mode: "u", checked: true }
-              : { ...p };
-          })
-        );
       }
     }
 
@@ -281,7 +275,7 @@ function DevsDtRow({
           setDataSource((prev) =>
             prev.map((p) => {
               return p.rowId === data.rowId
-                ? { ...p, mode: "u", checked: true }
+                ? { ...p, mode: p.mode === "c" ? "c" : "u", checked: true }
                 : { ...p };
             })
           );
@@ -290,7 +284,7 @@ function DevsDtRow({
         setDataSource((prev) =>
           prev.map((p) => {
             return p.rowId === data.rowId
-              ? { ...p, mode: "u", checked: true }
+              ? { ...p, mode: p.mode === "c" ? "c" : "u", checked: true }
               : { ...p };
           })
         );
@@ -336,7 +330,6 @@ function DevsDtRow({
       className={`devs-dt-row${
         focusedRow?.rowId === data.rowId ? " devs-dt-focused-row" : ""
       }${data.checked === true ? " devs-dt-checked-row" : ""}`}
-      onSubmit={handleSubmit(() => {})}
       onDoubleClick={onEditModeClick}
       onClick={() => {
         setFocusedRow(data);
@@ -384,6 +377,12 @@ function DevsDtRow({
       )}
       {lastNode &&
         lastNode.map((col, idx) => {
+          if (options?.editMode === "slider") {
+            register(col.field, {
+              required: col.required,
+              value: watch(col.field),
+            });
+          }
           return (
             <DevsDtCell
               key={`${rowKey}-${col.field}`}
@@ -391,7 +390,11 @@ function DevsDtRow({
               control={control}
               col={col}
               mode={data.mode}
-              defaultValue={data[col.field]}
+              defaultValue={
+                options?.editMode === "slider"
+                  ? watch(col.field)
+                  : data[col.field]
+              }
               error={errors.hasOwnProperty(col.field)}
               autoFocus={col.autoFocus?.(data.mode) ?? GetAutoFocus(col.field)}
               row={data}
@@ -407,4 +410,6 @@ function DevsDtRow({
   );
 }
 
-export default React.memo(DevsDtRow);
+export default React.memo(DevsDtRow, (prev, curr) => {
+  return prev === curr;
+});

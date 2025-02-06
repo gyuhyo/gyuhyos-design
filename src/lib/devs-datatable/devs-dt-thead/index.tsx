@@ -4,7 +4,7 @@ import DevsDtTh from "./devs-dt-th";
 import { IDataSource, IDataTableColumn } from "../_types";
 
 type TDevsDtThead = {
-  thead: React.RefObject<HTMLDivElement>;
+  thead: React.RefObject<HTMLDivElement | null>;
   setHeaderWidth: React.Dispatch<React.SetStateAction<number>>;
 };
 

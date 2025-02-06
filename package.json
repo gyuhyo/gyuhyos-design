@@ -1,6 +1,6 @@
 {
   "name": "gyud",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Copyright Gyuhyos Design Components",
   "license": "MIT",
   "author": {
@@ -30,8 +30,8 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.119",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "dayjs": "^1.11.13",
     "persist-and-sync": "^1.2.1",
     "react-hook-form": "^7.54.1",
@@ -43,15 +43,15 @@
     "zustand": "^5.0.2"
   },
   "resolutions": {
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1"
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0"
   },
   "peerDependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "antd": "^5.21.6",
-    "react": "^18.0.0 || ^17.0.0",
-    "react-dom": "^18.0.0 || ^17.0.0"
+    "react": "^19.0.0 || ^18.0.0",
+    "react-dom": "^19.0.0 || ^18.0.0"
   },
   "scripts": {
     "dev": "set PORT=3001 && react-scripts start",
@@ -88,8 +88,8 @@
     "antd": "^5.21.6",
     "copyfiles": "^2.4.1",
     "javascript-obfuscator": "^4.1.1",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "typescript": "^4.9.5",
     "webpack": "^5.97.1"
   }

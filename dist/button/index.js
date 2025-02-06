@@ -35,6 +35,7 @@ var Button = function (props) {
             borderRadius: rounded ? 5 : 0,
             background: "linear-gradient(180deg, ".concat(bgColor, "90 0%, ").concat(bgColor, " 50%, ").concat(bgColor, "90 100%)"),
             border: border ? "1px solid ".concat(borderColor) : undefined,
+            boxShadow: "inset 1px 1px 3px #ffffff97, inset -0.5px -0.5px 1px #00000030",
             color: color ? "".concat(color, " !important") : "#000",
             "&:hover": {
                 cursor: "pointer",

@@ -1,11 +1,12 @@
 import React from "react";
 import {
+  IDataSource,
   IDataTableColumn,
   IDataTableContextProps,
   IDataTableProviderProps,
   IDataTableSorterProps,
 } from "../_types";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormReturn } from "react-hook-form";
 import uuid from "react-uuid";
 import { MessageProvider } from "../../alert-message/context/message-context";
 import { useGyudAccess } from "../../access-context";
@@ -19,7 +20,8 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
   const keyField: string | undefined = props.columns.find(
     (col) => col.key
   )?.field;
-  const focusedRowForm = React.useRef(null);
+  const [focusedRowForm, setFocusedRowForm] =
+    React.useState<null | UseFormReturn<IDataSource, any, undefined>>(null);
   const [sliderFormOpen, setSliderFormOpen] = React.useState(false);
   const [sorter, setSorter] = React.useState<IDataTableSorterProps>({
     field: null,
@@ -105,6 +107,7 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
         sliderFormOpen,
         setSliderFormOpen,
         focusedRowForm,
+        setFocusedRowForm,
       }}
     >
       <MessageProvider>

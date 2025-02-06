@@ -32,9 +32,8 @@ export interface IDataTableContextProps extends IDataTableProps {
   editCount: number;
   sliderFormOpen: boolean;
   setSliderFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  focusedRowForm: React.MutableRefObject<null | UseFormReturn<
-    IDataSource,
-    any,
-    undefined
-  >>;
+  focusedRowForm: null | UseFormReturn<IDataSource, any, undefined>;
+  setFocusedRowForm: React.Dispatch<
+    React.SetStateAction<null | UseFormReturn<IDataSource, any, undefined>>
+  >;
 }

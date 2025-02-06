@@ -35,11 +35,12 @@ var DevsDtProviderComponent = function (props) {
     var _a, _b;
     var isAccess = useGyudAccess();
     var keyField = (_a = props.columns.find(function (col) { return col.key; })) === null || _a === void 0 ? void 0 : _a.field;
-    var _c = __read(React.useState(false), 2), isSetUUID = _c[0], setIsSetUUID = _c[1];
-    var _d = __read(React.useState({
+    var _c = __read(React.useState(null), 2), focusedRowForm = _c[0], setFocusedRowForm = _c[1];
+    var _d = __read(React.useState(false), 2), sliderFormOpen = _d[0], setSliderFormOpen = _d[1];
+    var _e = __read(React.useState({
         field: null,
         type: "asc",
-    }), 2), sorter = _d[0], setSorter = _d[1];
+    }), 2), sorter = _e[0], setSorter = _e[1];
     React.useEffect(function () {
         if (props.setColumns !== undefined) {
             props.setColumns(function (prevCols) {
@@ -88,6 +89,10 @@ var DevsDtProviderComponent = function (props) {
             editCount: editCount,
             sorter: sorter,
             setSorter: setSorter,
+            sliderFormOpen: sliderFormOpen,
+            setSliderFormOpen: setSliderFormOpen,
+            focusedRowForm: focusedRowForm,
+            setFocusedRowForm: setFocusedRowForm,
         } }, { children: _jsx(MessageProvider, { children: _jsx("div", __assign({ style: {
                     height: "100%",
                     display: "flex",

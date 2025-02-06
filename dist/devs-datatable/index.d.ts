@@ -41,5 +41,5 @@ interface DevsDataTableRef {
         getFocusedRowIndex: null | number;
     };
 }
-declare const _default: React.MemoExoticComponent<React.ForwardRefExoticComponent<IDataTableProps & React.RefAttributes<DevsDataTableRef>>>;
+declare const _default: React.NamedExoticComponent<IDataTableProps & React.RefAttributes<DevsDataTableRef>>;
 export default _default;

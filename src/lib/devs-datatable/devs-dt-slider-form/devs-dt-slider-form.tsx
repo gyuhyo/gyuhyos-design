@@ -1,13 +1,11 @@
 import styled from "@emotion/styled";
-import { DatePicker, Input, InputNumber } from "antd";
 import React from "react";
-import { UseFormGetValues } from "react-hook-form";
+import { FieldErrors, UseFormGetValues } from "react-hook-form";
 import Button from "../../button";
 import { IDataSource, IDataTableColumn } from "../_types";
 import { useDt } from "../context/devs-dt-context";
-import DateInput from "./date-input";
-import DateTimeInput from "./date-time-input";
-import SelectInput from "./select-input";
+import DataFormItemRenderer from "./data-form-item-renderer";
+import { DataFormErrorProvider } from "./data-form-error-context";
 
 export const getDefaultValue = ({
   val,
@@ -34,7 +32,7 @@ export const getDefaultValue = ({
 
 const DataFormComponent: React.FC<any> = React.memo(
   ({ children, panelWidth }) => {
-    const { columns, sliderFormOpen, setSliderFormOpen } = useDt();
+    const { focusedRow, columns, sliderFormOpen, focusedRowForm } = useDt();
 
     const getLastNodes = (columns: IDataTableColumn[]): IDataTableColumn[] => {
       let lastNodes: IDataTableColumn[] = [];
@@ -53,15 +51,16 @@ const DataFormComponent: React.FC<any> = React.memo(
 
     const lastNode = React.useMemo(() => getLastNodes(columns), [columns]);
 
-    if (lastNode.length === 0 || !sliderFormOpen) return <DataForm />;
+    if (lastNode.length === 0 || !sliderFormOpen || !focusedRowForm)
+      return <DataForm />;
 
     return (
       <DataForm>
         <table style={{ width: "100%" }}>
           <tbody>
             {lastNode.map((node) => {
-              const width = `100%`;
               const maxWidth = panelWidth / 3;
+
               return (
                 <tr key={node.field}>
                   <th
@@ -83,13 +82,10 @@ const DataFormComponent: React.FC<any> = React.memo(
                       lineHeight: "32px",
                     }}
                   >
-                    {node.type === undefined && <Input />}
-                    {node.type === "date" && <DateInput col={node} />}
-                    {node.type === "datetime" && <DateTimeInput col={node} />}
-                    {node.type === "select" && <SelectInput col={node} />}
-                    {node.type === "number" && (
-                      <InputNumber style={{ width: width }} />
-                    )}
+                    <DataFormItemRenderer
+                      focusedRow={focusedRow!}
+                      node={node}
+                    />
                   </td>
                 </tr>
               );
@@ -157,11 +153,61 @@ const Resizer = styled.div({
 });
 
 const DevsDtSliderForm: React.FC<any> = () => {
+  const beforeEditValues = React.useRef<null | IDataSource>(null);
   const [panelWidth, setPanelWidth] = React.useState(400);
-  const { sliderFormOpen, setSliderFormOpen } = useDt();
+  const {
+    focusedRow,
+    sliderFormOpen,
+    setSliderFormOpen,
+    focusedRowForm,
+    setDataSource,
+  } = useDt();
+  const [errors, setErrors] = React.useState<null | FieldErrors<IDataSource>>(
+    null
+  );
 
-  const onCloseSliderFormPanel = () => {
+  React.useEffect(() => {
+    if (!focusedRowForm) return;
+
+    beforeEditValues.current = focusedRowForm.getValues();
+  }, [focusedRowForm]);
+
+  const onCloseSliderFormPanel = async () => {
+    setDataSource((prev) =>
+      prev.map((p) =>
+        p.rowId === focusedRow!.rowId
+          ? Object.assign(p, beforeEditValues.current)
+          : p
+      )
+    );
+
+    focusedRowForm?.reset(undefined, {
+      keepErrors: true,
+    });
+
     setSliderFormOpen(false);
+  };
+
+  const onValidationCheck = async () => {
+    if (focusedRowForm === null) return;
+
+    focusedRowForm.handleSubmit(
+      () => {
+        setErrors(null);
+        setSliderFormOpen(false);
+        setDataSource((prev) =>
+          prev.map((p) => {
+            return p.rowId === focusedRow!.rowId
+              ? { ...p, mode: p.mode === "c" ? "c" : "u", checked: true }
+              : { ...p };
+          })
+        );
+      },
+      (err) => {
+        setErrors(err);
+      }
+    )();
+    //await focusedRowForm.trigger();
   };
 
   return (
@@ -172,9 +218,9 @@ const DevsDtSliderForm: React.FC<any> = () => {
           &#x2715;
         </CloseFormPanelButton>
       </FormTitle>
-      <DataFormComponent panelWidth={panelWidth}>
-        <FormPanelResizer width={panelWidth} setWidth={setPanelWidth} />
-      </DataFormComponent>
+      <DataFormErrorProvider errors={errors}>
+        <DataFormComponent panelWidth={panelWidth} />
+      </DataFormErrorProvider>
       <ButtonContainer>
         <Button
           bgColor="#22cb5f"
@@ -186,6 +232,7 @@ const DevsDtSliderForm: React.FC<any> = () => {
             width: "100%",
             flex: "1 1 0%",
           }}
+          onClick={onValidationCheck}
         >
           확인
         </Button>
@@ -203,6 +250,7 @@ const DevsDtSliderForm: React.FC<any> = () => {
           취소
         </Button>
       </ButtonContainer>
+      <FormPanelResizer width={panelWidth} setWidth={setPanelWidth} />
     </FormPanel>
   );
 };

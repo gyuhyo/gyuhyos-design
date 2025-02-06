@@ -6,9 +6,9 @@ export const useInitDt = ({
   tbody,
   thead,
 }: {
-  table: React.RefObject<HTMLDivElement>;
-  tbody: React.RefObject<HTMLDivElement>;
-  thead: React.RefObject<HTMLDivElement>;
+  table: React.RefObject<HTMLDivElement | null>;
+  tbody: React.RefObject<HTMLDivElement | null>;
+  thead: React.RefObject<HTMLDivElement | null>;
 }) => {
   const mounted = useMounted();
   const visibleStickyColShadow = () => {

@@ -1,13 +1,14 @@
+import { Input } from "antd";
 import React from "react";
+import { Controller } from "react-hook-form";
 import { IDataTableColumn } from "../_types";
 import { useDt } from "../context/devs-dt-context";
-import { Controller } from "react-hook-form";
-import { DatePicker } from "antd";
-import dayjs from "dayjs";
 import { getDefaultValue } from "./devs-dt-slider-form";
 import { useFormErrors } from "./data-form-error-context";
 
-const DateTimeInput: React.FC<any> = React.memo(
+const { TextArea } = Input;
+
+const TextAreaInput: React.FC<any> = React.memo(
   ({ col }: { col: IDataTableColumn }) => {
     const errors = useFormErrors();
     const {
@@ -16,7 +17,7 @@ const DateTimeInput: React.FC<any> = React.memo(
       setDataSource,
       focusedRowForm,
     } = useDt();
-    const defaultValue = focusedRowForm?.getValues(col.field) ?? undefined;
+    const defaultValue = focusedRowForm?.getValues(col.field);
     const rowIndex = dataSource.indexOf(row!);
 
     if (focusedRowForm === null) return null;
@@ -26,7 +27,7 @@ const DateTimeInput: React.FC<any> = React.memo(
         control={focusedRowForm.control}
         name={col.field}
         defaultValue={getDefaultValue({
-          val: defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : undefined,
+          val: defaultValue,
           col: col,
           row: row!,
           rowIndex,
@@ -34,21 +35,17 @@ const DateTimeInput: React.FC<any> = React.memo(
         })}
         rules={{ required: col.required }}
         render={({ field: { onChange } }) => (
-          <DatePicker
+          <TextArea
             status={errors?.hasOwnProperty(col.field) ? "error" : undefined}
             style={{ width: "100%" }}
-            placeholder="날짜/시간 선택"
-            showTime={true}
             defaultValue={getDefaultValue({
-              val: defaultValue
-                ? dayjs(defaultValue).tz("Asia/Seoul")
-                : undefined,
+              val: defaultValue,
               col: col,
               row: row!,
               rowIndex,
               getValue: focusedRowForm.getValues,
             })}
-            onChange={(_, v) => {
+            onChange={(v) => {
               onChange(v);
               if (col.onChange !== undefined) {
                 col.onChange({
@@ -69,4 +66,4 @@ const DateTimeInput: React.FC<any> = React.memo(
   }
 );
 
-export default React.memo(DateTimeInput);
+export default React.memo(TextAreaInput);

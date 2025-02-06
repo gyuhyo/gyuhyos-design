@@ -13,7 +13,7 @@ import {
 import useDtUtils from "../hooks/useDtUtils";
 
 type TDevsDtTBody = {
-  tbody: React.RefObject<HTMLDivElement>;
+  tbody: React.RefObject<HTMLDivElement | null>;
   headerWidth: number;
 };
 

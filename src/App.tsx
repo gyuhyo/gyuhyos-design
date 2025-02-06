@@ -135,6 +135,7 @@ const App: React.FC<{}> = () => {
       title: "4",
       width: 200,
       merge: true,
+      type: "textarea",
     },
     {
       field: "5",
@@ -168,6 +169,14 @@ const App: React.FC<{}> = () => {
           field: "2",
           title: "2",
           type: "select",
+          updatable: false,
+          render: ({ value }) => {
+            if (value === "Option A") {
+              return "asdasd";
+            }
+
+            return value;
+          },
           options: [
             { value: "0", label: "0" },
             { value: "1", label: "1" },
@@ -230,9 +239,9 @@ const App: React.FC<{}> = () => {
   const handleSaveClick = async () => {
     if (!tb.current) return;
 
-    setIsLayerPopOpen(true);
+    //setIsLayerPopOpen(true);
 
-    const { data, valid } = await tb.current.api.onValidationCheck();
+    const { data, valid } = await tb.current.api.validate();
     console.log(data);
 
     if (!valid) {

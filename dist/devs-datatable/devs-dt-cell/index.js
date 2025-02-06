@@ -317,6 +317,9 @@ function DevsDtCell(_a) {
             (mode === "c" && col.editable === false);
         var cellEditCheck = (options === null || options === void 0 ? void 0 : options.editType) === "cell" && isCellEdit === false;
         if ((options === null || options === void 0 ? void 0 : options.editType) === undefined || (options === null || options === void 0 ? void 0 : options.editType) === "row") {
+            if ((options === null || options === void 0 ? void 0 : options.editMode) === "slider") {
+                return GetCell();
+            }
             if (rowEditCheck) {
                 return GetCell();
             }

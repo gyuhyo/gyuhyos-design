@@ -75,23 +75,24 @@ import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "@emotion/reac
 import React from "react";
 import { DevsDtProvider } from "./context/devs-dt-context";
 import "./dev.datatable.style.css";
-import DevsDtButtons from "./devs-dt-component/buttons";
 import DevsDtTBody from "./devs-dt-tbody";
 import DevsDtTHead from "./devs-dt-thead";
 import { useInitDt } from "./hooks/useInitDt";
 import { css } from "@emotion/react";
+import DevsDtHeader from "./devs-dt-header";
+import DevsDtSliderForm from "./devs-dt-slider-form/devs-dt-slider-form";
 // DevsDataTable 컴포넌트 타입 설정 및 구현
 var DevsDataTable = React.forwardRef(function (props, ref) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
-    var _r = __read(React.useState(0), 2), headerWidth = _r[0], setHeaderWidth = _r[1];
-    var _s = __read(React.useState(false), 2), innerLoading = _s[0], setInnerLoading = _s[1];
-    var _t = __read(React.useState(null), 2), focusedCell = _t[0], setFocusedCell = _t[1];
-    var _u = __read(React.useState(null), 2), focusedRow = _u[0], setFocusedRow = _u[1];
+    var _a, _b, _c;
+    var _d = __read(React.useState(0), 2), headerWidth = _d[0], setHeaderWidth = _d[1];
+    var _e = __read(React.useState(false), 2), innerLoading = _e[0], setInnerLoading = _e[1];
+    var _f = __read(React.useState(null), 2), focusedCell = _f[0], setFocusedCell = _f[1];
+    var _g = __read(React.useState(null), 2), focusedRow = _g[0], setFocusedRow = _g[1];
     var formsRef = React.useRef({});
     var table = React.useRef(null);
     var thead = React.useRef(null);
     var tbody = React.useRef(null);
-    var _v = __read(React.useState(false), 2), DtForceUpdate = _v[1];
+    var _h = __read(React.useState(false), 2), DtForceUpdate = _h[1];
     var init = useInitDt({
         table: table,
         tbody: tbody,
@@ -139,23 +140,18 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
                     switch (_a.label) {
                         case 0:
                             forms = Object.values(formsRef.current);
-                            return [4 /*yield*/, Promise.all(forms.map(function (form) { return __awaiter(void 0, void 0, void 0, function () {
-                                    return __generator(this, function (_a) {
-                                        return [2 /*return*/, new Promise(function (resolve) { return resolve(form.clearErrors()); })];
-                                    });
-                                }); }))];
-                        case 1:
-                            _a.sent();
+                            // 모든 에러 초기화
+                            forms.forEach(function (form) { return form.clearErrors(); });
                             return [4 /*yield*/, Promise.all(forms
-                                    .filter(function (f) { return f.getValues("checked"); })
+                                    .filter(function (form) { return form.getValues("checked"); })
                                     .map(function (form) { return __awaiter(void 0, void 0, void 0, function () {
                                     return __generator(this, function (_a) {
                                         return [2 /*return*/, new Promise(function (resolve) {
-                                                return form.handleSubmit(function (data) { return resolve({ valid: true, data: data }); }, function (error) { return resolve({ valid: false, data: error }); })();
+                                                form.handleSubmit(function (data) { return resolve({ valid: true, data: data }); }, function (error) { return resolve({ valid: false, data: error }); })();
                                             })];
                                     });
                                 }); }))];
-                        case 2:
+                        case 1:
                             validations = _a.sent();
                             allValid = validations.every(function (result) { return result.valid; });
                             if (allValid) {
@@ -165,7 +161,7 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
                                         var _b = __read(_a, 2), key = _b[0], value = _b[1];
                                         return [
                                             key,
-                                            value === "" ? null : value !== null && value !== void 0 ? value : null,
+                                            value === "" ? undefined : value !== null && value !== void 0 ? value : undefined,
                                         ];
                                     }));
                                 });
@@ -173,7 +169,7 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
                             }
                             else {
                                 allData = validations
-                                    .filter(function (f) { return !f.valid; })
+                                    .filter(function (result) { return !result.valid; })
                                     .map(function (result) { return result.data; });
                                 return [2 /*return*/, { valid: false, data: allData }];
                             }
@@ -213,7 +209,7 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
                                         var _b = __read(_a, 2), key = _b[0], value = _b[1];
                                         return [
                                             key,
-                                            value === "" ? null : value !== null && value !== void 0 ? value : null,
+                                            value === "" ? undefined : value !== null && value !== void 0 ? value : undefined,
                                         ];
                                     }));
                                 });
@@ -276,44 +272,6 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
     }, [focusedCell, focusedRow]);
     if (!init)
         return _jsx(_Fragment, { children: "loading..." });
-    return (_jsxs(DevsDtProvider, __assign({ columns: props.columns, setColumns: props.setColumns, dataSource: props.dataSource, setDataSource: props.setDataSource, options: props.options, formsRef: formsRef, focusedRow: focusedRow, setFocusedRow: setFocusedRow, focusedCell: focusedCell, setFocusedCell: setFocusedCell }, { children: [(props.loading === true || innerLoading === true) && (_jsx("div", __assign({ className: "loader-backdrop" }, { children: _jsxs("div", __assign({ className: "loader-container" }, { children: [_jsx("span", { className: "spinner" }), _jsx("span", __assign({ style: { fontWeight: "bold" } }, { children: "\uB370\uC774\uD130 \uBD88\uB7EC\uC624\uB294 \uC911..." }))] })) }))), (props.title !== undefined ||
-                (typeof props.title === "string" && props.title !== "") ||
-                ((_a = props.buttons) === null || _a === void 0 ? void 0 : _a.onAddClick) !== undefined ||
-                ((_b = props.buttons) === null || _b === void 0 ? void 0 : _b.onSearchClick) !== undefined ||
-                ((_c = props.buttons) === null || _c === void 0 ? void 0 : _c.onSaveClick) !== undefined ||
-                ((_d = props.buttons) === null || _d === void 0 ? void 0 : _d.onCancelClick) !== undefined ||
-                ((_e = props.buttons) === null || _e === void 0 ? void 0 : _e.onDeleteClick) !== undefined ||
-                ((_f = props.buttons) === null || _f === void 0 ? void 0 : _f.custom) !== undefined) && (_jsxs("div", __assign({ style: {
-                    flex: "none",
-                    minHeight: "50px",
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: 7,
-                    flexWrap: "wrap",
-                    gap: "7px",
-                    background: "linear-gradient(180deg, rgb(231, 231, 231), rgb(215, 215, 215), rgb(231, 231, 231))",
-                    border: "1px solid rgb(199, 199, 199)",
-                    padding: "0.5rem 0.75rem",
-                } }, { children: [props.title !== undefined && (_jsxs("div", __assign({ css: css({
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "start",
-                            alignItems: "center",
-                            columnGap: 7,
-                        }) }, { children: [typeof props.title === "string" && props.title !== "" ? (_jsxs("p", __assign({ style: { fontSize: 18, fontWeight: "bold" } }, { children: ["\u27A4 ", props.title] }))) : (props.title), (((_g = props.options) === null || _g === void 0 ? void 0 : _g.readonly) === undefined ||
-                                props.options.readonly === false) && (_jsxs("span", __assign({ style: {
-                                    fontSize: 12,
-                                    color: "#7a7a7a",
-                                    marginLeft: props.title !== undefined && props.title !== ""
-                                        ? "7px"
-                                        : "0px",
-                                } }, { children: ["(", _jsx("span", __assign({ style: { color: "#000" } }, { children: "*" })), ") \uC785\uB825 \uAC00\uB2A5 (", _jsx("span", __assign({ style: { color: "red" } }, { children: "*" })), ") \uD544\uC218\uC785\uB825"] })))] }))), (((_h = props.buttons) === null || _h === void 0 ? void 0 : _h.onAddClick) !== undefined ||
-                        ((_j = props.buttons) === null || _j === void 0 ? void 0 : _j.onSearchClick) !== undefined ||
-                        ((_k = props.buttons) === null || _k === void 0 ? void 0 : _k.onSaveClick) !== undefined ||
-                        ((_l = props.buttons) === null || _l === void 0 ? void 0 : _l.onCancelClick) !== undefined ||
-                        ((_m = props.buttons) === null || _m === void 0 ? void 0 : _m.onDeleteClick) !== undefined ||
-                        ((_o = props.buttons) === null || _o === void 0 ? void 0 : _o.custom) !== undefined) && (_jsx(DevsDtButtons, { buttons: props.buttons, options: props.options, setInnerLoading: setInnerLoading }))] }))), _jsxs("div", __assign({ ref: table, className: "dev-table-wrapper", css: css({ minWidth: (_q = (_p = props.options) === null || _p === void 0 ? void 0 : _p.minWidth) !== null && _q !== void 0 ? _q : 0 }) }, { children: [_jsx(DevsDtTHead, { thead: thead, setHeaderWidth: setHeaderWidth }), _jsx(DevsDtTBody, { tbody: tbody, headerWidth: headerWidth })] }))] })));
+    return (_jsxs(DevsDtProvider, __assign({ columns: props.columns, setColumns: props.setColumns, dataSource: props.dataSource, setDataSource: props.setDataSource, options: props.options, formsRef: formsRef, focusedRow: focusedRow, setFocusedRow: setFocusedRow, focusedCell: focusedCell, setFocusedCell: setFocusedCell }, { children: [(props.loading === true || innerLoading === true) && (_jsx("div", __assign({ className: "loader-backdrop" }, { children: _jsxs("div", __assign({ className: "loader-container" }, { children: [_jsx("span", { className: "spinner" }), _jsx("span", __assign({ style: { fontWeight: "bold" } }, { children: "\uB370\uC774\uD130 \uBD88\uB7EC\uC624\uB294 \uC911..." }))] })) }))), _jsx(DevsDtHeader, { title: props.title, buttons: props.buttons, options: props.options, setInnerLoading: setInnerLoading }), _jsxs("div", __assign({ ref: table, className: "dev-table-wrapper", css: css({ minWidth: (_b = (_a = props.options) === null || _a === void 0 ? void 0 : _a.minWidth) !== null && _b !== void 0 ? _b : 0 }) }, { children: [_jsx(DevsDtTHead, { thead: thead, setHeaderWidth: setHeaderWidth }), _jsx(DevsDtTBody, { tbody: tbody, headerWidth: headerWidth }), ((_c = props.options) === null || _c === void 0 ? void 0 : _c.editMode) === "slider" && _jsx(DevsDtSliderForm, {})] }))] })));
 });
 export default React.memo(DevsDataTable);

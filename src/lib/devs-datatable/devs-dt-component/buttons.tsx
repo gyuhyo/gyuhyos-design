@@ -21,7 +21,14 @@ const ButtonLabel = styled.span({
 });
 
 const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
-  const { setDataSource, setFocusedRow, setFocusedCell } = useDt();
+  const {
+    setDataSource,
+    setFocusedRow,
+    setFocusedCell,
+    sliderFormOpen,
+    setFocusedRowForm,
+    setSliderFormOpen,
+  } = useDt();
   const ButtonEventBeforeShowLoading = (event: any) => {
     props.setInnerLoading(true);
 
@@ -36,6 +43,8 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
       clearTimeout(timer);
     };
   };
+
+  const sleep = () => new Promise((resolve) => setTimeout(resolve, 200));
 
   return (
     <React.Fragment>
@@ -72,7 +81,12 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
             <Button
               border={true}
               compact
-              onClick={() => {
+              onClick={async () => {
+                if (sliderFormOpen) {
+                  setFocusedRowForm(null);
+                  setSliderFormOpen(false);
+                  await sleep();
+                }
                 ButtonEventBeforeShowLoading(props.buttons?.onSearchClick);
                 setDataSource((prev) =>
                   prev.map((x) => ({ ...x, checked: false }))
@@ -97,7 +111,18 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
             </Button>
           )}
           {props.buttons?.onAddClick !== undefined && (
-            <Button border={true} compact onClick={props.buttons?.onAddClick}>
+            <Button
+              border={true}
+              compact
+              onClick={async () => {
+                if (sliderFormOpen) {
+                  setFocusedRowForm(null);
+                  setSliderFormOpen(false);
+                  await sleep();
+                }
+                (props.buttons?.onAddClick as Function)();
+              }}
+            >
               <svg
                 stroke="currentColor"
                 fill="currentColor"
@@ -120,7 +145,12 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
               bgColor="#22cb5f"
               color="#ffffff"
               borderColor="#03cf00"
-              onClick={() => {
+              onClick={async () => {
+                if (sliderFormOpen) {
+                  setFocusedRowForm(null);
+                  setSliderFormOpen(false);
+                  await sleep();
+                }
                 ButtonEventBeforeShowLoading(props.buttons?.onSaveClick);
                 setFocusedRow(null);
                 setFocusedCell(null);
@@ -153,7 +183,12 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
               bgColor="#df4873"
               borderColor="#f15151"
               color="#fff"
-              onClick={() => {
+              onClick={async () => {
+                if (sliderFormOpen) {
+                  setFocusedRowForm(null);
+                  setSliderFormOpen(false);
+                  await sleep();
+                }
                 ButtonEventBeforeShowLoading(props.buttons?.onDeleteClick);
                 setFocusedRow(null);
                 setFocusedCell(null);
@@ -180,7 +215,12 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
             <Button
               border={true}
               compact
-              onClick={() => {
+              onClick={async () => {
+                if (sliderFormOpen) {
+                  setFocusedRowForm(null);
+                  setSliderFormOpen(false);
+                  await sleep();
+                }
                 ButtonEventBeforeShowLoading(props.buttons?.onCancelClick);
                 setDataSource((prev) =>
                   prev.map((x) => ({ ...x, checked: false }))
@@ -208,7 +248,14 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
             <Button
               border={true}
               compact
-              onClick={props.buttons?.onExportClick}
+              onClick={async () => {
+                if (sliderFormOpen) {
+                  setFocusedRowForm(null);
+                  setSliderFormOpen(false);
+                  await sleep();
+                }
+                (props.buttons?.onExportClick as Function)();
+              }}
             >
               <svg
                 stroke="currentColor"

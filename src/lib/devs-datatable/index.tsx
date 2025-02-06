@@ -115,26 +115,26 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
         api: {
           validate: async () => {
             const forms = Object.values(formsRef.current);
-            await Promise.all(
-              forms.map(async (form) => {
-                return new Promise((resolve) => resolve(form.clearErrors()));
-              })
-            );
 
+            // 모든 에러 초기화
+            forms.forEach((form) => form.clearErrors());
+
+            // 유효성 검사 수행
             const validations: { valid: boolean; data: any }[] =
               await Promise.all(
                 forms
-                  .filter((f) => f.getValues("checked"))
+                  .filter((form) => form.getValues("checked"))
                   .map(async (form) => {
-                    return new Promise((resolve) =>
+                    return new Promise((resolve) => {
                       form.handleSubmit(
                         (data) => resolve({ valid: true, data }),
                         (error) => resolve({ valid: false, data: error })
-                      )()
-                    );
+                      )();
+                    });
                   })
               );
 
+            // 검증 결과 확인
             const allValid = validations.every((result) => result.valid);
 
             if (allValid) {
@@ -143,14 +143,14 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
                 Object.fromEntries(
                   Object.entries(data).map(([key, value]) => [
                     key,
-                    value === "" ? null : value ?? null,
+                    value === "" ? undefined : value ?? undefined,
                   ])
                 )
               );
               return { valid: true, data: allDataBlankToNull };
             } else {
               const allData = validations
-                .filter((f) => !f.valid)
+                .filter((result) => !result.valid)
                 .map((result) => result.data);
               return { valid: false, data: allData };
             }
@@ -185,7 +185,7 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
                 Object.fromEntries(
                   Object.entries(data).map(([key, value]) => [
                     key,
-                    value === "" ? null : value ?? null,
+                    value === "" ? undefined : value ?? undefined,
                   ])
                 )
               );

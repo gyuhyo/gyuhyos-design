@@ -1,6 +1,6 @@
 import React from "react";
 import { IDataSource, IDataTableProps } from "./component";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormReturn } from "react-hook-form";
 export interface IFormsRef {
     [key: string]: ReturnType<typeof useForm<IDataSource>>;
 }
@@ -26,4 +26,8 @@ export interface IDataTableContextProps extends IDataTableProps {
     sorter: IDataTableSorterProps;
     setSorter: React.Dispatch<React.SetStateAction<IDataTableSorterProps>>;
     editCount: number;
+    sliderFormOpen: boolean;
+    setSliderFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    focusedRowForm: null | UseFormReturn<IDataSource, any, undefined>;
+    setFocusedRowForm: React.Dispatch<React.SetStateAction<null | UseFormReturn<IDataSource, any, undefined>>>;
 }

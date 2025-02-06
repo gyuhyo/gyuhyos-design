@@ -67,10 +67,16 @@ function DevsDtRow(_a) {
     var _b;
     var data = _a.data, index = _a.index, rowKey = _a.rowKey, lastNode = _a.lastNode, dragProvided = _a.dragProvided, dragSnapshot = _a.dragSnapshot;
     var showMessage = useMessage().showMessage;
-    var _c = useDt(), columns = _c.columns, keyField = _c.keyField, setDataSource = _c.setDataSource, options = _c.options, formsRef = _c.formsRef, focusedRow = _c.focusedRow, setFocusedRow = _c.setFocusedRow, focusedCell = _c.focusedCell, editCount = _c.editCount, dataSource = _c.dataSource;
+    var _c = useDt(), columns = _c.columns, keyField = _c.keyField, setDataSource = _c.setDataSource, options = _c.options, formsRef = _c.formsRef, focusedRow = _c.focusedRow, setFocusedRow = _c.setFocusedRow, focusedCell = _c.focusedCell, editCount = _c.editCount, dataSource = _c.dataSource, setSliderFormOpen = _c.setSliderFormOpen, setFocusedRowForm = _c.setFocusedRowForm;
     var form = useForm({
         defaultValues: data,
         mode: "all",
+        reValidateMode: "onSubmit",
+        criteriaMode: "all",
+        delayError: 200,
+        progressive: true,
+        shouldFocusError: true,
+        shouldUseNativeValidation: true,
     });
     var control = form.control, register = form.register, handleSubmit = form.handleSubmit, errors = form.formState.errors, setValue = form.setValue, getValues = form.getValues, setFocus = form.setFocus, reset = form.reset, watch = form.watch, trigger = form.trigger;
     var prevRow = React.useMemo(function () {
@@ -96,7 +102,41 @@ function DevsDtRow(_a) {
             return;
         if (((_c = options === null || options === void 0 ? void 0 : options.onBeforeRowEdit) === null || _c === void 0 ? void 0 : _c.call(options, { index: index, row: data })) === false)
             return;
+        if ((options === null || options === void 0 ? void 0 : options.editMode) === "slider" &&
+            ((options === null || options === void 0 ? void 0 : options.editType) === undefined || (options === null || options === void 0 ? void 0 : options.editType) === "row")) {
+            if ((options === null || options === void 0 ? void 0 : options.multipleEdit) === false) {
+                if (editCount > 0) {
+                    showMessage({
+                        title: "경고",
+                        type: "warnning",
+                        message: "다른 데이터를 수정할 경우 기존 데이터 수정이 중단되며 복구할 수 없습니다.\n\n현재 데이터 수정을 중단 하시겠습니까?",
+                        onOkClick: function () {
+                            return setDataSource(function (prev) {
+                                return prev
+                                    .filter(function (x) { return x.mode !== "c"; })
+                                    .map(function (p) {
+                                    return p.rowId === data.rowId
+                                        ? __assign(__assign({}, p), { mode: "u", checked: true }) : __assign(__assign({}, p), { mode: "r", checked: false });
+                                });
+                            });
+                        },
+                        onCancelClick: function () { },
+                    });
+                }
+                else {
+                    setFocusedRowForm(null);
+                    setTimeout(function () { return setFocusedRowForm(form); }, 1);
+                    setSliderFormOpen(true);
+                }
+            }
+            else {
+                setFocusedRowForm(null);
+                setTimeout(function () { return setFocusedRowForm(form); }, 1);
+                setSliderFormOpen(true);
+            }
+        }
         if (data.mode === "r" &&
+            (options === null || options === void 0 ? void 0 : options.editMode) !== "slider" &&
             ((options === null || options === void 0 ? void 0 : options.editType) === undefined || (options === null || options === void 0 ? void 0 : options.editType) === "row")) {
             if ((options === null || options === void 0 ? void 0 : options.multipleEdit) === false) {
                 if (editCount > 0) {
@@ -121,7 +161,7 @@ function DevsDtRow(_a) {
                     setDataSource(function (prev) {
                         return prev.map(function (p) {
                             return p.rowId === data.rowId
-                                ? __assign(__assign({}, p), { mode: "u", checked: true }) : __assign({}, p);
+                                ? __assign(__assign({}, p), { mode: p.mode === "c" ? "c" : "u", checked: true }) : __assign({}, p);
                         });
                     });
                 }
@@ -130,7 +170,7 @@ function DevsDtRow(_a) {
                 setDataSource(function (prev) {
                     return prev.map(function (p) {
                         return p.rowId === data.rowId
-                            ? __assign(__assign({}, p), { mode: "u", checked: true }) : __assign({}, p);
+                            ? __assign(__assign({}, p), { mode: p.mode === "c" ? "c" : "u", checked: true }) : __assign({}, p);
                     });
                 });
             }
@@ -161,7 +201,12 @@ function DevsDtRow(_a) {
         }
         return focusabled;
     }, [lastNode, data]);
-    return (_jsxs("tr", __assign({ className: "devs-dt-row".concat((focusedRow === null || focusedRow === void 0 ? void 0 : focusedRow.rowId) === data.rowId ? " devs-dt-focused-row" : "").concat(data.checked === true ? " devs-dt-checked-row" : ""), onSubmit: handleSubmit(function () { }), onDoubleClick: onEditModeClick, onClick: function () { return setFocusedRow(data); }, "data-edit-mode": data.mode, ref: dragProvided.innerRef }, dragProvided.draggableProps, { style: __assign({}, dragProvided.draggableProps.style), css: css((_b = options === null || options === void 0 ? void 0 : options.rowStyle) === null || _b === void 0 ? void 0 : _b.call(options, {
+    return (_jsxs("tr", __assign({ className: "devs-dt-row".concat((focusedRow === null || focusedRow === void 0 ? void 0 : focusedRow.rowId) === data.rowId ? " devs-dt-focused-row" : "").concat(data.checked === true ? " devs-dt-checked-row" : ""), onDoubleClick: onEditModeClick, onClick: function () {
+            setFocusedRow(data);
+            if (data.mode === "r") {
+                setSliderFormOpen(false);
+            }
+        }, "data-edit-mode": data.mode, ref: dragProvided.innerRef }, dragProvided.draggableProps, { style: __assign({}, dragProvided.draggableProps.style), css: css((_b = options === null || options === void 0 ? void 0 : options.rowStyle) === null || _b === void 0 ? void 0 : _b.call(options, {
             index: index,
             row: data,
             prevRow: prevRow,
@@ -169,7 +214,17 @@ function DevsDtRow(_a) {
         })) }, { children: [(options === null || options === void 0 ? void 0 : options.enabledRowOrder) && (_jsx(RowChangeOrderCell, { mode: data.mode, dragHandleProps: dragProvided.dragHandleProps })), (options === null || options === void 0 ? void 0 : options.enabledExpand) && (_jsx(RowExpandCell, { setDataSource: setDataSource, data: data, index: index })), (options === null || options === void 0 ? void 0 : options.showRowNumber) && _jsx(RowNumberCell, { index: index }), (options === null || options === void 0 ? void 0 : options.enabledRowCheck) && (_jsx(RowCheckCell, { data: data, checked: data.checked, setDataSource: setDataSource, setValue: setValue, multipleRowCheck: options.multipleRowCheck })), lastNode &&
                 lastNode.map(function (col, idx) {
                     var _a, _b, _c;
-                    return (_jsx(DevsDtCell, { register: register, control: control, col: col, mode: data.mode, defaultValue: data[col.field], error: errors.hasOwnProperty(col.field), autoFocus: (_b = (_a = col.autoFocus) === null || _a === void 0 ? void 0 : _a.call(col, data.mode)) !== null && _b !== void 0 ? _b : GetAutoFocus(col.field), row: data, setValue: setValue, merge: (_c = data._merge) === null || _c === void 0 ? void 0 : _c[col.field], rowIndex: index, getValue: getValues, trigger: trigger }, "".concat(rowKey, "-").concat(col.field)));
+                    if ((options === null || options === void 0 ? void 0 : options.editMode) === "slider") {
+                        register(col.field, {
+                            required: col.required,
+                            value: watch(col.field),
+                        });
+                    }
+                    return (_jsx(DevsDtCell, { register: register, control: control, col: col, mode: data.mode, defaultValue: (options === null || options === void 0 ? void 0 : options.editMode) === "slider"
+                            ? watch(col.field)
+                            : data[col.field], error: errors.hasOwnProperty(col.field), autoFocus: (_b = (_a = col.autoFocus) === null || _a === void 0 ? void 0 : _a.call(col, data.mode)) !== null && _b !== void 0 ? _b : GetAutoFocus(col.field), row: data, setValue: setValue, merge: (_c = data._merge) === null || _c === void 0 ? void 0 : _c[col.field], rowIndex: index, getValue: getValues, trigger: trigger }, "".concat(rowKey, "-").concat(col.field)));
                 })] })));
 }
-export default React.memo(DevsDtRow);
+export default React.memo(DevsDtRow, function (prev, curr) {
+    return prev === curr;
+});
