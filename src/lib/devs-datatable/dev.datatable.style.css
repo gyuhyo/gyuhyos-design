@@ -585,3 +585,7 @@
 .expand_ico2.expand_ico_active2::before {
   transform: rotate(0deg) !important;
 }
+
+.devs-dt-hidden-cells > .devs-dt-cell {
+  visibility: hidden;
+}

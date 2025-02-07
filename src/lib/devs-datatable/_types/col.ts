@@ -13,6 +13,7 @@ export interface IDataTableColumn {
   field: string;
   title: string;
   width?: number;
+  reSizingWidth?: number;
   height?: number;
   required?: boolean;
   sticky?: boolean;

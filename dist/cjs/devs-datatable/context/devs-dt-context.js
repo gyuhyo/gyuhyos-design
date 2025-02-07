@@ -102,6 +102,7 @@ var DevsDtProviderComponent = function (props) {
             setFocusedRowForm: setFocusedRowForm,
             editMode: editMode,
             setEditMode: setEditMode,
+            tbody: props.tbody,
         } }, { children: (0, jsx_runtime_1.jsx)(message_context_1.MessageProvider, { children: (0, jsx_runtime_1.jsx)("div", __assign({ style: {
                     height: "100%",
                     display: "flex",
@@ -109,7 +110,14 @@ var DevsDtProviderComponent = function (props) {
                     position: "relative",
                 } }, { children: props.children })) }) })));
 };
-exports.DevsDtProvider = react_1.default.memo(DevsDtProviderComponent);
+exports.DevsDtProvider = react_1.default.memo(DevsDtProviderComponent, function (prev, curr) {
+    var prevColumns = prev.columns, prevDataSource = prev.dataSource, prevFocusedCell = prev.focusedCell, prevFocusedRow = prev.focusedRow;
+    var currColumns = curr.columns, currDataSource = curr.dataSource, currFocusedCell = curr.focusedCell, currFocusedRow = curr.focusedRow;
+    return (JSON.stringify(prevColumns) === JSON.stringify(currColumns) &&
+        JSON.stringify(prevDataSource) === JSON.stringify(currDataSource) &&
+        prevFocusedCell === currFocusedCell &&
+        prevFocusedRow === currFocusedRow);
+});
 var useDt = function () {
     var context = react_1.default.useContext(DevsDtContext);
     if (!context) {

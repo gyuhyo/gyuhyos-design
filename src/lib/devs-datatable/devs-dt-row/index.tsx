@@ -159,7 +159,6 @@ function DevsDtRow({
     dataSource,
     setSliderFormOpen,
     setFocusedRowForm,
-    buttons,
     editMode,
   } = useDt();
 
@@ -417,6 +416,4 @@ function DevsDtRow({
   );
 }
 
-export default React.memo(DevsDtRow, (prev, curr) => {
-  return prev === curr;
-});
+export default React.memo(DevsDtRow);

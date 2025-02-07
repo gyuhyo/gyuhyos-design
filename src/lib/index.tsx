@@ -35,3 +35,5 @@ export type { LayoutPopupProps } from "./layer-popup";
 export { default as ContextMenu } from "./context-menu";
 export type { ContextMenuProps } from "./context-menu";
 export { GyudAccessProvider } from "./access-context";
+export { default as DevsDatePicker } from "./devs-date-picker";
+export type { DevsDatePickerProps } from "./devs-date-picker";

@@ -5,10 +5,168 @@ import uuid from "react-uuid";
 import { IDataSource, IDataTableColumn } from "./lib/devs-datatable/_types";
 import DevsDataTable from "./lib/devs-datatable";
 import { DatePicker } from "antd";
+import DevsDatePicker from "./lib/devs-date-picker";
+import dayjs from "dayjs";
 
 const LayerPopup = React.lazy(() => import("./lib/layer-popup/index"));
 
 const dummyData = [
+  {
+    "1": "Group 1",
+    "2": "Option A123123123123123",
+    "3": "2024-11-01",
+    "4": "Batch A",
+    "5": "Category X",
+    "6": "2024-12-01",
+    "112": 1,
+    "33": null,
+  },
+  {
+    "1": "Group 1",
+    "2": "Option A",
+    "3": "2024-11-01",
+    "4": "Batch A",
+    "5": "Category Y",
+    "6": "2024-12-02",
+    "112": 3,
+  },
+  {
+    "1": "Group 1",
+    "2": "Option B\naaaaaaa\naaaaaaaaaaaaaaaaaa\naaaaaaaaaaa\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\naaaaaaaaaaa\naaaaaaa",
+    "3": "2024-11-02",
+    "4": "Batch A",
+    "5": "Category Z",
+    "6": "2024-12-03",
+    "112": 2,
+  },
+  {
+    "1": "Group 2",
+    "2": "Option A",
+    "3": "2024-11-03",
+    "4": "Batch B",
+    "5": "Category X",
+    "6": "2024-12-04",
+  },
+  {
+    "1": "Group 2",
+    "2": "Option A",
+    "3": "2024-11-03",
+    "4": "Batch B",
+    "5": "Category Y",
+    "6": "2024-12-05",
+  },
+  {
+    "1": "Group 2",
+    "2": "Option B",
+    "3": "2024-11-04",
+    "4": "Batch B",
+    "5": "Category Z",
+    "6": "2024-12-06",
+  },
+  {
+    "1": "Group 3",
+    "2": "Option C",
+
+    "4": "Batch C",
+    "5": "Category X",
+    "6": "2024-12-07",
+  },
+  {
+    "1": "Group 3",
+    "2": "Option C",
+
+    "4": "Batch C",
+    "5": "Category Y",
+    "6": "2024-12-08",
+  },
+  {
+    "1": "Group 3",
+    "2": "Option C",
+    "6": null,
+  },
+  {
+    "4": "Batch C",
+    "5": "Category Z",
+    "6": "2024-12-09",
+  },
+  {
+    "1": "Group 1",
+    "2": "Option A123123123123123",
+    "3": "2024-11-01",
+    "4": "Batch A",
+    "5": "Category X",
+    "6": "2024-12-01",
+    "112": 1,
+    "33": null,
+  },
+  {
+    "1": "Group 1",
+    "2": "Option A",
+    "3": "2024-11-01",
+    "4": "Batch A",
+    "5": "Category Y",
+    "6": "2024-12-02",
+    "112": 3,
+  },
+  {
+    "1": "Group 1",
+    "2": "Option B\naaaaaaa\naaaaaaaaaaaaaaaaaa\naaaaaaaaaaa\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\naaaaaaaaaaa\naaaaaaa",
+    "3": "2024-11-02",
+    "4": "Batch A",
+    "5": "Category Z",
+    "6": "2024-12-03",
+    "112": 2,
+  },
+  {
+    "1": "Group 2",
+    "2": "Option A",
+    "3": "2024-11-03",
+    "4": "Batch B",
+    "5": "Category X",
+    "6": "2024-12-04",
+  },
+  {
+    "1": "Group 2",
+    "2": "Option A",
+    "3": "2024-11-03",
+    "4": "Batch B",
+    "5": "Category Y",
+    "6": "2024-12-05",
+  },
+  {
+    "1": "Group 2",
+    "2": "Option B",
+    "3": "2024-11-04",
+    "4": "Batch B",
+    "5": "Category Z",
+    "6": "2024-12-06",
+  },
+  {
+    "1": "Group 3",
+    "2": "Option C",
+
+    "4": "Batch C",
+    "5": "Category X",
+    "6": "2024-12-07",
+  },
+  {
+    "1": "Group 3",
+    "2": "Option C",
+
+    "4": "Batch C",
+    "5": "Category Y",
+    "6": "2024-12-08",
+  },
+  {
+    "1": "Group 3",
+    "2": "Option C",
+    "6": null,
+  },
+  {
+    "4": "Batch C",
+    "5": "Category Z",
+    "6": "2024-12-09",
+  },
   {
     "1": "Group 1",
     "2": "Option A123123123123123",
@@ -112,6 +270,7 @@ const App: React.FC<{}> = () => {
   const { showMessage } = useMessage();
   const tb = React.useRef<any>(null);
   const tb2 = React.useRef<any>(null);
+  const [selectedDate, setSelectedDate] = React.useState(dayjs());
   const [focusedRow, setFocusedRow] = React.useState<IDataSource | null>(null);
   const [isLayerPopOpen, setIsLayerPopOpen] = React.useState<boolean>(false);
   const [dataSource, setDataSource] = React.useState<IDataSource[]>(dummyData);
@@ -122,6 +281,7 @@ const App: React.FC<{}> = () => {
       title: "1dwvdwdwv1edw1dwsd1v2wde1cfwdc1wcdsqcqdc",
       required: true,
       resizing: false,
+      sticky: true,
     },
     {
       key: true,
@@ -129,12 +289,14 @@ const App: React.FC<{}> = () => {
       title: "1",
       type: "number",
       isNotNullSort: true,
+      sticky: true,
     },
     {
       field: "4",
       title: "4",
       width: 200,
       merge: true,
+      sticky: true,
     },
     {
       field: "5",
@@ -227,6 +389,12 @@ const App: React.FC<{}> = () => {
         },
       ],
     },
+    ...(Array.from(Array(dayjs().daysInMonth()), (_, day) => ({
+      field: `pspDay_${day + 1}`,
+      title: `${day + 1}일`,
+      align: "right",
+      type: "number",
+    })) as IDataTableColumn[]),
   ]);
 
   const handleAddClick = () => {
@@ -354,6 +522,12 @@ const App: React.FC<{}> = () => {
           },
         }}
         buttons={{
+          custom: (
+            <DevsDatePicker
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+            />
+          ),
           export: {
             visible: true,
             excel: true,

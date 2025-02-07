@@ -10,6 +10,17 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __read = (this && this.__read) || function (o, n) {
     var m = typeof Symbol === "function" && o[Symbol.iterator];
     if (!m) return o;
@@ -41,20 +52,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsx_runtime_1 = require("@emotion/react/jsx-runtime");
 /** @jsxImportSource @emotion/react */
+var antd_1 = require("antd");
 var dayjs_1 = __importDefault(require("dayjs"));
-var customParseFormat_1 = __importDefault(require("dayjs/plugin/customParseFormat"));
+require("dayjs/locale/ko");
 var advancedFormat_1 = __importDefault(require("dayjs/plugin/advancedFormat"));
+var customParseFormat_1 = __importDefault(require("dayjs/plugin/customParseFormat"));
 var localeData_1 = __importDefault(require("dayjs/plugin/localeData"));
+var timezone_1 = __importDefault(require("dayjs/plugin/timezone"));
+var utc_1 = __importDefault(require("dayjs/plugin/utc"));
 var weekday_1 = __importDefault(require("dayjs/plugin/weekday"));
 var weekOfYear_1 = __importDefault(require("dayjs/plugin/weekOfYear"));
 var weekYear_1 = __importDefault(require("dayjs/plugin/weekYear"));
 var react_1 = __importDefault(require("react"));
 var react_hook_form_1 = require("react-hook-form");
-var antd_1 = require("antd");
-require("dayjs/locale/ko");
 var devs_dt_context_1 = require("../context/devs-dt-context");
-var utc_1 = __importDefault(require("dayjs/plugin/utc"));
-var timezone_1 = __importDefault(require("dayjs/plugin/timezone"));
 dayjs_1.default.extend(customParseFormat_1.default);
 dayjs_1.default.extend(advancedFormat_1.default);
 dayjs_1.default.extend(weekday_1.default);
@@ -68,7 +79,7 @@ dayjs_1.default.tz.setDefault("Asia/Seoul");
 function DevsDtCell(_a) {
     var _b, _c, _d, _e, _f, _g, _h;
     var register = _a.register, control = _a.control, col = _a.col, mode = _a.mode, defaultValue = _a.defaultValue, error = _a.error, autoFocus = _a.autoFocus, row = _a.row, merge = _a.merge, setValue = _a.setValue, getValue = _a.getValue, rowIndex = _a.rowIndex, trigger = _a.trigger;
-    var _j = (0, devs_dt_context_1.useDt)(), focusedRow = _j.focusedRow, focusedCell = _j.focusedCell, setFocusedCell = _j.setFocusedCell, setDataSource = _j.setDataSource, setColumns = _j.setColumns, options = _j.options, editMode = _j.editMode;
+    var _j = (0, devs_dt_context_1.useDt)(), focusedRow = _j.focusedRow, focusedCell = _j.focusedCell, setFocusedCell = _j.setFocusedCell, setDataSource = _j.setDataSource, setColumns = _j.setColumns, options = _j.options, editMode = _j.editMode, tbody = _j.tbody;
     var isCellEdit = react_1.default.useMemo(function () {
         var _a;
         if ((options === null || options === void 0 ? void 0 : options.editType) === undefined || (options === null || options === void 0 ? void 0 : options.editType) === "row")
@@ -395,4 +406,8 @@ function DevsDtCell(_a) {
                     zIndex: 2,
                 } }, { children: Cell })), (0, jsx_runtime_1.jsx)("div", { className: "devs-dt-bg-cell" })] })));
 }
-exports.default = react_1.default.memo(DevsDtCell);
+exports.default = react_1.default.memo(DevsDtCell, function (prev, curr) {
+    var prevGetValue = prev.getValue, prevRegister = prev.register, prevSetValue = prev.setValue, prevTrigger = prev.trigger, prevControl = prev.control, prevProps = __rest(prev, ["getValue", "register", "setValue", "trigger", "control"]);
+    var currGetValue = curr.getValue, currRegister = curr.register, currSetValue = curr.setValue, currTrigger = curr.trigger, currControl = curr.control, currProps = __rest(curr, ["getValue", "register", "setValue", "trigger", "control"]);
+    return JSON.stringify(prevProps) === JSON.stringify(currProps);
+});

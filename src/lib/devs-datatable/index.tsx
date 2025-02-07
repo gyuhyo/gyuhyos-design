@@ -41,6 +41,7 @@ const DevsDataTable: React.FC<IDataTableProps> = (props) => {
     table: table,
     tbody: tbody,
     thead: thead,
+    columns: props.columns,
   });
 
   React.useEffect(() => {
@@ -233,6 +234,7 @@ const DevsDataTable: React.FC<IDataTableProps> = (props) => {
       setFocusedRow={setFocusedRow}
       focusedCell={focusedCell}
       setFocusedCell={setFocusedCell}
+      tbody={tbody}
     >
       {(props.loading === true || innerLoading === true) && (
         <div className="loader-backdrop">

@@ -1,9 +1,13 @@
 /** @jsxImportSource @emotion/react */
 
+import { DatePicker, InputNumber, Select } from "antd";
 import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
+import "dayjs/locale/ko";
 import advancedFormat from "dayjs/plugin/advancedFormat";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import localeData from "dayjs/plugin/localeData";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import weekday from "dayjs/plugin/weekday";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import weekYear from "dayjs/plugin/weekYear";
@@ -18,11 +22,7 @@ import {
   UseFormTrigger,
 } from "react-hook-form";
 import { IDataSource, IDataTableColumn } from "../_types";
-import { DatePicker, InputNumber, Select } from "antd";
-import "dayjs/locale/ko";
 import { useDt } from "../context/devs-dt-context";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
 dayjs.extend(customParseFormat);
 dayjs.extend(advancedFormat);
 dayjs.extend(weekday);
@@ -76,6 +76,7 @@ function DevsDtCell({
     setColumns,
     options,
     editMode,
+    tbody,
   } = useDt();
   const isCellEdit = React.useMemo(() => {
     if (options?.editType === undefined || options?.editType === "row")
@@ -620,4 +621,23 @@ function DevsDtCell({
   );
 }
 
-export default React.memo(DevsDtCell);
+export default React.memo(DevsDtCell, (prev, curr) => {
+  const {
+    getValue: prevGetValue,
+    register: prevRegister,
+    setValue: prevSetValue,
+    trigger: prevTrigger,
+    control: prevControl,
+    ...prevProps
+  } = prev;
+  const {
+    getValue: currGetValue,
+    register: currRegister,
+    setValue: currSetValue,
+    trigger: currTrigger,
+    control: currControl,
+    ...currProps
+  } = curr;
+
+  return JSON.stringify(prevProps) === JSON.stringify(currProps);
+});

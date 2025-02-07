@@ -1,14 +1,17 @@
 import React from "react";
 import useMounted from "./useMounted";
+import { IDataTableColumn } from "../_types";
 
 export const useInitDt = ({
   table,
   tbody,
   thead,
+  columns,
 }: {
   table: React.RefObject<HTMLDivElement | null>;
   tbody: React.RefObject<HTMLDivElement | null>;
   thead: React.RefObject<HTMLDivElement | null>;
+  columns: IDataTableColumn[];
 }) => {
   const mounted = useMounted();
   const visibleStickyColShadow = () => {

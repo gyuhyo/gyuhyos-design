@@ -67,7 +67,7 @@ function DevsDtRow(_a) {
     var _b;
     var data = _a.data, index = _a.index, rowKey = _a.rowKey, lastNode = _a.lastNode, dragProvided = _a.dragProvided, dragSnapshot = _a.dragSnapshot;
     var showMessage = useMessage().showMessage;
-    var _c = useDt(), setDataSource = _c.setDataSource, options = _c.options, formsRef = _c.formsRef, focusedRow = _c.focusedRow, setFocusedRow = _c.setFocusedRow, editCount = _c.editCount, dataSource = _c.dataSource, setSliderFormOpen = _c.setSliderFormOpen, setFocusedRowForm = _c.setFocusedRowForm, buttons = _c.buttons, editMode = _c.editMode;
+    var _c = useDt(), setDataSource = _c.setDataSource, options = _c.options, formsRef = _c.formsRef, focusedRow = _c.focusedRow, setFocusedRow = _c.setFocusedRow, editCount = _c.editCount, dataSource = _c.dataSource, setSliderFormOpen = _c.setSliderFormOpen, setFocusedRowForm = _c.setFocusedRowForm, editMode = _c.editMode;
     var form = useForm({
         defaultValues: data,
         mode: "onSubmit",
@@ -234,6 +234,4 @@ function DevsDtRow(_a) {
                             : data[col.field], error: errors.hasOwnProperty(col.field), autoFocus: (_b = (_a = col.autoFocus) === null || _a === void 0 ? void 0 : _a.call(col, data.mode)) !== null && _b !== void 0 ? _b : GetAutoFocus(col.field), row: data, setValue: setValue, merge: (_c = data._merge) === null || _c === void 0 ? void 0 : _c[col.field], rowIndex: index, getValue: getValues, trigger: trigger }, "".concat(rowKey, "-").concat(col.field)));
                 })] })));
 }
-export default React.memo(DevsDtRow, function (prev, curr) {
-    return prev === curr;
-});
+export default React.memo(DevsDtRow);

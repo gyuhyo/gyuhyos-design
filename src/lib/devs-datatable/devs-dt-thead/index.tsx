@@ -337,7 +337,15 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
                 alignItems: "center",
               }}
             >
-              <p style={{ whiteSpace: "pre-wrap" }}>{column.title}</p>
+              <p
+                style={{
+                  whiteSpace: "pre-wrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {column.title}
+              </p>
               {column.children === undefined &&
                 (column.sortable === undefined || column.sortable === true) && (
                   <div>

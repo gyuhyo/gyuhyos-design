@@ -9,6 +9,17 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __read = (this && this.__read) || function (o, n) {
     var m = typeof Symbol === "function" && o[Symbol.iterator];
     if (!m) return o;
@@ -36,20 +47,20 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 import { jsx as _jsx, jsxs as _jsxs } from "@emotion/react/jsx-runtime";
 /** @jsxImportSource @emotion/react */
+import { DatePicker, InputNumber, Select } from "antd";
 import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
+import "dayjs/locale/ko";
 import advancedFormat from "dayjs/plugin/advancedFormat";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import localeData from "dayjs/plugin/localeData";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import weekday from "dayjs/plugin/weekday";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import weekYear from "dayjs/plugin/weekYear";
 import React from "react";
 import { Controller, } from "react-hook-form";
-import { DatePicker, InputNumber, Select } from "antd";
-import "dayjs/locale/ko";
 import { useDt } from "../context/devs-dt-context";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
 dayjs.extend(customParseFormat);
 dayjs.extend(advancedFormat);
 dayjs.extend(weekday);
@@ -63,7 +74,7 @@ dayjs.tz.setDefault("Asia/Seoul");
 function DevsDtCell(_a) {
     var _b, _c, _d, _e, _f, _g, _h;
     var register = _a.register, control = _a.control, col = _a.col, mode = _a.mode, defaultValue = _a.defaultValue, error = _a.error, autoFocus = _a.autoFocus, row = _a.row, merge = _a.merge, setValue = _a.setValue, getValue = _a.getValue, rowIndex = _a.rowIndex, trigger = _a.trigger;
-    var _j = useDt(), focusedRow = _j.focusedRow, focusedCell = _j.focusedCell, setFocusedCell = _j.setFocusedCell, setDataSource = _j.setDataSource, setColumns = _j.setColumns, options = _j.options, editMode = _j.editMode;
+    var _j = useDt(), focusedRow = _j.focusedRow, focusedCell = _j.focusedCell, setFocusedCell = _j.setFocusedCell, setDataSource = _j.setDataSource, setColumns = _j.setColumns, options = _j.options, editMode = _j.editMode, tbody = _j.tbody;
     var isCellEdit = React.useMemo(function () {
         var _a;
         if ((options === null || options === void 0 ? void 0 : options.editType) === undefined || (options === null || options === void 0 ? void 0 : options.editType) === "row")
@@ -390,4 +401,8 @@ function DevsDtCell(_a) {
                     zIndex: 2,
                 } }, { children: Cell })), _jsx("div", { className: "devs-dt-bg-cell" })] })));
 }
-export default React.memo(DevsDtCell);
+export default React.memo(DevsDtCell, function (prev, curr) {
+    var prevGetValue = prev.getValue, prevRegister = prev.register, prevSetValue = prev.setValue, prevTrigger = prev.trigger, prevControl = prev.control, prevProps = __rest(prev, ["getValue", "register", "setValue", "trigger", "control"]);
+    var currGetValue = curr.getValue, currRegister = curr.register, currSetValue = curr.setValue, currTrigger = curr.trigger, currControl = curr.control, currProps = __rest(curr, ["getValue", "register", "setValue", "trigger", "control"]);
+    return JSON.stringify(prevProps) === JSON.stringify(currProps);
+});

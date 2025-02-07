@@ -7,3 +7,4 @@ export { moveUrl, setDefaultTitle } from "./layout/utils/moveUrl";
 export { default as LayerPopup } from "./layer-popup";
 export { default as ContextMenu } from "./context-menu";
 export { GyudAccessProvider } from "./access-context";
+export { default as DevsDatePicker } from "./devs-date-picker";

@@ -18,6 +18,7 @@ export interface IDataTableProviderProps extends IDataTableProps {
   setFocusedCell: React.Dispatch<React.SetStateAction<null | string>>;
   focusedRow?: null | IDataSource;
   focusedCell?: null | string;
+  tbody?: React.RefObject<HTMLDivElement | null>;
 }
 
 export interface IDataTableContextProps extends IDataTableProps {
@@ -40,4 +41,5 @@ export interface IDataTableContextProps extends IDataTableProps {
   setEditMode: React.Dispatch<
     React.SetStateAction<undefined | "grid" | "slider">
   >;
+  tbody?: React.RefObject<HTMLDivElement | null>;
 }

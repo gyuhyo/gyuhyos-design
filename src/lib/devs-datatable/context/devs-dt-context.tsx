@@ -113,6 +113,7 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
         setFocusedRowForm,
         editMode,
         setEditMode,
+        tbody: props.tbody,
       }}
     >
       <MessageProvider>
@@ -131,7 +132,30 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
   );
 };
 
-export const DevsDtProvider = React.memo(DevsDtProviderComponent);
+export const DevsDtProvider = React.memo(
+  DevsDtProviderComponent,
+  (prev, curr) => {
+    const {
+      columns: prevColumns,
+      dataSource: prevDataSource,
+      focusedCell: prevFocusedCell,
+      focusedRow: prevFocusedRow,
+    } = prev;
+    const {
+      columns: currColumns,
+      dataSource: currDataSource,
+      focusedCell: currFocusedCell,
+      focusedRow: currFocusedRow,
+    } = curr;
+
+    return (
+      JSON.stringify(prevColumns) === JSON.stringify(currColumns) &&
+      JSON.stringify(prevDataSource) === JSON.stringify(currDataSource) &&
+      prevFocusedCell === currFocusedCell &&
+      prevFocusedRow === currFocusedRow
+    );
+  }
+);
 
 export const useDt = () => {
   const context = React.useContext(DevsDtContext);
