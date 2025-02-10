@@ -239,7 +239,6 @@ function DevsDtRow({
     if (!(options?.rowEditable?.({ index, row: data }) ?? true)) return;
     if (options?.onBeforeRowEdit?.({ index, row: data }) === false) return;
 
-    console.log(options?.showEditModeSelector, editMode);
     if (options?.showEditModeSelector && editMode === "slider") {
       handleActionSliderForm();
       return;

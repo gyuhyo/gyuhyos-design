@@ -134,7 +134,6 @@ function DevsDtRow(_a) {
             return;
         if (((_c = options === null || options === void 0 ? void 0 : options.onBeforeRowEdit) === null || _c === void 0 ? void 0 : _c.call(options, { index: index, row: data })) === false)
             return;
-        console.log(options === null || options === void 0 ? void 0 : options.showEditModeSelector, editMode);
         if ((options === null || options === void 0 ? void 0 : options.showEditModeSelector) && editMode === "slider") {
             handleActionSliderForm();
             return;

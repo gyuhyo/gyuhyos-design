@@ -37,3 +37,5 @@ export type { ContextMenuProps } from "./context-menu";
 export { GyudAccessProvider } from "./access-context";
 export { default as DevsDatePicker } from "./devs-date-picker";
 export type { DevsDatePickerProps } from "./devs-date-picker";
+export { default as DevsSplitContainer } from "./devs-split-container";
+export type { DevsSplitContainerProps } from "./devs-split-container";

@@ -36,12 +36,13 @@ const DevsDataTable: React.FC<IDataTableProps> = (props) => {
   const table = React.useRef<HTMLDivElement>(null);
   const thead = React.useRef<HTMLDivElement>(null);
   const tbody = React.useRef<HTMLDivElement>(null);
-  const [, DtForceUpdate] = React.useState(false);
+  const [columnsStyleForceUpdate, COLUMNS_STYLE_FORCE_UPDATE] =
+    React.useState<boolean>(false);
   const init = useInitDt({
     table: table,
     tbody: tbody,
     thead: thead,
-    columns: props.columns,
+    columnsStyleForceUpdate,
   });
 
   React.useEffect(() => {
@@ -235,6 +236,8 @@ const DevsDataTable: React.FC<IDataTableProps> = (props) => {
       focusedCell={focusedCell}
       setFocusedCell={setFocusedCell}
       tbody={tbody}
+      thead={thead}
+      COLUMNS_STYLE_FORCE_UPDATE={COLUMNS_STYLE_FORCE_UPDATE}
     >
       {(props.loading === true || innerLoading === true) && (
         <div className="loader-backdrop">

@@ -39,8 +39,9 @@ var react_1 = __importDefault(require("react"));
 var usehooks_ts_1 = require("usehooks-ts");
 var react_2 = require("@emotion/react");
 function DevsDatePicker(props) {
-    var selectedDate = props.selectedDate, setSelectedDate = props.setSelectedDate, _a = props.picker, picker = _a === void 0 ? "month" : _a, _b = props.showButton, showButton = _b === void 0 ? true : _b;
+    var selectedDate = props.selectedDate, setSelectedDate = props.setSelectedDate, _a = props.picker, picker = _a === void 0 ? "month" : _a, _b = props.minDate, minDate = _b === void 0 ? "1990-01-01" : _b;
     var matches = (0, usehooks_ts_1.useMediaQuery)("(min-width: 1024px)");
+    var showButton = matches;
     var _c = __read(react_1.default.useState(false), 2), monthPickerButtonHidden = _c[0], setMonthPickerButtonHidden = _c[1];
     react_1.default.useEffect(function () {
         typeof window !== "undefined" && matches
@@ -48,13 +49,13 @@ function DevsDatePicker(props) {
             : setMonthPickerButtonHidden(true);
     }, [matches]);
     var onPrevClick = function () {
-        if (picker === "date") {
+        if (picker === "date" && selectedDate.add(-1, "day") >= (0, dayjs_1.default)(minDate)) {
             setSelectedDate(selectedDate.add(-1, "day"));
         }
-        if (picker === "month") {
+        if (picker === "month" && selectedDate.add(-1, "month") >= (0, dayjs_1.default)(minDate)) {
             setSelectedDate(selectedDate.add(-1, "month"));
         }
-        if (picker === "year") {
+        if (picker === "year" && selectedDate.add(-1, "year") >= (0, dayjs_1.default)(minDate)) {
             setSelectedDate(selectedDate.add(-1, "year"));
         }
     };
@@ -70,8 +71,6 @@ function DevsDatePicker(props) {
         }
     };
     var onMonthChaged = function (e, dateString) {
-        if (typeof dateString !== "string")
-            return;
         setSelectedDate((0, dayjs_1.default)(dateString));
     };
     var prevTitle = react_1.default.useMemo(function () {
@@ -127,6 +126,6 @@ function DevsDatePicker(props) {
                     borderColor: showButton ? "none" : "#4096ff",
                 },
             },
-        }) }, { children: [showButton && ((0, jsx_runtime_1.jsx)(antd_1.Tooltip, __assign({ placement: "bottom", title: prevTitle }, { children: (0, jsx_runtime_1.jsx)(antd_1.Button, { icon: (0, jsx_runtime_1.jsx)(icons_1.LeftOutlined, {}), onClick: onPrevClick, hidden: monthPickerButtonHidden }) }))), (0, jsx_runtime_1.jsx)(antd_1.Tooltip, __assign({ placement: "bottom", title: "\uC870\uD68C\uC77C\uC790" }, { children: (0, jsx_runtime_1.jsx)(antd_1.DatePicker, __assign({ value: selectedDate, onChange: onMonthChaged, allowClear: false, inputReadOnly: true }, props)) })), showButton && ((0, jsx_runtime_1.jsx)(antd_1.Tooltip, __assign({ placement: "bottom", title: nextTitle }, { children: (0, jsx_runtime_1.jsx)(antd_1.Button, { icon: (0, jsx_runtime_1.jsx)(icons_1.RightOutlined, {}), onClick: onNextClick, hidden: monthPickerButtonHidden }) })))] })));
+        }) }, { children: [(0, jsx_runtime_1.jsx)(antd_1.Tooltip, __assign({ placement: "bottom", title: prevTitle }, { children: (0, jsx_runtime_1.jsx)(antd_1.Button, { icon: (0, jsx_runtime_1.jsx)(icons_1.LeftOutlined, {}), onClick: onPrevClick, hidden: monthPickerButtonHidden }) })), (0, jsx_runtime_1.jsx)(antd_1.Tooltip, __assign({ placement: "bottom", title: "\uC870\uD68C\uC77C\uC790" }, { children: (0, jsx_runtime_1.jsx)(antd_1.DatePicker, { picker: picker, value: selectedDate, onChange: onMonthChaged, allowClear: false, inputReadOnly: true, minDate: (0, dayjs_1.default)(minDate) }) })), (0, jsx_runtime_1.jsx)(antd_1.Tooltip, __assign({ placement: "bottom", title: nextTitle }, { children: (0, jsx_runtime_1.jsx)(antd_1.Button, { icon: (0, jsx_runtime_1.jsx)(icons_1.RightOutlined, {}), onClick: onNextClick, hidden: monthPickerButtonHidden }) }))] })));
 }
-exports.default = react_1.default.memo(DevsDatePicker);
+exports.default = DevsDatePicker;

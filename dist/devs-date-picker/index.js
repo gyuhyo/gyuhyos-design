@@ -34,8 +34,9 @@ import React from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { css } from "@emotion/react";
 function DevsDatePicker(props) {
-    var selectedDate = props.selectedDate, setSelectedDate = props.setSelectedDate, _a = props.picker, picker = _a === void 0 ? "month" : _a, _b = props.showButton, showButton = _b === void 0 ? true : _b;
+    var selectedDate = props.selectedDate, setSelectedDate = props.setSelectedDate, _a = props.picker, picker = _a === void 0 ? "month" : _a, _b = props.minDate, minDate = _b === void 0 ? "1990-01-01" : _b;
     var matches = useMediaQuery("(min-width: 1024px)");
+    var showButton = matches;
     var _c = __read(React.useState(false), 2), monthPickerButtonHidden = _c[0], setMonthPickerButtonHidden = _c[1];
     React.useEffect(function () {
         typeof window !== "undefined" && matches
@@ -43,13 +44,13 @@ function DevsDatePicker(props) {
             : setMonthPickerButtonHidden(true);
     }, [matches]);
     var onPrevClick = function () {
-        if (picker === "date") {
+        if (picker === "date" && selectedDate.add(-1, "day") >= dayjs(minDate)) {
             setSelectedDate(selectedDate.add(-1, "day"));
         }
-        if (picker === "month") {
+        if (picker === "month" && selectedDate.add(-1, "month") >= dayjs(minDate)) {
             setSelectedDate(selectedDate.add(-1, "month"));
         }
-        if (picker === "year") {
+        if (picker === "year" && selectedDate.add(-1, "year") >= dayjs(minDate)) {
             setSelectedDate(selectedDate.add(-1, "year"));
         }
     };
@@ -65,8 +66,6 @@ function DevsDatePicker(props) {
         }
     };
     var onMonthChaged = function (e, dateString) {
-        if (typeof dateString !== "string")
-            return;
         setSelectedDate(dayjs(dateString));
     };
     var prevTitle = React.useMemo(function () {
@@ -122,6 +121,6 @@ function DevsDatePicker(props) {
                     borderColor: showButton ? "none" : "#4096ff",
                 },
             },
-        }) }, { children: [showButton && (_jsx(Tooltip, __assign({ placement: "bottom", title: prevTitle }, { children: _jsx(Button, { icon: _jsx(LeftOutlined, {}), onClick: onPrevClick, hidden: monthPickerButtonHidden }) }))), _jsx(Tooltip, __assign({ placement: "bottom", title: "\uC870\uD68C\uC77C\uC790" }, { children: _jsx(DatePicker, __assign({ value: selectedDate, onChange: onMonthChaged, allowClear: false, inputReadOnly: true }, props)) })), showButton && (_jsx(Tooltip, __assign({ placement: "bottom", title: nextTitle }, { children: _jsx(Button, { icon: _jsx(RightOutlined, {}), onClick: onNextClick, hidden: monthPickerButtonHidden }) })))] })));
+        }) }, { children: [_jsx(Tooltip, __assign({ placement: "bottom", title: prevTitle }, { children: _jsx(Button, { icon: _jsx(LeftOutlined, {}), onClick: onPrevClick, hidden: monthPickerButtonHidden }) })), _jsx(Tooltip, __assign({ placement: "bottom", title: "\uC870\uD68C\uC77C\uC790" }, { children: _jsx(DatePicker, { picker: picker, value: selectedDate, onChange: onMonthChaged, allowClear: false, inputReadOnly: true, minDate: dayjs(minDate) }) })), _jsx(Tooltip, __assign({ placement: "bottom", title: nextTitle }, { children: _jsx(Button, { icon: _jsx(RightOutlined, {}), onClick: onNextClick, hidden: monthPickerButtonHidden }) }))] })));
 }
-export default React.memo(DevsDatePicker);
+export default DevsDatePicker;

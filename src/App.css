@@ -21,6 +21,11 @@ body {
     "Noto Color Emoji";
 }
 
+#root {
+  height: 100%;
+  width: 100%;
+}
+
 *,
 ::before,
 ::after {

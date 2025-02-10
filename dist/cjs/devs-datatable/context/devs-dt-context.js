@@ -30,13 +30,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useDt = exports.DevsDtProvider = void 0;
+exports.useDt = exports.DevsDtProvider = exports.DevsDtContext = void 0;
 var jsx_runtime_1 = require("@emotion/react/jsx-runtime");
 var react_1 = __importDefault(require("react"));
 var react_uuid_1 = __importDefault(require("react-uuid"));
 var message_context_1 = require("../../alert-message/context/message-context");
 var access_context_1 = require("../../access-context");
-var DevsDtContext = react_1.default.createContext(undefined);
+exports.DevsDtContext = react_1.default.createContext(undefined);
 var DevsDtProviderComponent = function (props) {
     var _a, _b, _c;
     var isAccess = (0, access_context_1.useGyudAccess)();
@@ -81,7 +81,7 @@ var DevsDtProviderComponent = function (props) {
     if (isAccess && !isAccess.result) {
         throw new Error("You do not have permission to use package 'gyud'.");
     }
-    return ((0, jsx_runtime_1.jsx)(DevsDtContext.Provider, __assign({ value: {
+    return ((0, jsx_runtime_1.jsx)(exports.DevsDtContext.Provider, __assign({ value: {
             columns: props.columns,
             setColumns: props.setColumns,
             dataSource: props.dataSource,
@@ -103,6 +103,8 @@ var DevsDtProviderComponent = function (props) {
             editMode: editMode,
             setEditMode: setEditMode,
             tbody: props.tbody,
+            thead: props.thead,
+            COLUMNS_STYLE_FORCE_UPDATE: props.COLUMNS_STYLE_FORCE_UPDATE,
         } }, { children: (0, jsx_runtime_1.jsx)(message_context_1.MessageProvider, { children: (0, jsx_runtime_1.jsx)("div", __assign({ style: {
                     height: "100%",
                     display: "flex",
@@ -110,16 +112,9 @@ var DevsDtProviderComponent = function (props) {
                     position: "relative",
                 } }, { children: props.children })) }) })));
 };
-exports.DevsDtProvider = react_1.default.memo(DevsDtProviderComponent, function (prev, curr) {
-    var prevColumns = prev.columns, prevDataSource = prev.dataSource, prevFocusedCell = prev.focusedCell, prevFocusedRow = prev.focusedRow;
-    var currColumns = curr.columns, currDataSource = curr.dataSource, currFocusedCell = curr.focusedCell, currFocusedRow = curr.focusedRow;
-    return (JSON.stringify(prevColumns) === JSON.stringify(currColumns) &&
-        JSON.stringify(prevDataSource) === JSON.stringify(currDataSource) &&
-        prevFocusedCell === currFocusedCell &&
-        prevFocusedRow === currFocusedRow);
-});
+exports.DevsDtProvider = react_1.default.memo(DevsDtProviderComponent);
 var useDt = function () {
-    var context = react_1.default.useContext(DevsDtContext);
+    var context = react_1.default.useContext(exports.DevsDtContext);
     if (!context) {
         throw new Error("DevsDtContext is not found");
     }

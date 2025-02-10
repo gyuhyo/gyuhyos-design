@@ -14,7 +14,7 @@ import useMounted from "./useMounted";
 export var useInitDt = function (_a) {
     var e_1, _b;
     var _c, _d, _e, _f;
-    var table = _a.table, tbody = _a.tbody, thead = _a.thead, columns = _a.columns;
+    var table = _a.table, tbody = _a.tbody, thead = _a.thead, columnsStyleForceUpdate = _a.columnsStyleForceUpdate;
     var mounted = useMounted();
     var visibleStickyColShadow = function () {
         var e_2, _a;

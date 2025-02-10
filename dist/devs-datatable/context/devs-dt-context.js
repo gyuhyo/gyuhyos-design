@@ -30,7 +30,7 @@ import React from "react";
 import uuid from "react-uuid";
 import { MessageProvider } from "../../alert-message/context/message-context";
 import { useGyudAccess } from "../../access-context";
-var DevsDtContext = React.createContext(undefined);
+export var DevsDtContext = React.createContext(undefined);
 var DevsDtProviderComponent = function (props) {
     var _a, _b, _c;
     var isAccess = useGyudAccess();
@@ -97,6 +97,8 @@ var DevsDtProviderComponent = function (props) {
             editMode: editMode,
             setEditMode: setEditMode,
             tbody: props.tbody,
+            thead: props.thead,
+            COLUMNS_STYLE_FORCE_UPDATE: props.COLUMNS_STYLE_FORCE_UPDATE,
         } }, { children: _jsx(MessageProvider, { children: _jsx("div", __assign({ style: {
                     height: "100%",
                     display: "flex",
@@ -104,14 +106,7 @@ var DevsDtProviderComponent = function (props) {
                     position: "relative",
                 } }, { children: props.children })) }) })));
 };
-export var DevsDtProvider = React.memo(DevsDtProviderComponent, function (prev, curr) {
-    var prevColumns = prev.columns, prevDataSource = prev.dataSource, prevFocusedCell = prev.focusedCell, prevFocusedRow = prev.focusedRow;
-    var currColumns = curr.columns, currDataSource = curr.dataSource, currFocusedCell = curr.focusedCell, currFocusedRow = curr.focusedRow;
-    return (JSON.stringify(prevColumns) === JSON.stringify(currColumns) &&
-        JSON.stringify(prevDataSource) === JSON.stringify(currDataSource) &&
-        prevFocusedCell === currFocusedCell &&
-        prevFocusedRow === currFocusedRow);
-});
+export var DevsDtProvider = React.memo(DevsDtProviderComponent);
 export var useDt = function () {
     var context = React.useContext(DevsDtContext);
     if (!context) {

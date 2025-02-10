@@ -8,3 +8,4 @@ export { default as LayerPopup } from "./layer-popup";
 export { default as ContextMenu } from "./context-menu";
 export { GyudAccessProvider } from "./access-context";
 export { default as DevsDatePicker } from "./devs-date-picker";
+export { default as DevsSplitContainer } from "./devs-split-container";

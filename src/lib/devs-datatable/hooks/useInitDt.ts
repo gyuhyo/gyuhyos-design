@@ -6,12 +6,12 @@ export const useInitDt = ({
   table,
   tbody,
   thead,
-  columns,
+  columnsStyleForceUpdate,
 }: {
   table: React.RefObject<HTMLDivElement | null>;
   tbody: React.RefObject<HTMLDivElement | null>;
   thead: React.RefObject<HTMLDivElement | null>;
-  columns: IDataTableColumn[];
+  columnsStyleForceUpdate: boolean;
 }) => {
   const mounted = useMounted();
   const visibleStickyColShadow = () => {

@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { Button, MesButton, useMessage } from "./lib/index";
+import { Button, DevsSplitContainer, MesButton, useMessage } from "./lib/index";
 import uuid from "react-uuid";
 import { IDataSource, IDataTableColumn } from "./lib/devs-datatable/_types";
 import DevsDataTable from "./lib/devs-datatable";
@@ -270,7 +270,7 @@ const App: React.FC<{}> = () => {
   const { showMessage } = useMessage();
   const tb = React.useRef<any>(null);
   const tb2 = React.useRef<any>(null);
-  const [selectedDate, setSelectedDate] = React.useState(dayjs());
+  const [selectedDate, setSelectedDate] = React.useState<dayjs.Dayjs>(dayjs());
   const [focusedRow, setFocusedRow] = React.useState<IDataSource | null>(null);
   const [isLayerPopOpen, setIsLayerPopOpen] = React.useState<boolean>(false);
   const [dataSource, setDataSource] = React.useState<IDataSource[]>(dummyData);

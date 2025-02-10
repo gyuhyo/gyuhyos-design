@@ -11,9 +11,9 @@ import uuid from "react-uuid";
 import { MessageProvider } from "../../alert-message/context/message-context";
 import { useGyudAccess } from "../../access-context";
 
-const DevsDtContext = React.createContext<IDataTableContextProps | undefined>(
-  undefined
-);
+export const DevsDtContext = React.createContext<
+  IDataTableContextProps | undefined
+>(undefined);
 
 const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
   const isAccess = useGyudAccess();
@@ -114,6 +114,8 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
         editMode,
         setEditMode,
         tbody: props.tbody,
+        thead: props.thead,
+        COLUMNS_STYLE_FORCE_UPDATE: props.COLUMNS_STYLE_FORCE_UPDATE,
       }}
     >
       <MessageProvider>
@@ -132,30 +134,7 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
   );
 };
 
-export const DevsDtProvider = React.memo(
-  DevsDtProviderComponent,
-  (prev, curr) => {
-    const {
-      columns: prevColumns,
-      dataSource: prevDataSource,
-      focusedCell: prevFocusedCell,
-      focusedRow: prevFocusedRow,
-    } = prev;
-    const {
-      columns: currColumns,
-      dataSource: currDataSource,
-      focusedCell: currFocusedCell,
-      focusedRow: currFocusedRow,
-    } = curr;
-
-    return (
-      JSON.stringify(prevColumns) === JSON.stringify(currColumns) &&
-      JSON.stringify(prevDataSource) === JSON.stringify(currDataSource) &&
-      prevFocusedCell === currFocusedCell &&
-      prevFocusedRow === currFocusedRow
-    );
-  }
-);
+export const DevsDtProvider = React.memo(DevsDtProviderComponent);
 
 export const useDt = () => {
   const context = React.useContext(DevsDtContext);

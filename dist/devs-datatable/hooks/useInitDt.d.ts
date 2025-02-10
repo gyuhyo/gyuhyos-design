@@ -1,8 +1,7 @@
 import React from "react";
-import { IDataTableColumn } from "../_types";
-export declare const useInitDt: ({ table, tbody, thead, columns, }: {
+export declare const useInitDt: ({ table, tbody, thead, columnsStyleForceUpdate, }: {
     table: React.RefObject<HTMLDivElement | null>;
     tbody: React.RefObject<HTMLDivElement | null>;
     thead: React.RefObject<HTMLDivElement | null>;
-    columns: IDataTableColumn[];
+    columnsStyleForceUpdate: boolean;
 }) => boolean;

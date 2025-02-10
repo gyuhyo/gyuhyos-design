@@ -108,7 +108,7 @@ function getMaxDepth(columns, currentDepth) {
 }
 function DevsDtTHead(_a) {
     var thead = _a.thead, setHeaderWidth = _a.setHeaderWidth;
-    var _b = (0, devs_dt_context_1.useDt)(), columns = _b.columns, options = _b.options, setDataSource = _b.setDataSource, setColumns = _b.setColumns, sorter = _b.sorter, setSorter = _b.setSorter;
+    var _b = (0, devs_dt_context_1.useDt)(), columns = _b.columns, options = _b.options, setDataSource = _b.setDataSource, setColumns = _b.setColumns, sorter = _b.sorter, setSorter = _b.setSorter, tbody = _b.tbody, COLUMNS_STYLE_FORCE_UPDATE = _b.COLUMNS_STYLE_FORCE_UPDATE;
     var isResizingRef = react_1.default.useRef(false);
     var resizingColumnRef = react_1.default.useRef(null);
     var rows = generateTableRows(columns);
@@ -135,22 +135,51 @@ function DevsDtTHead(_a) {
     };
     // 마우스 이동 핸들러
     var handleMouseMove = react_1.default.useCallback(function (e) {
-        var _a;
+        var e_1, _a;
+        var _b, _c, _d;
         e.stopPropagation();
         if (resizingColumnRef.current && setColumns !== undefined) {
-            var _b = resizingColumnRef.current, startX = _b.startX, startWidth = _b.startWidth;
-            var col = columns.find(function (f) { return f.field === resizingColumnRef.current.column.field; });
-            var deltaX = e.clientX - startX;
-            var newWidth_1 = Math.max(startWidth + deltaX, (_a = col === null || col === void 0 ? void 0 : col.width) !== null && _a !== void 0 ? _a : 100); // 최소 너비 50px
-            // columns 배열을 자식 컬럼까지 고려하여 업데이트
-            setColumns(function (prevColumns) {
-                var _a;
-                return updateColumnWidth(prevColumns, (_a = resizingColumnRef.current) === null || _a === void 0 ? void 0 : _a.column.field, newWidth_1);
+            var _e = resizingColumnRef.current, startX = _e.startX, startWidth = _e.startWidth;
+            var flatColumns = columns.flatMap(function (x) {
+                return x.children !== undefined && x.children.length > 0 ? x.children : x;
             });
+            var col = flatColumns.find(function (f) { return f.field === resizingColumnRef.current.column.field; });
+            if (!col)
+                return;
+            var deltaX = e.clientX - startX;
+            var newWidth = Math.max(startWidth + deltaX, (_b = col === null || col === void 0 ? void 0 : col.width) !== null && _b !== void 0 ? _b : 100); // 최소 너비 50px
+            resizingColumnRef.current.endWidth = newWidth;
+            // columns 배열을 자식 컬럼까지 고려하여 업데이트
+            var target = (_c = thead.current) === null || _c === void 0 ? void 0 : _c.querySelector("th[data-field='".concat(col.field, "']"));
+            var targetBodyCell = (_d = tbody.current) === null || _d === void 0 ? void 0 : _d.querySelectorAll("tr > td[data-field='".concat(col.field, "']"));
+            if (target) {
+                target.style.setProperty("--width", "".concat(newWidth, "px"));
+            }
+            if (targetBodyCell) {
+                try {
+                    for (var targetBodyCell_1 = __values(targetBodyCell), targetBodyCell_1_1 = targetBodyCell_1.next(); !targetBodyCell_1_1.done; targetBodyCell_1_1 = targetBodyCell_1.next()) {
+                        var cell = targetBodyCell_1_1.value;
+                        var c = cell;
+                        c.style.setProperty("--width", "".concat(newWidth, "px"));
+                    }
+                }
+                catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                finally {
+                    try {
+                        if (targetBodyCell_1_1 && !targetBodyCell_1_1.done && (_a = targetBodyCell_1.return)) _a.call(targetBodyCell_1);
+                    }
+                    finally { if (e_1) throw e_1.error; }
+                }
+            }
+            COLUMNS_STYLE_FORCE_UPDATE(function (prev) { return !prev; });
         }
-    }, [resizingColumnRef, setColumns]);
+    }, [setColumns, columns.length]);
     // 마우스 업 핸들러
     var handleMouseUp = react_1.default.useCallback(function (e) {
+        setColumns(function (prevColumns) {
+            var _a, _b;
+            return updateColumnWidth(prevColumns, (_a = resizingColumnRef.current) === null || _a === void 0 ? void 0 : _a.column.field, (_b = resizingColumnRef.current) === null || _b === void 0 ? void 0 : _b.endWidth);
+        });
         resizingColumnRef.current = null;
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
@@ -160,22 +189,24 @@ function DevsDtTHead(_a) {
     }, [handleMouseMove]);
     // 마우스 다운 핸들러
     var handleMouseDown = react_1.default.useCallback(function (e, col) {
-        var _a;
+        var _a, _b;
         e.stopPropagation();
         isResizingRef.current = true;
         resizingColumnRef.current = {
             startX: e.clientX,
             startWidth: (_a = col.width) !== null && _a !== void 0 ? _a : 100,
+            endWidth: (_b = col.width) !== null && _b !== void 0 ? _b : 100,
             column: col, // 현재 컬럼 정보 저장
         };
         document.addEventListener("mousemove", handleMouseMove);
         document.addEventListener("mouseup", handleMouseUp);
     }, [handleMouseMove, handleMouseUp]);
     var checkOverflow = function (col) {
-        var e_1, _a;
+        var e_2, _a;
         var width = col.width, field = col.field;
         var targetTds = document.querySelectorAll(".devs-dt-tbody tr td[data-field='".concat(field, "']"));
         var maxWidth = width !== null && width !== void 0 ? width : 100;
+        var findContentWidth = maxWidth;
         try {
             for (var targetTds_1 = __values(targetTds), targetTds_1_1 = targetTds_1.next(); !targetTds_1_1.done; targetTds_1_1 = targetTds_1.next()) {
                 var td = targetTds_1_1.value;
@@ -185,28 +216,17 @@ function DevsDtTHead(_a) {
                 // div의 콘텐츠 너비
                 var contentWidth = div.scrollWidth;
                 maxWidth = contentWidth > maxWidth ? contentWidth : maxWidth;
+                findContentWidth = contentWidth > maxWidth ? contentWidth : maxWidth;
             }
         }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
         finally {
             try {
                 if (targetTds_1_1 && !targetTds_1_1.done && (_a = targetTds_1.return)) _a.call(targetTds_1);
             }
-            finally { if (e_1) throw e_1.error; }
+            finally { if (e_2) throw e_2.error; }
         }
         setColumns(function (prev) { return updateColumnWidth(prev, field, maxWidth + 12); });
-        //const tdElement = cellRef.current;
-        //if (!tdElement || !divElement) return;
-        // // td의 실제 너비
-        // const tdWidth = tdElement.getBoundingClientRect().width;
-        // // div의 콘텐츠 너비
-        // const contentWidth = divElement.scrollWidth;
-        // // 콘텐츠가 td보다 크다면
-        // if (contentWidth > tdWidth && contentWidth > (col.width ?? 100)) {
-        //   setColumns((prev) =>
-        //     updateColumnWidth(prev, col.field, contentWidth + 12)
-        //   );
-        // }
     };
     function generateTableRows(allColumns) {
         var maxDepth = Math.max.apply(Math, __spreadArray([], __read(allColumns.map(calculateDepth)), false));
@@ -228,7 +248,7 @@ function DevsDtTHead(_a) {
                 }
                 if (depth === 1)
                     idx++;
-                rows[depth].push((0, jsx_runtime_1.jsxs)("th", __assign({ className: classString, rowSpan: rowspan, colSpan: colspan, "data-col": true, "data-sortable": column.children === undefined &&
+                rows[depth].push((0, jsx_runtime_1.jsxs)("th", __assign({ className: classString, rowSpan: rowspan, colSpan: colspan, "data-field": column.field, "data-col": true, "data-sortable": column.children === undefined &&
                         (column.sortable === undefined || column.sortable === true), "data-sorted": sorter.field === column.field, onClick: function (e) {
                         if (column.children === undefined &&
                             (column.sortable === undefined || column.sortable === true) &&

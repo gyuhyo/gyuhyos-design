@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+
 import { Button, DatePicker, Tooltip } from "antd";
 import dayjs from "dayjs";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
@@ -10,7 +11,7 @@ export interface DevsDatePickerProps {
   selectedDate: dayjs.Dayjs;
   setSelectedDate: React.Dispatch<React.SetStateAction<dayjs.Dayjs>>;
   picker?: "date" | "month" | "year" | undefined;
-  showButton?: boolean | undefined;
+  minDate?: string;
 }
 
 function DevsDatePicker(props: DevsDatePickerProps) {
@@ -18,9 +19,10 @@ function DevsDatePicker(props: DevsDatePickerProps) {
     selectedDate,
     setSelectedDate,
     picker = "month",
-    showButton = true,
+    minDate = "1990-01-01",
   } = props;
   const matches = useMediaQuery("(min-width: 1024px)");
+  const showButton = matches;
   const [monthPickerButtonHidden, setMonthPickerButtonHidden] =
     React.useState(false);
 
@@ -31,15 +33,15 @@ function DevsDatePicker(props: DevsDatePickerProps) {
   }, [matches]);
 
   const onPrevClick = () => {
-    if (picker === "date") {
+    if (picker === "date" && selectedDate.add(-1, "day") >= dayjs(minDate)) {
       setSelectedDate(selectedDate.add(-1, "day"));
     }
 
-    if (picker === "month") {
+    if (picker === "month" && selectedDate.add(-1, "month") >= dayjs(minDate)) {
       setSelectedDate(selectedDate.add(-1, "month"));
     }
 
-    if (picker === "year") {
+    if (picker === "year" && selectedDate.add(-1, "year") >= dayjs(minDate)) {
       setSelectedDate(selectedDate.add(-1, "year"));
     }
   };
@@ -58,10 +60,8 @@ function DevsDatePicker(props: DevsDatePickerProps) {
     }
   };
 
-  const onMonthChaged = (e: dayjs.Dayjs, dateString: string | string[]) => {
-    if (typeof dateString !== "string") return;
-
-    setSelectedDate(dayjs(dateString));
+  const onMonthChaged = (e: any, dateString: string | string[]) => {
+    setSelectedDate(dayjs(dateString as dayjs.ConfigType));
   };
 
   const prevTitle = React.useMemo(() => {
@@ -127,35 +127,32 @@ function DevsDatePicker(props: DevsDatePickerProps) {
         },
       })}
     >
-      {showButton && (
-        <Tooltip placement="bottom" title={prevTitle}>
-          <Button
-            icon={<LeftOutlined />}
-            onClick={onPrevClick}
-            hidden={monthPickerButtonHidden}
-          />
-        </Tooltip>
-      )}
+      <Tooltip placement="bottom" title={prevTitle}>
+        <Button
+          icon={<LeftOutlined />}
+          onClick={onPrevClick}
+          hidden={monthPickerButtonHidden}
+        />
+      </Tooltip>
       <Tooltip placement="bottom" title="조회일자">
         <DatePicker
+          picker={picker}
           value={selectedDate}
           onChange={onMonthChaged}
           allowClear={false}
           inputReadOnly={true}
-          {...props}
+          minDate={dayjs(minDate)}
         />
       </Tooltip>
-      {showButton && (
-        <Tooltip placement="bottom" title={nextTitle}>
-          <Button
-            icon={<RightOutlined />}
-            onClick={onNextClick}
-            hidden={monthPickerButtonHidden}
-          />
-        </Tooltip>
-      )}
+      <Tooltip placement="bottom" title={nextTitle}>
+        <Button
+          icon={<RightOutlined />}
+          onClick={onNextClick}
+          hidden={monthPickerButtonHidden}
+        />
+      </Tooltip>
     </div>
   );
 }
 
-export default React.memo(DevsDatePicker);
+export default DevsDatePicker;

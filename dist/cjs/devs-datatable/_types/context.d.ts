@@ -16,6 +16,8 @@ export interface IDataTableProviderProps extends IDataTableProps {
     focusedRow?: null | IDataSource;
     focusedCell?: null | string;
     tbody?: React.RefObject<HTMLDivElement | null>;
+    thead?: React.RefObject<HTMLDivElement | null>;
+    COLUMNS_STYLE_FORCE_UPDATE: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export interface IDataTableContextProps extends IDataTableProps {
     keyField?: string;
@@ -34,4 +36,6 @@ export interface IDataTableContextProps extends IDataTableProps {
     editMode: undefined | "grid" | "slider";
     setEditMode: React.Dispatch<React.SetStateAction<undefined | "grid" | "slider">>;
     tbody?: React.RefObject<HTMLDivElement | null>;
+    thead?: React.RefObject<HTMLDivElement | null>;
+    COLUMNS_STYLE_FORCE_UPDATE: React.Dispatch<React.SetStateAction<boolean>>;
 }

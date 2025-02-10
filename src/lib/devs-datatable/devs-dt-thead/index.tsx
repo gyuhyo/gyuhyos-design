@@ -112,12 +112,21 @@ function getMaxDepth(columns: IDataTableColumn[], currentDepth = 0) {
 }
 
 function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
-  const { columns, options, setDataSource, setColumns, sorter, setSorter } =
-    useDt();
+  const {
+    columns,
+    options,
+    setDataSource,
+    setColumns,
+    sorter,
+    setSorter,
+    tbody,
+    COLUMNS_STYLE_FORCE_UPDATE,
+  } = useDt();
   const isResizingRef = React.useRef<boolean>(false);
   const resizingColumnRef = React.useRef<{
     startX: number;
     startWidth: number;
+    endWidth: number;
     column: IDataTableColumn;
   } | null>(null);
   const rows = generateTableRows(columns);
@@ -162,29 +171,60 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
       e.stopPropagation();
       if (resizingColumnRef.current && setColumns !== undefined) {
         const { startX, startWidth } = resizingColumnRef.current;
-        const col = columns.find(
+        const flatColumns = columns.flatMap((x) =>
+          x.children !== undefined && x.children.length > 0 ? x.children : x
+        );
+
+        const col = flatColumns.find(
           (f) => f.field === resizingColumnRef.current!.column.field
         );
+
+        if (!col) return;
 
         const deltaX = e.clientX - startX;
         const newWidth = Math.max(startWidth + deltaX, col?.width ?? 100); // 최소 너비 50px
 
+        resizingColumnRef.current.endWidth = newWidth;
         // columns 배열을 자식 컬럼까지 고려하여 업데이트
-        setColumns((prevColumns) =>
-          updateColumnWidth(
-            prevColumns,
-            resizingColumnRef.current?.column.field!,
-            newWidth
-          )
+        const target = thead.current?.querySelector(
+          `th[data-field='${col!.field}']`
         );
+
+        const targetBodyCell = tbody!.current?.querySelectorAll(
+          `tr > td[data-field='${col!.field}']`
+        );
+
+        if (target) {
+          (target as HTMLTableCellElement).style.setProperty(
+            "--width",
+            `${newWidth}px`
+          );
+        }
+
+        if (targetBodyCell) {
+          for (const cell of targetBodyCell) {
+            const c = cell as HTMLTableCellElement;
+
+            c.style.setProperty("--width", `${newWidth}px`);
+          }
+        }
+
+        COLUMNS_STYLE_FORCE_UPDATE((prev) => !prev);
       }
     },
-    [resizingColumnRef, setColumns]
+    [setColumns, columns.length]
   );
 
   // 마우스 업 핸들러
   const handleMouseUp = React.useCallback(
     (e: MouseEvent) => {
+      setColumns((prevColumns) =>
+        updateColumnWidth(
+          prevColumns,
+          resizingColumnRef.current?.column.field!,
+          resizingColumnRef.current?.endWidth!
+        )
+      );
       resizingColumnRef.current = null;
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
@@ -206,6 +246,7 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
       resizingColumnRef.current = {
         startX: e.clientX,
         startWidth: col.width ?? 100,
+        endWidth: col.width ?? 100,
         column: col, // 현재 컬럼 정보 저장
       };
       document.addEventListener("mousemove", handleMouseMove);
@@ -222,6 +263,7 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
     );
 
     let maxWidth = width ?? 100;
+    let findContentWidth = maxWidth;
 
     for (let td of targetTds) {
       const div = td.querySelector("div:first-child");
@@ -232,25 +274,10 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
       const contentWidth = div.scrollWidth;
 
       maxWidth = contentWidth > maxWidth ? contentWidth : maxWidth;
+      findContentWidth = contentWidth > maxWidth ? contentWidth : maxWidth;
     }
 
     setColumns((prev) => updateColumnWidth(prev, field, maxWidth + 12));
-    //const tdElement = cellRef.current;
-
-    //if (!tdElement || !divElement) return;
-
-    // // td의 실제 너비
-    // const tdWidth = tdElement.getBoundingClientRect().width;
-
-    // // div의 콘텐츠 너비
-    // const contentWidth = divElement.scrollWidth;
-
-    // // 콘텐츠가 td보다 크다면
-    // if (contentWidth > tdWidth && contentWidth > (col.width ?? 100)) {
-    //   setColumns((prev) =>
-    //     updateColumnWidth(prev, col.field, contentWidth + 12)
-    //   );
-    // }
   };
 
   function generateTableRows(allColumns: IDataTableColumn[]) {
@@ -284,6 +311,7 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
             className={classString}
             rowSpan={rowspan}
             colSpan={colspan}
+            data-field={column.field}
             data-col={true}
             data-sortable={
               column.children === undefined &&
