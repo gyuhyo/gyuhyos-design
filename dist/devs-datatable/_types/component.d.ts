@@ -12,6 +12,7 @@ export interface IDataTableOptions {
     enabledRowCheck?: boolean;
     multipleRowCheck?: boolean;
     enabledRowOrder?: boolean;
+    enabledClipboard?: boolean;
     multipleEdit?: boolean;
     rowOrderEnd?: (data: IDataSource[]) => void;
     readonly?: boolean;

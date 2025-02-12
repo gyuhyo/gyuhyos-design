@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
+import { css } from "@emotion/react";
 import React from "react";
 import {
   DevsDataTableRef,
@@ -9,14 +10,11 @@ import {
 } from "./_types";
 import { DevsDtProvider } from "./context/devs-dt-context";
 import "./dev.datatable.style.css";
-import DevsDtButtons from "./devs-dt-component/buttons";
+import DevsDtHeader from "./devs-dt-header";
+import DevsDtSliderForm from "./devs-dt-slider-form/devs-dt-slider-form";
 import DevsDtTBody from "./devs-dt-tbody";
 import DevsDtTHead from "./devs-dt-thead";
 import { useInitDt } from "./hooks/useInitDt";
-import { css } from "@emotion/react";
-import useDtUtils from "./hooks/useDtUtils";
-import DevsDtHeader from "./devs-dt-header";
-import DevsDtSliderForm from "./devs-dt-slider-form/devs-dt-slider-form";
 
 // DevsDataTable 컴포넌트 타입 설정 및 구현
 const DevsDataTable: React.FC<IDataTableProps> = (props) => {
@@ -114,15 +112,7 @@ const DevsDataTable: React.FC<IDataTableProps> = (props) => {
 
           if (allValid) {
             const allData = validations.map((result) => result.data);
-            const allDataBlankToNull = allData.map((data) =>
-              Object.fromEntries(
-                Object.entries(data).map(([key, value]) => [
-                  key,
-                  value === "" ? undefined : value ?? undefined,
-                ])
-              )
-            );
-            return { valid: true, data: allDataBlankToNull };
+            return { valid: true, data: allData };
           } else {
             const allData = validations
               .filter((result) => !result.valid)
@@ -156,15 +146,7 @@ const DevsDataTable: React.FC<IDataTableProps> = (props) => {
 
           if (allValid) {
             const allData = validations.map((result) => result.data);
-            const allDataBlankToNull = allData.map((data) =>
-              Object.fromEntries(
-                Object.entries(data).map(([key, value]) => [
-                  key,
-                  value === "" ? undefined : value ?? undefined,
-                ])
-              )
-            );
-            return { valid: true, data: allDataBlankToNull };
+            return { valid: true, data: allData };
           } else {
             const allData = validations
               .filter((f) => !f.valid)
@@ -197,6 +179,11 @@ const DevsDataTable: React.FC<IDataTableProps> = (props) => {
 
           if (form) {
             form.setValue(field, value);
+            props.setDataSource((prev) =>
+              prev.map((p) =>
+                p.rowId === rowId ? { ...p, [field]: value } : p
+              )
+            );
             form.trigger();
           }
         },
@@ -220,6 +207,58 @@ const DevsDataTable: React.FC<IDataTableProps> = (props) => {
       props.focusedCellChanged({ row: focusedRow, field: focusedCell });
     }
   }, [focusedCell, focusedRow]);
+
+  React.useEffect(() => {
+    /* #########################################
+    추후 개발 예정 (엑셀 복사 내용 붙여넣기)
+    ############################################*/
+    if (
+      !table.current ||
+      typeof window === undefined ||
+      !props.options?.enabledClipboard ||
+      props.columns.length === 0
+    )
+      return;
+
+    const getClipboardData = async (ev: ClipboardEvent) => {
+      const target = ev.target as HTMLElement;
+      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") return;
+      ev.preventDefault();
+
+      const data = ev.clipboardData || window.clipboardData;
+      const pastedData = data?.getData("Text") || "";
+
+      const rows = pastedData.split("\r\n");
+      const dt: IDataSource[] = [];
+      let rowNo = 0;
+      for (const row of rows) {
+        if (row.split("\t").filter((x) => x !== "").length === 0) continue;
+
+        dt.push({ checked: true, mode: "c" });
+        let colNo = 0;
+        for (const col of row.split("\t")) {
+          dt[rowNo] = Object.assign(dt[rowNo], {
+            [props.columns[colNo].field]: col,
+          });
+          colNo++;
+        }
+        rowNo++;
+      }
+
+      props.setDataSource((prev) => {
+        return [...dt, ...prev];
+      });
+      //console.log(dt);
+    };
+
+    const pasteListener = (event: Event) => {
+      getClipboardData(event as ClipboardEvent);
+    };
+
+    window.addEventListener("paste", pasteListener);
+
+    return () => window.removeEventListener("paste", pasteListener);
+  }, [props.columns.length]);
 
   if (!init) return <>loading...</>;
 

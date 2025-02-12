@@ -17,6 +17,7 @@ var alertMessageBody = css({
     flex: "1 1 0%",
     padding: 12,
     borderBottom: "1px solid #ccc",
+    alignContent: "center",
 });
 var AlertMessageBody = React.memo(function (_a) {
     var message = _a.message;

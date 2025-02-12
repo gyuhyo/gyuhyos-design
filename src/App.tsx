@@ -282,6 +282,7 @@ const App: React.FC<{}> = () => {
       required: true,
       resizing: false,
       sticky: true,
+      defaultValue: () => "a",
     },
     {
       key: true,
@@ -290,6 +291,7 @@ const App: React.FC<{}> = () => {
       type: "number",
       isNotNullSort: true,
       sticky: true,
+      defaultValue: () => "a",
     },
     {
       field: "4",
@@ -481,8 +483,8 @@ const App: React.FC<{}> = () => {
           setFocusedRow(row);
         }}
         options={{
-          cellEditClickType: "click",
-          editType: "cell",
+          enabledClipboard: true,
+          editType: "row",
           readonly: false,
           showRowNumber: true,
           enabledRowOrder: true,

@@ -160,16 +160,21 @@ function DevsDtCell(_a) {
     }, [col.sticky, error, focusedCell, focusedRow]);
     var getDefaultValue = function (val) {
         if (col.defaultValue !== undefined) {
-            return col.defaultValue({
+            var value = col.defaultValue({
                 row: row,
-                value: defaultValue,
+                value: val,
                 index: rowIndex,
                 getValue: getValue,
             });
+            if (val !== value && row.mode === "u") {
+                setValue(col.field, value);
+            }
+            return value;
         }
         return val;
     };
     var cellComp = React.useMemo(function () {
+        var _a, _b;
         if (col.editor !== undefined) {
             return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue || null), rules: { required: col.required }, render: function (_a) {
                     var onChange = _a.field.onChange;
@@ -185,8 +190,9 @@ function DevsDtCell(_a) {
         }
         if (col.type === "date") {
             return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), rules: { required: col.required }, render: function (_a) {
+                    var _b;
                     var onChange = _a.field.onChange;
-                    return (_jsx(DatePicker, __assign({ size: "small", placeholder: "\uB0A0\uC9DC \uC120\uD0DD", defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), onChange: function (_, v) {
+                    return (_jsx(DatePicker, __assign({ disabled: (_b = col.readonly) !== null && _b !== void 0 ? _b : false, size: "small", placeholder: "\uB0A0\uC9DC \uC120\uD0DD", defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), onChange: function (_, v) {
                             onChange(v);
                             if (col.onChange !== undefined) {
                                 col.onChange({
@@ -203,8 +209,9 @@ function DevsDtCell(_a) {
         }
         if (col.type === "datetime") {
             return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), rules: { required: col.required }, render: function (_a) {
+                    var _b;
                     var onChange = _a.field.onChange;
-                    return (_jsx(DatePicker, __assign({ size: "small", placeholder: "\uB0A0\uC9DC/\uC2DC\uAC04 \uC120\uD0DD", defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), showTime: true, onChange: function (_, v) {
+                    return (_jsx(DatePicker, __assign({ disabled: (_b = col.readonly) !== null && _b !== void 0 ? _b : false, size: "small", placeholder: "\uB0A0\uC9DC/\uC2DC\uAC04 \uC120\uD0DD", defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), showTime: true, onChange: function (_, v) {
                             onChange(v);
                             if (col.onChange !== undefined) {
                                 col.onChange({
@@ -221,8 +228,9 @@ function DevsDtCell(_a) {
         }
         if (col.type === "select") {
             return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue || null), rules: { required: col.required }, render: function (_a) {
+                    var _b;
                     var onChange = _a.field.onChange;
-                    return (_jsx(Select, __assign({ size: "small", showSearch: true, onChange: function (v) {
+                    return (_jsx(Select, __assign({ disabled: (_b = col.readonly) !== null && _b !== void 0 ? _b : false, size: "small", showSearch: true, onChange: function (v) {
                             onChange(v);
                             if (col.onChange !== undefined) {
                                 col.onChange({
@@ -240,8 +248,9 @@ function DevsDtCell(_a) {
         }
         if (col.type === "number") {
             return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue || null), rules: { required: col.required }, render: function (_a) {
+                    var _b;
                     var onChange = _a.field.onChange;
-                    return (_jsx(InputNumber, __assign({ size: "small", onChange: function (v) {
+                    return (_jsx(InputNumber, __assign({ disabled: (_b = col.readonly) !== null && _b !== void 0 ? _b : false, size: "small", onChange: function (v) {
                             onChange(v);
                             if (col.onChange !== undefined) {
                                 col.onChange({
@@ -271,7 +280,7 @@ function DevsDtCell(_a) {
                         });
                     }
                 },
-            }), { defaultValue: getDefaultValue(defaultValue || null), autoFocus: (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click" ? true : autoFocus }, col.inputOptions)));
+            }), { disabled: (_a = col.readonly) !== null && _a !== void 0 ? _a : false, defaultValue: getDefaultValue(defaultValue || null), autoFocus: (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click" ? true : autoFocus }, col.inputOptions)));
         }
         return (_jsx("input", __assign({}, register(col.field, {
             required: col.required,
@@ -287,7 +296,7 @@ function DevsDtCell(_a) {
                     });
                 }
             },
-        }), { type: "text", defaultValue: getDefaultValue(defaultValue || null), autoFocus: (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click" ? true : autoFocus, autoComplete: "off" }, col.inputOptions)));
+        }), { disabled: (_b = col.readonly) !== null && _b !== void 0 ? _b : false, type: "text", defaultValue: getDefaultValue(defaultValue || null), autoFocus: (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click" ? true : autoFocus, autoComplete: "off" }, col.inputOptions)));
     }, [col, autoFocus, defaultValue, row, rowIndex]);
     var GetCell = function () {
         var _a, _b;

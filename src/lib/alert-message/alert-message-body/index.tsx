@@ -6,6 +6,7 @@ const alertMessageBody = css({
   flex: "1 1 0%",
   padding: 12,
   borderBottom: "1px solid #ccc",
+  alignContent: "center",
 });
 
 type AlertMessageBodyProps = {

@@ -70,17 +70,28 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
 import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "@emotion/react/jsx-runtime";
 /** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 import React from "react";
 import { DevsDtProvider } from "./context/devs-dt-context";
 import "./dev.datatable.style.css";
+import DevsDtHeader from "./devs-dt-header";
+import DevsDtSliderForm from "./devs-dt-slider-form/devs-dt-slider-form";
 import DevsDtTBody from "./devs-dt-tbody";
 import DevsDtTHead from "./devs-dt-thead";
 import { useInitDt } from "./hooks/useInitDt";
-import { css } from "@emotion/react";
-import DevsDtHeader from "./devs-dt-header";
-import DevsDtSliderForm from "./devs-dt-slider-form/devs-dt-slider-form";
 // DevsDataTable 컴포넌트 타입 설정 및 구현
 var DevsDataTable = function (props) {
     var _a, _b, _c, _d, _e, _f;
@@ -140,7 +151,7 @@ var DevsDataTable = function (props) {
     React.useImperativeHandle(props.ref, function () { return ({
         api: {
             validate: function () { return __awaiter(void 0, void 0, void 0, function () {
-                var forms, validations, allValid, allData, allDataBlankToNull, allData;
+                var forms, validations, allValid, allData, allData;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -161,16 +172,7 @@ var DevsDataTable = function (props) {
                             allValid = validations.every(function (result) { return result.valid; });
                             if (allValid) {
                                 allData = validations.map(function (result) { return result.data; });
-                                allDataBlankToNull = allData.map(function (data) {
-                                    return Object.fromEntries(Object.entries(data).map(function (_a) {
-                                        var _b = __read(_a, 2), key = _b[0], value = _b[1];
-                                        return [
-                                            key,
-                                            value === "" ? undefined : value !== null && value !== void 0 ? value : undefined,
-                                        ];
-                                    }));
-                                });
-                                return [2 /*return*/, { valid: true, data: allDataBlankToNull }];
+                                return [2 /*return*/, { valid: true, data: allData }];
                             }
                             else {
                                 allData = validations
@@ -183,7 +185,7 @@ var DevsDataTable = function (props) {
                 });
             }); },
             onValidationCheck: function () { return __awaiter(void 0, void 0, void 0, function () {
-                var forms, validations, allValid, allData, allDataBlankToNull, allData;
+                var forms, validations, allValid, allData, allData;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -209,16 +211,7 @@ var DevsDataTable = function (props) {
                             allValid = validations.every(function (result) { return result.valid; });
                             if (allValid) {
                                 allData = validations.map(function (result) { return result.data; });
-                                allDataBlankToNull = allData.map(function (data) {
-                                    return Object.fromEntries(Object.entries(data).map(function (_a) {
-                                        var _b = __read(_a, 2), key = _b[0], value = _b[1];
-                                        return [
-                                            key,
-                                            value === "" ? undefined : value !== null && value !== void 0 ? value : undefined,
-                                        ];
-                                    }));
-                                });
-                                return [2 /*return*/, { valid: true, data: allDataBlankToNull }];
+                                return [2 /*return*/, { valid: true, data: allData }];
                             }
                             else {
                                 allData = validations
@@ -258,6 +251,12 @@ var DevsDataTable = function (props) {
                 var form = formsRef.current[rowId];
                 if (form) {
                     form.setValue(field, value);
+                    props.setDataSource(function (prev) {
+                        return prev.map(function (p) {
+                            var _a;
+                            return p.rowId === rowId ? __assign(__assign({}, p), (_a = {}, _a[field] = value, _a)) : p;
+                        });
+                    });
                     form.trigger();
                 }
             },
@@ -275,6 +274,74 @@ var DevsDataTable = function (props) {
             props.focusedCellChanged({ row: focusedRow, field: focusedCell });
         }
     }, [focusedCell, focusedRow]);
+    React.useEffect(function () {
+        var _a;
+        /* #########################################
+        추후 개발 예정 (엑셀 복사 내용 붙여넣기)
+        ############################################*/
+        if (!table.current ||
+            typeof window === undefined ||
+            !((_a = props.options) === null || _a === void 0 ? void 0 : _a.enabledClipboard) ||
+            props.columns.length === 0)
+            return;
+        var getClipboardData = function (ev) { return __awaiter(void 0, void 0, void 0, function () {
+            var target, data, pastedData, rows, dt, rowNo, rows_1, rows_1_1, row, colNo, _a, _b, col;
+            var e_1, _c, e_2, _d, _e;
+            return __generator(this, function (_f) {
+                target = ev.target;
+                if (target.tagName === "INPUT" || target.tagName === "TEXTAREA")
+                    return [2 /*return*/];
+                ev.preventDefault();
+                data = ev.clipboardData || window.clipboardData;
+                pastedData = (data === null || data === void 0 ? void 0 : data.getData("Text")) || "";
+                rows = pastedData.split("\r\n");
+                dt = [];
+                rowNo = 0;
+                try {
+                    for (rows_1 = __values(rows), rows_1_1 = rows_1.next(); !rows_1_1.done; rows_1_1 = rows_1.next()) {
+                        row = rows_1_1.value;
+                        if (row.split("\t").filter(function (x) { return x !== ""; }).length === 0)
+                            continue;
+                        dt.push({ checked: true, mode: "c" });
+                        colNo = 0;
+                        try {
+                            for (_a = (e_2 = void 0, __values(row.split("\t"))), _b = _a.next(); !_b.done; _b = _a.next()) {
+                                col = _b.value;
+                                dt[rowNo] = Object.assign(dt[rowNo], (_e = {},
+                                    _e[props.columns[colNo].field] = col,
+                                    _e));
+                                colNo++;
+                            }
+                        }
+                        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+                        finally {
+                            try {
+                                if (_b && !_b.done && (_d = _a.return)) _d.call(_a);
+                            }
+                            finally { if (e_2) throw e_2.error; }
+                        }
+                        rowNo++;
+                    }
+                }
+                catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                finally {
+                    try {
+                        if (rows_1_1 && !rows_1_1.done && (_c = rows_1.return)) _c.call(rows_1);
+                    }
+                    finally { if (e_1) throw e_1.error; }
+                }
+                props.setDataSource(function (prev) {
+                    return __spreadArray(__spreadArray([], __read(dt), false), __read(prev), false);
+                });
+                return [2 /*return*/];
+            });
+        }); };
+        var pasteListener = function (event) {
+            getClipboardData(event);
+        };
+        window.addEventListener("paste", pasteListener);
+        return function () { return window.removeEventListener("paste", pasteListener); };
+    }, [props.columns.length]);
     if (!init)
         return _jsx(_Fragment, { children: "loading..." });
     return (_jsxs(DevsDtProvider, __assign({ columns: props.columns, setColumns: props.setColumns, dataSource: props.dataSource, setDataSource: props.setDataSource, options: props.options, formsRef: formsRef, focusedRow: focusedRow, setFocusedRow: setFocusedRow, focusedCell: focusedCell, setFocusedCell: setFocusedCell, tbody: tbody, thead: thead, COLUMNS_STYLE_FORCE_UPDATE: COLUMNS_STYLE_FORCE_UPDATE }, { children: [(props.loading === true || innerLoading === true) && (_jsx("div", __assign({ className: "loader-backdrop" }, { children: _jsxs("div", __assign({ className: "loader-container" }, { children: [_jsx("span", { className: "spinner" }), _jsx("span", __assign({ style: { fontWeight: "bold" } }, { children: "\uB370\uC774\uD130 \uBD88\uB7EC\uC624\uB294 \uC911..." }))] })) }))), _jsx(DevsDtHeader, { title: props.title, buttons: props.buttons, options: props.options, setInnerLoading: setInnerLoading }), _jsxs("div", __assign({ ref: table, className: "dev-table-wrapper", css: css({ minWidth: (_d = (_c = props.options) === null || _c === void 0 ? void 0 : _c.minWidth) !== null && _d !== void 0 ? _d : 0 }) }, { children: [_jsx(DevsDtTHead, { thead: thead, setHeaderWidth: setHeaderWidth }), _jsx(DevsDtTBody, { tbody: tbody, headerWidth: headerWidth }), (((_e = props.options) === null || _e === void 0 ? void 0 : _e.editMode) === "slider" ||

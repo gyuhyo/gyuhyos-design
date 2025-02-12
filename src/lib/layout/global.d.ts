@@ -4,4 +4,5 @@ interface Window {
   DisableDevtool: any;
   googleTranslateElementInit: () => void;
   google: any;
+  clipboardData: DataTransfer;
 }

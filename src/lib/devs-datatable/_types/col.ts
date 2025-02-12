@@ -101,4 +101,5 @@ export interface IDataTableColumn {
   updatable?: boolean;
   options?: IDataTableSelectorOptionsProps[];
   children?: IDataTableColumn[];
+  readonly?: boolean;
 }

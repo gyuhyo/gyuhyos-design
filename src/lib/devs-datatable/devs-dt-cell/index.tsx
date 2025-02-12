@@ -187,12 +187,18 @@ function DevsDtCell({
 
   const getDefaultValue = (val: any) => {
     if (col.defaultValue !== undefined) {
-      return col.defaultValue({
+      const value = col.defaultValue({
         row,
-        value: defaultValue,
+        value: val,
         index: rowIndex,
         getValue,
       });
+
+      if (val !== value && row.mode === "u") {
+        setValue(col.field, value);
+      }
+
+      return value;
     }
 
     return val;
@@ -231,6 +237,7 @@ function DevsDtCell({
           rules={{ required: col.required }}
           render={({ field: { onChange } }) => (
             <DatePicker
+              disabled={col.readonly ?? false}
               size="small"
               placeholder="날짜 선택"
               defaultValue={getDefaultValue(
@@ -270,6 +277,7 @@ function DevsDtCell({
           rules={{ required: col.required }}
           render={({ field: { onChange } }) => (
             <DatePicker
+              disabled={col.readonly ?? false}
               size="small"
               placeholder="날짜/시간 선택"
               defaultValue={getDefaultValue(
@@ -308,6 +316,7 @@ function DevsDtCell({
           rules={{ required: col.required }}
           render={({ field: { onChange } }) => (
             <Select
+              disabled={col.readonly ?? false}
               size="small"
               showSearch={true}
               onChange={(v) => {
@@ -350,6 +359,7 @@ function DevsDtCell({
           rules={{ required: col.required }}
           render={({ field: { onChange } }) => (
             <InputNumber
+              disabled={col.readonly ?? false}
               size="small"
               onChange={(v) => {
                 onChange(v);
@@ -393,6 +403,7 @@ function DevsDtCell({
               }
             },
           })}
+          disabled={col.readonly ?? false}
           defaultValue={getDefaultValue(defaultValue || null)}
           autoFocus={options?.cellEditClickType === "click" ? true : autoFocus}
           {...col.inputOptions}
@@ -417,6 +428,7 @@ function DevsDtCell({
             }
           },
         })}
+        disabled={col.readonly ?? false}
         type="text"
         defaultValue={getDefaultValue(defaultValue || null)}
         autoFocus={options?.cellEditClickType === "click" ? true : autoFocus}

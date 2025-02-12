@@ -1,6 +1,6 @@
 {
   "name": "gyud",
-  "version": "1.0.42",
+  "version": "1.0.52",
   "description": "Copyright Gyuhyos Design Components",
   "license": "MIT",
   "author": {
@@ -64,7 +64,9 @@
     "prepare:win32": "rmdir /s /q dist && mkdir dist && tsc && copyfiles -u 2 \"src/lib/**/*.css\" dist && tsc --module commonjs --outDir ./dist/cjs",
     "prepare:mac": "rm -rf dist && mkdir dist && tsc && copyfiles -u 2 \"src/lib/**/*.css\" dist && tsc --module commonjs --outDir ./dist/cjs",
     "prepare": "npm run prepare:mac || npm run prepare:win32",
-    "auto-publish": "npm version patch && npm publish"
+    "auto-patch-publish": "npm version patch --no-git-tag-version && npm publish",
+    "auto-minor-publish": "npm version minor --no-git-tag-version && npm publish",
+    "auto-major-publish": "npm version major --no-git-tag-version && npm publish"
   },
   "eslintConfig": {
     "extends": [

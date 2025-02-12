@@ -71,21 +71,32 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsx_runtime_1 = require("@emotion/react/jsx-runtime");
 /** @jsxImportSource @emotion/react */
-var react_1 = __importDefault(require("react"));
+var react_1 = require("@emotion/react");
+var react_2 = __importDefault(require("react"));
 var devs_dt_context_1 = require("./context/devs-dt-context");
 require("./dev.datatable.style.css");
+var devs_dt_header_1 = __importDefault(require("./devs-dt-header"));
+var devs_dt_slider_form_1 = __importDefault(require("./devs-dt-slider-form/devs-dt-slider-form"));
 var devs_dt_tbody_1 = __importDefault(require("./devs-dt-tbody"));
 var devs_dt_thead_1 = __importDefault(require("./devs-dt-thead"));
 var useInitDt_1 = require("./hooks/useInitDt");
-var react_2 = require("@emotion/react");
-var devs_dt_header_1 = __importDefault(require("./devs-dt-header"));
-var devs_dt_slider_form_1 = __importDefault(require("./devs-dt-slider-form/devs-dt-slider-form"));
 // DevsDataTable 컴포넌트 타입 설정 및 구현
 var DevsDataTable = function (props) {
     var _a, _b, _c, _d, _e, _f;
@@ -93,22 +104,22 @@ var DevsDataTable = function (props) {
         ((_b = props.options) === null || _b === void 0 ? void 0 : _b.editType) === "cell") {
         throw new Error("showEditModeSelector and editType cannot be used together.");
     }
-    var _g = __read(react_1.default.useState(0), 2), headerWidth = _g[0], setHeaderWidth = _g[1];
-    var _h = __read(react_1.default.useState(false), 2), innerLoading = _h[0], setInnerLoading = _h[1];
-    var _j = __read(react_1.default.useState(null), 2), focusedCell = _j[0], setFocusedCell = _j[1];
-    var _k = __read(react_1.default.useState(null), 2), focusedRow = _k[0], setFocusedRow = _k[1];
-    var formsRef = react_1.default.useRef({});
-    var table = react_1.default.useRef(null);
-    var thead = react_1.default.useRef(null);
-    var tbody = react_1.default.useRef(null);
-    var _l = __read(react_1.default.useState(false), 2), columnsStyleForceUpdate = _l[0], COLUMNS_STYLE_FORCE_UPDATE = _l[1];
+    var _g = __read(react_2.default.useState(0), 2), headerWidth = _g[0], setHeaderWidth = _g[1];
+    var _h = __read(react_2.default.useState(false), 2), innerLoading = _h[0], setInnerLoading = _h[1];
+    var _j = __read(react_2.default.useState(null), 2), focusedCell = _j[0], setFocusedCell = _j[1];
+    var _k = __read(react_2.default.useState(null), 2), focusedRow = _k[0], setFocusedRow = _k[1];
+    var formsRef = react_2.default.useRef({});
+    var table = react_2.default.useRef(null);
+    var thead = react_2.default.useRef(null);
+    var tbody = react_2.default.useRef(null);
+    var _l = __read(react_2.default.useState(false), 2), columnsStyleForceUpdate = _l[0], COLUMNS_STYLE_FORCE_UPDATE = _l[1];
     var init = (0, useInitDt_1.useInitDt)({
         table: table,
         tbody: tbody,
         thead: thead,
         columnsStyleForceUpdate: columnsStyleForceUpdate,
     });
-    react_1.default.useEffect(function () {
+    react_2.default.useEffect(function () {
         if (!thead.current)
             return;
         var allCheck = thead.current.querySelector("input[name='allCheck']");
@@ -142,10 +153,10 @@ var DevsDataTable = function (props) {
             }
         });
     }); };
-    react_1.default.useImperativeHandle(props.ref, function () { return ({
+    react_2.default.useImperativeHandle(props.ref, function () { return ({
         api: {
             validate: function () { return __awaiter(void 0, void 0, void 0, function () {
-                var forms, validations, allValid, allData, allDataBlankToNull, allData;
+                var forms, validations, allValid, allData, allData;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -166,16 +177,7 @@ var DevsDataTable = function (props) {
                             allValid = validations.every(function (result) { return result.valid; });
                             if (allValid) {
                                 allData = validations.map(function (result) { return result.data; });
-                                allDataBlankToNull = allData.map(function (data) {
-                                    return Object.fromEntries(Object.entries(data).map(function (_a) {
-                                        var _b = __read(_a, 2), key = _b[0], value = _b[1];
-                                        return [
-                                            key,
-                                            value === "" ? undefined : value !== null && value !== void 0 ? value : undefined,
-                                        ];
-                                    }));
-                                });
-                                return [2 /*return*/, { valid: true, data: allDataBlankToNull }];
+                                return [2 /*return*/, { valid: true, data: allData }];
                             }
                             else {
                                 allData = validations
@@ -188,7 +190,7 @@ var DevsDataTable = function (props) {
                 });
             }); },
             onValidationCheck: function () { return __awaiter(void 0, void 0, void 0, function () {
-                var forms, validations, allValid, allData, allDataBlankToNull, allData;
+                var forms, validations, allValid, allData, allData;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -214,16 +216,7 @@ var DevsDataTable = function (props) {
                             allValid = validations.every(function (result) { return result.valid; });
                             if (allValid) {
                                 allData = validations.map(function (result) { return result.data; });
-                                allDataBlankToNull = allData.map(function (data) {
-                                    return Object.fromEntries(Object.entries(data).map(function (_a) {
-                                        var _b = __read(_a, 2), key = _b[0], value = _b[1];
-                                        return [
-                                            key,
-                                            value === "" ? undefined : value !== null && value !== void 0 ? value : undefined,
-                                        ];
-                                    }));
-                                });
-                                return [2 /*return*/, { valid: true, data: allDataBlankToNull }];
+                                return [2 /*return*/, { valid: true, data: allData }];
                             }
                             else {
                                 allData = validations
@@ -263,26 +256,100 @@ var DevsDataTable = function (props) {
                 var form = formsRef.current[rowId];
                 if (form) {
                     form.setValue(field, value);
+                    props.setDataSource(function (prev) {
+                        return prev.map(function (p) {
+                            var _a;
+                            return p.rowId === rowId ? __assign(__assign({}, p), (_a = {}, _a[field] = value, _a)) : p;
+                        });
+                    });
                     form.trigger();
                 }
             },
         },
     }); }, [props.dataSource, props.options, focusedRow, focusedCell]);
-    react_1.default.useEffect(function () {
+    react_2.default.useEffect(function () {
         if (focusedRow !== null && props.focusedRowChanged !== undefined) {
             props.focusedRowChanged(focusedRow);
         }
     }, [focusedRow]);
-    react_1.default.useEffect(function () {
+    react_2.default.useEffect(function () {
         if (focusedRow !== null &&
             focusedCell !== null &&
             props.focusedCellChanged !== undefined) {
             props.focusedCellChanged({ row: focusedRow, field: focusedCell });
         }
     }, [focusedCell, focusedRow]);
+    react_2.default.useEffect(function () {
+        var _a;
+        /* #########################################
+        추후 개발 예정 (엑셀 복사 내용 붙여넣기)
+        ############################################*/
+        if (!table.current ||
+            typeof window === undefined ||
+            !((_a = props.options) === null || _a === void 0 ? void 0 : _a.enabledClipboard) ||
+            props.columns.length === 0)
+            return;
+        var getClipboardData = function (ev) { return __awaiter(void 0, void 0, void 0, function () {
+            var target, data, pastedData, rows, dt, rowNo, rows_1, rows_1_1, row, colNo, _a, _b, col;
+            var e_1, _c, e_2, _d, _e;
+            return __generator(this, function (_f) {
+                target = ev.target;
+                if (target.tagName === "INPUT" || target.tagName === "TEXTAREA")
+                    return [2 /*return*/];
+                ev.preventDefault();
+                data = ev.clipboardData || window.clipboardData;
+                pastedData = (data === null || data === void 0 ? void 0 : data.getData("Text")) || "";
+                rows = pastedData.split("\r\n");
+                dt = [];
+                rowNo = 0;
+                try {
+                    for (rows_1 = __values(rows), rows_1_1 = rows_1.next(); !rows_1_1.done; rows_1_1 = rows_1.next()) {
+                        row = rows_1_1.value;
+                        if (row.split("\t").filter(function (x) { return x !== ""; }).length === 0)
+                            continue;
+                        dt.push({ checked: true, mode: "c" });
+                        colNo = 0;
+                        try {
+                            for (_a = (e_2 = void 0, __values(row.split("\t"))), _b = _a.next(); !_b.done; _b = _a.next()) {
+                                col = _b.value;
+                                dt[rowNo] = Object.assign(dt[rowNo], (_e = {},
+                                    _e[props.columns[colNo].field] = col,
+                                    _e));
+                                colNo++;
+                            }
+                        }
+                        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+                        finally {
+                            try {
+                                if (_b && !_b.done && (_d = _a.return)) _d.call(_a);
+                            }
+                            finally { if (e_2) throw e_2.error; }
+                        }
+                        rowNo++;
+                    }
+                }
+                catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                finally {
+                    try {
+                        if (rows_1_1 && !rows_1_1.done && (_c = rows_1.return)) _c.call(rows_1);
+                    }
+                    finally { if (e_1) throw e_1.error; }
+                }
+                props.setDataSource(function (prev) {
+                    return __spreadArray(__spreadArray([], __read(dt), false), __read(prev), false);
+                });
+                return [2 /*return*/];
+            });
+        }); };
+        var pasteListener = function (event) {
+            getClipboardData(event);
+        };
+        window.addEventListener("paste", pasteListener);
+        return function () { return window.removeEventListener("paste", pasteListener); };
+    }, [props.columns.length]);
     if (!init)
         return (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: "loading..." });
-    return ((0, jsx_runtime_1.jsxs)(devs_dt_context_1.DevsDtProvider, __assign({ columns: props.columns, setColumns: props.setColumns, dataSource: props.dataSource, setDataSource: props.setDataSource, options: props.options, formsRef: formsRef, focusedRow: focusedRow, setFocusedRow: setFocusedRow, focusedCell: focusedCell, setFocusedCell: setFocusedCell, tbody: tbody, thead: thead, COLUMNS_STYLE_FORCE_UPDATE: COLUMNS_STYLE_FORCE_UPDATE }, { children: [(props.loading === true || innerLoading === true) && ((0, jsx_runtime_1.jsx)("div", __assign({ className: "loader-backdrop" }, { children: (0, jsx_runtime_1.jsxs)("div", __assign({ className: "loader-container" }, { children: [(0, jsx_runtime_1.jsx)("span", { className: "spinner" }), (0, jsx_runtime_1.jsx)("span", __assign({ style: { fontWeight: "bold" } }, { children: "\uB370\uC774\uD130 \uBD88\uB7EC\uC624\uB294 \uC911..." }))] })) }))), (0, jsx_runtime_1.jsx)(devs_dt_header_1.default, { title: props.title, buttons: props.buttons, options: props.options, setInnerLoading: setInnerLoading }), (0, jsx_runtime_1.jsxs)("div", __assign({ ref: table, className: "dev-table-wrapper", css: (0, react_2.css)({ minWidth: (_d = (_c = props.options) === null || _c === void 0 ? void 0 : _c.minWidth) !== null && _d !== void 0 ? _d : 0 }) }, { children: [(0, jsx_runtime_1.jsx)(devs_dt_thead_1.default, { thead: thead, setHeaderWidth: setHeaderWidth }), (0, jsx_runtime_1.jsx)(devs_dt_tbody_1.default, { tbody: tbody, headerWidth: headerWidth }), (((_e = props.options) === null || _e === void 0 ? void 0 : _e.editMode) === "slider" ||
+    return ((0, jsx_runtime_1.jsxs)(devs_dt_context_1.DevsDtProvider, __assign({ columns: props.columns, setColumns: props.setColumns, dataSource: props.dataSource, setDataSource: props.setDataSource, options: props.options, formsRef: formsRef, focusedRow: focusedRow, setFocusedRow: setFocusedRow, focusedCell: focusedCell, setFocusedCell: setFocusedCell, tbody: tbody, thead: thead, COLUMNS_STYLE_FORCE_UPDATE: COLUMNS_STYLE_FORCE_UPDATE }, { children: [(props.loading === true || innerLoading === true) && ((0, jsx_runtime_1.jsx)("div", __assign({ className: "loader-backdrop" }, { children: (0, jsx_runtime_1.jsxs)("div", __assign({ className: "loader-container" }, { children: [(0, jsx_runtime_1.jsx)("span", { className: "spinner" }), (0, jsx_runtime_1.jsx)("span", __assign({ style: { fontWeight: "bold" } }, { children: "\uB370\uC774\uD130 \uBD88\uB7EC\uC624\uB294 \uC911..." }))] })) }))), (0, jsx_runtime_1.jsx)(devs_dt_header_1.default, { title: props.title, buttons: props.buttons, options: props.options, setInnerLoading: setInnerLoading }), (0, jsx_runtime_1.jsxs)("div", __assign({ ref: table, className: "dev-table-wrapper", css: (0, react_1.css)({ minWidth: (_d = (_c = props.options) === null || _c === void 0 ? void 0 : _c.minWidth) !== null && _d !== void 0 ? _d : 0 }) }, { children: [(0, jsx_runtime_1.jsx)(devs_dt_thead_1.default, { thead: thead, setHeaderWidth: setHeaderWidth }), (0, jsx_runtime_1.jsx)(devs_dt_tbody_1.default, { tbody: tbody, headerWidth: headerWidth }), (((_e = props.options) === null || _e === void 0 ? void 0 : _e.editMode) === "slider" ||
                         ((_f = props.options) === null || _f === void 0 ? void 0 : _f.showEditModeSelector)) && (0, jsx_runtime_1.jsx)(devs_dt_slider_form_1.default, {})] }))] })));
 };
-exports.default = react_1.default.memo(DevsDataTable);
+exports.default = react_2.default.memo(DevsDataTable);
