@@ -189,9 +189,14 @@
     mix-blend-mode: lighten;
   }
 
-  &:is([data-edit-mode="u"]) > .devs-dt-cell[data-updatable="true"]::after,
-  &:is([data-edit-mode="c"]) > .devs-dt-cell[data-editable="true"]::after,
-  .devs-dt-cell[data-updatable="true"][data-edit-mode="true"]::after {
+  &:is([data-edit-mode="u"])
+    > .devs-dt-cell[data-updatable="true"]
+    > .devs-dt-required-sig::after,
+  &:is([data-edit-mode="c"])
+    > .devs-dt-cell[data-editable="true"]
+    > .devs-dt-required-sig::after,
+  .devs-dt-cell[data-updatable="true"][data-edit-mode="true"]
+    > .devs-dt-required-sig::after {
     content: "*";
     position: absolute;
     pointer-events: none;
@@ -202,10 +207,13 @@
   }
 
   &:is([data-edit-mode="u"])
-    > .devs-dt-cell[data-updatable="true"][data-required="true"]::after,
+    > .devs-dt-cell[data-updatable="true"][data-required="true"]
+    > .devs-dt-required-sig::after,
   &:is([data-edit-mode="c"])
-    > .devs-dt-cell[data-editable="true"][data-required="true"]::after,
-  .devs-dt-cell[data-updatable="true"][data-edit-mode="true"][data-required="true"]::after {
+    > .devs-dt-cell[data-editable="true"][data-required="true"]
+    > .devs-dt-required-sig::after,
+  .devs-dt-cell[data-updatable="true"][data-edit-mode="true"][data-required="true"]
+    > .devs-dt-required-sig::after {
     color: red;
   }
 

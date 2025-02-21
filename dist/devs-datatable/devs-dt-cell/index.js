@@ -179,7 +179,7 @@ function DevsDtCell(_a) {
             return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue || null), rules: { required: col.required }, render: function (_a) {
                     var onChange = _a.field.onChange;
                     return col.editor({
-                        value: defaultValue,
+                        value: getDefaultValue(defaultValue || null),
                         row: row,
                         index: rowIndex,
                         onChange: onChange,
@@ -192,7 +192,7 @@ function DevsDtCell(_a) {
             return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), rules: { required: col.required }, render: function (_a) {
                     var _b;
                     var onChange = _a.field.onChange;
-                    return (_jsx(DatePicker, __assign({ disabled: (_b = col.readonly) !== null && _b !== void 0 ? _b : false, size: "small", placeholder: "\uB0A0\uC9DC \uC120\uD0DD", defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), onChange: function (_, v) {
+                    return (_jsx(DatePicker, __assign({ disabled: (_b = col.readonly) !== null && _b !== void 0 ? _b : false, size: "small", placeholder: "\uB0A0\uC9DC \uC120\uD0DD", defaultOpen: autoFocus, defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), onChange: function (_, v) {
                             onChange(v);
                             if (col.onChange !== undefined) {
                                 col.onChange({
@@ -211,7 +211,7 @@ function DevsDtCell(_a) {
             return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), rules: { required: col.required }, render: function (_a) {
                     var _b;
                     var onChange = _a.field.onChange;
-                    return (_jsx(DatePicker, __assign({ disabled: (_b = col.readonly) !== null && _b !== void 0 ? _b : false, size: "small", placeholder: "\uB0A0\uC9DC/\uC2DC\uAC04 \uC120\uD0DD", defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), showTime: true, onChange: function (_, v) {
+                    return (_jsx(DatePicker, __assign({ disabled: (_b = col.readonly) !== null && _b !== void 0 ? _b : false, size: "small", placeholder: "\uB0A0\uC9DC/\uC2DC\uAC04 \uC120\uD0DD", defaultOpen: autoFocus, defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), showTime: true, onChange: function (_, v) {
                             onChange(v);
                             if (col.onChange !== undefined) {
                                 col.onChange({
@@ -230,7 +230,7 @@ function DevsDtCell(_a) {
             return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue || null), rules: { required: col.required }, render: function (_a) {
                     var _b;
                     var onChange = _a.field.onChange;
-                    return (_jsx(Select, __assign({ disabled: (_b = col.readonly) !== null && _b !== void 0 ? _b : false, size: "small", showSearch: true, onChange: function (v) {
+                    return (_jsx(Select, __assign({ disabled: (_b = col.readonly) !== null && _b !== void 0 ? _b : false, size: "small", showSearch: true, defaultOpen: autoFocus, onChange: function (v) {
                             onChange(v);
                             if (col.onChange !== undefined) {
                                 col.onChange({
@@ -408,7 +408,7 @@ function DevsDtCell(_a) {
                     height: "100%",
                     alignContent: "center",
                     zIndex: 2,
-                } }, { children: Cell })), _jsx("div", { className: "devs-dt-bg-cell" })] })));
+                } }, { children: Cell })), _jsx("div", { className: "devs-dt-bg-cell" }), _jsx("div", { className: "devs-dt-required-sig" })] })));
 }
 export default React.memo(DevsDtCell, function (prev, curr) {
     var prevGetValue = prev.getValue, prevRegister = prev.register, prevSetValue = prev.setValue, prevTrigger = prev.trigger, prevControl = prev.control, prevProps = __rest(prev, ["getValue", "register", "setValue", "trigger", "control"]);

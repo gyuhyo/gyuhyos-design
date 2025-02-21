@@ -15,6 +15,9 @@ import DevsDtSliderForm from "./devs-dt-slider-form/devs-dt-slider-form";
 import DevsDtTBody from "./devs-dt-tbody";
 import DevsDtTHead from "./devs-dt-thead";
 import { useInitDt } from "./hooks/useInitDt";
+import DevsDtPagination from "./devs-dt-pagination";
+import "./assets/style.css";
+import { sleep } from "../utils/sleep";
 
 // DevsDataTable 컴포넌트 타입 설정 및 구현
 const DevsDataTable: React.FC<IDataTableProps> = (props) => {
@@ -85,6 +88,8 @@ const DevsDataTable: React.FC<IDataTableProps> = (props) => {
   React.useImperativeHandle(
     props.ref,
     (): DevsDataTableRef => ({
+      tbody: tbody.current,
+      thead: thead.current,
       api: {
         validate: async () => {
           const forms = Object.values(formsRef.current);
@@ -260,10 +265,47 @@ const DevsDataTable: React.FC<IDataTableProps> = (props) => {
     return () => window.removeEventListener("paste", pasteListener);
   }, [props.columns.length]);
 
+  React.useEffect(() => {
+    if (
+      !props.options?.initialAutoScroll ||
+      !thead.current ||
+      !tbody.current ||
+      props.dataSource.length === 0
+    )
+      return;
+
+    const initialScrolling = async () => {
+      const scrollField = props.options?.initialAutoScroll;
+      const th = tbody.current!.querySelector(
+        `table tbody tr:first-child td[data-field='${scrollField}']`
+      );
+      const tbodtTable = tbody.current!.querySelector("table");
+
+      if (th) {
+        await sleep(100);
+
+        th.scrollIntoView({
+          behavior: "smooth",
+          inline: "end",
+        });
+      } else {
+        await sleep(100);
+
+        tbodtTable!.scrollTo({
+          left: 0,
+          behavior: "smooth",
+        });
+      }
+    };
+
+    initialScrolling();
+  }, [props.options?.initialAutoScroll, JSON.stringify(props.dataSource)]);
+
   if (!init) return <>loading...</>;
 
   return (
     <DevsDtProvider
+      ref={props.ref}
       columns={props.columns}
       setColumns={props.setColumns}
       dataSource={props.dataSource}
@@ -299,6 +341,7 @@ const DevsDataTable: React.FC<IDataTableProps> = (props) => {
       >
         <DevsDtTHead thead={thead} setHeaderWidth={setHeaderWidth} />
         <DevsDtTBody tbody={tbody} headerWidth={headerWidth} />
+        {props.options?.pagination && <DevsDtPagination />}
         {(props.options?.editMode === "slider" ||
           props.options?.showEditModeSelector) && <DevsDtSliderForm />}
       </div>

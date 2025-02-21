@@ -273,7 +273,22 @@ const App: React.FC<{}> = () => {
   const [selectedDate, setSelectedDate] = React.useState<dayjs.Dayjs>(dayjs());
   const [focusedRow, setFocusedRow] = React.useState<IDataSource | null>(null);
   const [isLayerPopOpen, setIsLayerPopOpen] = React.useState<boolean>(false);
-  const [dataSource, setDataSource] = React.useState<IDataSource[]>(dummyData);
+  const [dataSource, setDataSource] = React.useState<IDataSource[]>([
+    ...dummyData.map((x, indx) => ({ ...x, "1": indx })),
+    // ...dummyData,
+    // ...dummyData,
+    // ...dummyData,
+    // ...dummyData,
+    // ...dummyData,
+    // ...dummyData,
+    // ...dummyData,
+    // ...dummyData,
+    // ...dummyData,
+    // ...dummyData,
+    // ...dummyData,
+    // ...dummyData,
+    // ...dummyData,
+  ]);
   const [columns, setColumns] = React.useState<IDataTableColumn[]>([
     {
       key: true,
@@ -282,7 +297,14 @@ const App: React.FC<{}> = () => {
       required: true,
       resizing: false,
       sticky: true,
-      defaultValue: () => "a",
+    },
+
+    {
+      field: "4",
+      title: "4",
+      width: 200,
+      merge: true,
+      sticky: true,
     },
     {
       key: true,
@@ -290,14 +312,6 @@ const App: React.FC<{}> = () => {
       title: "1",
       type: "number",
       isNotNullSort: true,
-      sticky: true,
-      defaultValue: () => "a",
-    },
-    {
-      field: "4",
-      title: "4",
-      width: 200,
-      merge: true,
       sticky: true,
     },
     {
@@ -444,6 +458,16 @@ const App: React.FC<{}> = () => {
     setDataSource((prev) => prev.filter((f) => !checkedRows.includes(f)));
   };
 
+  const todayField = React.useMemo(() => {
+    if (dayjs().format("YYYY-MM") !== dayjs(selectedDate).format("YYYY-MM")) {
+      return null;
+    }
+
+    return `pspDay_${dayjs().date()}`;
+  }, [selectedDate]);
+
+  console.log(tb.current);
+
   return (
     <div
       style={{
@@ -455,9 +479,6 @@ const App: React.FC<{}> = () => {
         flexDirection: "column",
       }}
     >
-      <div style={{ width: "200px" }}>
-        <MesButton primary="blue">하이</MesButton>
-      </div>
       <DevsDataTable
         ref={tb}
         title={
@@ -483,13 +504,15 @@ const App: React.FC<{}> = () => {
           setFocusedRow(row);
         }}
         options={{
+          pagination: true,
+          paginationLimit: 11,
           enabledClipboard: true,
-          editType: "row",
           readonly: false,
           showRowNumber: true,
           enabledRowOrder: true,
           enabledRowCheck: true,
           enabledExpand: true,
+          editType: "cell",
           onBeforeRowEdit: ({ index, row }) => {
             if (index > 3) return false;
             return true;

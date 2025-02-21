@@ -41,13 +41,14 @@ var DevsDtProviderComponent = function (props) {
     var _a, _b, _c;
     var isAccess = (0, access_context_1.useGyudAccess)();
     var keyField = (_a = props.columns.find(function (col) { return col.key; })) === null || _a === void 0 ? void 0 : _a.field;
-    var _d = __read(react_1.default.useState(null), 2), focusedRowForm = _d[0], setFocusedRowForm = _d[1];
-    var _e = __read(react_1.default.useState(false), 2), sliderFormOpen = _e[0], setSliderFormOpen = _e[1];
-    var _f = __read(react_1.default.useState(((_b = props.options) === null || _b === void 0 ? void 0 : _b.showEditModeSelector) ? "grid" : undefined), 2), editMode = _f[0], setEditMode = _f[1];
-    var _g = __read(react_1.default.useState({
+    var _d = __read(react_1.default.useState(1), 2), currentPage = _d[0], setCurrentPage = _d[1];
+    var _e = __read(react_1.default.useState(null), 2), focusedRowForm = _e[0], setFocusedRowForm = _e[1];
+    var _f = __read(react_1.default.useState(false), 2), sliderFormOpen = _f[0], setSliderFormOpen = _f[1];
+    var _g = __read(react_1.default.useState(((_b = props.options) === null || _b === void 0 ? void 0 : _b.showEditModeSelector) ? "grid" : undefined), 2), editMode = _g[0], setEditMode = _g[1];
+    var _h = __read(react_1.default.useState({
         field: null,
         type: "asc",
-    }), 2), sorter = _g[0], setSorter = _g[1];
+    }), 2), sorter = _h[0], setSorter = _h[1];
     react_1.default.useEffect(function () {
         if (props.setColumns !== undefined) {
             props.setColumns(function (prevCols) {
@@ -105,6 +106,8 @@ var DevsDtProviderComponent = function (props) {
             tbody: props.tbody,
             thead: props.thead,
             COLUMNS_STYLE_FORCE_UPDATE: props.COLUMNS_STYLE_FORCE_UPDATE,
+            currentPage: currentPage,
+            setCurrentPage: setCurrentPage,
         } }, { children: (0, jsx_runtime_1.jsx)(message_context_1.MessageProvider, { children: (0, jsx_runtime_1.jsx)("div", __assign({ style: {
                     height: "100%",
                     display: "flex",

@@ -31,7 +31,7 @@ export interface IDataTableColumn {
     value: any;
     row: IDataSource;
     index: number;
-    getValue: UseFormGetValues<IDataSource>;
+    getValue?: UseFormGetValues<IDataSource>;
   }) => any;
   mergeOptions?: ({
     prev,
@@ -51,7 +51,7 @@ export interface IDataTableColumn {
     value?: any;
     row: IDataSource;
     index?: number;
-    getValue: UseFormGetValues<IDataSource>;
+    getValue?: UseFormGetValues<IDataSource>;
   }) => any;
   editor?: ({
     value,

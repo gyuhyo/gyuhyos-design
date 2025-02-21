@@ -38,4 +38,6 @@ export interface IDataTableContextProps extends IDataTableProps {
     tbody?: React.RefObject<HTMLDivElement | null>;
     thead?: React.RefObject<HTMLDivElement | null>;
     COLUMNS_STYLE_FORCE_UPDATE: React.Dispatch<React.SetStateAction<boolean>>;
+    currentPage: number;
+    setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }

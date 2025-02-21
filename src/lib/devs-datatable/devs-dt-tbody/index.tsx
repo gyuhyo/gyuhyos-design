@@ -18,8 +18,15 @@ type TDevsDtTBody = {
 };
 
 function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
-  const { columns, dataSource, setDataSource, options, formsRef, sorter } =
-    useDt();
+  const {
+    columns,
+    dataSource,
+    setDataSource,
+    options,
+    formsRef,
+    sorter,
+    currentPage,
+  } = useDt();
   const [isDrop, setIsDrop] = React.useState(false);
   useDtUtils();
 
@@ -53,6 +60,25 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
     return lastNode.length + fixedCount;
   }, [lastNode, options]);
 
+  const getDefaultValue = (
+    col: IDataTableColumn,
+    row: IDataSource,
+    rowIndex: number,
+    val: any
+  ) => {
+    if (col?.defaultValue !== undefined) {
+      const value = col.defaultValue({
+        row,
+        value: val,
+        index: rowIndex,
+      });
+
+      return value;
+    }
+
+    return val;
+  };
+
   const sortDataSource = React.useCallback(
     (d: IDataSource[]): IDataSource[] => {
       const findSorterField = columns.find(
@@ -61,15 +87,34 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
       const newRows = d.filter((x) => x.mode === "c");
       const nullRows =
         findSorterField?.isNotNullSort === true
-          ? d.filter(
-              (x) =>
-                x[sorter.field!] === "" ||
-                x[sorter.field!] === null ||
-                x[sorter.field!] === undefined
-            )
+          ? d.filter((x, idx) => {
+              const val = getDefaultValue(
+                findSorterField,
+                x,
+                idx,
+                x[sorter.field!]
+              );
+
+              return val === "" || val === null || val === undefined;
+            })
           : [];
 
       if (sorter.field === null || sorter.field === undefined) {
+        if (options?.pagination) {
+          const limit = options?.paginationLimit ?? 20;
+
+          return [
+            ...(currentPage === 1 ? newRows : []),
+            ...d
+              .filter((x) => x.mode !== "c")
+              .sort(
+                (a: IDataSource, b: IDataSource) =>
+                  a.originIndex - b.originIndex
+              )
+              .slice((currentPage - 1) * limit, currentPage * limit),
+          ];
+        }
+
         return [
           ...newRows,
           ...d
@@ -81,24 +126,42 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
       }
 
       const sortedDataSource = d
-        .filter((x) => {
+        .filter((x, idx) => {
           if (findSorterField?.isNotNullSort === true) {
+            const val = getDefaultValue(
+              findSorterField,
+              x,
+              idx,
+              x[sorter.field!]
+            );
+
             return (
-              x.mode !== "c" &&
-              x[sorter.field!] !== "" &&
-              x[sorter.field!] !== null &&
-              x[sorter.field!] !== undefined
+              x.mode !== "c" && val !== "" && val !== null && val !== undefined
             );
           }
 
           return x.mode !== "c";
         })
         .sort((a: IDataSource, b: IDataSource) => {
+          const valA = getDefaultValue(
+            findSorterField!,
+            a,
+            a.originIndex,
+            a[sorter.field!]
+          );
+
+          const valB = getDefaultValue(
+            findSorterField!,
+            b,
+            b.originIndex,
+            b[sorter.field!]
+          );
+
           if (sorter.type === "desc") {
-            if (a[sorter.field!] === b[sorter.field!]) {
+            if (valA === valB) {
               return a.originIndex - b.originIndex;
             } else {
-              if (a[sorter.field!] > b[sorter.field!]) {
+              if (valA > valB) {
                 return -1;
               } else {
                 return 1;
@@ -106,10 +169,10 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
             }
           }
 
-          if (a[sorter.field!] === b[sorter.field!]) {
+          if (valA === valB) {
             return a.originIndex - b.originIndex;
           } else {
-            if (a[sorter.field!] > b[sorter.field!]) {
+            if (valA > valB) {
               return 1;
             } else {
               return -1;
@@ -117,9 +180,27 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
           }
         });
 
+      if (options?.pagination) {
+        const limit = options?.paginationLimit ?? 20;
+
+        return [
+          ...(currentPage === 1 ? newRows : []),
+          ...[...sortedDataSource, ...nullRows].slice(
+            (currentPage - 1) * limit,
+            currentPage * limit
+          ),
+        ];
+      }
+
       return [...newRows, ...sortedDataSource, ...nullRows];
     },
-    [sorter, columns]
+    [
+      sorter,
+      columns,
+      options?.pagination,
+      options?.paginationLimit,
+      currentPage,
+    ]
   );
 
   const mergedDataSource: IDataSource[] | undefined = React.useMemo(() => {
@@ -215,7 +296,7 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
     }
 
     return dataSource;
-  }, [dataSource, lastNode, sorter]);
+  }, [dataSource, lastNode, sorter, currentPage]);
 
   const setRowOrderChange = React.useCallback(
     (e: DropResult<string>) => {

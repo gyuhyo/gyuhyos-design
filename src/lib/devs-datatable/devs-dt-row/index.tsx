@@ -38,7 +38,9 @@ type TUseForm = {
   setValue: UseFormSetValue<FieldValues>;
 };
 
-const RowNumberCell: React.FC<{ index: number }> = ({ index }) => {
+const RowNumberCell: React.FC<{
+  index: number;
+}> = ({ index }) => {
   return (
     <td
       className="devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-index-cell"
@@ -160,7 +162,12 @@ function DevsDtRow({
     setSliderFormOpen,
     setFocusedRowForm,
     editMode,
+    currentPage,
+    focusedCell,
   } = useDt();
+
+  const idx: number =
+    (currentPage - 1) * (options?.paginationLimit ?? 20) + index;
 
   const form = useForm({
     defaultValues: data,
@@ -184,12 +191,12 @@ function DevsDtRow({
   } = form;
 
   const prevRow = React.useMemo(() => {
-    return dataSource[index - 1];
-  }, [dataSource[index - 1]]);
+    return dataSource[idx - 1];
+  }, [dataSource[idx - 1]]);
 
   const nextRow = React.useMemo(() => {
-    return dataSource[index + 1];
-  }, [dataSource[index + 1]]);
+    return dataSource[idx + 1];
+  }, [dataSource[idx + 1]]);
 
   React.useEffect(() => {
     if (!Object.keys(formsRef.current).includes(rowKey)) {
@@ -236,8 +243,8 @@ function DevsDtRow({
 
   const onEditModeClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
     if (options?.readonly === true) return;
-    if (!(options?.rowEditable?.({ index, row: data }) ?? true)) return;
-    if (options?.onBeforeRowEdit?.({ index, row: data }) === false) return;
+    if (!(options?.rowEditable?.({ index: idx, row: data }) ?? true)) return;
+    if (options?.onBeforeRowEdit?.({ index: idx, row: data }) === false) return;
 
     if (options?.showEditModeSelector && editMode === "slider") {
       handleActionSliderForm();
@@ -298,8 +305,21 @@ function DevsDtRow({
   };
 
   const GetAutoFocus = React.useCallback(
-    (field: string) => {
-      let focusabled = false;
+    (field: string): boolean => {
+      const updatables = lastNode.filter(
+        (x) => x.updatable === true || x.updatable === undefined
+      );
+
+      if (options?.editType === "cell") {
+        if (
+          field === focusedCell &&
+          updatables.find((f) => f.field === field)
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      }
 
       if (data.mode === "c") {
         const editables = lastNode.filter(
@@ -312,22 +332,23 @@ function DevsDtRow({
           return editables[0].field === field;
         }
       } else if (data.mode === "u") {
-        const updatables = lastNode.filter(
-          (x) => x.updatable === true || x.updatable === undefined
-        );
+        if (
+          field === focusedCell &&
+          updatables.find((f) => f.field === field)
+        ) {
+          return true;
+        }
 
         if (updatables.length === 0) {
           return false;
         } else {
           return updatables[0].field === field;
         }
-      } else {
-        focusabled = false;
       }
 
-      return focusabled;
+      return false;
     },
-    [lastNode, data]
+    [lastNode, data, focusedCell]
   );
 
   return (
@@ -350,7 +371,7 @@ function DevsDtRow({
       }}
       css={css(
         options?.rowStyle?.({
-          index: index,
+          index: idx,
           row: data,
           prevRow: prevRow,
           nextRow: nextRow,
@@ -364,13 +385,9 @@ function DevsDtRow({
         />
       )}
       {options?.enabledExpand && (
-        <RowExpandCell
-          setDataSource={setDataSource}
-          data={data}
-          index={index}
-        />
+        <RowExpandCell setDataSource={setDataSource} data={data} index={idx} />
       )}
-      {options?.showRowNumber && <RowNumberCell index={index} />}
+      {options?.showRowNumber && <RowNumberCell index={idx} />}
       {options?.enabledRowCheck && (
         <RowCheckCell
           data={data}
@@ -405,7 +422,7 @@ function DevsDtRow({
               row={data}
               setValue={setValue}
               merge={data._merge?.[col.field]}
-              rowIndex={index}
+              rowIndex={idx}
               getValue={getValues}
               trigger={trigger}
             />

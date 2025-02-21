@@ -69,10 +69,11 @@ var RowExpandCell = function (_a) {
         } }, { children: (0, jsx_runtime_1.jsx)("button", { className: "expand_ico2 ".concat(data.expand ? "expand_ico_active2" : "") }) })));
 };
 function DevsDtRow(_a) {
-    var _b;
+    var _b, _c;
     var data = _a.data, index = _a.index, rowKey = _a.rowKey, lastNode = _a.lastNode, dragProvided = _a.dragProvided, dragSnapshot = _a.dragSnapshot;
     var showMessage = (0, message_context_1.useMessage)().showMessage;
-    var _c = (0, devs_dt_context_1.useDt)(), setDataSource = _c.setDataSource, options = _c.options, formsRef = _c.formsRef, focusedRow = _c.focusedRow, setFocusedRow = _c.setFocusedRow, editCount = _c.editCount, dataSource = _c.dataSource, setSliderFormOpen = _c.setSliderFormOpen, setFocusedRowForm = _c.setFocusedRowForm, editMode = _c.editMode;
+    var _d = (0, devs_dt_context_1.useDt)(), setDataSource = _d.setDataSource, options = _d.options, formsRef = _d.formsRef, focusedRow = _d.focusedRow, setFocusedRow = _d.setFocusedRow, editCount = _d.editCount, dataSource = _d.dataSource, setSliderFormOpen = _d.setSliderFormOpen, setFocusedRowForm = _d.setFocusedRowForm, editMode = _d.editMode, currentPage = _d.currentPage, focusedCell = _d.focusedCell;
+    var idx = (currentPage - 1) * ((_b = options === null || options === void 0 ? void 0 : options.paginationLimit) !== null && _b !== void 0 ? _b : 20) + index;
     var form = (0, react_hook_form_1.useForm)({
         defaultValues: data,
         mode: "onSubmit",
@@ -85,11 +86,11 @@ function DevsDtRow(_a) {
     });
     var control = form.control, register = form.register, errors = form.formState.errors, setValue = form.setValue, getValues = form.getValues, watch = form.watch, trigger = form.trigger;
     var prevRow = react_2.default.useMemo(function () {
-        return dataSource[index - 1];
-    }, [dataSource[index - 1]]);
+        return dataSource[idx - 1];
+    }, [dataSource[idx - 1]]);
     var nextRow = react_2.default.useMemo(function () {
-        return dataSource[index + 1];
-    }, [dataSource[index + 1]]);
+        return dataSource[idx + 1];
+    }, [dataSource[idx + 1]]);
     react_2.default.useEffect(function () {
         if (!Object.keys(formsRef.current).includes(rowKey)) {
             formsRef.current[rowKey] = form;
@@ -135,9 +136,9 @@ function DevsDtRow(_a) {
         var _a, _b, _c;
         if ((options === null || options === void 0 ? void 0 : options.readonly) === true)
             return;
-        if (!((_b = (_a = options === null || options === void 0 ? void 0 : options.rowEditable) === null || _a === void 0 ? void 0 : _a.call(options, { index: index, row: data })) !== null && _b !== void 0 ? _b : true))
+        if (!((_b = (_a = options === null || options === void 0 ? void 0 : options.rowEditable) === null || _a === void 0 ? void 0 : _a.call(options, { index: idx, row: data })) !== null && _b !== void 0 ? _b : true))
             return;
-        if (((_c = options === null || options === void 0 ? void 0 : options.onBeforeRowEdit) === null || _c === void 0 ? void 0 : _c.call(options, { index: index, row: data })) === false)
+        if (((_c = options === null || options === void 0 ? void 0 : options.onBeforeRowEdit) === null || _c === void 0 ? void 0 : _c.call(options, { index: idx, row: data })) === false)
             return;
         if ((options === null || options === void 0 ? void 0 : options.showEditModeSelector) && editMode === "slider") {
             handleActionSliderForm();
@@ -190,7 +191,16 @@ function DevsDtRow(_a) {
         }
     };
     var GetAutoFocus = react_2.default.useCallback(function (field) {
-        var focusabled = false;
+        var updatables = lastNode.filter(function (x) { return x.updatable === true || x.updatable === undefined; });
+        if ((options === null || options === void 0 ? void 0 : options.editType) === "cell") {
+            if (field === focusedCell &&
+                updatables.find(function (f) { return f.field === field; })) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
         if (data.mode === "c") {
             var editables = lastNode.filter(function (x) { return x.editable === true || x.editable === undefined; });
             if (editables.length === 0) {
@@ -201,7 +211,10 @@ function DevsDtRow(_a) {
             }
         }
         else if (data.mode === "u") {
-            var updatables = lastNode.filter(function (x) { return x.updatable === true || x.updatable === undefined; });
+            if (field === focusedCell &&
+                updatables.find(function (f) { return f.field === field; })) {
+                return true;
+            }
             if (updatables.length === 0) {
                 return false;
             }
@@ -209,22 +222,19 @@ function DevsDtRow(_a) {
                 return updatables[0].field === field;
             }
         }
-        else {
-            focusabled = false;
-        }
-        return focusabled;
-    }, [lastNode, data]);
+        return false;
+    }, [lastNode, data, focusedCell]);
     return ((0, jsx_runtime_1.jsxs)("tr", __assign({ className: "devs-dt-row".concat((focusedRow === null || focusedRow === void 0 ? void 0 : focusedRow.rowId) === data.rowId ? " devs-dt-focused-row" : "").concat(data.checked === true ? " devs-dt-checked-row" : ""), onDoubleClick: onEditModeClick, onClick: function () {
             setFocusedRow(data);
             if (data.mode === "r") {
                 setSliderFormOpen(false);
             }
-        }, "data-edit-mode": data.mode, ref: dragProvided.innerRef }, dragProvided.draggableProps, { style: __assign({}, dragProvided.draggableProps.style), css: (0, react_1.css)((_b = options === null || options === void 0 ? void 0 : options.rowStyle) === null || _b === void 0 ? void 0 : _b.call(options, {
-            index: index,
+        }, "data-edit-mode": data.mode, ref: dragProvided.innerRef }, dragProvided.draggableProps, { style: __assign({}, dragProvided.draggableProps.style), css: (0, react_1.css)((_c = options === null || options === void 0 ? void 0 : options.rowStyle) === null || _c === void 0 ? void 0 : _c.call(options, {
+            index: idx,
             row: data,
             prevRow: prevRow,
             nextRow: nextRow,
-        })) }, { children: [(options === null || options === void 0 ? void 0 : options.enabledRowOrder) && ((0, jsx_runtime_1.jsx)(RowChangeOrderCell, { mode: data.mode, dragHandleProps: dragProvided.dragHandleProps })), (options === null || options === void 0 ? void 0 : options.enabledExpand) && ((0, jsx_runtime_1.jsx)(RowExpandCell, { setDataSource: setDataSource, data: data, index: index })), (options === null || options === void 0 ? void 0 : options.showRowNumber) && (0, jsx_runtime_1.jsx)(RowNumberCell, { index: index }), (options === null || options === void 0 ? void 0 : options.enabledRowCheck) && ((0, jsx_runtime_1.jsx)(RowCheckCell, { data: data, checked: data.checked, setDataSource: setDataSource, setValue: setValue, multipleRowCheck: options.multipleRowCheck })), lastNode &&
+        })) }, { children: [(options === null || options === void 0 ? void 0 : options.enabledRowOrder) && ((0, jsx_runtime_1.jsx)(RowChangeOrderCell, { mode: data.mode, dragHandleProps: dragProvided.dragHandleProps })), (options === null || options === void 0 ? void 0 : options.enabledExpand) && ((0, jsx_runtime_1.jsx)(RowExpandCell, { setDataSource: setDataSource, data: data, index: idx })), (options === null || options === void 0 ? void 0 : options.showRowNumber) && (0, jsx_runtime_1.jsx)(RowNumberCell, { index: idx }), (options === null || options === void 0 ? void 0 : options.enabledRowCheck) && ((0, jsx_runtime_1.jsx)(RowCheckCell, { data: data, checked: data.checked, setDataSource: setDataSource, setValue: setValue, multipleRowCheck: options.multipleRowCheck })), lastNode &&
                 lastNode.map(function (col, idx) {
                     var _a, _b, _c;
                     if ((options === null || options === void 0 ? void 0 : options.editMode) === "slider") {
@@ -235,7 +245,7 @@ function DevsDtRow(_a) {
                     }
                     return ((0, jsx_runtime_1.jsx)(devs_dt_cell_1.default, { register: register, control: control, col: col, mode: data.mode, defaultValue: (options === null || options === void 0 ? void 0 : options.editMode) === "slider"
                             ? watch(col.field)
-                            : data[col.field], error: errors.hasOwnProperty(col.field), autoFocus: (_b = (_a = col.autoFocus) === null || _a === void 0 ? void 0 : _a.call(col, data.mode)) !== null && _b !== void 0 ? _b : GetAutoFocus(col.field), row: data, setValue: setValue, merge: (_c = data._merge) === null || _c === void 0 ? void 0 : _c[col.field], rowIndex: index, getValue: getValues, trigger: trigger }, "".concat(rowKey, "-").concat(col.field)));
+                            : data[col.field], error: errors.hasOwnProperty(col.field), autoFocus: (_b = (_a = col.autoFocus) === null || _a === void 0 ? void 0 : _a.call(col, data.mode)) !== null && _b !== void 0 ? _b : GetAutoFocus(col.field), row: data, setValue: setValue, merge: (_c = data._merge) === null || _c === void 0 ? void 0 : _c[col.field], rowIndex: idx, getValue: getValues, trigger: trigger }, "".concat(rowKey, "-").concat(col.field)));
                 })] })));
 }
 exports.default = react_2.default.memo(DevsDtRow);

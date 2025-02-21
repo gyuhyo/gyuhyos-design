@@ -45,7 +45,8 @@ var Button = function (props) {
                 background: "linear-gradient(180deg, ".concat(bgColor).concat((95 * 0.9).toFixed(0), " 0%, ").concat(bgColor).concat((100 * 0.9).toFixed(0), " 50%, ").concat(bgColor).concat((95 * 0.9).toFixed(0), " 100%)"),
             },
             "&:active": {
-                filter: "contrast(0.7)",
+                background: "linear-gradient(180deg, ".concat(bgColor, "90 0%, ").concat(bgColor, " 50%, ").concat(bgColor, "90 100%)"),
+                boxShadow: "inset 1px 1px 3px #00000030, inset -0.5px -0.5px 1px #ffffff97",
             },
             display: "flex",
             flexDirection: "row",

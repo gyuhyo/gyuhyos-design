@@ -57,7 +57,9 @@ const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
           ).toFixed(0)} 100%)`,
         },
         "&:active": {
-          filter: "contrast(0.7)",
+          background: `linear-gradient(180deg, ${bgColor}90 0%, ${bgColor} 50%, ${bgColor}90 100%)`,
+          boxShadow:
+            "inset 1px 1px 3px #00000030, inset -0.5px -0.5px 1px #ffffff97",
         },
         display: "flex",
         flexDirection: "row",

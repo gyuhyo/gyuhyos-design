@@ -20,6 +20,7 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
   const keyField: string | undefined = props.columns.find(
     (col) => col.key
   )?.field;
+  const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [focusedRowForm, setFocusedRowForm] =
     React.useState<null | UseFormReturn<IDataSource, any, undefined>>(null);
   const [sliderFormOpen, setSliderFormOpen] = React.useState(false);
@@ -116,6 +117,8 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
         tbody: props.tbody,
         thead: props.thead,
         COLUMNS_STYLE_FORCE_UPDATE: props.COLUMNS_STYLE_FORCE_UPDATE,
+        currentPage,
+        setCurrentPage,
       }}
     >
       <MessageProvider>

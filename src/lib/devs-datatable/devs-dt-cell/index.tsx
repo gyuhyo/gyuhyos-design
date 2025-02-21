@@ -214,7 +214,7 @@ function DevsDtCell({
           rules={{ required: col.required }}
           render={({ field: { onChange } }) =>
             col.editor!({
-              value: defaultValue,
+              value: getDefaultValue(defaultValue || null),
               row: row,
               index: rowIndex,
               onChange,
@@ -240,6 +240,7 @@ function DevsDtCell({
               disabled={col.readonly ?? false}
               size="small"
               placeholder="날짜 선택"
+              defaultOpen={autoFocus}
               defaultValue={getDefaultValue(
                 defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null
               )}
@@ -280,6 +281,7 @@ function DevsDtCell({
               disabled={col.readonly ?? false}
               size="small"
               placeholder="날짜/시간 선택"
+              defaultOpen={autoFocus}
               defaultValue={getDefaultValue(
                 defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null
               )}
@@ -319,6 +321,7 @@ function DevsDtCell({
               disabled={col.readonly ?? false}
               size="small"
               showSearch={true}
+              defaultOpen={autoFocus}
               onChange={(v) => {
                 onChange(v);
                 if (col.onChange !== undefined) {
@@ -629,6 +632,7 @@ function DevsDtCell({
         {Cell}
       </div>
       <div className="devs-dt-bg-cell" />
+      <div className="devs-dt-required-sig" />
     </td>
   );
 }

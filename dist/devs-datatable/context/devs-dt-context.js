@@ -35,13 +35,14 @@ var DevsDtProviderComponent = function (props) {
     var _a, _b, _c;
     var isAccess = useGyudAccess();
     var keyField = (_a = props.columns.find(function (col) { return col.key; })) === null || _a === void 0 ? void 0 : _a.field;
-    var _d = __read(React.useState(null), 2), focusedRowForm = _d[0], setFocusedRowForm = _d[1];
-    var _e = __read(React.useState(false), 2), sliderFormOpen = _e[0], setSliderFormOpen = _e[1];
-    var _f = __read(React.useState(((_b = props.options) === null || _b === void 0 ? void 0 : _b.showEditModeSelector) ? "grid" : undefined), 2), editMode = _f[0], setEditMode = _f[1];
-    var _g = __read(React.useState({
+    var _d = __read(React.useState(1), 2), currentPage = _d[0], setCurrentPage = _d[1];
+    var _e = __read(React.useState(null), 2), focusedRowForm = _e[0], setFocusedRowForm = _e[1];
+    var _f = __read(React.useState(false), 2), sliderFormOpen = _f[0], setSliderFormOpen = _f[1];
+    var _g = __read(React.useState(((_b = props.options) === null || _b === void 0 ? void 0 : _b.showEditModeSelector) ? "grid" : undefined), 2), editMode = _g[0], setEditMode = _g[1];
+    var _h = __read(React.useState({
         field: null,
         type: "asc",
-    }), 2), sorter = _g[0], setSorter = _g[1];
+    }), 2), sorter = _h[0], setSorter = _h[1];
     React.useEffect(function () {
         if (props.setColumns !== undefined) {
             props.setColumns(function (prevCols) {
@@ -99,6 +100,8 @@ var DevsDtProviderComponent = function (props) {
             tbody: props.tbody,
             thead: props.thead,
             COLUMNS_STYLE_FORCE_UPDATE: props.COLUMNS_STYLE_FORCE_UPDATE,
+            currentPage: currentPage,
+            setCurrentPage: setCurrentPage,
         } }, { children: _jsx(MessageProvider, { children: _jsx("div", __assign({ style: {
                     height: "100%",
                     display: "flex",

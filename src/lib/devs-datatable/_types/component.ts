@@ -22,6 +22,12 @@ export interface IDataTableOptions {
   editType?: "row" | "cell";
   cellEditClickType?: "click" | "doubleClick";
   minWidth?: number;
+  pagination?: boolean;
+  paginationLimit?: number;
+  /**
+   * @deprecated
+   */
+  initialAutoScroll?: string | null;
   onBeforeRowEdit?: ({
     index,
     row,
@@ -82,6 +88,8 @@ export interface IDataTableButtons {
 }
 
 export interface DevsDataTableRef {
+  tbody: HTMLDivElement | null;
+  thead: HTMLDivElement | null;
   api: {
     validate: () => Promise<{ valid: boolean; data?: any }>;
     onValidationCheck: () => Promise<{ valid: boolean; data?: any }>;

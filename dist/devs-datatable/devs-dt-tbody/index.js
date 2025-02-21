@@ -54,7 +54,7 @@ import { DragDropContext, Draggable, Droppable, } from "@hello-pangea/dnd";
 import useDtUtils from "../hooks/useDtUtils";
 function DevsDtTBody(_a) {
     var tbody = _a.tbody, headerWidth = _a.headerWidth;
-    var _b = useDt(), columns = _b.columns, dataSource = _b.dataSource, setDataSource = _b.setDataSource, options = _b.options, formsRef = _b.formsRef, sorter = _b.sorter;
+    var _b = useDt(), columns = _b.columns, dataSource = _b.dataSource, setDataSource = _b.setDataSource, options = _b.options, formsRef = _b.formsRef, sorter = _b.sorter, currentPage = _b.currentPage;
     var _c = __read(React.useState(false), 2), isDrop = _c[0], setIsDrop = _c[1];
     useDtUtils();
     var keyField = React.useMemo(function () {
@@ -82,38 +82,58 @@ function DevsDtTBody(_a) {
             ((options === null || options === void 0 ? void 0 : options.enabledRowOrder) ? 1 : 0);
         return lastNode.length + fixedCount;
     }, [lastNode, options]);
+    var getDefaultValue = function (col, row, rowIndex, val) {
+        if ((col === null || col === void 0 ? void 0 : col.defaultValue) !== undefined) {
+            var value = col.defaultValue({
+                row: row,
+                value: val,
+                index: rowIndex,
+            });
+            return value;
+        }
+        return val;
+    };
     var sortDataSource = React.useCallback(function (d) {
+        var _a, _b;
         var findSorterField = columns.find(function (col) { return col.field === sorter.field; });
         var newRows = d.filter(function (x) { return x.mode === "c"; });
         var nullRows = (findSorterField === null || findSorterField === void 0 ? void 0 : findSorterField.isNotNullSort) === true
-            ? d.filter(function (x) {
-                return x[sorter.field] === "" ||
-                    x[sorter.field] === null ||
-                    x[sorter.field] === undefined;
+            ? d.filter(function (x, idx) {
+                var val = getDefaultValue(findSorterField, x, idx, x[sorter.field]);
+                return val === "" || val === null || val === undefined;
             })
             : [];
         if (sorter.field === null || sorter.field === undefined) {
+            if (options === null || options === void 0 ? void 0 : options.pagination) {
+                var limit = (_a = options === null || options === void 0 ? void 0 : options.paginationLimit) !== null && _a !== void 0 ? _a : 20;
+                return __spreadArray(__spreadArray([], __read((currentPage === 1 ? newRows : [])), false), __read(d
+                    .filter(function (x) { return x.mode !== "c"; })
+                    .sort(function (a, b) {
+                    return a.originIndex - b.originIndex;
+                })
+                    .slice((currentPage - 1) * limit, currentPage * limit)), false);
+            }
             return __spreadArray(__spreadArray([], __read(newRows), false), __read(d
                 .filter(function (x) { return x.mode !== "c"; })
                 .sort(function (a, b) { return a.originIndex - b.originIndex; })), false);
         }
         var sortedDataSource = d
-            .filter(function (x) {
+            .filter(function (x, idx) {
             if ((findSorterField === null || findSorterField === void 0 ? void 0 : findSorterField.isNotNullSort) === true) {
-                return (x.mode !== "c" &&
-                    x[sorter.field] !== "" &&
-                    x[sorter.field] !== null &&
-                    x[sorter.field] !== undefined);
+                var val = getDefaultValue(findSorterField, x, idx, x[sorter.field]);
+                return (x.mode !== "c" && val !== "" && val !== null && val !== undefined);
             }
             return x.mode !== "c";
         })
             .sort(function (a, b) {
+            var valA = getDefaultValue(findSorterField, a, a.originIndex, a[sorter.field]);
+            var valB = getDefaultValue(findSorterField, b, b.originIndex, b[sorter.field]);
             if (sorter.type === "desc") {
-                if (a[sorter.field] === b[sorter.field]) {
+                if (valA === valB) {
                     return a.originIndex - b.originIndex;
                 }
                 else {
-                    if (a[sorter.field] > b[sorter.field]) {
+                    if (valA > valB) {
                         return -1;
                     }
                     else {
@@ -121,11 +141,11 @@ function DevsDtTBody(_a) {
                     }
                 }
             }
-            if (a[sorter.field] === b[sorter.field]) {
+            if (valA === valB) {
                 return a.originIndex - b.originIndex;
             }
             else {
-                if (a[sorter.field] > b[sorter.field]) {
+                if (valA > valB) {
                     return 1;
                 }
                 else {
@@ -133,8 +153,18 @@ function DevsDtTBody(_a) {
                 }
             }
         });
+        if (options === null || options === void 0 ? void 0 : options.pagination) {
+            var limit = (_b = options === null || options === void 0 ? void 0 : options.paginationLimit) !== null && _b !== void 0 ? _b : 20;
+            return __spreadArray(__spreadArray([], __read((currentPage === 1 ? newRows : [])), false), __read(__spreadArray(__spreadArray([], __read(sortedDataSource), false), __read(nullRows), false).slice((currentPage - 1) * limit, currentPage * limit)), false);
+        }
         return __spreadArray(__spreadArray(__spreadArray([], __read(newRows), false), __read(sortedDataSource), false), __read(nullRows), false);
-    }, [sorter, columns]);
+    }, [
+        sorter,
+        columns,
+        options === null || options === void 0 ? void 0 : options.pagination,
+        options === null || options === void 0 ? void 0 : options.paginationLimit,
+        currentPage,
+    ]);
     var mergedDataSource = React.useMemo(function () {
         var e_1, _a, e_2, _b, _c, _d, _e;
         var _f, _g;
@@ -216,7 +246,7 @@ function DevsDtTBody(_a) {
             return copyDataSource;
         }
         return dataSource;
-    }, [dataSource, lastNode, sorter]);
+    }, [dataSource, lastNode, sorter, currentPage]);
     var setRowOrderChange = React.useCallback(function (e) {
         setIsDrop(false);
         if (!e.destination)
