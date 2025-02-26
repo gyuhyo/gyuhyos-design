@@ -19,6 +19,7 @@ export interface IDataTableColumn {
     type?: "date" | "select" | "number" | "textarea" | "datetime";
     align?: string;
     merge?: boolean;
+    editorWidth?: number;
     autoFocus?: (mode: string) => boolean;
     defaultValue?: ({ value, row, index, getValue, }: {
         value: any;
@@ -37,13 +38,14 @@ export interface IDataTableColumn {
         index?: number;
         getValue?: UseFormGetValues<IDataSource>;
     }) => any;
-    editor?: ({ value, row, index, onChange, getValue, setValue, }: {
+    editor?: ({ value, row, index, onChange, getValue, setValue, setDataSource, }: {
         value?: any;
         row: IDataSource;
         index?: number;
         onChange: (...event: any[]) => void;
         getValue: UseFormGetValues<IDataSource>;
         setValue: UseFormSetValue<IDataSource>;
+        setDataSource: React.Dispatch<React.SetStateAction<IDataSource[]>>;
     }) => any;
     onChange?: ({ value, row, index, setDataSource, setValue, getValue, }: {
         value: any;

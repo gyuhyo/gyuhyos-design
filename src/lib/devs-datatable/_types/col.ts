@@ -21,6 +21,7 @@ export interface IDataTableColumn {
   type?: "date" | "select" | "number" | "textarea" | "datetime";
   align?: string;
   merge?: boolean;
+  editorWidth?: number;
   autoFocus?: (mode: string) => boolean;
   defaultValue?: ({
     value,
@@ -60,6 +61,7 @@ export interface IDataTableColumn {
     onChange,
     getValue,
     setValue,
+    setDataSource,
   }: {
     value?: any;
     row: IDataSource;
@@ -67,6 +69,7 @@ export interface IDataTableColumn {
     onChange: (...event: any[]) => void;
     getValue: UseFormGetValues<IDataSource>;
     setValue: UseFormSetValue<IDataSource>;
+    setDataSource: React.Dispatch<React.SetStateAction<IDataSource[]>>;
   }) => any;
   onChange?: ({
     value,

@@ -34,6 +34,7 @@ export var DevsDtContext = React.createContext(undefined);
 var DevsDtProviderComponent = function (props) {
     var _a, _b, _c;
     var isAccess = useGyudAccess();
+    var originalColumns = React.useRef([]);
     var keyField = (_a = props.columns.find(function (col) { return col.key; })) === null || _a === void 0 ? void 0 : _a.field;
     var _d = __read(React.useState(1), 2), currentPage = _d[0], setCurrentPage = _d[1];
     var _e = __read(React.useState(null), 2), focusedRowForm = _e[0], setFocusedRowForm = _e[1];
@@ -50,6 +51,11 @@ var DevsDtProviderComponent = function (props) {
             });
         }
     }, []);
+    React.useEffect(function () {
+        if (props.columns.length > 0) {
+            originalColumns.current = props.columns;
+        }
+    }, [props.columns.length]);
     React.useEffect(function () {
         var validRowIds = new Set(props.dataSource.map(function (obj) { return obj.rowId; }));
         // Step 2: targetObject에서 유효하지 않은 키 삭제
@@ -102,6 +108,7 @@ var DevsDtProviderComponent = function (props) {
             COLUMNS_STYLE_FORCE_UPDATE: props.COLUMNS_STYLE_FORCE_UPDATE,
             currentPage: currentPage,
             setCurrentPage: setCurrentPage,
+            originalColumns: originalColumns.current,
         } }, { children: _jsx(MessageProvider, { children: _jsx("div", __assign({ style: {
                     height: "100%",
                     display: "flex",

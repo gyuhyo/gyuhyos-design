@@ -17,6 +17,7 @@ export const DevsDtContext = React.createContext<
 
 const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
   const isAccess = useGyudAccess();
+  const originalColumns = React.useRef<IDataTableColumn[]>([]);
   const keyField: string | undefined = props.columns.find(
     (col) => col.key
   )?.field;
@@ -42,6 +43,12 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
       );
     }
   }, []);
+
+  React.useEffect(() => {
+    if (props.columns.length > 0) {
+      originalColumns.current = props.columns;
+    }
+  }, [props.columns.length]);
 
   React.useEffect(() => {
     const validRowIds = new Set(props.dataSource.map((obj) => obj.rowId));
@@ -119,6 +126,7 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
         COLUMNS_STYLE_FORCE_UPDATE: props.COLUMNS_STYLE_FORCE_UPDATE,
         currentPage,
         setCurrentPage,
+        originalColumns: originalColumns.current,
       }}
     >
       <MessageProvider>

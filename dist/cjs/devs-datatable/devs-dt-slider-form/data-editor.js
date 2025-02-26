@@ -10,7 +10,7 @@ var react_hook_form_1 = require("react-hook-form");
 var devs_dt_slider_form_1 = require("./devs-dt-slider-form");
 var DataEditor = react_1.default.memo(function (_a) {
     var col = _a.col;
-    var _b = (0, devs_dt_context_1.useDt)(), row = _b.focusedRow, dataSource = _b.dataSource, focusedRowForm = _b.focusedRowForm;
+    var _b = (0, devs_dt_context_1.useDt)(), row = _b.focusedRow, dataSource = _b.dataSource, focusedRowForm = _b.focusedRowForm, setDataSource = _b.setDataSource;
     var defaultValue = focusedRowForm === null || focusedRowForm === void 0 ? void 0 : focusedRowForm.getValues(col.field);
     var rowIndex = dataSource.indexOf(row);
     if (focusedRowForm === null)
@@ -24,6 +24,7 @@ var DataEditor = react_1.default.memo(function (_a) {
                 onChange: onChange,
                 setValue: focusedRowForm.setValue,
                 getValue: focusedRowForm.getValues,
+                setDataSource: setDataSource,
             });
         } }));
 });

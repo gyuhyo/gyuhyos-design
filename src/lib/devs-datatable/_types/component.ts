@@ -24,6 +24,7 @@ export interface IDataTableOptions {
   minWidth?: number;
   pagination?: boolean;
   paginationLimit?: number;
+  enabledEditingAutoColumnWidth?: boolean;
   /**
    * @deprecated
    */
@@ -73,6 +74,7 @@ export interface IDataTableExportButtonProps {
 
 export interface IDataTableButtons {
   custom?: JSX.Element;
+  isDisabledMobileStyle?: boolean;
   searchText?: string;
   addText?: string;
   saveText?: string;

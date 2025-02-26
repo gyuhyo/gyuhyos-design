@@ -9,17 +9,6 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-};
 var __read = (this && this.__read) || function (o, n) {
     var m = typeof Symbol === "function" && o[Symbol.iterator];
     if (!m) return o;
@@ -83,40 +72,53 @@ function DevsDtCell(_a) {
     }, [options === null || options === void 0 ? void 0 : options.editType, row]);
     var cellRef = React.useRef(null);
     var divRef = React.useRef(null);
-    React.useEffect(function () {
-        var updateColumnWidth = function (columns, targetField, newWidth) {
-            return columns.map(function (column) {
-                // 컬럼이 자식 컬럼을 가지는 경우
-                if (column.children) {
-                    return __assign(__assign({}, column), { children: updateColumnWidth(column.children, targetField, newWidth) });
-                }
-                // field가 일치하는 컬럼을 찾아서 width 업데이트
-                if (column.field === targetField) {
-                    return __assign(__assign({}, column), { width: newWidth });
-                }
-                return column;
-            });
-        };
-        var checkOverflow = function () {
-            var _a;
-            var tdElement = cellRef.current;
-            var divElement = divRef.current;
-            if (!tdElement || !divElement)
-                return;
-            // td의 실제 너비
-            var tdWidth = tdElement.getBoundingClientRect().width;
-            // div의 콘텐츠 너비
-            var contentWidth = divElement.scrollWidth;
-            // 콘텐츠가 td보다 크다면
-            if (contentWidth > tdWidth && contentWidth > ((_a = col.width) !== null && _a !== void 0 ? _a : 100)) {
-                setColumns(function (prev) {
-                    return updateColumnWidth(prev, col.field, contentWidth + 12);
-                });
+    var updateColumnWidth = function (columns, targetField, newWidth) {
+        return columns.map(function (column) {
+            // 컬럼이 자식 컬럼을 가지는 경우
+            if (column.children) {
+                return __assign(__assign({}, column), { children: updateColumnWidth(column.children, targetField, newWidth) });
             }
-        };
+            // field가 일치하는 컬럼을 찾아서 width 업데이트
+            if (column.field === targetField) {
+                return __assign(__assign({}, column), { width: newWidth });
+            }
+            return column;
+        });
+    };
+    var checkOverflow = function () {
+        var _a;
+        var tdElement = cellRef.current;
+        var divElement = divRef.current;
+        if (!tdElement || !divElement)
+            return;
+        // td의 실제 너비
+        var tdWidth = tdElement.getBoundingClientRect().width;
+        // div의 콘텐츠 너비
+        var contentWidth = divElement.scrollWidth;
+        // 콘텐츠가 td보다 크다면
+        if (contentWidth > tdWidth && contentWidth > ((_a = col.width) !== null && _a !== void 0 ? _a : 100)) {
+            setColumns(function (prev) {
+                return updateColumnWidth(prev, col.field, contentWidth + 12);
+            });
+        }
+    };
+    React.useEffect(function () {
         // 초기에 한 번 실행
         checkOverflow();
     }, []);
+    React.useEffect(function () {
+        if (!(options === null || options === void 0 ? void 0 : options.enabledEditingAutoColumnWidth))
+            return;
+        if (mode === "c" || mode === "u" || isCellEdit) {
+            if ((col === null || col === void 0 ? void 0 : col.editorWidth) !== undefined) {
+                setColumns(function (prev) {
+                    return updateColumnWidth(prev, col.field, col.editorWidth);
+                });
+                return;
+            }
+            checkOverflow();
+        }
+    }, [mode, isCellEdit, options === null || options === void 0 ? void 0 : options.enabledEditingAutoColumnWidth]);
     var classString = React.useMemo(function () {
         var classes = [];
         if (cellRef.current) {
@@ -185,6 +187,7 @@ function DevsDtCell(_a) {
                         onChange: onChange,
                         setValue: setValue,
                         getValue: getValue,
+                        setDataSource: setDataSource,
                     });
                 } }));
         }
@@ -410,8 +413,4 @@ function DevsDtCell(_a) {
                     zIndex: 2,
                 } }, { children: Cell })), _jsx("div", { className: "devs-dt-bg-cell" }), _jsx("div", { className: "devs-dt-required-sig" })] })));
 }
-export default React.memo(DevsDtCell, function (prev, curr) {
-    var prevGetValue = prev.getValue, prevRegister = prev.register, prevSetValue = prev.setValue, prevTrigger = prev.trigger, prevControl = prev.control, prevProps = __rest(prev, ["getValue", "register", "setValue", "trigger", "control"]);
-    var currGetValue = curr.getValue, currRegister = curr.register, currSetValue = curr.setValue, currTrigger = curr.trigger, currControl = curr.control, currProps = __rest(curr, ["getValue", "register", "setValue", "trigger", "control"]);
-    return JSON.stringify(prevProps) === JSON.stringify(currProps);
-});
+export default React.memo(DevsDtCell);

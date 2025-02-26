@@ -4,9 +4,14 @@ import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import React from "react";
 import Button from "../../button";
-import { IDataTableButtons, IDataTableOptions } from "../_types";
+import {
+  IDataTableButtons,
+  IDataTableColumn,
+  IDataTableOptions,
+} from "../_types";
 import { useDt } from "../context/devs-dt-context";
 import { Select } from "antd";
+import { useMessage } from "../../alert-message/context/message-context";
 
 interface IDataTableButtonsProps {
   options?: IDataTableOptions | undefined;
@@ -22,6 +27,7 @@ const ButtonLabel = styled.span({
 });
 
 const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
+  const { showMessage } = useMessage();
   const {
     setDataSource,
     setFocusedRow,
@@ -30,14 +36,66 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
     setFocusedRowForm,
     setSliderFormOpen,
     setEditMode,
+    originalColumns,
+    setColumns,
+    editCount,
   } = useDt();
+
+  const getLastNodes = (columns: IDataTableColumn[]): IDataTableColumn[] => {
+    let lastNodes: IDataTableColumn[] = [];
+
+    const findLastNodes = (column: IDataTableColumn) => {
+      if (column.children && column.children.length > 0) {
+        column.children.forEach(findLastNodes);
+      } else {
+        lastNodes.push(column);
+      }
+    };
+
+    columns.forEach(findLastNodes);
+    return lastNodes;
+  };
+
+  const lastNode = React.useMemo(
+    () => getLastNodes(originalColumns),
+    [originalColumns]
+  );
+
+  const updateColumnWidth = (
+    columns: IDataTableColumn[],
+    targetField: string,
+    newWidth: number
+  ): IDataTableColumn[] => {
+    return columns.map((column) => {
+      // 컬럼이 자식 컬럼을 가지는 경우
+      if (column.children) {
+        return {
+          ...column,
+          children: updateColumnWidth(column.children, targetField, newWidth),
+        };
+      }
+
+      // field가 일치하는 컬럼을 찾아서 width 업데이트
+      if (column.field === targetField) {
+        return { ...column, width: newWidth };
+      }
+
+      return column;
+    });
+  };
+
   const ButtonEventBeforeShowLoading = (event: any) => {
     props.setInnerLoading(true);
-
     const timer = setTimeout(() => {
       if (event !== undefined) {
         (event as Function)();
       }
+      for (const col of lastNode) {
+        setColumns((prev) =>
+          updateColumnWidth(prev, col.field, col.width ?? 100)
+        );
+      }
+
       props.setInnerLoading(false);
     }, 300);
 
@@ -65,17 +123,20 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
             columnGap: 5,
             width: "100%",
             "& > button": {
-              fontSize: "18px",
-              padding: "3px 11px",
-              lineHeight: "26px",
+              fontSize: "18px !important",
+              padding: "3px 11px !important",
+              lineHeight: "26px !important",
             },
-            "@media (min-width: 650px)": {
-              width: "auto",
-              "& > button": {
-                fontSize: "1.0rem",
-                padding: "2px 7px",
-              },
-            },
+            "@media (min-width: 650px)":
+              props.buttons?.isDisabledMobileStyle === true
+                ? {}
+                : {
+                    width: "auto",
+                    "& > button": {
+                      fontSize: "1.0rem !important",
+                      padding: "2px 7px !important",
+                    },
+                  },
           })}
         >
           {props.buttons?.custom !== undefined && props.buttons.custom}
@@ -158,6 +219,28 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
                   setSliderFormOpen(false);
                   await sleep();
                 }
+                if (props.options?.multipleEdit === false) {
+                  if (editCount > 0) {
+                    await showMessage({
+                      title: "경고",
+                      type: "warnning",
+                      message:
+                        "다른 데이터를 수정할 경우\n기존 데이터 수정이 중단되며 복구할 수 없습니다.\n\n현재 데이터 수정을 중단 하시겠습니까?",
+                      onOkClick: () => {
+                        setDataSource((prev) =>
+                          prev
+                            .filter((f) => f.mode !== "c")
+                            .map((p) => ({ ...p, checked: false, mode: "r" }))
+                        );
+                        (props.buttons?.onAddClick as Function)();
+                      },
+                      onCancelClick: () => {},
+                    });
+
+                    return;
+                  }
+                }
+
                 (props.buttons?.onAddClick as Function)();
               }}
             >

@@ -87,53 +87,67 @@ function DevsDtCell({
   const cellRef = React.useRef<HTMLTableCellElement>(null);
   const divRef = React.useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
-    const updateColumnWidth = (
-      columns: IDataTableColumn[],
-      targetField: string,
-      newWidth: number
-    ): IDataTableColumn[] => {
-      return columns.map((column) => {
-        // 컬럼이 자식 컬럼을 가지는 경우
-        if (column.children) {
-          return {
-            ...column,
-            children: updateColumnWidth(column.children, targetField, newWidth),
-          };
-        }
-
-        // field가 일치하는 컬럼을 찾아서 width 업데이트
-        if (column.field === targetField) {
-          return { ...column, width: newWidth };
-        }
-
-        return column;
-      });
-    };
-
-    const checkOverflow = () => {
-      const tdElement = cellRef.current;
-      const divElement = divRef.current;
-
-      if (!tdElement || !divElement) return;
-
-      // td의 실제 너비
-      const tdWidth = tdElement.getBoundingClientRect().width;
-
-      // div의 콘텐츠 너비
-      const contentWidth = divElement.scrollWidth;
-
-      // 콘텐츠가 td보다 크다면
-      if (contentWidth > tdWidth && contentWidth > (col.width ?? 100)) {
-        setColumns((prev) =>
-          updateColumnWidth(prev, col.field, contentWidth + 12)
-        );
+  const updateColumnWidth = (
+    columns: IDataTableColumn[],
+    targetField: string,
+    newWidth: number
+  ): IDataTableColumn[] => {
+    return columns.map((column) => {
+      // 컬럼이 자식 컬럼을 가지는 경우
+      if (column.children) {
+        return {
+          ...column,
+          children: updateColumnWidth(column.children, targetField, newWidth),
+        };
       }
-    };
 
+      // field가 일치하는 컬럼을 찾아서 width 업데이트
+      if (column.field === targetField) {
+        return { ...column, width: newWidth };
+      }
+
+      return column;
+    });
+  };
+
+  const checkOverflow = () => {
+    const tdElement = cellRef.current;
+    const divElement = divRef.current;
+
+    if (!tdElement || !divElement) return;
+
+    // td의 실제 너비
+    const tdWidth = tdElement.getBoundingClientRect().width;
+
+    // div의 콘텐츠 너비
+    const contentWidth = divElement.scrollWidth;
+
+    // 콘텐츠가 td보다 크다면
+    if (contentWidth > tdWidth && contentWidth > (col.width ?? 100)) {
+      setColumns((prev) =>
+        updateColumnWidth(prev, col.field, contentWidth + 12)
+      );
+    }
+  };
+
+  React.useEffect(() => {
     // 초기에 한 번 실행
     checkOverflow();
   }, []);
+
+  React.useEffect(() => {
+    if (!options?.enabledEditingAutoColumnWidth) return;
+
+    if (mode === "c" || mode === "u" || isCellEdit) {
+      if (col?.editorWidth !== undefined) {
+        setColumns((prev) =>
+          updateColumnWidth(prev, col.field, col.editorWidth!)
+        );
+        return;
+      }
+      checkOverflow();
+    }
+  }, [mode, isCellEdit, options?.enabledEditingAutoColumnWidth]);
 
   const classString = React.useMemo(() => {
     var classes: string[] = [];
@@ -220,6 +234,7 @@ function DevsDtCell({
               onChange,
               setValue,
               getValue,
+              setDataSource,
             })
           }
         />
@@ -637,23 +652,4 @@ function DevsDtCell({
   );
 }
 
-export default React.memo(DevsDtCell, (prev, curr) => {
-  const {
-    getValue: prevGetValue,
-    register: prevRegister,
-    setValue: prevSetValue,
-    trigger: prevTrigger,
-    control: prevControl,
-    ...prevProps
-  } = prev;
-  const {
-    getValue: currGetValue,
-    register: currRegister,
-    setValue: currSetValue,
-    trigger: currTrigger,
-    control: currControl,
-    ...currProps
-  } = curr;
-
-  return JSON.stringify(prevProps) === JSON.stringify(currProps);
-});
+export default React.memo(DevsDtCell);

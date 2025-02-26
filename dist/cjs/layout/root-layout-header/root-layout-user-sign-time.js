@@ -41,6 +41,7 @@ var RootLayoutUserSignTime = react_2.default.memo(function () {
     var user = (0, user_store_1.useUserStore)(function (state) { return state.me; });
     var showMessage = (0, message_context_1.useMessage)().showMessage;
     var _a = __read(react_2.default.useState("00:00"), 2), expiredTime = _a[0], setExpiredTime = _a[1];
+    var _b = __read(react_2.default.useState("00:00"), 2), refreshExpiredTime = _b[0], setRefreshExpiredTime = _b[1];
     react_2.default.useEffect(function () {
         if (!user.tokenInExpire)
             return;
@@ -58,6 +59,23 @@ var RootLayoutUserSignTime = react_2.default.memo(function () {
         }, 1000);
         return function () { return clearInterval(timer); };
     }, [user.tokenInExpire]);
+    react_2.default.useEffect(function () {
+        if (!user.refreshTokenInExpire)
+            return;
+        var end = user.refreshTokenInExpire;
+        var timer = setInterval(function () {
+            var now = new Date().getTime();
+            var diffTime = end - now;
+            if (diffTime <= 0) {
+                signOut();
+                return;
+            }
+            var h = Math.floor(diffTime / 1000 / 3600);
+            var m = Math.floor(((diffTime / 1000) % 3600) / 60);
+            setRefreshExpiredTime("".concat(String(h).padStart(2, "0"), ":").concat(String(m).padStart(2, "0")));
+        }, 1000);
+        return function () { return clearInterval(timer); };
+    }, [user.refreshTokenInExpire]);
     return ((0, jsx_runtime_1.jsxs)("p", __assign({ css: (0, react_1.css)({
             padding: "0px 7px",
             background: "#fff",

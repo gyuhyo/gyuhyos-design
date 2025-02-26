@@ -40,6 +40,7 @@ exports.DevsDtContext = react_1.default.createContext(undefined);
 var DevsDtProviderComponent = function (props) {
     var _a, _b, _c;
     var isAccess = (0, access_context_1.useGyudAccess)();
+    var originalColumns = react_1.default.useRef([]);
     var keyField = (_a = props.columns.find(function (col) { return col.key; })) === null || _a === void 0 ? void 0 : _a.field;
     var _d = __read(react_1.default.useState(1), 2), currentPage = _d[0], setCurrentPage = _d[1];
     var _e = __read(react_1.default.useState(null), 2), focusedRowForm = _e[0], setFocusedRowForm = _e[1];
@@ -56,6 +57,11 @@ var DevsDtProviderComponent = function (props) {
             });
         }
     }, []);
+    react_1.default.useEffect(function () {
+        if (props.columns.length > 0) {
+            originalColumns.current = props.columns;
+        }
+    }, [props.columns.length]);
     react_1.default.useEffect(function () {
         var validRowIds = new Set(props.dataSource.map(function (obj) { return obj.rowId; }));
         // Step 2: targetObject에서 유효하지 않은 키 삭제
@@ -108,6 +114,7 @@ var DevsDtProviderComponent = function (props) {
             COLUMNS_STYLE_FORCE_UPDATE: props.COLUMNS_STYLE_FORCE_UPDATE,
             currentPage: currentPage,
             setCurrentPage: setCurrentPage,
+            originalColumns: originalColumns.current,
         } }, { children: (0, jsx_runtime_1.jsx)(message_context_1.MessageProvider, { children: (0, jsx_runtime_1.jsx)("div", __assign({ style: {
                     height: "100%",
                     display: "flex",

@@ -6,7 +6,12 @@ import { getDefaultValue } from "./devs-dt-slider-form";
 
 const DataEditor: React.FC<any> = React.memo(
   ({ col }: { col: IDataTableColumn }) => {
-    const { focusedRow: row, dataSource, focusedRowForm } = useDt();
+    const {
+      focusedRow: row,
+      dataSource,
+      focusedRowForm,
+      setDataSource,
+    } = useDt();
     const defaultValue = focusedRowForm?.getValues(col.field);
     const rowIndex = dataSource.indexOf(row!);
 
@@ -26,6 +31,7 @@ const DataEditor: React.FC<any> = React.memo(
             onChange,
             setValue: focusedRowForm.setValue,
             getValue: focusedRowForm.getValues,
+            setDataSource,
           })
         }
       />

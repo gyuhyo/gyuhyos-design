@@ -318,6 +318,7 @@ const App: React.FC<{}> = () => {
       field: "5",
       title: "5",
       type: "select",
+      editorWidth: 500,
       options: [
         { value: "0", label: "0" },
         { value: "1", label: "1" },
@@ -512,7 +513,7 @@ const App: React.FC<{}> = () => {
           enabledRowOrder: true,
           enabledRowCheck: true,
           enabledExpand: true,
-          editType: "cell",
+          multipleEdit: false,
           onBeforeRowEdit: ({ index, row }) => {
             if (index > 3) return false;
             return true;

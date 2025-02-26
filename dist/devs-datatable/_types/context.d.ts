@@ -1,6 +1,7 @@
 import React from "react";
 import { IDataSource, IDataTableProps } from "./component";
 import { useForm, UseFormReturn } from "react-hook-form";
+import { IDataTableColumn } from "./col";
 export interface IFormsRef {
     [key: string]: ReturnType<typeof useForm<IDataSource>>;
 }
@@ -40,4 +41,5 @@ export interface IDataTableContextProps extends IDataTableProps {
     COLUMNS_STYLE_FORCE_UPDATE: React.Dispatch<React.SetStateAction<boolean>>;
     currentPage: number;
     setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+    originalColumns: IDataTableColumn[];
 }

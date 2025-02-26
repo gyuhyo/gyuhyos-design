@@ -5,7 +5,7 @@ import { Controller } from "react-hook-form";
 import { getDefaultValue } from "./devs-dt-slider-form";
 var DataEditor = React.memo(function (_a) {
     var col = _a.col;
-    var _b = useDt(), row = _b.focusedRow, dataSource = _b.dataSource, focusedRowForm = _b.focusedRowForm;
+    var _b = useDt(), row = _b.focusedRow, dataSource = _b.dataSource, focusedRowForm = _b.focusedRowForm, setDataSource = _b.setDataSource;
     var defaultValue = focusedRowForm === null || focusedRowForm === void 0 ? void 0 : focusedRowForm.getValues(col.field);
     var rowIndex = dataSource.indexOf(row);
     if (focusedRowForm === null)
@@ -19,6 +19,7 @@ var DataEditor = React.memo(function (_a) {
                 onChange: onChange,
                 setValue: focusedRowForm.setValue,
                 getValue: focusedRowForm.getValues,
+                setDataSource: setDataSource,
             });
         } }));
 });
