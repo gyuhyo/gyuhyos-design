@@ -97,6 +97,30 @@ var useMenuStore = (0, zustand_1.create)((0, middleware_1.persist)(function (set
             (0, moveUrl_1.moveUrl)("".concat(group, "/").concat(key), "MES");
         }));
     },
+    closeNotMyTabs: function () {
+        set((0, immer_1.produce)(function (state) {
+            state.openedMenus = state.openedMenus.filter(function (f) {
+                var _a, _b;
+                var sameKey = ((_a = state.selectedMenu) === null || _a === void 0 ? void 0 : _a.gr) === f.group &&
+                    ((_b = state.selectedMenu) === null || _b === void 0 ? void 0 : _b.mn) === f.key;
+                return f.main === true || sameKey;
+            });
+        }));
+    },
+    closeHighIndexTabs: function () {
+        set((0, immer_1.produce)(function (state) {
+            var currentIndex = state.openedMenus.findIndex(function (f) {
+                var _a, _b;
+                return f.group === ((_a = state.selectedMenu) === null || _a === void 0 ? void 0 : _a.gr) &&
+                    f.key === ((_b = state.selectedMenu) === null || _b === void 0 ? void 0 : _b.mn);
+            });
+            if (currentIndex > -1) {
+                state.openedMenus = state.openedMenus.filter(function (f, index) {
+                    return f.main === true || index <= currentIndex;
+                });
+            }
+        }));
+    },
 }); }, {
     name: "menu-storage",
     partialize: function (state) { return ({

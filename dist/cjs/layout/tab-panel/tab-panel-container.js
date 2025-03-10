@@ -51,7 +51,7 @@ var TabPanelContentDynamicComponent = React.lazy(function () {
     return Promise.resolve().then(function () { return __importStar(require("./tab-panel-content-dynamic-component/tab-panel-content-dynamic-content")); });
 });
 function TabPanelContainer() {
-    var closeAllTabls = (0, menu_store_1.useMenuStore)().closeAllTabls;
+    var _a = (0, menu_store_1.useMenuStore)(), closeAllTabls = _a.closeAllTabls, closeNotMyTabs = _a.closeNotMyTabs, closeHighIndexTabs = _a.closeHighIndexTabs;
     var showMessage = (0, message_context_1.useMessage)().showMessage;
     var onCloseAllTabls = function () {
         showMessage({
@@ -59,6 +59,22 @@ function TabPanelContainer() {
             message: "탭 페이지를 모두 닫으시겠습니까?",
             okCaption: "닫기",
             onOkClick: function () { return closeAllTabls(); },
+        });
+    };
+    var onCloseNotMyTabs = function () {
+        showMessage({
+            title: "열린 탭을 제외한 모든 탭 모두 닫기",
+            message: "열린 탭을 제외한 모든 탭 페이지를 모두 닫으시겠습니까?",
+            okCaption: "닫기",
+            onOkClick: function () { return closeNotMyTabs(); },
+        });
+    };
+    var onCloseHighIndexTabs = function () {
+        showMessage({
+            title: "열린 탭 기준 오른쪽 모든 탭 닫기",
+            message: "열린 탭 기준 오른쪽 모든 탭 페이지를 모두 닫으시겠습니까?",
+            okCaption: "닫기",
+            onOkClick: function () { return closeHighIndexTabs(); },
         });
     };
     return ((0, jsx_runtime_1.jsxs)("div", __assign({ css: (0, react_1.css)({
@@ -70,6 +86,14 @@ function TabPanelContainer() {
                     {
                         label: "탭 모두 닫기",
                         onClick: onCloseAllTabls,
+                    },
+                    {
+                        label: "열린 탭을 제외한 모든 탭 닫기",
+                        onClick: onCloseNotMyTabs,
+                    },
+                    {
+                        label: "열린 탭 기준 오른쪽 모든 탭 닫기",
+                        onClick: onCloseHighIndexTabs,
                     },
                 ] }, { children: (0, jsx_runtime_1.jsx)(tab_panel_header_1.default, {}) })), (0, jsx_runtime_1.jsx)(tab_panel_content_1.default, { children: (0, jsx_runtime_1.jsx)(TabPanelContentDynamicComponent, {}) })] })));
 }

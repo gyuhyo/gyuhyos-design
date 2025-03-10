@@ -75,3 +75,113 @@
   height: 100%;
   background: #1b575f;
 }
+
+@-webkit-keyframes showRightToastMessageFrame {
+  0% {
+    opacity: 0;
+    right: -316px;
+  }
+
+  100% {
+    opacity: 1;
+    right: 7px;
+  }
+}
+
+@keyframes showRightToastMessageFrame {
+  0% {
+    opacity: 0;
+    right: -316px;
+  }
+
+  100% {
+    opacity: 1;
+    right: 7px;
+  }
+}
+
+@-webkit-keyframes closeRightToastMessageFrame {
+  0% {
+    opacity: 1;
+    right: 7px;
+  }
+
+  100% {
+    opacity: 0;
+    right: -316px;
+  }
+}
+
+@keyframes closeRightToastMessageFrame {
+  0% {
+    opacity: 1;
+    right: 7px;
+  }
+
+  100% {
+    opacity: 0;
+    right: -316px;
+  }
+}
+
+.showRightToastMessage {
+  animation: showRightToastMessageFrame 0.3s ease-in;
+}
+.closeRightToastMessage {
+  animation: closeRightToastMessageFrame 0.3s ease-in;
+}
+
+@-webkit-keyframes showLeftToastMessageFrame {
+  0% {
+    opacity: 0;
+    left: -316px;
+  }
+
+  100% {
+    opacity: 1;
+    left: 7px;
+  }
+}
+
+@-webkit-keyframes closeLeftToastMessageFrame {
+  0% {
+    opacity: 1;
+    left: 7px;
+  }
+
+  100% {
+    opacity: 0;
+    left: -316px;
+  }
+}
+
+@keyframes showLeftToastMessageFrame {
+  0% {
+    opacity: 0;
+    left: -316px;
+  }
+
+  100% {
+    opacity: 1;
+    left: 7px;
+  }
+}
+
+@keyframes closeLeftToastMessageFrame {
+  0% {
+    opacity: 1;
+    left: 7px;
+  }
+
+  100% {
+    opacity: 0;
+    left: -316px;
+  }
+}
+
+.showLeftToastMessage {
+  animation: showLeftToastMessageFrame 0.3s ease-in forwards;
+}
+.closeLeftToastMessage {
+  animation: closeLeftToastMessageFrame 0.3s ease-in forwards;
+}

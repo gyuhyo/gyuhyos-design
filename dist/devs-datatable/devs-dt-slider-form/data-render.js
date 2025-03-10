@@ -12,6 +12,7 @@ var DataRender = React.memo(function (_a) {
         row: row,
         index: rowIndex,
         getValue: focusedRowForm.getValues,
+        watch: focusedRowForm.watch,
     });
 });
 export default DataRender;

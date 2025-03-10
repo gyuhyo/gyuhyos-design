@@ -11,6 +11,7 @@ import {
   DropResult,
 } from "@hello-pangea/dnd";
 import useDtUtils from "../hooks/useDtUtils";
+import DevsDtTFoot from "../devs-dt-tfoot";
 
 type TDevsDtTBody = {
   tbody: React.RefObject<HTMLDivElement | null>;
@@ -66,6 +67,33 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
     rowIndex: number,
     val: any
   ) => {
+    if (col?.render !== undefined) {
+      const form = formsRef.current[row.rowId];
+      const renderResult = col?.render({
+        row: row,
+        value: val,
+        index: rowIndex,
+        getValue: form?.getValues,
+        watch: form?.watch,
+      });
+
+      if (
+        typeof renderResult === "string" ||
+        typeof renderResult === "number" ||
+        typeof renderResult === "boolean" ||
+        typeof renderResult === "bigint"
+      ) {
+        if (typeof renderResult === "string") {
+          const isNanCheck = isNaN(parseFloat(renderResult));
+
+          if (!isNanCheck) {
+            return parseFloat(renderResult.replace(",", ""));
+          }
+        }
+        return renderResult;
+      }
+    }
+
     if (col?.defaultValue !== undefined) {
       const value = col.defaultValue({
         row,
@@ -84,6 +112,8 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
       const findSorterField = columns.find(
         (col) => col.field === sorter.field!
       );
+      //if (!findSorterField) return d;
+
       const newRows = d.filter((x) => x.mode === "c");
       const nullRows =
         findSorterField?.isNotNullSort === true
@@ -342,12 +372,11 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
       <div ref={tbody} className="devs-dt-tbody-wrapper">
         <div
           className="devs-dt-table devs-dt-table-fixed"
-          style={{ width: headerWidth, height: "100%" }}
+          style={{ width: headerWidth - 15, height: "100%" }}
         >
-          <div className="devs-dt-tbody" style={{ position: "relative" }}>
-            <EmptySvg />
-          </div>
+          <div className="devs-dt-tbody" style={{ position: "relative" }}></div>
         </div>
+        <EmptySvg />
       </div>
     );
   }
@@ -440,6 +469,7 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
           )}
         </Droppable>
       </DragDropContext>
+      {lastNode.filter((f) => f.footer).length > 0 && <DevsDtTFoot />}
     </div>
   );
 }

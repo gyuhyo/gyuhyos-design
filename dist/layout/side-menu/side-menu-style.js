@@ -5,7 +5,7 @@ export var sideMenuContainerStyle = function (_a) {
         position: "sticky",
         flex: "none",
         width: opened ? "250px" : "55px",
-        height: "100vh",
+        height: "100dvh",
         top: 0,
         transition: "width 300ms ease-in-out",
         background: bgColor,

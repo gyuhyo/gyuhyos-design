@@ -30,6 +30,14 @@ export interface MessageContextTypes extends MessageContextProps, MessageShowPro
     isCloseButtonVisible: boolean;
     onCloseClick: (e?: MouseEvent<HTMLDivElement>) => void;
 }
+export interface IToastMessage {
+    type?: "success" | "error" | "warnning" | "info";
+    align?: "topLeft" | "topRight" | "bottomLeft" | "bottomRight";
+    title?: string;
+    message?: string;
+    duration?: number;
+}
 export interface MessageClicentProps {
     showMessage: ({ type, title, message, okCaption, cancelCaption, isOkButtonVisible, onOkClick, isCancelButtonVisible, onCancelClick, isCloseButtonVisible, onCloseClick, footerStart, }: MessageShowProps) => Promise<boolean>;
+    showToastMessage: ({ type, align, title, message, duration, }: IToastMessage) => void;
 }

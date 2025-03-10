@@ -60,7 +60,11 @@ var DevsDtPagination = function () {
             setCurrentPage(currentPage + 7);
         }
     }, [currentPage, totalPageCount]);
-    return ((0, jsx_runtime_1.jsxs)(Pagination.Container, { children: [(0, jsx_runtime_1.jsxs)(Pagination.DataCountLabel, { children: ["\uCD1D ", (0, jsx_runtime_1.jsx)("strong", { children: dataLength }), "\uAC74 (", (0, jsx_runtime_1.jsx)("strong", { children: totalPageCount }), " ", "\uD398\uC774\uC9C0)"] }), (0, jsx_runtime_1.jsxs)(Pagination.PageButtonContainer, { children: [(0, jsx_runtime_1.jsx)(Pagination.PageButton, __assign({ "data-disabled": currentPage <= 4, onClick: function () { return onChangePage(1); } }, { children: "<<" })), (0, jsx_runtime_1.jsx)(Pagination.PageButton, __assign({ "data-disabled": currentPage <= 4, onClick: onPrevPageMoveClick }, { children: "<" })), (0, jsx_runtime_1.jsxs)(Pagination.PageNumberContainer, __assign({ ref: numberContainerRef, className: "smooth-scrolling" }, { children: [dataLength === 0 && ((0, jsx_runtime_1.jsx)(Pagination.NumberButton, __assign({ "data-is-current": true }, { children: "1" }))), Array.from({ length: totalPageCount }, function (n, i) { return ((0, jsx_runtime_1.jsx)(Pagination.NumberButton, __assign({ "data-is-current": i + 1 === currentPage, onClick: function () { return onChangePage(i + 1); } }, { children: i + 1 }), "page-".concat(i + 1))); })] })), (0, jsx_runtime_1.jsx)(Pagination.PageButton, __assign({ "data-disabled": currentPage >= totalPageCount - 3, onClick: onNextPageMoveClick }, { children: ">" })), (0, jsx_runtime_1.jsx)(Pagination.PageButton, __assign({ "data-disabled": currentPage >= totalPageCount - 3, onClick: function () { return onChangePage(totalPageCount); } }, { children: ">>" }))] })] }));
+    return ((0, jsx_runtime_1.jsxs)(Pagination.Container, { children: [(0, jsx_runtime_1.jsxs)(Pagination.DataCountLabel, { children: ["\uCD1D ", (0, jsx_runtime_1.jsx)("strong", { children: dataLength }), "\uAC74 (", (0, jsx_runtime_1.jsx)("strong", { children: totalPageCount }), " ", "\uD398\uC774\uC9C0)"] }), (0, jsx_runtime_1.jsxs)(Pagination.PageButtonContainer, __assign({ ref: react_1.default.useCallback(function (node) {
+                    if (!node)
+                        return;
+                    node.classList.add("pagination-container-bling");
+                }, []) }, { children: [(0, jsx_runtime_1.jsx)(Pagination.PageButton, __assign({ "data-disabled": currentPage <= 4, onClick: function () { return onChangePage(1); } }, { children: "<<" })), (0, jsx_runtime_1.jsx)(Pagination.PageButton, __assign({ "data-disabled": currentPage <= 4, onClick: onPrevPageMoveClick }, { children: "<" })), (0, jsx_runtime_1.jsxs)(Pagination.PageNumberContainer, __assign({ ref: numberContainerRef, className: "smooth-scrolling" }, { children: [dataLength === 0 && ((0, jsx_runtime_1.jsx)(Pagination.NumberButton, __assign({ "data-is-current": true }, { children: "1" }))), Array.from({ length: totalPageCount }, function (n, i) { return ((0, jsx_runtime_1.jsx)(Pagination.NumberButton, __assign({ "data-is-current": i + 1 === currentPage, onClick: function () { return onChangePage(i + 1); } }, { children: i + 1 }), "page-".concat(i + 1))); })] })), (0, jsx_runtime_1.jsx)(Pagination.PageButton, __assign({ "data-disabled": currentPage >= totalPageCount - 3, onClick: onNextPageMoveClick }, { children: ">" })), (0, jsx_runtime_1.jsx)(Pagination.PageButton, __assign({ "data-disabled": currentPage >= totalPageCount - 3, onClick: function () { return onChangePage(totalPageCount); } }, { children: ">>" }))] }))] }));
 };
 exports.default = react_1.default.memo(DevsDtPagination);
 var Pagination = {
@@ -77,7 +81,6 @@ var Pagination = {
     PageButtonContainer: styled_1.default.div({
         display: "flex",
         flexDirection: "row",
-        border: "1px solid #c7c7c7",
     }),
     PageButton: styled_1.default.div({
         width: 30,
@@ -85,7 +88,6 @@ var Pagination = {
         textAlign: "center",
         alignContent: "center",
         fontWeight: "bold",
-        borderInlineEnd: "1px solid #c7c7c7",
         "&:last-of-type": {
             borderInlineEnd: "none",
         },
@@ -104,7 +106,6 @@ var Pagination = {
     PageNumberContainer: styled_1.default.div({
         maxWidth: "189px",
         width: "auto",
-        borderInlineEnd: "1px solid #c7c7c7",
         display: "flex",
         flexDirection: "row",
         justifyContent: "start",

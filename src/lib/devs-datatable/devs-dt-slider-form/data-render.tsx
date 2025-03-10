@@ -15,6 +15,7 @@ const DataRender: React.FC<any> = React.memo(
       row: row!,
       index: rowIndex,
       getValue: focusedRowForm.getValues,
+      watch: focusedRowForm.watch,
     });
   }
 );

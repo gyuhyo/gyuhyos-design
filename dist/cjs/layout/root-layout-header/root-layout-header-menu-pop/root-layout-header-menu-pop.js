@@ -76,7 +76,7 @@ var react_1 = require("@emotion/react");
 var React = __importStar(require("react"));
 var menu_store_1 = require("../../stores/menu-store");
 function RootLayoutHeaderMenuPop(_a) {
-    var value = _a.value, onRemoveSearchText = _a.onRemoveSearchText;
+    var isPopShow = _a.isPopShow, value = _a.value, onRemoveSearchText = _a.onRemoveSearchText;
     var openMenu = (0, menu_store_1.useMenuStore)(function (state) { return state.openMenu; });
     var menus = (0, menu_store_1.useMenuStore)(function (state) { return state.menus; });
     var filteredMenus = React.useMemo(function () {
@@ -107,8 +107,8 @@ function RootLayoutHeaderMenuPop(_a) {
         openMenu(menu);
         onRemoveSearchText();
     };
-    return ((0, jsx_runtime_1.jsx)("div", __assign({ css: (0, react_1.css)({
-            visibility: value ? "visible" : "hidden",
+    return ((0, jsx_runtime_1.jsxs)("div", __assign({ css: (0, react_1.css)({
+            visibility: isPopShow || value ? "visible" : "hidden",
             position: "absolute",
             overflow: "auto",
             top: "42px",
@@ -118,21 +118,31 @@ function RootLayoutHeaderMenuPop(_a) {
             background: "#fff",
             boxShadow: "3px 3px 11px rgba(0, 0, 0, 0.5)",
             borderRadius: "7px",
-            zIndex: 3,
-        }) }, { children: filteredMenus &&
-            filteredMenus.map(function (menu) { return ((0, jsx_runtime_1.jsx)("p", __assign({ css: (0, react_1.css)({
-                    margin: 0,
-                    padding: "5px 7px",
-                    borderBottom: "1px solid #ddd",
-                    ":last-of-type": {
-                        borderBottom: "none",
-                    },
-                    cursor: "pointer",
-                    "&:hover": {
-                        background: "#eee",
-                        textDecoration: "underline",
-                        textUnderlineOffset: "3px",
-                    },
-                }), onClick: function () { return onMenuClick(menu); } }, { children: menu.title }), "".concat(menu.group, "-").concat(menu.key))); }) })));
+            zIndex: 4,
+        }) }, { children: [!value && ((0, jsx_runtime_1.jsx)("p", __assign({ css: (0, react_1.css)({
+                    textAlign: "center",
+                    height: "100%",
+                    alignContent: "center",
+                    color: "#a0a0a0",
+                }) }, { children: "\uBA54\uB274\uB97C \uC785\uB825\uD574 \uC8FC\uC138\uC694." }))), value && (filteredMenus === null || filteredMenus === void 0 ? void 0 : filteredMenus.length) === 0 && ((0, jsx_runtime_1.jsx)("p", __assign({ css: (0, react_1.css)({
+                    textAlign: "center",
+                    height: "100%",
+                    alignContent: "center",
+                    color: "#a0a0a0",
+                }) }, { children: "\uAC80\uC0C9\uD558\uC2E0 \uBA54\uB274\uAC00 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }))), filteredMenus &&
+                filteredMenus.map(function (menu) { return ((0, jsx_runtime_1.jsx)("p", __assign({ css: (0, react_1.css)({
+                        margin: 0,
+                        padding: "5px 7px",
+                        borderBottom: "1px solid #ddd",
+                        ":last-of-type": {
+                            borderBottom: "none",
+                        },
+                        cursor: "pointer",
+                        "&:hover": {
+                            background: "#eee",
+                            textDecoration: "underline",
+                            textUnderlineOffset: "3px",
+                        },
+                    }), onClick: function () { return onMenuClick(menu); } }, { children: menu.title }), "".concat(menu.group, "-").concat(menu.key))); })] })));
 }
 exports.default = RootLayoutHeaderMenuPop;

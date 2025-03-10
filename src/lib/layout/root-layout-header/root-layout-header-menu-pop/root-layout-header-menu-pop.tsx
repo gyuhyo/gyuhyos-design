@@ -5,9 +5,11 @@ import * as React from "react";
 import { useMenuStore } from "../../stores/menu-store";
 import { SideMenuItemsChildProps } from "../../types/side-menu-item-props";
 function RootLayoutHeaderMenuPop({
+  isPopShow,
   value,
   onRemoveSearchText,
 }: {
+  isPopShow: boolean;
   value?: string;
   onRemoveSearchText: () => void;
 }) {
@@ -40,7 +42,7 @@ function RootLayoutHeaderMenuPop({
   return (
     <div
       css={css({
-        visibility: value ? "visible" : "hidden",
+        visibility: isPopShow || value ? "visible" : "hidden",
         position: "absolute",
         overflow: "auto",
         top: "42px",
@@ -50,9 +52,33 @@ function RootLayoutHeaderMenuPop({
         background: "#fff",
         boxShadow: "3px 3px 11px rgba(0, 0, 0, 0.5)",
         borderRadius: "7px",
-        zIndex: 3,
+        zIndex: 4,
       })}
     >
+      {!value && (
+        <p
+          css={css({
+            textAlign: "center",
+            height: "100%",
+            alignContent: "center",
+            color: "#a0a0a0",
+          })}
+        >
+          메뉴를 입력해 주세요.
+        </p>
+      )}
+      {value && filteredMenus?.length === 0 && (
+        <p
+          css={css({
+            textAlign: "center",
+            height: "100%",
+            alignContent: "center",
+            color: "#a0a0a0",
+          })}
+        >
+          검색하신 메뉴가 존재하지 않습니다.
+        </p>
+      )}
       {filteredMenus &&
         filteredMenus.map((menu) => (
           <p

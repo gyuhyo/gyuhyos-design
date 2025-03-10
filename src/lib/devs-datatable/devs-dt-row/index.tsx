@@ -57,42 +57,52 @@ const RowCheckCell: React.FC<{
   setDataSource: React.Dispatch<React.SetStateAction<any[]>>;
   setValue: UseFormSetValue<FieldValues>;
   multipleRowCheck?: boolean;
-}> = ({ data, checked, setDataSource, setValue, multipleRowCheck }) => {
+  rowCheckable: boolean;
+}> = ({
+  data,
+  checked,
+  setDataSource,
+  setValue,
+  multipleRowCheck,
+  rowCheckable,
+}) => {
   return (
     <td
-      className="devs-dt-cell devs-dt-sticky-col"
+      className="devs-dt-cell devs-dt-th devs-dt-sticky-col"
       style={{ "--width": "30px" } as React.CSSProperties}
     >
-      <input
-        type="checkbox"
-        checked={checked || false}
-        style={{ cursor: "pointer" }}
-        onChange={(e) => {
-          e.stopPropagation();
-          setValue("checked", !checked);
-          setDataSource((prev) => {
-            if (checked === false && multipleRowCheck === false) {
-              return prev.map((p) =>
-                p.rowId === data.rowId
-                  ? { ...p, checked: true }
-                  : { ...p, checked: false }
-              );
-            }
+      {rowCheckable && (
+        <input
+          type="checkbox"
+          checked={checked || false}
+          style={{ cursor: "pointer" }}
+          onChange={(e) => {
+            e.stopPropagation();
+            setValue("checked", !checked);
+            setDataSource((prev) => {
+              if (checked === false && multipleRowCheck === false) {
+                return prev.map((p) =>
+                  p.rowId === data.rowId
+                    ? { ...p, checked: true }
+                    : { ...p, checked: false }
+                );
+              }
 
-            if (checked === true && data.mode !== "c") {
-              return prev.map((p) =>
-                p.rowId === data.rowId
-                  ? { ...p, checked: false, mode: "r" }
-                  : { ...p }
-              );
-            }
+              if (checked === true && data.mode !== "c") {
+                return prev.map((p) =>
+                  p.rowId === data.rowId
+                    ? { ...p, checked: false, mode: "r" }
+                    : { ...p }
+                );
+              }
 
-            return prev.map((p) =>
-              p.rowId === data.rowId ? { ...p, checked: !checked } : { ...p }
-            );
-          });
-        }}
-      />
+              return prev.map((p) =>
+                p.rowId === data.rowId ? { ...p, checked: !checked } : { ...p }
+              );
+            });
+          }}
+        />
+      )}
     </td>
   );
 };
@@ -186,6 +196,7 @@ function DevsDtRow({
     formState: { errors },
     setValue,
     getValues,
+    setError,
     watch,
     trigger,
   } = form;
@@ -270,7 +281,7 @@ function DevsDtRow({
             title: "경고",
             type: "warnning",
             message:
-              "다른 데이터를 수정할 경우 기존 데이터 수정이 중단되며 복구할 수 없습니다.\n\n현재 데이터 수정을 중단 하시겠습니까?",
+              "다른 데이터를 수정할 경우\n기존 데이터 수정이 중단되며 복구할 수 없습니다.\n\n현재 데이터 수정을 중단 하시겠습니까?",
             onOkClick: () =>
               setDataSource((prev) => {
                 return prev
@@ -395,6 +406,9 @@ function DevsDtRow({
           setDataSource={setDataSource}
           setValue={setValue}
           multipleRowCheck={options.multipleRowCheck}
+          rowCheckable={
+            options?.rowCheckable?.({ index: idx, row: data }) ?? true
+          }
         />
       )}
       {lastNode &&
@@ -412,19 +426,18 @@ function DevsDtRow({
               control={control}
               col={col}
               mode={data.mode}
-              defaultValue={
-                options?.editMode === "slider"
-                  ? watch(col.field)
-                  : data[col.field]
-              }
+              defaultValue={watch(col.field)}
               error={errors.hasOwnProperty(col.field)}
               autoFocus={col.autoFocus?.(data.mode) ?? GetAutoFocus(col.field)}
               row={data}
+              prevRow={prevRow}
+              nextRow={nextRow}
               setValue={setValue}
               merge={data._merge?.[col.field]}
               rowIndex={idx}
               getValue={getValues}
               trigger={trigger}
+              watch={watch}
             />
           );
         })}

@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
-declare function RootLayoutHeaderMenuPop({ value, onRemoveSearchText, }: {
+declare function RootLayoutHeaderMenuPop({ isPopShow, value, onRemoveSearchText, }: {
+    isPopShow: boolean;
     value?: string;
     onRemoveSearchText: () => void;
 }): import("@emotion/react/jsx-runtime").JSX.Element;

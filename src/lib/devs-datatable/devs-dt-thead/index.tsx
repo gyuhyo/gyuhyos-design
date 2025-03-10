@@ -48,7 +48,14 @@ const RowCheckCell: React.FC<{
   setDataSource: React.Dispatch<React.SetStateAction<any[]>>;
   maxDepth: number;
   isMultipleCheck: boolean | undefined;
-}> = ({ setDataSource, maxDepth, isMultipleCheck }) => {
+  rowCheckable?: ({
+    index,
+    row,
+  }: {
+    index: number;
+    row: IDataSource;
+  }) => boolean;
+}> = ({ setDataSource, maxDepth, isMultipleCheck, rowCheckable }) => {
   return (
     <th
       className="devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-th-bottom-border"
@@ -61,7 +68,16 @@ const RowCheckCell: React.FC<{
           type="checkbox"
           onChange={(e) => {
             setDataSource((prev) =>
-              prev.map((p) => ({ ...p, checked: e.target.checked }))
+              prev.map((p, index) => {
+                if (rowCheckable !== undefined) {
+                  if (rowCheckable({ index, row: p })) {
+                    return { ...p, checked: e.target.checked };
+                  }
+                  return p;
+                }
+
+                return { ...p, checked: e.target.checked };
+              })
             );
           }}
         />
@@ -194,6 +210,10 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
           `tr > td[data-field='${col!.field}']`
         );
 
+        const targetFootCell = tbody!.current?.querySelectorAll(
+          `tr > td[data-field='${col!.field}']`
+        );
+
         if (target) {
           (target as HTMLTableCellElement).style.setProperty(
             "--width",
@@ -203,6 +223,14 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
 
         if (targetBodyCell) {
           for (const cell of targetBodyCell) {
+            const c = cell as HTMLTableCellElement;
+
+            c.style.setProperty("--width", `${newWidth}px`);
+          }
+        }
+
+        if (targetFootCell) {
+          for (const cell of targetFootCell) {
             const c = cell as HTMLTableCellElement;
 
             c.style.setProperty("--width", `${newWidth}px`);
@@ -442,6 +470,7 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
                       setDataSource={setDataSource}
                       maxDepth={maxDepth}
                       isMultipleCheck={options.multipleRowCheck}
+                      rowCheckable={options?.rowCheckable}
                     />
                   )}
                   {row}

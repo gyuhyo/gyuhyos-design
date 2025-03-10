@@ -40,6 +40,10 @@ export interface IDataTableOptions {
         index: number;
         row: IDataSource;
     }) => boolean;
+    rowCheckable?: ({ index, row, }: {
+        index: number;
+        row: IDataSource;
+    }) => boolean;
     rowStyle?: ({ index, row, nextRow, prevRow, }: {
         index: number;
         row: IDataSource;
@@ -89,6 +93,14 @@ export interface DevsDataTableRef {
         getCheckedRows: IDataSource[];
         getCheckedRowsData: () => Promise<IDataSource[]>;
         addRow: (defaultValues?: IDataSource) => void;
+        setFocus: ({ rowId, field }: {
+            rowId: string;
+            field: string;
+        }) => void;
+        setError: ({ rowId, field }: {
+            rowId: string;
+            field: string;
+        }) => void;
         setValue: ({ rowId, field, value, }: {
             rowId: string;
             field: string;
@@ -106,10 +118,10 @@ export interface IDataTableProps {
     setColumns: React.Dispatch<React.SetStateAction<IDataTableColumn[]>>;
     dataSource: IDataSource[];
     setDataSource: React.Dispatch<React.SetStateAction<IDataSource[]>>;
-    focusedRowChanged?: (row: IDataSource) => void;
+    focusedRowChanged?: (row: IDataSource | null) => void;
     focusedCellChanged?: ({ row, field, }: {
-        row: IDataSource;
-        field: string;
+        row: IDataSource | null;
+        field: string | null;
     }) => void;
     options?: IDataTableOptions;
     buttons?: IDataTableButtons;

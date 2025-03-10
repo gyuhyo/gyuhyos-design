@@ -15,10 +15,32 @@ const DevsSplitContainer: React.FC<DevsSplitContainerProps> = ({
   defaultSize,
   children,
 }) => {
+  const [isMobile, setIsMobile] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    if (window.innerWidth <= 1200) {
+      setIsMobile(true);
+    }
+
+    const browserResizing = () => {
+      if (window.innerWidth <= 1200) {
+        setIsMobile(true);
+      } else {
+        setIsMobile(false);
+      }
+    };
+
+    window.addEventListener("resize", browserResizing);
+
+    return () => window.removeEventListener("resize", browserResizing);
+  }, []);
+
   return (
     <React.Suspense>
       <Split
-        horizontal={align == "column" ? true : false}
+        horizontal={isMobile ? true : align == "column" ? true : false}
         initialPrimarySize={defaultSize ?? "50%"}
       >
         {children}

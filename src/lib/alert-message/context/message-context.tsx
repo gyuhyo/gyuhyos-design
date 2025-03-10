@@ -1,11 +1,14 @@
 /** @jsxImportSource @emotion/react */
 import React, { createContext, ReactNode, useContext, useState } from "react";
 import {
+  IToastMessage,
   MessageClicentProps,
   MessageShowProps,
 } from "../types/message-context-props";
 import AlertMessage from "..";
 import { useGyudAccess } from "../../access-context";
+import ToastMessage, { IToastMessageComponent } from "../toast-message";
+import styled from "@emotion/styled";
 
 const MessageContext = createContext<MessageClicentProps | undefined>(
   undefined
@@ -15,6 +18,9 @@ export const MessageProvider = React.memo(
   ({ children }: { children: ReactNode }) => {
     const isAccess = useGyudAccess();
     const [messages, setMessages] = useState<MessageShowProps[]>([]);
+    const [toastMessages, setToastMessages] = useState<
+      IToastMessageComponent[]
+    >([]);
 
     const showMessage = (props: MessageShowProps): Promise<boolean> => {
       return new Promise((resolve) => {
@@ -56,12 +62,43 @@ export const MessageProvider = React.memo(
       setMessages((current) => current.filter((m) => m.alertID !== alertID));
     };
 
+    const showToastMessage = (props: IToastMessage): void => {
+      setToastMessages((prev) => {
+        const align = props.align ?? "topRight";
+        return [
+          {
+            id: Date.now().toString(),
+            length: 1,
+            type: props.type ?? "info",
+            align: align,
+            title: props.title ?? "",
+            message: props.message ?? "",
+            duration: props.duration ?? 3000,
+            startAt: Date.now(),
+            endAt: Date.now() + (props.duration ?? 3000),
+            removeToastMessage: (alertId) => removeToastMessage(alertId),
+          },
+          ...prev.map((p) => ({
+            ...p,
+            length: p.length + 1,
+          })),
+        ];
+      });
+    };
+
+    const removeToastMessage = (alertID: string) => {
+      setToastMessages((current) => {
+        const filtered = current.filter((m) => m.id !== alertID);
+        return filtered.map((x) => ({ ...x, length: filtered.indexOf(x) + 1 }));
+      });
+    };
+
     if (isAccess && !isAccess.result) {
       throw new Error("You do not have permission to use package 'gyud'.");
     }
 
     return (
-      <MessageContext.Provider value={{ showMessage }}>
+      <MessageContext.Provider value={{ showMessage, showToastMessage }}>
         {children}
         {messages.map((msg) => (
           <AlertMessage
@@ -88,10 +125,30 @@ export const MessageProvider = React.memo(
             duration={msg.duration}
           />
         ))}
+        {toastMessages &&
+          toastMessages.map((msg) => (
+            <ToastMessage
+              key={msg.id}
+              id={msg.id}
+              length={msg.length}
+              align={msg.align}
+              title={msg.title}
+              message={msg.message}
+              type={msg.type}
+              duration={msg.duration}
+              startAt={msg.startAt}
+              endAt={msg.endAt}
+              removeToastMessage={removeToastMessage}
+            />
+          ))}
       </MessageContext.Provider>
     );
   }
 );
+
+const ToastMessageContainer = styled.div({
+  display: "flex",
+});
 
 export const useMessage = (): MessageClicentProps => {
   const context = useContext(MessageContext);

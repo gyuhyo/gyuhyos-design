@@ -20,7 +20,7 @@ function SideMenuItemContainer(_a) {
             textWrap: "nowrap",
             overflowX: "hidden",
             overflowY: "auto",
-            height: "calc(100vh - 60px)",
+            height: "calc(100dvh - 60px)",
             letterSpacing: 3,
         }) }, { children: items &&
             items.map(function (group) { return (_jsx(SideMenuItemGroup, { isShow: isShow, group: group }, group.key)); }) })));

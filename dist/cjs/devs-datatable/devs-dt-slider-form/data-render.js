@@ -17,6 +17,7 @@ var DataRender = react_1.default.memo(function (_a) {
         row: row,
         index: rowIndex,
         getValue: focusedRowForm.getValues,
+        watch: focusedRowForm.watch,
     });
 });
 exports.default = DataRender;

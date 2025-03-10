@@ -68,10 +68,18 @@ var RowExpandCell = react_1.default.memo(function (_a) {
         } }, { children: (0, jsx_runtime_1.jsx)("button", { className: "expand_ico2 ".concat(isExpand ? "expand_ico_active2" : "") }) })));
 });
 var RowCheckCell = function (_a) {
-    var setDataSource = _a.setDataSource, maxDepth = _a.maxDepth, isMultipleCheck = _a.isMultipleCheck;
+    var setDataSource = _a.setDataSource, maxDepth = _a.maxDepth, isMultipleCheck = _a.isMultipleCheck, rowCheckable = _a.rowCheckable;
     return ((0, jsx_runtime_1.jsx)("th", __assign({ className: "devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-th-bottom-border", style: { "--width": "30px" }, rowSpan: maxDepth }, { children: (isMultipleCheck === undefined || isMultipleCheck === true) && ((0, jsx_runtime_1.jsx)("input", { name: "allCheck", type: "checkbox", onChange: function (e) {
                 setDataSource(function (prev) {
-                    return prev.map(function (p) { return (__assign(__assign({}, p), { checked: e.target.checked })); });
+                    return prev.map(function (p, index) {
+                        if (rowCheckable !== undefined) {
+                            if (rowCheckable({ index: index, row: p })) {
+                                return __assign(__assign({}, p), { checked: e.target.checked });
+                            }
+                            return p;
+                        }
+                        return __assign(__assign({}, p), { checked: e.target.checked });
+                    });
                 });
             } })) })));
 };
@@ -135,11 +143,11 @@ function DevsDtTHead(_a) {
     };
     // 마우스 이동 핸들러
     var handleMouseMove = react_1.default.useCallback(function (e) {
-        var e_1, _a;
-        var _b, _c, _d;
+        var e_1, _a, e_2, _b;
+        var _c, _d, _e, _f;
         e.stopPropagation();
         if (resizingColumnRef.current && setColumns !== undefined) {
-            var _e = resizingColumnRef.current, startX = _e.startX, startWidth = _e.startWidth;
+            var _g = resizingColumnRef.current, startX = _g.startX, startWidth = _g.startWidth;
             var flatColumns = columns.flatMap(function (x) {
                 return x.children !== undefined && x.children.length > 0 ? x.children : x;
             });
@@ -147,11 +155,12 @@ function DevsDtTHead(_a) {
             if (!col)
                 return;
             var deltaX = e.clientX - startX;
-            var newWidth = Math.max(startWidth + deltaX, (_b = col === null || col === void 0 ? void 0 : col.width) !== null && _b !== void 0 ? _b : 100); // 최소 너비 50px
+            var newWidth = Math.max(startWidth + deltaX, (_c = col === null || col === void 0 ? void 0 : col.width) !== null && _c !== void 0 ? _c : 100); // 최소 너비 50px
             resizingColumnRef.current.endWidth = newWidth;
             // columns 배열을 자식 컬럼까지 고려하여 업데이트
-            var target = (_c = thead.current) === null || _c === void 0 ? void 0 : _c.querySelector("th[data-field='".concat(col.field, "']"));
-            var targetBodyCell = (_d = tbody.current) === null || _d === void 0 ? void 0 : _d.querySelectorAll("tr > td[data-field='".concat(col.field, "']"));
+            var target = (_d = thead.current) === null || _d === void 0 ? void 0 : _d.querySelector("th[data-field='".concat(col.field, "']"));
+            var targetBodyCell = (_e = tbody.current) === null || _e === void 0 ? void 0 : _e.querySelectorAll("tr > td[data-field='".concat(col.field, "']"));
+            var targetFootCell = (_f = tbody.current) === null || _f === void 0 ? void 0 : _f.querySelectorAll("tr > td[data-field='".concat(col.field, "']"));
             if (target) {
                 target.style.setProperty("--width", "".concat(newWidth, "px"));
             }
@@ -169,6 +178,22 @@ function DevsDtTHead(_a) {
                         if (targetBodyCell_1_1 && !targetBodyCell_1_1.done && (_a = targetBodyCell_1.return)) _a.call(targetBodyCell_1);
                     }
                     finally { if (e_1) throw e_1.error; }
+                }
+            }
+            if (targetFootCell) {
+                try {
+                    for (var targetFootCell_1 = __values(targetFootCell), targetFootCell_1_1 = targetFootCell_1.next(); !targetFootCell_1_1.done; targetFootCell_1_1 = targetFootCell_1.next()) {
+                        var cell = targetFootCell_1_1.value;
+                        var c = cell;
+                        c.style.setProperty("--width", "".concat(newWidth, "px"));
+                    }
+                }
+                catch (e_2_1) { e_2 = { error: e_2_1 }; }
+                finally {
+                    try {
+                        if (targetFootCell_1_1 && !targetFootCell_1_1.done && (_b = targetFootCell_1.return)) _b.call(targetFootCell_1);
+                    }
+                    finally { if (e_2) throw e_2.error; }
                 }
             }
             COLUMNS_STYLE_FORCE_UPDATE(function (prev) { return !prev; });
@@ -202,7 +227,7 @@ function DevsDtTHead(_a) {
         document.addEventListener("mouseup", handleMouseUp);
     }, [handleMouseMove, handleMouseUp]);
     var checkOverflow = function (col) {
-        var e_2, _a;
+        var e_3, _a;
         var width = col.width, field = col.field;
         var targetTds = document.querySelectorAll(".devs-dt-tbody tr td[data-field='".concat(field, "']"));
         var maxWidth = width !== null && width !== void 0 ? width : 100;
@@ -219,12 +244,12 @@ function DevsDtTHead(_a) {
                 findContentWidth = contentWidth > maxWidth ? contentWidth : maxWidth;
             }
         }
-        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        catch (e_3_1) { e_3 = { error: e_3_1 }; }
         finally {
             try {
                 if (targetTds_1_1 && !targetTds_1_1.done && (_a = targetTds_1.return)) _a.call(targetTds_1);
             }
-            finally { if (e_2) throw e_2.error; }
+            finally { if (e_3) throw e_3.error; }
         }
         setColumns(function (prev) { return updateColumnWidth(prev, field, maxWidth + 12); });
     };
@@ -298,7 +323,7 @@ function DevsDtTHead(_a) {
     }
     return ((0, jsx_runtime_1.jsx)("div", __assign({ ref: thead, className: "devs-dt-thead-wrapper" }, { children: (0, jsx_runtime_1.jsx)("table", __assign({ ref: theadRef, className: "devs-dt-table devs-dt-table-fixed" }, { children: (0, jsx_runtime_1.jsx)("thead", __assign({ className: "devs-dt-thead" }, { children: rows.map(function (row, rowIndex) {
                     if (rowIndex === 0) {
-                        return ((0, jsx_runtime_1.jsxs)("tr", __assign({ className: "devs-dt-row" }, { children: [(options === null || options === void 0 ? void 0 : options.enabledRowOrder) && ((0, jsx_runtime_1.jsx)(RowChangeOrderCell, { maxDepth: maxDepth })), (options === null || options === void 0 ? void 0 : options.enabledExpand) && ((0, jsx_runtime_1.jsx)(RowExpandCell, { maxDepth: maxDepth, setDataSource: setDataSource })), (options === null || options === void 0 ? void 0 : options.showRowNumber) && ((0, jsx_runtime_1.jsx)(RowNumberCell, { maxDepth: maxDepth })), (options === null || options === void 0 ? void 0 : options.enabledRowCheck) && ((0, jsx_runtime_1.jsx)(RowCheckCell, { setDataSource: setDataSource, maxDepth: maxDepth, isMultipleCheck: options.multipleRowCheck })), row, (0, jsx_runtime_1.jsx)("th", { className: "devs-dt-cell devs-dt-th devs-dt-empty-header", rowSpan: maxDepth }), (0, jsx_runtime_1.jsx)("th", { className: "devs-dt-cell devs-dt-th devs-dt-scrollbar-header", rowSpan: maxDepth })] }), rowIndex));
+                        return ((0, jsx_runtime_1.jsxs)("tr", __assign({ className: "devs-dt-row" }, { children: [(options === null || options === void 0 ? void 0 : options.enabledRowOrder) && ((0, jsx_runtime_1.jsx)(RowChangeOrderCell, { maxDepth: maxDepth })), (options === null || options === void 0 ? void 0 : options.enabledExpand) && ((0, jsx_runtime_1.jsx)(RowExpandCell, { maxDepth: maxDepth, setDataSource: setDataSource })), (options === null || options === void 0 ? void 0 : options.showRowNumber) && ((0, jsx_runtime_1.jsx)(RowNumberCell, { maxDepth: maxDepth })), (options === null || options === void 0 ? void 0 : options.enabledRowCheck) && ((0, jsx_runtime_1.jsx)(RowCheckCell, { setDataSource: setDataSource, maxDepth: maxDepth, isMultipleCheck: options.multipleRowCheck, rowCheckable: options === null || options === void 0 ? void 0 : options.rowCheckable })), row, (0, jsx_runtime_1.jsx)("th", { className: "devs-dt-cell devs-dt-th devs-dt-empty-header", rowSpan: maxDepth }), (0, jsx_runtime_1.jsx)("th", { className: "devs-dt-cell devs-dt-th devs-dt-scrollbar-header", rowSpan: maxDepth })] }), rowIndex));
                     }
                     else {
                         return ((0, jsx_runtime_1.jsx)("tr", __assign({ className: "devs-dt-row" }, { children: row }), rowIndex));

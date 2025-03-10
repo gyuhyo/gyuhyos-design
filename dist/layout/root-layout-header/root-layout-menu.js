@@ -38,6 +38,7 @@ var RootLayoutMenu = React.memo(function () {
     var items = useMenuStore(function (state) { return state.menus; });
     var menuType = useLayout().menuType;
     var _a = __read(React.useState(""), 2), searchMenuText = _a[0], setSearchMenuText = _a[1];
+    var _b = __read(React.useState(false), 2), isPopShow = _b[0], setIsPopShow = _b[1];
     var onMenuSearch = function (search) {
         setSearchMenuText(search);
     };
@@ -178,8 +179,8 @@ var RootLayoutMenu = React.memo(function () {
                         flex: "1 1 0%",
                         borderRadius: "7px",
                         paddingLeft: "7px",
-                    }), value: searchMenuText, onChange: function (e) { return onMenuSearch(e.target.value); } }), _jsx(Button, __assign({ onClick: onRemoveSearchText, css: css({
+                    }), value: searchMenuText, onChange: function (e) { return onMenuSearch(e.target.value); }, onFocus: function () { return setIsPopShow(true); }, onBlur: function () { return setIsPopShow(false); } }), _jsx(Button, __assign({ onClick: onRemoveSearchText, css: css({
                         visibility: searchMenuText ? "visible" : "hidden",
-                    }), compact: true }, { children: "\u2715" })), _jsx(RootLayoutHeaderMenuPop, { value: searchMenuText, onRemoveSearchText: onRemoveSearchText })] }))) : (CreatedMenus(items)) }));
+                    }), compact: true }, { children: "\u2715" })), _jsx(RootLayoutHeaderMenuPop, { isPopShow: isPopShow, value: searchMenuText, onRemoveSearchText: onRemoveSearchText })] }))) : (CreatedMenus(items)) }));
 });
 export default RootLayoutMenu;

@@ -13,6 +13,8 @@ interface MenuStoreProps {
     closeMenu: (menu: SideMenuItemsProps | SideMenuItemsChildProps) => void | undefined;
     menuOrderChanges: (openedMenus: SideMenuItemsChildProps[]) => void;
     closeAllTabls: () => void;
+    closeNotMyTabs: () => void;
+    closeHighIndexTabs: () => void;
 }
 declare const useMenuStore: import("zustand").UseBoundStore<Omit<import("zustand").StoreApi<MenuStoreProps>, "persist"> & {
     persist: {

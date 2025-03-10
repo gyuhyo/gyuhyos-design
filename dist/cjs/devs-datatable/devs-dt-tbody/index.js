@@ -57,6 +57,7 @@ var devs_dt_row_1 = __importDefault(require("../devs-dt-row"));
 var empty_svg_1 = __importDefault(require("../assets/empty.svg"));
 var dnd_1 = require("@hello-pangea/dnd");
 var useDtUtils_1 = __importDefault(require("../hooks/useDtUtils"));
+var devs_dt_tfoot_1 = __importDefault(require("../devs-dt-tfoot"));
 function DevsDtTBody(_a) {
     var tbody = _a.tbody, headerWidth = _a.headerWidth;
     var _b = (0, devs_dt_context_1.useDt)(), columns = _b.columns, dataSource = _b.dataSource, setDataSource = _b.setDataSource, options = _b.options, formsRef = _b.formsRef, sorter = _b.sorter, currentPage = _b.currentPage;
@@ -88,6 +89,28 @@ function DevsDtTBody(_a) {
         return lastNode.length + fixedCount;
     }, [lastNode, options]);
     var getDefaultValue = function (col, row, rowIndex, val) {
+        if ((col === null || col === void 0 ? void 0 : col.render) !== undefined) {
+            var form = formsRef.current[row.rowId];
+            var renderResult = col === null || col === void 0 ? void 0 : col.render({
+                row: row,
+                value: val,
+                index: rowIndex,
+                getValue: form === null || form === void 0 ? void 0 : form.getValues,
+                watch: form === null || form === void 0 ? void 0 : form.watch,
+            });
+            if (typeof renderResult === "string" ||
+                typeof renderResult === "number" ||
+                typeof renderResult === "boolean" ||
+                typeof renderResult === "bigint") {
+                if (typeof renderResult === "string") {
+                    var isNanCheck = isNaN(parseFloat(renderResult));
+                    if (!isNanCheck) {
+                        return parseFloat(renderResult.replace(",", ""));
+                    }
+                }
+                return renderResult;
+            }
+        }
         if ((col === null || col === void 0 ? void 0 : col.defaultValue) !== undefined) {
             var value = col.defaultValue({
                 row: row,
@@ -101,6 +124,7 @@ function DevsDtTBody(_a) {
     var sortDataSource = react_1.default.useCallback(function (d) {
         var _a, _b;
         var findSorterField = columns.find(function (col) { return col.field === sorter.field; });
+        //if (!findSorterField) return d;
         var newRows = d.filter(function (x) { return x.mode === "c"; });
         var nullRows = (findSorterField === null || findSorterField === void 0 ? void 0 : findSorterField.isNotNullSort) === true
             ? d.filter(function (x, idx) {
@@ -279,32 +303,32 @@ function DevsDtTBody(_a) {
         }
     }, [dataSource]);
     if (dataSource === undefined || dataSource.length === 0) {
-        return ((0, jsx_runtime_1.jsx)("div", __assign({ ref: tbody, className: "devs-dt-tbody-wrapper" }, { children: (0, jsx_runtime_1.jsx)("div", __assign({ className: "devs-dt-table devs-dt-table-fixed", style: { width: headerWidth, height: "100%" } }, { children: (0, jsx_runtime_1.jsx)("div", __assign({ className: "devs-dt-tbody", style: { position: "relative" } }, { children: (0, jsx_runtime_1.jsx)(empty_svg_1.default, {}) })) })) })));
+        return ((0, jsx_runtime_1.jsxs)("div", __assign({ ref: tbody, className: "devs-dt-tbody-wrapper" }, { children: [(0, jsx_runtime_1.jsx)("div", __assign({ className: "devs-dt-table devs-dt-table-fixed", style: { width: headerWidth - 15, height: "100%" } }, { children: (0, jsx_runtime_1.jsx)("div", { className: "devs-dt-tbody", style: { position: "relative" } }) })), (0, jsx_runtime_1.jsx)(empty_svg_1.default, {})] })));
     }
-    return ((0, jsx_runtime_1.jsx)("div", __assign({ ref: tbody, className: "devs-dt-tbody-wrapper" }, { children: (0, jsx_runtime_1.jsx)(dnd_1.DragDropContext, __assign({ onDragEnd: setRowOrderChange, onDragStart: function (e) { }, onDragUpdate: onDragUpdate }, { children: (0, jsx_runtime_1.jsx)(dnd_1.Droppable, __assign({ droppableId: "droppable", mode: "standard", type: "", direction: "vertical", isDropDisabled: isDrop }, { children: function (provided) { return ((0, jsx_runtime_1.jsx)("table", __assign({ className: "devs-dt-table devs-dt-table-fixed", ref: provided.innerRef }, provided.droppableProps, { children: (0, jsx_runtime_1.jsxs)("tbody", __assign({ className: "devs-dt-tbody" }, { children: [mergedDataSource &&
-                                mergedDataSource
-                                    .filter(function (f) { return f.rowId; })
-                                    .map(function (row, index) {
-                                    return ((0, jsx_runtime_1.jsx)(dnd_1.Draggable, __assign({ draggableId: row.rowId, index: index, isDragDisabled: !(options === null || options === void 0 ? void 0 : options.enabledRowOrder) || row.mode === "c" }, { children: function (provided2, snapshot) {
-                                            var _a;
-                                            var style = provided2.draggableProps.style;
-                                            if (style !== undefined) {
-                                                var transform = provided2.draggableProps.style.transform;
-                                                if (transform) {
-                                                    var t = transform.split(",")[1];
-                                                    provided2.draggableProps.style.transform =
-                                                        "translate(0px," + t;
+    return ((0, jsx_runtime_1.jsxs)("div", __assign({ ref: tbody, className: "devs-dt-tbody-wrapper" }, { children: [(0, jsx_runtime_1.jsx)(dnd_1.DragDropContext, __assign({ onDragEnd: setRowOrderChange, onDragStart: function (e) { }, onDragUpdate: onDragUpdate }, { children: (0, jsx_runtime_1.jsx)(dnd_1.Droppable, __assign({ droppableId: "droppable", mode: "standard", type: "", direction: "vertical", isDropDisabled: isDrop }, { children: function (provided) { return ((0, jsx_runtime_1.jsx)("table", __assign({ className: "devs-dt-table devs-dt-table-fixed", ref: provided.innerRef }, provided.droppableProps, { children: (0, jsx_runtime_1.jsxs)("tbody", __assign({ className: "devs-dt-tbody" }, { children: [mergedDataSource &&
+                                    mergedDataSource
+                                        .filter(function (f) { return f.rowId; })
+                                        .map(function (row, index) {
+                                        return ((0, jsx_runtime_1.jsx)(dnd_1.Draggable, __assign({ draggableId: row.rowId, index: index, isDragDisabled: !(options === null || options === void 0 ? void 0 : options.enabledRowOrder) || row.mode === "c" }, { children: function (provided2, snapshot) {
+                                                var _a;
+                                                var style = provided2.draggableProps.style;
+                                                if (style !== undefined) {
+                                                    var transform = provided2.draggableProps.style.transform;
+                                                    if (transform) {
+                                                        var t = transform.split(",")[1];
+                                                        provided2.draggableProps.style.transform =
+                                                            "translate(0px," + t;
+                                                    }
                                                 }
-                                            }
-                                            return ((0, jsx_runtime_1.jsxs)(react_1.default.Fragment, { children: [(0, jsx_runtime_1.jsx)(devs_dt_row_1.default, { index: index, rowKey: row.rowId, data: row, lastNode: lastNode, dragProvided: provided2, dragSnapshot: snapshot }, row.rowId), (options === null || options === void 0 ? void 0 : options.enabledExpand) === true && ((0, jsx_runtime_1.jsx)("tr", __assign({ style: {
-                                                            display: row.expand
-                                                                ? "table-row"
-                                                                : "none",
-                                                        } }, { children: (0, jsx_runtime_1.jsx)("td", __assign({ className: "devs-dt-cell devs-dt-td", style: {
-                                                                padding: "7px",
-                                                                height: "0px",
-                                                            }, colSpan: nodeCount }, { children: (_a = options === null || options === void 0 ? void 0 : options.expandContent) === null || _a === void 0 ? void 0 : _a.call(options, row) })) })))] }, row.rowId));
-                                        } }), row.rowId));
-                                }), provided.placeholder] })) }))); } })) })) })));
+                                                return ((0, jsx_runtime_1.jsxs)(react_1.default.Fragment, { children: [(0, jsx_runtime_1.jsx)(devs_dt_row_1.default, { index: index, rowKey: row.rowId, data: row, lastNode: lastNode, dragProvided: provided2, dragSnapshot: snapshot }, row.rowId), (options === null || options === void 0 ? void 0 : options.enabledExpand) === true && ((0, jsx_runtime_1.jsx)("tr", __assign({ style: {
+                                                                display: row.expand
+                                                                    ? "table-row"
+                                                                    : "none",
+                                                            } }, { children: (0, jsx_runtime_1.jsx)("td", __assign({ className: "devs-dt-cell devs-dt-td", style: {
+                                                                    padding: "7px",
+                                                                    height: "0px",
+                                                                }, colSpan: nodeCount }, { children: (_a = options === null || options === void 0 ? void 0 : options.expandContent) === null || _a === void 0 ? void 0 : _a.call(options, row) })) })))] }, row.rowId));
+                                            } }), row.rowId));
+                                    }), provided.placeholder] })) }))); } })) })), lastNode.filter(function (f) { return f.footer; }).length > 0 && (0, jsx_runtime_1.jsx)(devs_dt_tfoot_1.default, {})] })));
 }
 exports.default = react_1.default.memo(DevsDtTBody);

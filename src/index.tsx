@@ -24,7 +24,7 @@ root.render(
         <LayoutProvider
           refreshTokenUrl="/auth/refresh"
           authUrl="/auth"
-          menuType="multiple"
+          menuType="slide"
           customSettings={
             <React.Fragment>
               <div>123</div>

@@ -27,8 +27,8 @@ var RowNumberCell = function (_a) {
     return ((0, jsx_runtime_1.jsx)("td", __assign({ className: "devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-index-cell", style: { "--width": "50px" } }, { children: index + 1 })));
 };
 var RowCheckCell = function (_a) {
-    var data = _a.data, checked = _a.checked, setDataSource = _a.setDataSource, setValue = _a.setValue, multipleRowCheck = _a.multipleRowCheck;
-    return ((0, jsx_runtime_1.jsx)("td", __assign({ className: "devs-dt-cell devs-dt-sticky-col", style: { "--width": "30px" } }, { children: (0, jsx_runtime_1.jsx)("input", { type: "checkbox", checked: checked || false, style: { cursor: "pointer" }, onChange: function (e) {
+    var data = _a.data, checked = _a.checked, setDataSource = _a.setDataSource, setValue = _a.setValue, multipleRowCheck = _a.multipleRowCheck, rowCheckable = _a.rowCheckable;
+    return ((0, jsx_runtime_1.jsx)("td", __assign({ className: "devs-dt-cell devs-dt-th devs-dt-sticky-col", style: { "--width": "30px" } }, { children: rowCheckable && ((0, jsx_runtime_1.jsx)("input", { type: "checkbox", checked: checked || false, style: { cursor: "pointer" }, onChange: function (e) {
                 e.stopPropagation();
                 setValue("checked", !checked);
                 setDataSource(function (prev) {
@@ -48,7 +48,7 @@ var RowCheckCell = function (_a) {
                         return p.rowId === data.rowId ? __assign(__assign({}, p), { checked: !checked }) : __assign({}, p);
                     });
                 });
-            } }) })));
+            } })) })));
 };
 var RowChangeOrderCell = function (_a) {
     var mode = _a.mode, dragHandleProps = _a.dragHandleProps;
@@ -69,10 +69,10 @@ var RowExpandCell = function (_a) {
         } }, { children: (0, jsx_runtime_1.jsx)("button", { className: "expand_ico2 ".concat(data.expand ? "expand_ico_active2" : "") }) })));
 };
 function DevsDtRow(_a) {
-    var _b, _c;
+    var _b, _c, _d, _e;
     var data = _a.data, index = _a.index, rowKey = _a.rowKey, lastNode = _a.lastNode, dragProvided = _a.dragProvided, dragSnapshot = _a.dragSnapshot;
     var showMessage = (0, message_context_1.useMessage)().showMessage;
-    var _d = (0, devs_dt_context_1.useDt)(), setDataSource = _d.setDataSource, options = _d.options, formsRef = _d.formsRef, focusedRow = _d.focusedRow, setFocusedRow = _d.setFocusedRow, editCount = _d.editCount, dataSource = _d.dataSource, setSliderFormOpen = _d.setSliderFormOpen, setFocusedRowForm = _d.setFocusedRowForm, editMode = _d.editMode, currentPage = _d.currentPage, focusedCell = _d.focusedCell;
+    var _f = (0, devs_dt_context_1.useDt)(), setDataSource = _f.setDataSource, options = _f.options, formsRef = _f.formsRef, focusedRow = _f.focusedRow, setFocusedRow = _f.setFocusedRow, editCount = _f.editCount, dataSource = _f.dataSource, setSliderFormOpen = _f.setSliderFormOpen, setFocusedRowForm = _f.setFocusedRowForm, editMode = _f.editMode, currentPage = _f.currentPage, focusedCell = _f.focusedCell;
     var idx = (currentPage - 1) * ((_b = options === null || options === void 0 ? void 0 : options.paginationLimit) !== null && _b !== void 0 ? _b : 20) + index;
     var form = (0, react_hook_form_1.useForm)({
         defaultValues: data,
@@ -84,7 +84,7 @@ function DevsDtRow(_a) {
         shouldFocusError: true,
         shouldUseNativeValidation: true,
     });
-    var control = form.control, register = form.register, errors = form.formState.errors, setValue = form.setValue, getValues = form.getValues, watch = form.watch, trigger = form.trigger;
+    var control = form.control, register = form.register, errors = form.formState.errors, setValue = form.setValue, getValues = form.getValues, setError = form.setError, watch = form.watch, trigger = form.trigger;
     var prevRow = react_2.default.useMemo(function () {
         return dataSource[idx - 1];
     }, [dataSource[idx - 1]]);
@@ -157,7 +157,7 @@ function DevsDtRow(_a) {
                     showMessage({
                         title: "경고",
                         type: "warnning",
-                        message: "다른 데이터를 수정할 경우 기존 데이터 수정이 중단되며 복구할 수 없습니다.\n\n현재 데이터 수정을 중단 하시겠습니까?",
+                        message: "다른 데이터를 수정할 경우\n기존 데이터 수정이 중단되며 복구할 수 없습니다.\n\n현재 데이터 수정을 중단 하시겠습니까?",
                         onOkClick: function () {
                             return setDataSource(function (prev) {
                                 return prev
@@ -234,7 +234,7 @@ function DevsDtRow(_a) {
             row: data,
             prevRow: prevRow,
             nextRow: nextRow,
-        })) }, { children: [(options === null || options === void 0 ? void 0 : options.enabledRowOrder) && ((0, jsx_runtime_1.jsx)(RowChangeOrderCell, { mode: data.mode, dragHandleProps: dragProvided.dragHandleProps })), (options === null || options === void 0 ? void 0 : options.enabledExpand) && ((0, jsx_runtime_1.jsx)(RowExpandCell, { setDataSource: setDataSource, data: data, index: idx })), (options === null || options === void 0 ? void 0 : options.showRowNumber) && (0, jsx_runtime_1.jsx)(RowNumberCell, { index: idx }), (options === null || options === void 0 ? void 0 : options.enabledRowCheck) && ((0, jsx_runtime_1.jsx)(RowCheckCell, { data: data, checked: data.checked, setDataSource: setDataSource, setValue: setValue, multipleRowCheck: options.multipleRowCheck })), lastNode &&
+        })) }, { children: [(options === null || options === void 0 ? void 0 : options.enabledRowOrder) && ((0, jsx_runtime_1.jsx)(RowChangeOrderCell, { mode: data.mode, dragHandleProps: dragProvided.dragHandleProps })), (options === null || options === void 0 ? void 0 : options.enabledExpand) && ((0, jsx_runtime_1.jsx)(RowExpandCell, { setDataSource: setDataSource, data: data, index: idx })), (options === null || options === void 0 ? void 0 : options.showRowNumber) && (0, jsx_runtime_1.jsx)(RowNumberCell, { index: idx }), (options === null || options === void 0 ? void 0 : options.enabledRowCheck) && ((0, jsx_runtime_1.jsx)(RowCheckCell, { data: data, checked: data.checked, setDataSource: setDataSource, setValue: setValue, multipleRowCheck: options.multipleRowCheck, rowCheckable: (_e = (_d = options === null || options === void 0 ? void 0 : options.rowCheckable) === null || _d === void 0 ? void 0 : _d.call(options, { index: idx, row: data })) !== null && _e !== void 0 ? _e : true })), lastNode &&
                 lastNode.map(function (col, idx) {
                     var _a, _b, _c;
                     if ((options === null || options === void 0 ? void 0 : options.editMode) === "slider") {
@@ -243,9 +243,7 @@ function DevsDtRow(_a) {
                             value: watch(col.field),
                         });
                     }
-                    return ((0, jsx_runtime_1.jsx)(devs_dt_cell_1.default, { register: register, control: control, col: col, mode: data.mode, defaultValue: (options === null || options === void 0 ? void 0 : options.editMode) === "slider"
-                            ? watch(col.field)
-                            : data[col.field], error: errors.hasOwnProperty(col.field), autoFocus: (_b = (_a = col.autoFocus) === null || _a === void 0 ? void 0 : _a.call(col, data.mode)) !== null && _b !== void 0 ? _b : GetAutoFocus(col.field), row: data, setValue: setValue, merge: (_c = data._merge) === null || _c === void 0 ? void 0 : _c[col.field], rowIndex: idx, getValue: getValues, trigger: trigger }, "".concat(rowKey, "-").concat(col.field)));
+                    return ((0, jsx_runtime_1.jsx)(devs_dt_cell_1.default, { register: register, control: control, col: col, mode: data.mode, defaultValue: watch(col.field), error: errors.hasOwnProperty(col.field), autoFocus: (_b = (_a = col.autoFocus) === null || _a === void 0 ? void 0 : _a.call(col, data.mode)) !== null && _b !== void 0 ? _b : GetAutoFocus(col.field), row: data, prevRow: prevRow, nextRow: nextRow, setValue: setValue, merge: (_c = data._merge) === null || _c === void 0 ? void 0 : _c[col.field], rowIndex: idx, getValue: getValues, trigger: trigger, watch: watch }, "".concat(rowKey, "-").concat(col.field)));
                 })] })));
 }
 exports.default = react_2.default.memo(DevsDtRow);

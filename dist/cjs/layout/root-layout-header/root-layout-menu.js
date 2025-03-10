@@ -43,6 +43,7 @@ var RootLayoutMenu = react_2.default.memo(function () {
     var items = (0, menu_store_1.useMenuStore)(function (state) { return state.menus; });
     var menuType = (0, layout_context_1.useLayout)().menuType;
     var _a = __read(react_2.default.useState(""), 2), searchMenuText = _a[0], setSearchMenuText = _a[1];
+    var _b = __read(react_2.default.useState(false), 2), isPopShow = _b[0], setIsPopShow = _b[1];
     var onMenuSearch = function (search) {
         setSearchMenuText(search);
     };
@@ -183,8 +184,8 @@ var RootLayoutMenu = react_2.default.memo(function () {
                         flex: "1 1 0%",
                         borderRadius: "7px",
                         paddingLeft: "7px",
-                    }), value: searchMenuText, onChange: function (e) { return onMenuSearch(e.target.value); } }), (0, jsx_runtime_1.jsx)(button_1.default, __assign({ onClick: onRemoveSearchText, css: (0, react_1.css)({
+                    }), value: searchMenuText, onChange: function (e) { return onMenuSearch(e.target.value); }, onFocus: function () { return setIsPopShow(true); }, onBlur: function () { return setIsPopShow(false); } }), (0, jsx_runtime_1.jsx)(button_1.default, __assign({ onClick: onRemoveSearchText, css: (0, react_1.css)({
                         visibility: searchMenuText ? "visible" : "hidden",
-                    }), compact: true }, { children: "\u2715" })), (0, jsx_runtime_1.jsx)(root_layout_header_menu_pop_1.default, { value: searchMenuText, onRemoveSearchText: onRemoveSearchText })] }))) : (CreatedMenus(items)) }));
+                    }), compact: true }, { children: "\u2715" })), (0, jsx_runtime_1.jsx)(root_layout_header_menu_pop_1.default, { isPopShow: isPopShow, value: searchMenuText, onRemoveSearchText: onRemoveSearchText })] }))) : (CreatedMenus(items)) }));
 });
 exports.default = RootLayoutMenu;

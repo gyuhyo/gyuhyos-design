@@ -50,63 +50,50 @@ export var useInitDt = function (_a) {
             finally { if (e_3) throw e_3.error; }
         }
     };
-    var hiddenLastColumnBorder = function () {
-        var e_4, _a;
-        var lastColumn = table.current.querySelectorAll(".devs-dt-thead .devs-dt-row:first-child .devs-dt-th:nth-last-child(3), .devs-dt-thead .devs-dt-row:not(:first-child) .devs-dt-th:last-child, .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child");
-        try {
-            for (var lastColumn_1 = __values(lastColumn), lastColumn_1_1 = lastColumn_1.next(); !lastColumn_1_1.done; lastColumn_1_1 = lastColumn_1.next()) {
-                var el = lastColumn_1_1.value;
-                if (el.classList.contains("devs-dt-no-hidden-border"))
-                    continue;
-                el.classList.add("devs-dt-hidden-border");
-            }
-        }
-        catch (e_4_1) { e_4 = { error: e_4_1 }; }
-        finally {
-            try {
-                if (lastColumn_1_1 && !lastColumn_1_1.done && (_a = lastColumn_1.return)) _a.call(lastColumn_1);
-            }
-            finally { if (e_4) throw e_4.error; }
-        }
-    };
-    var visibleLastColumnBorder = function () {
-        var e_5, _a;
-        var lastColumn = table.current.querySelectorAll(".devs-dt-thead .devs-dt-row:first-child .devs-dt-th:nth-last-child(3), .devs-dt-thead .devs-dt-row:not(:first-child) .devs-dt-th:last-child, .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child");
-        try {
-            for (var lastColumn_2 = __values(lastColumn), lastColumn_2_1 = lastColumn_2.next(); !lastColumn_2_1.done; lastColumn_2_1 = lastColumn_2.next()) {
-                var el = lastColumn_2_1.value;
-                el.classList.remove("devs-dt-hidden-border");
-            }
-        }
-        catch (e_5_1) { e_5 = { error: e_5_1 }; }
-        finally {
-            try {
-                if (lastColumn_2_1 && !lastColumn_2_1.done && (_a = lastColumn_2.return)) _a.call(lastColumn_2);
-            }
-            finally { if (e_5) throw e_5.error; }
-        }
-    };
     React.useEffect(function () {
         // body 스크롤 시 동시 head 스크롤 적용
         if (!tbody.current || !thead.current)
             return;
         var tableBodyScrolling = function () {
+            var _a;
             thead.current.scrollLeft = tbody.current.scrollLeft;
-            if (tbody.current.scrollWidth !== tbody.current.clientWidth &&
-                tbody.current.scrollWidth -
-                    tbody.current.clientWidth -
-                    tbody.current.scrollLeft ===
-                    0) {
-                hiddenLastColumnBorder();
-            }
-            else {
-                visibleLastColumnBorder();
-            }
             if (tbody.current.scrollLeft > 0) {
                 visibleStickyColShadow();
             }
             else {
                 hiddenStickyColShadow();
+            }
+            if (tbody.current.scrollTop > 0) {
+                thead.current.style.transition = "box-shadow 200ms ease-in-out";
+                thead.current.style.boxShadow = "0px 5px 12px #00000050";
+                thead.current.style.zIndex = "4";
+            }
+            else {
+                thead.current.style.transition = "box-shadow 200ms ease-in-out";
+                thead.current.style.boxShadow = "none";
+                thead.current.style.zIndex = "unset";
+            }
+            var tfoot = (_a = tbody.current) === null || _a === void 0 ? void 0 : _a.querySelector("table[data-table-type='devs-dt-tfoot']");
+            var scrollPosition = tbody.current.scrollHeight -
+                tbody.current.clientHeight -
+                tbody.current.scrollTop;
+            if (tfoot) {
+                var tf = tfoot;
+                tf.style.transition = "box-shadow 200ms ease-in-out";
+                var tfTds = tf.querySelectorAll("td");
+                if (tbody.current.scrollHeight !== tbody.current.clientHeight &&
+                    scrollPosition > 1) {
+                    tf.style.boxShadow = "0px -5px 12px #00000050";
+                    // for (const td of tfTds) {
+                    //   td.style.borderTop = "1px solid #c6c6c6";
+                    // }
+                }
+                else {
+                    tf.style.boxShadow = "none";
+                    // for (const td of tfTds) {
+                    //   td.style.borderTop = "none";
+                    // }
+                }
             }
         };
         tbody.current.addEventListener("scroll", tableBodyScrolling);

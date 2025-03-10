@@ -55,7 +55,11 @@ var DevsDtPagination = function () {
             setCurrentPage(currentPage + 7);
         }
     }, [currentPage, totalPageCount]);
-    return (_jsxs(Pagination.Container, { children: [_jsxs(Pagination.DataCountLabel, { children: ["\uCD1D ", _jsx("strong", { children: dataLength }), "\uAC74 (", _jsx("strong", { children: totalPageCount }), " ", "\uD398\uC774\uC9C0)"] }), _jsxs(Pagination.PageButtonContainer, { children: [_jsx(Pagination.PageButton, __assign({ "data-disabled": currentPage <= 4, onClick: function () { return onChangePage(1); } }, { children: "<<" })), _jsx(Pagination.PageButton, __assign({ "data-disabled": currentPage <= 4, onClick: onPrevPageMoveClick }, { children: "<" })), _jsxs(Pagination.PageNumberContainer, __assign({ ref: numberContainerRef, className: "smooth-scrolling" }, { children: [dataLength === 0 && (_jsx(Pagination.NumberButton, __assign({ "data-is-current": true }, { children: "1" }))), Array.from({ length: totalPageCount }, function (n, i) { return (_jsx(Pagination.NumberButton, __assign({ "data-is-current": i + 1 === currentPage, onClick: function () { return onChangePage(i + 1); } }, { children: i + 1 }), "page-".concat(i + 1))); })] })), _jsx(Pagination.PageButton, __assign({ "data-disabled": currentPage >= totalPageCount - 3, onClick: onNextPageMoveClick }, { children: ">" })), _jsx(Pagination.PageButton, __assign({ "data-disabled": currentPage >= totalPageCount - 3, onClick: function () { return onChangePage(totalPageCount); } }, { children: ">>" }))] })] }));
+    return (_jsxs(Pagination.Container, { children: [_jsxs(Pagination.DataCountLabel, { children: ["\uCD1D ", _jsx("strong", { children: dataLength }), "\uAC74 (", _jsx("strong", { children: totalPageCount }), " ", "\uD398\uC774\uC9C0)"] }), _jsxs(Pagination.PageButtonContainer, __assign({ ref: React.useCallback(function (node) {
+                    if (!node)
+                        return;
+                    node.classList.add("pagination-container-bling");
+                }, []) }, { children: [_jsx(Pagination.PageButton, __assign({ "data-disabled": currentPage <= 4, onClick: function () { return onChangePage(1); } }, { children: "<<" })), _jsx(Pagination.PageButton, __assign({ "data-disabled": currentPage <= 4, onClick: onPrevPageMoveClick }, { children: "<" })), _jsxs(Pagination.PageNumberContainer, __assign({ ref: numberContainerRef, className: "smooth-scrolling" }, { children: [dataLength === 0 && (_jsx(Pagination.NumberButton, __assign({ "data-is-current": true }, { children: "1" }))), Array.from({ length: totalPageCount }, function (n, i) { return (_jsx(Pagination.NumberButton, __assign({ "data-is-current": i + 1 === currentPage, onClick: function () { return onChangePage(i + 1); } }, { children: i + 1 }), "page-".concat(i + 1))); })] })), _jsx(Pagination.PageButton, __assign({ "data-disabled": currentPage >= totalPageCount - 3, onClick: onNextPageMoveClick }, { children: ">" })), _jsx(Pagination.PageButton, __assign({ "data-disabled": currentPage >= totalPageCount - 3, onClick: function () { return onChangePage(totalPageCount); } }, { children: ">>" }))] }))] }));
 };
 export default React.memo(DevsDtPagination);
 var Pagination = {
@@ -72,7 +76,6 @@ var Pagination = {
     PageButtonContainer: styled.div({
         display: "flex",
         flexDirection: "row",
-        border: "1px solid #c7c7c7",
     }),
     PageButton: styled.div({
         width: 30,
@@ -80,7 +83,6 @@ var Pagination = {
         textAlign: "center",
         alignContent: "center",
         fontWeight: "bold",
-        borderInlineEnd: "1px solid #c7c7c7",
         "&:last-of-type": {
             borderInlineEnd: "none",
         },
@@ -99,7 +101,6 @@ var Pagination = {
     PageNumberContainer: styled.div({
         maxWidth: "189px",
         width: "auto",
-        borderInlineEnd: "1px solid #c7c7c7",
         display: "flex",
         flexDirection: "row",
         justifyContent: "start",

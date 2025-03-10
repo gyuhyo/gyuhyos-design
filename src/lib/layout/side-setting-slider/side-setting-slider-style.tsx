@@ -13,7 +13,7 @@ export const sideSettingSliderContainerStyle = ({
     position: "absolute",
     zIndex: 9999,
     width: "280px",
-    height: "100vh",
+    height: "100dvh",
     top: 0,
     right: opened ? "0px" : "-280px",
     transition: "right 300ms ease-in-out",

@@ -1,9 +1,9 @@
 import { SetStateAction } from "react";
 import { IDataSource } from "./component";
-import { UseFormGetValues, UseFormSetValue } from "react-hook-form";
+import { UseFormGetValues, UseFormSetValue, UseFormWatch } from "react-hook-form";
 export interface IDataTableSelectorOptionsProps {
     value: string;
-    label: string;
+    label: string | null;
 }
 export interface IDataTableColumn {
     key?: boolean;
@@ -16,10 +16,12 @@ export interface IDataTableColumn {
     required?: boolean;
     sticky?: boolean;
     resizing?: boolean;
-    type?: "date" | "select" | "number" | "textarea" | "datetime";
+    type?: "date" | "select" | "number" | "textarea" | "datetime" | "radio" | ((row: IDataSource) => "date" | "select" | "number" | "textarea" | "datetime" | "radio");
+    editorMerge?: number;
     align?: string;
     merge?: boolean;
     editorWidth?: number;
+    footer?: (dataSource: IDataSource) => any;
     autoFocus?: (mode: string) => boolean;
     defaultValue?: ({ value, row, index, getValue, }: {
         value: any;
@@ -32,11 +34,12 @@ export interface IDataTableColumn {
         curr: IDataSource;
         next?: IDataSource;
     }) => boolean;
-    render?: ({ value, row, index, getValue, }: {
+    render?: ({ value, row, index, getValue, watch, }: {
         value?: any;
         row: IDataSource;
         index?: number;
         getValue?: UseFormGetValues<IDataSource>;
+        watch: UseFormWatch<IDataSource>;
     }) => any;
     editor?: ({ value, row, index, onChange, getValue, setValue, setDataSource, }: {
         value?: any;

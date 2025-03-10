@@ -267,7 +267,7 @@ function generateDummyData() {
 }
 
 const App: React.FC<{}> = () => {
-  const { showMessage } = useMessage();
+  const { showMessage, showToastMessage } = useMessage();
   const tb = React.useRef<any>(null);
   const tb2 = React.useRef<any>(null);
   const [selectedDate, setSelectedDate] = React.useState<dayjs.Dayjs>(dayjs());
@@ -291,6 +291,46 @@ const App: React.FC<{}> = () => {
   ]);
   const [columns, setColumns] = React.useState<IDataTableColumn[]>([
     {
+      field: "opt1",
+      title: "1",
+      type: "select",
+      options: [
+        {
+          value: "1",
+          label: "Level 1",
+        },
+        {
+          value: "2",
+          label: "Level 2",
+        },
+        {
+          value: "3",
+          label: "Level 3",
+        },
+        {
+          value: "4",
+          label: "Level 4",
+        },
+      ],
+      width: 50,
+      editorMerge: 4,
+    },
+    {
+      field: "opt2",
+      title: "2",
+      width: 50,
+    },
+    {
+      field: "opt3",
+      title: "3",
+      width: 50,
+    },
+    {
+      field: "opt4",
+      title: "4",
+      width: 50,
+    },
+    {
       key: true,
       field: "1",
       title: "1dwvdwdwv1edw1dwsd1v2wde1cfwdc1wcdsqcqdc",
@@ -303,7 +343,6 @@ const App: React.FC<{}> = () => {
       field: "4",
       title: "4",
       width: 200,
-      merge: true,
       sticky: true,
     },
     {
@@ -406,13 +445,14 @@ const App: React.FC<{}> = () => {
         },
       ],
     },
-    ...(Array.from(Array(dayjs().daysInMonth()), (_, day) => ({
-      field: `pspDay_${day + 1}`,
-      title: `${day + 1}일`,
-      align: "right",
-      type: "number",
-    })) as IDataTableColumn[]),
+    // ...(Array.from(Array(dayjs().daysInMonth()), (_, day) => ({
+    //   field: `pspDay_${day + 1}`,
+    //   title: `${day + 1}일`,
+    //   align: "right",
+    //   type: "number",
+    // })) as IDataTableColumn[]),
   ]);
+  const [cnt, setCnt] = React.useState(0);
 
   const handleAddClick = () => {
     setDataSource((prev) => {
@@ -467,7 +507,17 @@ const App: React.FC<{}> = () => {
     return `pspDay_${dayjs().date()}`;
   }, [selectedDate]);
 
-  console.log(tb.current);
+  const handleSearchClick = () => {
+    showToastMessage({
+      title: "test",
+      message: "ttestt",
+      type: "warnning",
+      align: "topLeft",
+      duration: 3000,
+    });
+
+    setCnt((prev) => ++prev);
+  };
 
   return (
     <div
@@ -506,46 +556,13 @@ const App: React.FC<{}> = () => {
         }}
         options={{
           pagination: true,
-          paginationLimit: 11,
+          paginationLimit: 1,
           enabledClipboard: true,
           readonly: false,
           showRowNumber: true,
           enabledRowOrder: true,
           enabledRowCheck: true,
           enabledExpand: true,
-          multipleEdit: false,
-          onBeforeRowEdit: ({ index, row }) => {
-            if (index > 3) return false;
-            return true;
-          },
-          expandContent: (row) => {
-            return (
-              <div
-                onLoad={() => console.log(row)}
-                style={{ width: "100%", height: "100%" }}
-              >
-                <input type="text" style={{ width: "100%", height: "100%" }} />
-              </div>
-            );
-          },
-          rowOrderEnd: (data) => {
-            console.log(data);
-          },
-          rowEditable: ({ index, row }) => {
-            if (index === 2) return false;
-
-            return true;
-          },
-          rowStyle: ({ index, row, prevRow, nextRow }) => {
-            if (index > 0 && index < dataSource.length - 1) {
-              return {
-                "& .devs-dt-cell": {
-                  borderBottom: "2px solid #000",
-                },
-              };
-            }
-            return {};
-          },
         }}
         buttons={{
           custom: (
@@ -559,7 +576,7 @@ const App: React.FC<{}> = () => {
             excel: true,
             print: true,
           },
-          onSearchClick: () => tb.current.api.focusedRowIndex(2),
+          onSearchClick: handleSearchClick,
           onSaveClick: handleSaveClick,
           onAddClick: handleAddClick,
           onDeleteClick: handleDeleteClick,

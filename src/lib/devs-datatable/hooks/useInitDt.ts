@@ -34,28 +34,6 @@ export const useInitDt = ({
     }
   };
 
-  const hiddenLastColumnBorder = () => {
-    const lastColumn = table.current!.querySelectorAll(
-      ".devs-dt-thead .devs-dt-row:first-child .devs-dt-th:nth-last-child(3), .devs-dt-thead .devs-dt-row:not(:first-child) .devs-dt-th:last-child, .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child"
-    );
-
-    for (let el of lastColumn) {
-      if (el.classList.contains("devs-dt-no-hidden-border")) continue;
-
-      el.classList.add("devs-dt-hidden-border");
-    }
-  };
-
-  const visibleLastColumnBorder = () => {
-    const lastColumn = table.current!.querySelectorAll(
-      ".devs-dt-thead .devs-dt-row:first-child .devs-dt-th:nth-last-child(3), .devs-dt-thead .devs-dt-row:not(:first-child) .devs-dt-th:last-child, .devs-dt-tbody .devs-dt-row > .devs-dt-cell:last-child"
-    );
-
-    for (let el of lastColumn) {
-      el.classList.remove("devs-dt-hidden-border");
-    }
-  };
-
   React.useEffect(() => {
     // body 스크롤 시 동시 head 스크롤 적용
     if (!tbody.current || !thead.current) return;
@@ -63,22 +41,50 @@ export const useInitDt = ({
     const tableBodyScrolling = () => {
       thead.current!.scrollLeft = tbody.current!.scrollLeft;
 
-      if (
-        tbody.current!.scrollWidth !== tbody.current!.clientWidth &&
-        tbody.current!.scrollWidth -
-          tbody.current!.clientWidth -
-          tbody.current!.scrollLeft ===
-          0
-      ) {
-        hiddenLastColumnBorder();
-      } else {
-        visibleLastColumnBorder();
-      }
-
       if (tbody.current!.scrollLeft > 0) {
         visibleStickyColShadow();
       } else {
         hiddenStickyColShadow();
+      }
+
+      if (tbody.current!.scrollTop > 0) {
+        thead.current!.style.transition = "box-shadow 200ms ease-in-out";
+        thead.current!.style.boxShadow = "0px 5px 12px #00000050";
+        thead.current!.style.zIndex = "4";
+      } else {
+        thead.current!.style.transition = "box-shadow 200ms ease-in-out";
+        thead.current!.style.boxShadow = "none";
+        thead.current!.style.zIndex = "unset";
+      }
+
+      const tfoot = tbody.current?.querySelector(
+        "table[data-table-type='devs-dt-tfoot']"
+      );
+
+      const scrollPosition =
+        tbody.current!.scrollHeight -
+        tbody.current!.clientHeight -
+        tbody.current!.scrollTop;
+      if (tfoot) {
+        const tf = tfoot as HTMLTableElement;
+        tf.style.transition = "box-shadow 200ms ease-in-out";
+
+        const tfTds = tf.querySelectorAll("td");
+
+        if (
+          tbody.current!.scrollHeight !== tbody.current!.clientHeight &&
+          scrollPosition > 1
+        ) {
+          tf.style.boxShadow = "0px -5px 12px #00000050";
+          // for (const td of tfTds) {
+          //   td.style.borderTop = "1px solid #c6c6c6";
+          // }
+        } else {
+          tf.style.boxShadow = "none";
+          // for (const td of tfTds) {
+          //   td.style.borderTop = "none";
+          // }
+        }
       }
     };
 

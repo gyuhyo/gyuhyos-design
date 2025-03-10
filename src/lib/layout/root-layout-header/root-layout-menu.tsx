@@ -18,6 +18,7 @@ const RootLayoutMenu: React.FC<any> = React.memo(() => {
   );
   const { menuType } = useLayout();
   const [searchMenuText, setSearchMenuText] = React.useState<string>("");
+  const [isPopShow, setIsPopShow] = React.useState<boolean>(false);
 
   const onMenuSearch = (search: string) => {
     setSearchMenuText(search);
@@ -215,6 +216,8 @@ const RootLayoutMenu: React.FC<any> = React.memo(() => {
             })}
             value={searchMenuText}
             onChange={(e: any) => onMenuSearch(e.target.value)}
+            onFocus={() => setIsPopShow(true)}
+            onBlur={() => setIsPopShow(false)}
           />
           <Button
             onClick={onRemoveSearchText}
@@ -226,6 +229,7 @@ const RootLayoutMenu: React.FC<any> = React.memo(() => {
             ✕
           </Button>
           <RootLayoutHeaderMenuPop
+            isPopShow={isPopShow}
             value={searchMenuText}
             onRemoveSearchText={onRemoveSearchText}
           />

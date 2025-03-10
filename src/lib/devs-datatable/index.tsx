@@ -57,6 +57,10 @@ const DevsDataTable: React.FC<IDataTableProps> = (props) => {
 
     const { dataSource: data } = props;
 
+    if (data.length === 0) {
+      allCheck.checked = false;
+    }
+
     const checked = data.filter((d) => d.checked);
     const unChecked = data.filter((d) => !d.checked);
 
@@ -192,23 +196,33 @@ const DevsDataTable: React.FC<IDataTableProps> = (props) => {
             form.trigger();
           }
         },
+        setFocus: ({ rowId, field }) => {
+          const form = formsRef.current[rowId];
+
+          if (form) {
+            form.setFocus(field);
+          }
+        },
+        setError: ({ rowId, field }) => {
+          const form = formsRef.current[rowId];
+
+          if (form) {
+            form.setError(field, { type: "required" });
+          }
+        },
       },
     }),
     [props.dataSource, props.options, focusedRow, focusedCell]
   );
 
   React.useEffect(() => {
-    if (focusedRow !== null && props.focusedRowChanged !== undefined) {
+    if (props.focusedRowChanged !== undefined) {
       props.focusedRowChanged(focusedRow);
     }
   }, [focusedRow]);
 
   React.useEffect(() => {
-    if (
-      focusedRow !== null &&
-      focusedCell !== null &&
-      props.focusedCellChanged !== undefined
-    ) {
+    if (props.focusedCellChanged !== undefined) {
       props.focusedCellChanged({ row: focusedRow, field: focusedCell });
     }
   }, [focusedCell, focusedRow]);

@@ -33,6 +33,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -45,6 +61,24 @@ var Split = react_1.default.lazy(function () {
 });
 var DevsSplitContainer = function (_a) {
     var _b = _a.align, align = _b === void 0 ? "column" : _b, defaultSize = _a.defaultSize, children = _a.children;
-    return ((0, jsx_runtime_1.jsx)(react_1.default.Suspense, { children: (0, jsx_runtime_1.jsx)(Split, __assign({ horizontal: align == "column" ? true : false, initialPrimarySize: defaultSize !== null && defaultSize !== void 0 ? defaultSize : "50%" }, { children: children })) }));
+    var _c = __read(react_1.default.useState(false), 2), isMobile = _c[0], setIsMobile = _c[1];
+    react_1.default.useEffect(function () {
+        if (typeof window === "undefined")
+            return;
+        if (window.innerWidth <= 1200) {
+            setIsMobile(true);
+        }
+        var browserResizing = function () {
+            if (window.innerWidth <= 1200) {
+                setIsMobile(true);
+            }
+            else {
+                setIsMobile(false);
+            }
+        };
+        window.addEventListener("resize", browserResizing);
+        return function () { return window.removeEventListener("resize", browserResizing); };
+    }, []);
+    return ((0, jsx_runtime_1.jsx)(react_1.default.Suspense, { children: (0, jsx_runtime_1.jsx)(Split, __assign({ horizontal: isMobile ? true : align == "column" ? true : false, initialPrimarySize: defaultSize !== null && defaultSize !== void 0 ? defaultSize : "50%" }, { children: children })) }));
 };
 exports.default = react_1.default.memo(DevsSplitContainer);

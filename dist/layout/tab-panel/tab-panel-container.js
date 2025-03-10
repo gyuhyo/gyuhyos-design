@@ -23,7 +23,7 @@ var TabPanelContentDynamicComponent = React.lazy(function () {
     return import("./tab-panel-content-dynamic-component/tab-panel-content-dynamic-content");
 });
 function TabPanelContainer() {
-    var closeAllTabls = useMenuStore().closeAllTabls;
+    var _a = useMenuStore(), closeAllTabls = _a.closeAllTabls, closeNotMyTabs = _a.closeNotMyTabs, closeHighIndexTabs = _a.closeHighIndexTabs;
     var showMessage = useMessage().showMessage;
     var onCloseAllTabls = function () {
         showMessage({
@@ -31,6 +31,22 @@ function TabPanelContainer() {
             message: "탭 페이지를 모두 닫으시겠습니까?",
             okCaption: "닫기",
             onOkClick: function () { return closeAllTabls(); },
+        });
+    };
+    var onCloseNotMyTabs = function () {
+        showMessage({
+            title: "열린 탭을 제외한 모든 탭 모두 닫기",
+            message: "열린 탭을 제외한 모든 탭 페이지를 모두 닫으시겠습니까?",
+            okCaption: "닫기",
+            onOkClick: function () { return closeNotMyTabs(); },
+        });
+    };
+    var onCloseHighIndexTabs = function () {
+        showMessage({
+            title: "열린 탭 기준 오른쪽 모든 탭 닫기",
+            message: "열린 탭 기준 오른쪽 모든 탭 페이지를 모두 닫으시겠습니까?",
+            okCaption: "닫기",
+            onOkClick: function () { return closeHighIndexTabs(); },
         });
     };
     return (_jsxs("div", __assign({ css: css({
@@ -42,6 +58,14 @@ function TabPanelContainer() {
                     {
                         label: "탭 모두 닫기",
                         onClick: onCloseAllTabls,
+                    },
+                    {
+                        label: "열린 탭을 제외한 모든 탭 닫기",
+                        onClick: onCloseNotMyTabs,
+                    },
+                    {
+                        label: "열린 탭 기준 오른쪽 모든 탭 닫기",
+                        onClick: onCloseHighIndexTabs,
                     },
                 ] }, { children: _jsx(TabPanelHeader, {}) })), _jsx(TabPanelContent, { children: _jsx(TabPanelContentDynamicComponent, {}) })] })));
 }

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
-import { DatePicker, InputNumber, Select } from "antd";
+import { DatePicker, InputNumber, Radio, Select } from "antd";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import advancedFormat from "dayjs/plugin/advancedFormat";
@@ -20,6 +20,7 @@ import {
   UseFormRegister,
   UseFormSetValue,
   UseFormTrigger,
+  UseFormWatch,
 } from "react-hook-form";
 import { IDataSource, IDataTableColumn } from "../_types";
 import { useDt } from "../context/devs-dt-context";
@@ -51,6 +52,9 @@ type TDevsDtCell = {
   setValue: UseFormSetValue<IDataSource>;
   getValue: UseFormGetValues<IDataSource>;
   trigger: UseFormTrigger<IDataSource>;
+  watch: UseFormWatch<IDataSource>;
+  prevRow: IDataSource;
+  nextRow: IDataSource;
 };
 
 function DevsDtCell({
@@ -67,23 +71,32 @@ function DevsDtCell({
   getValue,
   rowIndex,
   trigger,
+  watch,
+  prevRow,
+  nextRow,
 }: TDevsDtCell) {
   const {
     focusedRow,
     focusedCell,
     setFocusedCell,
+    setFocusedRow,
     setDataSource,
     setColumns,
     options,
     editMode,
     tbody,
+    formsRef,
   } = useDt();
+
+  const colType = typeof col.type === "function" ? col.type(row) : col.type;
+
   const isCellEdit = React.useMemo(() => {
     if (options?.editType === undefined || options?.editType === "row")
       return false;
 
     return (row.editedCells as string[])?.includes(col.field);
   }, [options?.editType, row]);
+
   const cellRef = React.useRef<HTMLTableCellElement>(null);
   const divRef = React.useRef<HTMLDivElement>(null);
 
@@ -218,6 +231,40 @@ function DevsDtCell({
     return val;
   };
 
+  const onInputArrowClick = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+
+      if (prevRow && (prevRow.mode === "c" || prevRow.mode === "u")) {
+        const form = formsRef.current[prevRow.rowId];
+
+        if (form) {
+          setTimeout(() => {
+            form.setFocus(col.field);
+            setFocusedCell(col.field);
+            setFocusedRow(prevRow);
+          });
+        }
+      }
+    }
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+
+      if (nextRow && (nextRow.mode === "c" || nextRow.mode === "u")) {
+        const form = formsRef.current[nextRow.rowId];
+
+        if (form) {
+          setTimeout(() => {
+            form.setFocus(col.field);
+            setFocusedCell(col.field);
+            setFocusedRow(nextRow);
+          });
+        }
+      }
+    }
+  };
+
   const cellComp = React.useMemo(() => {
     if (col.editor !== undefined) {
       return (
@@ -241,7 +288,7 @@ function DevsDtCell({
       );
     }
 
-    if (col.type === "date") {
+    if (colType === "date") {
       return (
         <Controller
           control={control}
@@ -282,7 +329,7 @@ function DevsDtCell({
       );
     }
 
-    if (col.type === "datetime") {
+    if (colType === "datetime") {
       return (
         <Controller
           control={control}
@@ -324,7 +371,7 @@ function DevsDtCell({
       );
     }
 
-    if (col.type === "select") {
+    if (colType === "select") {
       return (
         <Controller
           control={control}
@@ -337,6 +384,7 @@ function DevsDtCell({
               size="small"
               showSearch={true}
               defaultOpen={autoFocus}
+              optionFilterProp="label"
               onChange={(v) => {
                 onChange(v);
                 if (col.onChange !== undefined) {
@@ -355,20 +403,14 @@ function DevsDtCell({
                 options?.cellEditClickType === "click" ? true : autoFocus
               }
               {...col.inputOptions}
-            >
-              {col.options &&
-                col.options.map((op) => (
-                  <Select.Option key={op.value} value={op.value}>
-                    {op.label}
-                  </Select.Option>
-                ))}
-            </Select>
+              options={col.options}
+            />
           )}
         />
       );
     }
 
-    if (col.type === "number") {
+    if (colType === "number") {
       return (
         <Controller
           control={control}
@@ -403,7 +445,45 @@ function DevsDtCell({
       );
     }
 
-    if (col.type === "textarea") {
+    if (colType === "radio") {
+      return (
+        <Controller
+          control={control}
+          name={col.field}
+          defaultValue={getDefaultValue(defaultValue || null)}
+          rules={{ required: col.required }}
+          render={({ field: { onChange } }) => (
+            <Radio.Group
+              style={{
+                width: "100%",
+                textAlign: "center",
+              }}
+              onChange={(e) => {
+                onChange(e.target.value);
+                if (col.onChange !== undefined) {
+                  col.onChange({
+                    value: e.target.value,
+                    row: row,
+                    index: rowIndex,
+                    setDataSource: setDataSource,
+                    setValue: setValue,
+                    getValue,
+                  });
+                }
+              }}
+              defaultValue={getDefaultValue(defaultValue || null)}
+            >
+              {col.options &&
+                col.options.map((op) => (
+                  <Radio key={op.value} value={op.value} />
+                ))}
+            </Radio.Group>
+          )}
+        />
+      );
+    }
+
+    if (colType === "textarea") {
       return (
         <textarea
           {...register(col.field, {
@@ -446,6 +526,7 @@ function DevsDtCell({
             }
           },
         })}
+        onKeyDown={onInputArrowClick}
         disabled={col.readonly ?? false}
         type="text"
         defaultValue={getDefaultValue(defaultValue || null)}
@@ -463,13 +544,14 @@ function DevsDtCell({
         row: row,
         index: rowIndex,
         getValue,
+        watch,
       });
     } else {
-      if (col.type === "number") {
+      if (colType === "number") {
         return <span>{defaultValue?.toLocaleString()}</span>;
       }
 
-      if (col.type === "date") {
+      if (colType === "date") {
         if (defaultValue && dayjs(defaultValue).isValid()) {
           return (
             <span>
@@ -479,7 +561,7 @@ function DevsDtCell({
         }
       }
 
-      if (col.type === "datetime") {
+      if (colType === "datetime") {
         if (defaultValue && dayjs(defaultValue).isValid()) {
           return (
             <span>
@@ -491,7 +573,7 @@ function DevsDtCell({
         }
       }
 
-      if (col.type === "select") {
+      if (colType === "select") {
         return (
           <span>
             {col.options?.find((op) => op.value === defaultValue)?.label}
@@ -601,9 +683,34 @@ function DevsDtCell({
     );
   }
 
+  const onEditorColspan = (e: HTMLTableCellElement | null) => {
+    if (!e) return;
+
+    const tr = e.parentNode;
+    const tds = Array.from(tr!.children);
+    const index = tds.indexOf(e);
+
+    if (index > -1) {
+      const rightTds = tds.slice(index + 1, index + col.editorMerge!);
+
+      for (const elm of rightTds) {
+        (elm as HTMLTableCellElement).style.display = "none";
+      }
+    }
+  };
+
   return (
     <td
-      ref={cellRef}
+      ref={(e) => {
+        cellRef.current = e;
+        if (
+          options?.editType !== "cell" &&
+          mode !== "r" &&
+          col.editorMerge !== undefined
+        ) {
+          onEditorColspan(e);
+        }
+      }}
       className={classString}
       rowSpan={merge?.rowSpan}
       data-field={col.field}
@@ -629,15 +736,16 @@ function DevsDtCell({
           }),
         } as React.CSSProperties
       }
+      colSpan={mode !== "r" ? col.editorMerge ?? 1 : 1}
     >
       <div
         ref={divRef}
         style={{
           position: "relative",
           overflow: "hidden",
-          whiteSpace: "pre",
+          whiteSpace: "nowrap",
           textOverflow: "ellipsis",
-          wordBreak: "keep-all",
+          wordBreak: "break-all",
           width: "100%",
           height: "100%",
           alignContent: "center",

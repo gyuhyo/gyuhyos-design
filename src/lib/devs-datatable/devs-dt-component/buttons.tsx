@@ -17,6 +17,8 @@ interface IDataTableButtonsProps {
   options?: IDataTableOptions | undefined;
   buttons?: IDataTableButtons | undefined;
   setInnerLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  isDetailSearchFormOpen: boolean;
+  setIsDetailSearchFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ButtonLabel = styled.span({
@@ -39,6 +41,9 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
     originalColumns,
     setColumns,
     editCount,
+    focusedCellChanged,
+    focusedRowChanged,
+    options,
   } = useDt();
 
   const getLastNodes = (columns: IDataTableColumn[]): IDataTableColumn[] => {
@@ -97,6 +102,11 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
       }
 
       props.setInnerLoading(false);
+      setFocusedRow(null);
+      setFocusedCell(null);
+      setFocusedRowForm(null);
+      focusedRowChanged?.(null);
+      focusedCellChanged?.({ row: null, field: null });
     }, 300);
 
     return () => {
@@ -176,6 +186,30 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
               </div>
             </div>
           )}
+          <Button
+            border={true}
+            compact
+            onClick={() => props.setIsDetailSearchFormOpen((prev) => !prev)}
+            style={{ display: "none" }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 122.88 113.65"
+              stroke="currentColor"
+              fill="currentColor"
+              strokeWidth="0"
+              height="1em"
+              width="1em"
+            >
+              <path
+                css={css({ fillRule: "evenodd" })}
+                d="M56.26,0a50.59,50.59,0,0,1,50.46,63.44A49.92,49.92,0,0,1,102,75.25L122.19,96a2.43,2.43,0,0,1,0,3.42L108.2,113a2.42,2.42,0,0,1-3.42,0l-19.35-20A50.34,50.34,0,0,1,61.24,101a11.54,11.54,0,0,0,1.35-9.55,11.19,11.19,0,0,0,2.23-1.15,40.34,40.34,0,1,0-46.51-47.9A11.36,11.36,0,0,0,7.76,43.61a49.69,49.69,0,0,1,2.77-10.92A50.45,50.45,0,0,1,56.26,0Zm-5,53.3,4.27,4.5a3,3,0,0,1-.1,4.2l-3.63,3.44a23.38,23.38,0,0,1,2,5.91l4.58.11a3,3,0,0,1,2.9,3.05l-.16,6.21a3,3,0,0,1-3,2.89l-5-.13a23.42,23.42,0,0,1-2.74,5.62l3.16,3.32a3,3,0,0,1-.11,4.2l-4.5,4.28a3,3,0,0,1-4.2-.11L41.25,97.2a23.38,23.38,0,0,1-5.91,2l-.11,4.58a3,3,0,0,1-3,2.9L26,106.56a3,3,0,0,1-2.89-3l.13-5a24,24,0,0,1-5.62-2.74l-3.32,3.16a3,3,0,0,1-4.2-.11l-4.28-4.5a3,3,0,0,1,.11-4.2l3.62-3.44a23.81,23.81,0,0,1-2-5.91L2.9,80.66a3,3,0,0,1-2.9-3l.16-6.21a3,3,0,0,1,3.05-2.89l5,.12A23.35,23.35,0,0,1,10.94,63L7.78,59.7a3,3,0,0,1,.11-4.2l4.5-4.27a3,3,0,0,1,4.2.1L20,55a23.51,23.51,0,0,1,5.91-2.05l.12-4.57a3,3,0,0,1,3-2.9l6.21.16a3,3,0,0,1,2.89,3l-.12,5a23.53,23.53,0,0,1,5.61,2.74L47,53.22a3,3,0,0,1,4.21.11ZM31,63.88A12.2,12.2,0,1,1,18.44,75.77,12.2,12.2,0,0,1,31,63.88Z"
+              />
+            </svg>
+            <ButtonLabel>
+              {props.buttons?.searchText ?? "상세 검색 조건"}
+            </ButtonLabel>
+          </Button>
           {props.buttons?.onSearchClick !== undefined && (
             <Button
               border={true}
@@ -190,8 +224,6 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
                 setDataSource((prev) =>
                   prev.map((x) => ({ ...x, checked: false }))
                 );
-                setFocusedRow(null);
-                setFocusedCell(null);
               }}
             >
               <svg
@@ -242,6 +274,11 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
                 }
 
                 (props.buttons?.onAddClick as Function)();
+                setFocusedRow(null);
+                setFocusedCell(null);
+                setFocusedRowForm(null);
+                focusedRowChanged?.(null);
+                focusedCellChanged?.({ row: null, field: null });
               }}
             >
               <svg
@@ -273,8 +310,6 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
                   await sleep();
                 }
                 ButtonEventBeforeShowLoading(props.buttons?.onSaveClick);
-                setFocusedRow(null);
-                setFocusedCell(null);
               }}
             >
               <svg
@@ -311,8 +346,6 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
                   await sleep();
                 }
                 ButtonEventBeforeShowLoading(props.buttons?.onDeleteClick);
-                setFocusedRow(null);
-                setFocusedCell(null);
               }}
             >
               <svg
@@ -346,8 +379,6 @@ const DevsDtButtons: React.FC<IDataTableButtonsProps> = (props) => {
                 setDataSource((prev) =>
                   prev.map((x) => ({ ...x, checked: false }))
                 );
-                setFocusedRow(null);
-                setFocusedCell(null);
               }}
             >
               <svg

@@ -25,7 +25,7 @@ function SideMenuItemContainer(_a) {
             textWrap: "nowrap",
             overflowX: "hidden",
             overflowY: "auto",
-            height: "calc(100vh - 60px)",
+            height: "calc(100dvh - 60px)",
             letterSpacing: 3,
         }) }, { children: items &&
             items.map(function (group) { return ((0, jsx_runtime_1.jsx)(side_menu_item_group_1.default, { isShow: isShow, group: group }, group.key)); }) })));

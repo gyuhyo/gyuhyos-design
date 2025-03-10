@@ -19,7 +19,7 @@ function SideMenuItemContainer({ isShow }: { isShow: boolean }) {
         textWrap: "nowrap",
         overflowX: "hidden",
         overflowY: "auto",
-        height: "calc(100vh - 60px)",
+        height: "calc(100dvh - 60px)",
         letterSpacing: 3,
       })}
     >

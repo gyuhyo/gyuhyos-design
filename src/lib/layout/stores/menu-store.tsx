@@ -25,6 +25,8 @@ interface MenuStoreProps {
   ) => void | undefined;
   menuOrderChanges: (openedMenus: SideMenuItemsChildProps[]) => void;
   closeAllTabls: () => void;
+  closeNotMyTabs: () => void;
+  closeHighIndexTabs: () => void;
 }
 
 const useMenuStore = create(
@@ -160,6 +162,35 @@ const useMenuStore = create(
             )[0];
             state.selectedMenu = { gr: group, mn: key };
             moveUrl(`${group}/${key}`, "MES");
+          })
+        );
+      },
+      closeNotMyTabs: () => {
+        set(
+          produce((state: MenuStoreProps) => {
+            state.openedMenus = state.openedMenus.filter((f) => {
+              const sameKey =
+                state.selectedMenu?.gr === f.group &&
+                state.selectedMenu?.mn === f.key;
+              return f.main === true || sameKey;
+            });
+          })
+        );
+      },
+      closeHighIndexTabs: () => {
+        set(
+          produce((state: MenuStoreProps) => {
+            const currentIndex = state.openedMenus.findIndex(
+              (f) =>
+                f.group === state.selectedMenu?.gr &&
+                f.key === state.selectedMenu?.mn
+            );
+
+            if (currentIndex > -1) {
+              state.openedMenus = state.openedMenus.filter((f, index) => {
+                return f.main === true || index <= currentIndex;
+              });
+            }
           })
         );
       },

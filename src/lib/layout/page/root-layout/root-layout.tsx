@@ -16,7 +16,7 @@ function RootLayout() {
     <div
       css={css({
         width: "100vw",
-        height: "100vh",
+        height: "100dvh",
         display: "flex",
         flexDirection: "row",
       })}
@@ -27,7 +27,7 @@ function RootLayout() {
       <div
         css={css({
           width: calculWidth,
-          height: "100vh",
+          height: "100dvh",
           display: "flex",
           flexDirection: "column",
         })}

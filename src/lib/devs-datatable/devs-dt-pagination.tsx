@@ -54,7 +54,12 @@ const DevsDtPagination: React.FC<any> = () => {
         총 <strong>{dataLength}</strong>건 (<strong>{totalPageCount}</strong>{" "}
         페이지)
       </Pagination.DataCountLabel>
-      <Pagination.PageButtonContainer>
+      <Pagination.PageButtonContainer
+        ref={React.useCallback((node: HTMLDivElement) => {
+          if (!node) return;
+          node.classList.add("pagination-container-bling");
+        }, [])}
+      >
         <Pagination.PageButton
           data-disabled={currentPage <= 4}
           onClick={() => onChangePage(1)}
@@ -119,7 +124,6 @@ const Pagination = {
   PageButtonContainer: styled.div({
     display: "flex",
     flexDirection: "row",
-    border: "1px solid #c7c7c7",
   }),
   PageButton: styled.div({
     width: 30,
@@ -127,7 +131,6 @@ const Pagination = {
     textAlign: "center",
     alignContent: "center",
     fontWeight: "bold",
-    borderInlineEnd: "1px solid #c7c7c7",
     "&:last-of-type": {
       borderInlineEnd: "none",
     },
@@ -146,7 +149,6 @@ const Pagination = {
   PageNumberContainer: styled.div({
     maxWidth: "189px",
     width: "auto",
-    borderInlineEnd: "1px solid #c7c7c7",
     display: "flex",
     flexDirection: "row",
     justifyContent: "start",
