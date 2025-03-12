@@ -62,8 +62,8 @@ var alert_message_footer_1 = __importDefault(require("./alert-message-footer"));
 var alert_message_header_1 = __importDefault(require("./alert-message-header"));
 require("./message.styles.css");
 var backdrop = (0, react_1.css)({
-    width: "100vw",
-    height: "100vh",
+    width: "100dvw",
+    height: "100dvh",
     top: 0,
     left: 0,
     visibility: "visible",

@@ -1,9 +1,8 @@
-import "./split.container.css";
 import React from "react";
-export interface DevsSplitContainerProps {
+export type TDevsSplitContainer = {
+    children: React.ReactNode | React.ReactNode[];
     align?: "column" | "row";
-    defaultSize?: string;
-    children: any;
-}
-declare const _default: React.NamedExoticComponent<DevsSplitContainerProps>;
-export default _default;
+    sizes?: Array<number | string>;
+};
+declare const DevsSplitContainer: React.FC<TDevsSplitContainer>;
+export default DevsSplitContainer;

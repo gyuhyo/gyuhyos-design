@@ -41,7 +41,7 @@ const RootLayoutUserCard: React.FC<any> = React.memo(() => {
     })
       .then((res) => res.json())
       .then((data) => {
-        signIn(data.data);
+        signIn(data);
       });
   }, [user]);
 

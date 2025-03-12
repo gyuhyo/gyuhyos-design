@@ -7,8 +7,8 @@ interface backdropStyleProps {
 
 export const BACK_DROP_STYLE = ({ show = false, styles }: backdropStyleProps) =>
   css({
-    width: "100vw",
-    height: "100vh",
+    width: "100dvw",
+    height: "100dvh",
     overflow: "hidden",
     background: "rgba(0, 0, 0, 0.5)",
     backdropFilter: "blur(3px)",

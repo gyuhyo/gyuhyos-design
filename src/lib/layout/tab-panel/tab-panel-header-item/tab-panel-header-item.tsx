@@ -106,9 +106,6 @@ function TabPanelHeaderItem({
           width: "100%",
           textAlign: "left",
           cursor: "pointer !important",
-          "&:active": {
-            cursor: "grab !important",
-          },
         })}
       >
         {menu.title}

@@ -48,11 +48,13 @@ export const LayoutProvider: React.FC<{
   const path = isClient ? window.location.pathname : ""; // 클라이언트에서만 접근
   const user = useUserStore((state) => state.me?.userNo);
   const setInitialMenus = useMenuStore((state) => state.setInitialMenus);
+  const isDev =
+    process.env.NODE_ENV === "development" && window?.location.port === "3000";
 
   const calculWidth = React.useMemo(() => {
     return menuType === "slide" || menuType === "multiple"
-      ? "calc(100vw - 55px)"
-      : "100vw";
+      ? "calc(100dvw - 55px)"
+      : "100dvw";
   }, [menuType]);
 
   // 클라이언트 체크
@@ -78,6 +80,7 @@ export const LayoutProvider: React.FC<{
   React.useEffect(() => {
     if (!isClient || !authUrl) return;
     if (
+      !isDev &&
       !path.includes("popup") &&
       path !== authUrl &&
       (user === undefined || user === null)
@@ -182,7 +185,7 @@ export const LayoutProvider: React.FC<{
     return <React.Fragment>{children}</React.Fragment>;
   }
 
-  if (!isLoaded || user === undefined || user === null) {
+  if (!isLoaded || (!isDev && (user === undefined || user === null))) {
     return null;
   }
 

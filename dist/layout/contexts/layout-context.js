@@ -44,10 +44,11 @@ export var LayoutProvider = function (_a) {
     var path = isClient ? window.location.pathname : ""; // 클라이언트에서만 접근
     var user = useUserStore(function (state) { var _a; return (_a = state.me) === null || _a === void 0 ? void 0 : _a.userNo; });
     var setInitialMenus = useMenuStore(function (state) { return state.setInitialMenus; });
+    var isDev = process.env.NODE_ENV === "development" && (window === null || window === void 0 ? void 0 : window.location.port) === "3000";
     var calculWidth = React.useMemo(function () {
         return menuType === "slide" || menuType === "multiple"
-            ? "calc(100vw - 55px)"
-            : "100vw";
+            ? "calc(100dvw - 55px)"
+            : "100dvw";
     }, [menuType]);
     // 클라이언트 체크
     React.useEffect(function () {
@@ -70,7 +71,8 @@ export var LayoutProvider = function (_a) {
     React.useEffect(function () {
         if (!isClient || !authUrl)
             return;
-        if (!path.includes("popup") &&
+        if (!isDev &&
+            !path.includes("popup") &&
             path !== authUrl &&
             (user === undefined || user === null)) {
             window.sessionStorage.removeItem("menu-storage");
@@ -148,7 +150,7 @@ export var LayoutProvider = function (_a) {
     if (!isClient || path === authUrl || path.includes("popup")) {
         return _jsx(React.Fragment, { children: children });
     }
-    if (!isLoaded || user === undefined || user === null) {
+    if (!isLoaded || (!isDev && (user === undefined || user === null))) {
         return null;
     }
     return (_jsxs(LayoutContext.Provider, __assign({ value: {

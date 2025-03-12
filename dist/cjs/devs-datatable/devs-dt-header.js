@@ -66,6 +66,7 @@ var DevsDtHeader = function (props) {
                         justifyContent: "start",
                         alignItems: "center",
                         columnGap: 7,
+                        textWrap: "nowrap",
                     }) }, { children: [typeof props.title === "string" && props.title !== "" ? ((0, jsx_runtime_1.jsxs)("p", __assign({ style: { fontSize: 18, fontWeight: "bold" } }, { children: ["\u27A4 ", props.title] }))) : (props.title), (((_g = props.options) === null || _g === void 0 ? void 0 : _g.readonly) === undefined ||
                             props.options.readonly === false) && ((0, jsx_runtime_1.jsxs)("span", __assign({ style: {
                                 fontSize: 12,

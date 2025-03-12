@@ -58,6 +58,7 @@ const DevsDtHeader: React.FC<DevsDtHeaderProps> = (props) => {
                 justifyContent: "start",
                 alignItems: "center",
                 columnGap: 7,
+                textWrap: "nowrap",
               })}
             >
               {typeof props.title === "string" && props.title !== "" ? (

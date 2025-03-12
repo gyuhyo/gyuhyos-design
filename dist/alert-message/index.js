@@ -34,8 +34,8 @@ import AlertMessageFooter from "./alert-message-footer";
 import AlertMessageHeader from "./alert-message-header";
 import "./message.styles.css";
 var backdrop = css({
-    width: "100vw",
-    height: "100vh",
+    width: "100dvw",
+    height: "100dvh",
     top: 0,
     left: 0,
     visibility: "visible",

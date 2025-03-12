@@ -21,7 +21,7 @@ function DevsDatePicker(props: DevsDatePickerProps) {
     picker = "month",
     minDate = "1990-01-01",
   } = props;
-  const matches = useMediaQuery("(min-width: 1024px)");
+  const matches = useMediaQuery("(min-width: 600px)");
   const showButton = matches;
   const [monthPickerButtonHidden, setMonthPickerButtonHidden] =
     React.useState(false);
@@ -131,7 +131,11 @@ function DevsDatePicker(props: DevsDatePickerProps) {
         <Button
           icon={<LeftOutlined />}
           onClick={onPrevClick}
-          hidden={monthPickerButtonHidden}
+          css={css({
+            display: monthPickerButtonHidden
+              ? "none !important"
+              : "block !important",
+          })}
         />
       </Tooltip>
       <Tooltip placement="bottom" title="조회일자">
@@ -142,13 +146,21 @@ function DevsDatePicker(props: DevsDatePickerProps) {
           allowClear={false}
           inputReadOnly={true}
           minDate={dayjs(minDate)}
+          css={css({
+            minWidth: "120px !important",
+            height: monthPickerButtonHidden ? "26px" : "100%",
+          })}
         />
       </Tooltip>
       <Tooltip placement="bottom" title={nextTitle}>
         <Button
           icon={<RightOutlined />}
           onClick={onNextClick}
-          hidden={monthPickerButtonHidden}
+          css={css({
+            display: monthPickerButtonHidden
+              ? "none !important"
+              : "block !important",
+          })}
         />
       </Tooltip>
     </div>

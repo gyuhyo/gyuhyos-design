@@ -70,12 +70,18 @@ exports.default = react_1.default.memo(DevsDtPagination);
 var Pagination = {
     Container: styled_1.default.div({
         borderTop: "1px solid #c7c7c7",
-        height: "50px",
+        height: "40px",
         display: "flex",
         flexDirection: "row",
+        gap: 7,
+        flexWrap: "wrap-reverse",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: "0px 12px",
+        padding: "5px 12px",
+        "@media (max-width: 600px)": {
+            height: "auto",
+            justifyContent: "center",
+        },
     }),
     DataCountLabel: styled_1.default.p(),
     PageButtonContainer: styled_1.default.div({

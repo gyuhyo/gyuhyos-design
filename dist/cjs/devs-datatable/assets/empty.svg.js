@@ -13,7 +13,7 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsx_runtime_1 = require("@emotion/react/jsx-runtime");
 var EmptySvg = function () {
-    return ((0, jsx_runtime_1.jsxs)("div", __assign({ style: {
+    return ((0, jsx_runtime_1.jsxs)("div", __assign({ "data-type": "emptySvg", style: {
             height: "100px",
             position: "absolute",
             top: "50%",

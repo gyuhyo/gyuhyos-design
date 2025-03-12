@@ -671,3 +671,9 @@
 .pagination-container-bling {
   animation: bling-bling 700ms linear forwards;
 }
+
+@media (max-width: 600px) {
+  .devs-dt-button-container {
+    overflow-x: overlay;
+  }
+}

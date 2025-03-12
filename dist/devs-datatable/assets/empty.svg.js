@@ -11,7 +11,7 @@ var __assign = (this && this.__assign) || function () {
 };
 import { jsx as _jsx, jsxs as _jsxs } from "@emotion/react/jsx-runtime";
 var EmptySvg = function () {
-    return (_jsxs("div", __assign({ style: {
+    return (_jsxs("div", __assign({ "data-type": "emptySvg", style: {
             height: "100px",
             position: "absolute",
             top: "50%",

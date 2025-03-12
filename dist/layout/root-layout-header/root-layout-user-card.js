@@ -50,7 +50,7 @@ var RootLayoutUserCard = React.memo(function () {
         })
             .then(function (res) { return res.json(); })
             .then(function (data) {
-            signIn(data.data);
+            signIn(data);
         });
     }, [user]);
     return (_jsxs("div", { children: [_jsx("div", __assign({ css: css({

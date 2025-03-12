@@ -16,6 +16,6 @@ export { GyudAccessProvider } from "./access-context";
 export { default as DevsDatePicker } from "./devs-date-picker";
 export type { DevsDatePickerProps } from "./devs-date-picker";
 export { default as DevsSplitContainer } from "./devs-split-container";
-export type { DevsSplitContainerProps } from "./devs-split-container";
+export type { TDevsSplitContainer } from "./devs-split-container";
 export { default as messages } from "./utils/messages";
 export { sleep } from "./utils/sleep";

@@ -6,6 +6,7 @@ import { IDataSource, IDataTableColumn } from "./lib/devs-datatable/_types";
 import DevsDataTable from "./lib/devs-datatable";
 import { DatePicker } from "antd";
 import DevsDatePicker from "./lib/devs-date-picker";
+import DevSplitContainer from "./lib/devs-split-container";
 import dayjs from "dayjs";
 
 const LayerPopup = React.lazy(() => import("./lib/layer-popup/index"));
@@ -522,66 +523,69 @@ const App: React.FC<{}> = () => {
   return (
     <div
       style={{
-        height: "100vh",
-        maxHeight: "100vh",
+        height: "100dvh",
+        maxHeight: "100dvh",
         overflow: "hidden",
         padding: "12px 7px 20px 7px",
         display: "flex",
         flexDirection: "column",
       }}
     >
-      <DevsDataTable
-        ref={tb}
-        title={
-          <Button
-            onClick={() => {
-              if (focusedRow) {
-                tb.current.api.setValue({
-                  rowId: focusedRow.rowId,
-                  field: "1",
-                  value: "123",
-                });
-              }
-            }}
-          >
-            123
-          </Button>
-        }
-        columns={columns}
-        setColumns={setColumns}
-        dataSource={dataSource}
-        setDataSource={setDataSource}
-        focusedRowChanged={(row) => {
-          setFocusedRow(row);
-        }}
-        options={{
-          pagination: true,
-          paginationLimit: 1,
-          enabledClipboard: true,
-          readonly: false,
-          showRowNumber: true,
-          enabledRowOrder: true,
-          enabledRowCheck: true,
-          enabledExpand: true,
-        }}
-        buttons={{
-          custom: (
-            <DevsDatePicker
-              selectedDate={selectedDate}
-              setSelectedDate={setSelectedDate}
-            />
-          ),
-          export: {
-            visible: true,
-            excel: true,
-            print: true,
-          },
-          onSearchClick: handleSearchClick,
-          onSaveClick: handleSaveClick,
-          onAddClick: handleAddClick,
-          onDeleteClick: handleDeleteClick,
-        }}
-      />
+      <DevSplitContainer align="row" sizes={["60%"]}>
+        <DevsDataTable
+          ref={tb}
+          title={
+            <Button
+              onClick={() => {
+                if (focusedRow) {
+                  tb.current.api.setValue({
+                    rowId: focusedRow.rowId,
+                    field: "1",
+                    value: "123",
+                  });
+                }
+              }}
+            >
+              123
+            </Button>
+          }
+          columns={columns}
+          setColumns={setColumns}
+          dataSource={dataSource}
+          setDataSource={setDataSource}
+          focusedRowChanged={(row) => {
+            setFocusedRow(row);
+          }}
+          options={{
+            editMode: "slider",
+            enabledClipboard: true,
+            readonly: false,
+            showRowNumber: true,
+            enabledRowOrder: true,
+            enabledRowCheck: true,
+            enabledExpand: true,
+            pagination: true,
+            paginationLimit: 1,
+          }}
+          buttons={{
+            custom: (
+              <DevsDatePicker
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate}
+              />
+            ),
+            export: {
+              visible: true,
+              excel: true,
+              print: true,
+            },
+            onSearchClick: handleSearchClick,
+            onSaveClick: handleSaveClick,
+            onAddClick: handleAddClick,
+            onDeleteClick: handleDeleteClick,
+          }}
+        />
+      </DevSplitContainer>
       {isLayerPopOpen && (
         <React.Suspense>
           <LayerPopup

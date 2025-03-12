@@ -3,6 +3,7 @@ import React from "react";
 const EmptySvg = (): React.JSX.Element => {
   return (
     <div
+      data-type="emptySvg"
       style={{
         height: "100px",
         position: "absolute",

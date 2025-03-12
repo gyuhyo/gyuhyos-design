@@ -10,7 +10,13 @@ var DataEditor = React.memo(function (_a) {
     var rowIndex = dataSource.indexOf(row);
     if (focusedRowForm === null)
         return null;
-    return (_jsx(Controller, { control: focusedRowForm.control, name: col.field, defaultValue: getDefaultValue(defaultValue), rules: { required: col.required }, render: function (_a) {
+    return (_jsx(Controller, { control: focusedRowForm.control, name: col.field, defaultValue: getDefaultValue({
+            val: defaultValue,
+            col: col,
+            row: row,
+            rowIndex: rowIndex,
+            getValue: focusedRowForm.getValues,
+        }), rules: { required: col.required }, render: function (_a) {
             var onChange = _a.field.onChange;
             return col.editor({
                 value: defaultValue,

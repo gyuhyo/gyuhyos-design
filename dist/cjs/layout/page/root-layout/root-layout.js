@@ -28,7 +28,7 @@ function RootLayout() {
     if (pathName === "/auth" || pathName.includes("popup"))
         return (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, {});
     return ((0, jsx_runtime_1.jsxs)("div", __assign({ css: (0, react_1.css)({
-            width: "100vw",
+            width: "100dvw",
             height: "100dvh",
             display: "flex",
             flexDirection: "row",

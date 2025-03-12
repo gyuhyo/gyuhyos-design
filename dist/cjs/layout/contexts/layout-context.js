@@ -73,10 +73,11 @@ var LayoutProvider = function (_a) {
     var path = isClient ? window.location.pathname : ""; // 클라이언트에서만 접근
     var user = (0, user_store_1.useUserStore)(function (state) { var _a; return (_a = state.me) === null || _a === void 0 ? void 0 : _a.userNo; });
     var setInitialMenus = (0, menu_store_1.useMenuStore)(function (state) { return state.setInitialMenus; });
+    var isDev = process.env.NODE_ENV === "development" && (window === null || window === void 0 ? void 0 : window.location.port) === "3000";
     var calculWidth = react_1.default.useMemo(function () {
         return menuType === "slide" || menuType === "multiple"
-            ? "calc(100vw - 55px)"
-            : "100vw";
+            ? "calc(100dvw - 55px)"
+            : "100dvw";
     }, [menuType]);
     // 클라이언트 체크
     react_1.default.useEffect(function () {
@@ -99,7 +100,8 @@ var LayoutProvider = function (_a) {
     react_1.default.useEffect(function () {
         if (!isClient || !authUrl)
             return;
-        if (!path.includes("popup") &&
+        if (!isDev &&
+            !path.includes("popup") &&
             path !== authUrl &&
             (user === undefined || user === null)) {
             window.sessionStorage.removeItem("menu-storage");
@@ -177,7 +179,7 @@ var LayoutProvider = function (_a) {
     if (!isClient || path === authUrl || path.includes("popup")) {
         return (0, jsx_runtime_1.jsx)(react_1.default.Fragment, { children: children });
     }
-    if (!isLoaded || user === undefined || user === null) {
+    if (!isLoaded || (!isDev && (user === undefined || user === null))) {
         return null;
     }
     return ((0, jsx_runtime_1.jsxs)(LayoutContext.Provider, __assign({ value: {

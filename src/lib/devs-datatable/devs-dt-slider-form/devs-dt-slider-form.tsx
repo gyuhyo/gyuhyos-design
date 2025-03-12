@@ -6,6 +6,7 @@ import { IDataSource, IDataTableColumn } from "../_types";
 import { useDt } from "../context/devs-dt-context";
 import DataFormItemRenderer from "./data-form-item-renderer";
 import { DataFormErrorProvider } from "./data-form-error-context";
+import { useMediaQuery } from "usehooks-ts";
 
 export const getDefaultValue = ({
   val,
@@ -106,7 +107,7 @@ const FormPanelResizer: React.FC<any> = ({ width, setWidth }) => {
       e.stopPropagation();
 
       const deltaX = startX.current - e.clientX;
-      const newWidth = Math.max(width + deltaX, 400); // 최소 너비 50px
+      const newWidth = Math.max(width + deltaX, 300); // 최소 너비 50px
       const screenWidth = document.body.clientWidth;
 
       if (screenWidth / 2 < newWidth) return;
@@ -153,8 +154,9 @@ const Resizer = styled.div({
 });
 
 const DevsDtSliderForm: React.FC<any> = () => {
+  const matches = useMediaQuery("(max-width: 600px)");
   const beforeEditValues = React.useRef<null | IDataSource>(null);
-  const [panelWidth, setPanelWidth] = React.useState(400);
+  const [panelWidth, setPanelWidth] = React.useState(300);
   const {
     focusedRow,
     sliderFormOpen,
@@ -211,7 +213,11 @@ const DevsDtSliderForm: React.FC<any> = () => {
   };
 
   return (
-    <FormPanel sliderFormOpen={sliderFormOpen} width={panelWidth}>
+    <FormPanel
+      sliderFormOpen={sliderFormOpen}
+      width={panelWidth}
+      matches={matches}
+    >
       <FormTitle>
         <p>데이터 수정</p>
         <CloseFormPanelButton onClick={onCloseSliderFormPanel}>
@@ -260,6 +266,7 @@ export default React.memo(DevsDtSliderForm);
 interface FormPanelComponentProps {
   width: number;
   sliderFormOpen: boolean;
+  matches: boolean;
 }
 
 const FormPanel = styled.div<FormPanelComponentProps>((props) => ({
@@ -268,12 +275,14 @@ const FormPanel = styled.div<FormPanelComponentProps>((props) => ({
   flexDirection: "column",
   justifyContent: "space-between",
   top: 0,
-  right: props.sliderFormOpen ? 0 : `-${props.width + 17}px`,
-  width: `${props.width}px`,
+  right: props.sliderFormOpen
+    ? 0
+    : `-${props.matches ? 1000 : props.width + 17}px`,
+  width: props.matches ? "100%" : `${props.width}px`,
   transition: "right 200ms ease-in-out",
   transitionDelay: "150ms",
   height: "100%",
-  zIndex: 2,
+  zIndex: 3,
   boxShadow: "-5px 0px 12px #00000040",
   borderLeft: "1px solid #bbb",
   overflow: "hidden",

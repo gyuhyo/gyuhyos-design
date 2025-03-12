@@ -21,7 +21,13 @@ const DataEditor: React.FC<any> = React.memo(
       <Controller
         control={focusedRowForm.control}
         name={col.field}
-        defaultValue={getDefaultValue(defaultValue)}
+        defaultValue={getDefaultValue({
+          val: defaultValue,
+          col: col,
+          row: row!,
+          rowIndex,
+          getValue: focusedRowForm.getValues,
+        })}
         rules={{ required: col.required }}
         render={({ field: { onChange } }) =>
           col.editor!({

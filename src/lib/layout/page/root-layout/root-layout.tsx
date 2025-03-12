@@ -15,7 +15,7 @@ function RootLayout() {
   return (
     <div
       css={css({
-        width: "100vw",
+        width: "100dvw",
         height: "100dvh",
         display: "flex",
         flexDirection: "row",

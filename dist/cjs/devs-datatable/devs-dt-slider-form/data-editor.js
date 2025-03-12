@@ -15,7 +15,13 @@ var DataEditor = react_1.default.memo(function (_a) {
     var rowIndex = dataSource.indexOf(row);
     if (focusedRowForm === null)
         return null;
-    return ((0, jsx_runtime_1.jsx)(react_hook_form_1.Controller, { control: focusedRowForm.control, name: col.field, defaultValue: (0, devs_dt_slider_form_1.getDefaultValue)(defaultValue), rules: { required: col.required }, render: function (_a) {
+    return ((0, jsx_runtime_1.jsx)(react_hook_form_1.Controller, { control: focusedRowForm.control, name: col.field, defaultValue: (0, devs_dt_slider_form_1.getDefaultValue)({
+            val: defaultValue,
+            col: col,
+            row: row,
+            rowIndex: rowIndex,
+            getValue: focusedRowForm.getValues,
+        }), rules: { required: col.required }, render: function (_a) {
             var onChange = _a.field.onChange;
             return col.editor({
                 value: defaultValue,

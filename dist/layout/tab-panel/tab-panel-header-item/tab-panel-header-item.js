@@ -85,9 +85,6 @@ function TabPanelHeaderItem(_a) {
                     width: "100%",
                     textAlign: "left",
                     cursor: "pointer !important",
-                    "&:active": {
-                        cursor: "grab !important",
-                    },
                 }) }, { children: menu.title })), (menu.hasClose === undefined || menu.hasClose === true) && (_jsx("p", __assign({ css: css({
                     width: "22px",
                     textAlign: "center",

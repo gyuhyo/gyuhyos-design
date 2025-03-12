@@ -15,6 +15,6 @@ exports.BACK_DROP_STYLE = void 0;
 var react_1 = require("@emotion/react");
 var BACK_DROP_STYLE = function (_a) {
     var _b = _a.show, show = _b === void 0 ? false : _b, styles = _a.styles;
-    return (0, react_1.css)(__assign({ width: "100vw", height: "100vh", overflow: "hidden", background: "rgba(0, 0, 0, 0.5)", backdropFilter: "blur(3px)", opacity: show ? 1 : 0, position: "absolute", left: 0, top: 0, transitionDuration: "300ms", transitionProperty: "opacity", zIndex: 9998, display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }, styles));
+    return (0, react_1.css)(__assign({ width: "100dvw", height: "100dvh", overflow: "hidden", background: "rgba(0, 0, 0, 0.5)", backdropFilter: "blur(3px)", opacity: show ? 1 : 0, position: "absolute", left: 0, top: 0, transitionDuration: "300ms", transitionProperty: "opacity", zIndex: 9998, display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }, styles));
 };
 exports.BACK_DROP_STYLE = BACK_DROP_STYLE;

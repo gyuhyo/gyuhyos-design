@@ -74,6 +74,7 @@ var button_1 = __importDefault(require("../../button"));
 var devs_dt_context_1 = require("../context/devs-dt-context");
 var data_form_item_renderer_1 = __importDefault(require("./data-form-item-renderer"));
 var data_form_error_context_1 = require("./data-form-error-context");
+var usehooks_ts_1 = require("usehooks-ts");
 var getDefaultValue = function (_a) {
     var val = _a.val, col = _a.col, row = _a.row, rowIndex = _a.rowIndex, getValue = _a.getValue;
     if ((col === null || col === void 0 ? void 0 : col.defaultValue) === undefined)
@@ -127,7 +128,7 @@ var FormPanelResizer = function (_a) {
     var handleMouseMove = react_1.default.useCallback(function (e) {
         e.stopPropagation();
         var deltaX = startX.current - e.clientX;
-        var newWidth = Math.max(width + deltaX, 400); // 최소 너비 50px
+        var newWidth = Math.max(width + deltaX, 300); // 최소 너비 50px
         var screenWidth = document.body.clientWidth;
         if (screenWidth / 2 < newWidth)
             return;
@@ -160,8 +161,9 @@ var Resizer = styled_1.default.div({
     },
 });
 var DevsDtSliderForm = function () {
+    var matches = (0, usehooks_ts_1.useMediaQuery)("(max-width: 600px)");
     var beforeEditValues = react_1.default.useRef(null);
-    var _a = __read(react_1.default.useState(400), 2), panelWidth = _a[0], setPanelWidth = _a[1];
+    var _a = __read(react_1.default.useState(300), 2), panelWidth = _a[0], setPanelWidth = _a[1];
     var _b = (0, devs_dt_context_1.useDt)(), focusedRow = _b.focusedRow, sliderFormOpen = _b.sliderFormOpen, setSliderFormOpen = _b.setSliderFormOpen, focusedRowForm = _b.focusedRowForm, setDataSource = _b.setDataSource;
     var _c = __read(react_1.default.useState(null), 2), errors = _c[0], setErrors = _c[1];
     react_1.default.useEffect(function () {
@@ -204,7 +206,7 @@ var DevsDtSliderForm = function () {
             return [2 /*return*/];
         });
     }); };
-    return ((0, jsx_runtime_1.jsxs)(FormPanel, __assign({ sliderFormOpen: sliderFormOpen, width: panelWidth }, { children: [(0, jsx_runtime_1.jsxs)(FormTitle, { children: [(0, jsx_runtime_1.jsx)("p", { children: "\uB370\uC774\uD130 \uC218\uC815" }), (0, jsx_runtime_1.jsx)(CloseFormPanelButton, __assign({ onClick: onCloseSliderFormPanel }, { children: "\u2715" }))] }), (0, jsx_runtime_1.jsx)(data_form_error_context_1.DataFormErrorProvider, __assign({ errors: errors }, { children: (0, jsx_runtime_1.jsx)(DataFormComponent, { panelWidth: panelWidth }) })), (0, jsx_runtime_1.jsxs)(ButtonContainer, { children: [(0, jsx_runtime_1.jsx)(button_1.default, __assign({ bgColor: "#22cb5f", border: true, borderColor: "#03cf00", color: "#ffffff", style: {
+    return ((0, jsx_runtime_1.jsxs)(FormPanel, __assign({ sliderFormOpen: sliderFormOpen, width: panelWidth, matches: matches }, { children: [(0, jsx_runtime_1.jsxs)(FormTitle, { children: [(0, jsx_runtime_1.jsx)("p", { children: "\uB370\uC774\uD130 \uC218\uC815" }), (0, jsx_runtime_1.jsx)(CloseFormPanelButton, __assign({ onClick: onCloseSliderFormPanel }, { children: "\u2715" }))] }), (0, jsx_runtime_1.jsx)(data_form_error_context_1.DataFormErrorProvider, __assign({ errors: errors }, { children: (0, jsx_runtime_1.jsx)(DataFormComponent, { panelWidth: panelWidth }) })), (0, jsx_runtime_1.jsxs)(ButtonContainer, { children: [(0, jsx_runtime_1.jsx)(button_1.default, __assign({ bgColor: "#22cb5f", border: true, borderColor: "#03cf00", color: "#ffffff", style: {
                             padding: "12px",
                             width: "100%",
                             flex: "1 1 0%",
@@ -220,12 +222,14 @@ var FormPanel = styled_1.default.div(function (props) { return ({
     flexDirection: "column",
     justifyContent: "space-between",
     top: 0,
-    right: props.sliderFormOpen ? 0 : "-".concat(props.width + 17, "px"),
-    width: "".concat(props.width, "px"),
+    right: props.sliderFormOpen
+        ? 0
+        : "-".concat(props.matches ? 1000 : props.width + 17, "px"),
+    width: props.matches ? "100%" : "".concat(props.width, "px"),
     transition: "right 200ms ease-in-out",
     transitionDelay: "150ms",
     height: "100%",
-    zIndex: 2,
+    zIndex: 3,
     boxShadow: "-5px 0px 12px #00000040",
     borderLeft: "1px solid #bbb",
     overflow: "hidden",
