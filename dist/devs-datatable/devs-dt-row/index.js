@@ -17,6 +17,7 @@ import { useForm, } from "react-hook-form";
 import { useMessage } from "../../alert-message/context/message-context";
 import { useDt } from "../context/devs-dt-context";
 import DevsDtCell from "../devs-dt-cell";
+import dayjs from "dayjs";
 var RowNumberCell = function (_a) {
     var index = _a.index;
     return (_jsx("td", __assign({ className: "devs-dt-cell devs-dt-th devs-dt-sticky-col devs-dt-index-cell", style: { "--width": "50px" } }, { children: index + 1 })));
@@ -63,14 +64,58 @@ var RowExpandCell = function (_a) {
             });
         } }, { children: _jsx("button", { className: "expand_ico2 ".concat(data.expand ? "expand_ico_active2" : "") }) })));
 };
+var getDefaultValue = function (_a) {
+    var col = _a.col, row = _a.row, rowIndex = _a.rowIndex, val = _a.val;
+    if (col.defaultValue !== undefined) {
+        var value = col.defaultValue({
+            row: row,
+            value: val,
+            index: rowIndex,
+        });
+        return value;
+    }
+    return val;
+};
 function DevsDtRow(_a) {
     var _b, _c, _d, _e;
     var data = _a.data, index = _a.index, rowKey = _a.rowKey, lastNode = _a.lastNode, dragProvided = _a.dragProvided, dragSnapshot = _a.dragSnapshot;
     var showMessage = useMessage().showMessage;
     var _f = useDt(), setDataSource = _f.setDataSource, options = _f.options, formsRef = _f.formsRef, focusedRow = _f.focusedRow, setFocusedRow = _f.setFocusedRow, editCount = _f.editCount, dataSource = _f.dataSource, setSliderFormOpen = _f.setSliderFormOpen, setFocusedRowForm = _f.setFocusedRowForm, editMode = _f.editMode, currentPage = _f.currentPage, focusedCell = _f.focusedCell;
     var idx = (currentPage - 1) * ((_b = options === null || options === void 0 ? void 0 : options.paginationLimit) !== null && _b !== void 0 ? _b : 20) + index;
+    var getDefaultValues = React.useMemo(function () {
+        var hasDefaultValueColumns = lastNode
+            .filter(function (f) { return f.defaultValue; })
+            .reduce(function (prev, curr) {
+            prev[curr.field] = null;
+            return prev;
+        }, {});
+        var dataKeys = Object.keys(Object.assign(data, hasDefaultValueColumns));
+        var defaultValuesData = dataKeys.reduce(function (prev, curr) {
+            var findKey = lastNode.find(function (f) { return f.field === curr; });
+            if (!findKey) {
+                prev[curr] = data[curr];
+            }
+            else {
+                var d = null;
+                if (data[curr]) {
+                    d =
+                        findKey.type === "date" || findKey.type === "datetime"
+                            ? dayjs(data[curr]).tz("Asia/Seoul")
+                            : data[curr];
+                }
+                prev[curr] = getDefaultValue({
+                    col: findKey,
+                    row: data,
+                    rowIndex: index,
+                    val: d,
+                });
+            }
+            return prev;
+        }, {});
+        return defaultValuesData;
+    }, []);
     var form = useForm({
-        defaultValues: data,
+        defaultValues: getDefaultValues,
         mode: "onSubmit",
         reValidateMode: "onChange",
         criteriaMode: "all",
@@ -79,7 +124,7 @@ function DevsDtRow(_a) {
         shouldFocusError: true,
         shouldUseNativeValidation: true,
     });
-    var control = form.control, register = form.register, errors = form.formState.errors, setValue = form.setValue, getValues = form.getValues, setError = form.setError, watch = form.watch, trigger = form.trigger;
+    var control = form.control, register = form.register, errors = form.formState.errors, setValue = form.setValue, getValues = form.getValues, setError = form.setError, watch = form.watch, trigger = form.trigger, reset = form.reset;
     var prevRow = React.useMemo(function () {
         return dataSource[idx - 1];
     }, [dataSource[idx - 1]]);
@@ -238,7 +283,7 @@ function DevsDtRow(_a) {
                             value: watch(col.field),
                         });
                     }
-                    return (_jsx(DevsDtCell, { register: register, control: control, col: col, mode: data.mode, defaultValue: watch(col.field), error: errors.hasOwnProperty(col.field), autoFocus: (_b = (_a = col.autoFocus) === null || _a === void 0 ? void 0 : _a.call(col, data.mode)) !== null && _b !== void 0 ? _b : GetAutoFocus(col.field), row: data, prevRow: prevRow, nextRow: nextRow, setValue: setValue, merge: (_c = data._merge) === null || _c === void 0 ? void 0 : _c[col.field], rowIndex: idx, getValue: getValues, trigger: trigger, watch: watch }, "".concat(rowKey, "-").concat(col.field)));
+                    return (_jsx(DevsDtCell, { register: register, control: control, col: col, mode: data.mode, defaultValue: watch(col.field), error: errors.hasOwnProperty(col.field), autoFocus: (_b = (_a = col.autoFocus) === null || _a === void 0 ? void 0 : _a.call(col, data.mode)) !== null && _b !== void 0 ? _b : GetAutoFocus(col.field), row: data, prevRow: prevRow, nextRow: nextRow, setValue: setValue, merge: (_c = data._merge) === null || _c === void 0 ? void 0 : _c[col.field], rowIndex: index, getValue: getValues, trigger: trigger, watch: watch }, "".concat(rowKey, "-").concat(col.field)));
                 })] })));
 }
 export default React.memo(DevsDtRow);

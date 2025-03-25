@@ -30,7 +30,6 @@ var TextAreaInput = React.memo(function (_a) {
             col: col,
             row: row,
             rowIndex: rowIndex,
-            getValue: focusedRowForm.getValues,
         }), rules: { required: col.required }, render: function (_a) {
             var onChange = _a.field.onChange;
             return (_jsx(TextArea, __assign({ status: (errors === null || errors === void 0 ? void 0 : errors.hasOwnProperty(col.field)) ? "error" : undefined, style: { width: "100%" }, defaultValue: getDefaultValue({
@@ -38,7 +37,6 @@ var TextAreaInput = React.memo(function (_a) {
                     col: col,
                     row: row,
                     rowIndex: rowIndex,
-                    getValue: focusedRowForm.getValues,
                 }), onChange: function (v) {
                     onChange(v);
                     if (col.onChange !== undefined) {

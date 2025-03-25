@@ -20,7 +20,6 @@ var DataEditor = react_1.default.memo(function (_a) {
             col: col,
             row: row,
             rowIndex: rowIndex,
-            getValue: focusedRowForm.getValues,
         }), rules: { required: col.required }, render: function (_a) {
             var onChange = _a.field.onChange;
             return col.editor({

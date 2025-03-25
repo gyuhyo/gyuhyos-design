@@ -76,14 +76,13 @@ var data_form_item_renderer_1 = __importDefault(require("./data-form-item-render
 var data_form_error_context_1 = require("./data-form-error-context");
 var usehooks_ts_1 = require("usehooks-ts");
 var getDefaultValue = function (_a) {
-    var val = _a.val, col = _a.col, row = _a.row, rowIndex = _a.rowIndex, getValue = _a.getValue;
+    var val = _a.val, col = _a.col, row = _a.row, rowIndex = _a.rowIndex;
     if ((col === null || col === void 0 ? void 0 : col.defaultValue) === undefined)
         return val;
     return col.defaultValue({
         row: row,
         value: val,
         index: rowIndex,
-        getValue: getValue,
     });
 };
 exports.getDefaultValue = getDefaultValue;

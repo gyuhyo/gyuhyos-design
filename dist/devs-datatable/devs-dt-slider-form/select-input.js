@@ -29,7 +29,6 @@ var SelectInput = React.memo(function (_a) {
             col: col,
             row: row,
             rowIndex: rowIndex,
-            getValue: focusedRowForm.getValues,
         }), rules: { required: col.required }, render: function (_a) {
             var onChange = _a.field.onChange;
             return (_jsx(Select, __assign({ status: (errors === null || errors === void 0 ? void 0 : errors.hasOwnProperty(col.field)) ? "error" : undefined, style: { width: "100%" }, showSearch: true, onChange: function (v) {
@@ -49,7 +48,6 @@ var SelectInput = React.memo(function (_a) {
                     col: col,
                     row: row,
                     rowIndex: rowIndex,
-                    getValue: focusedRowForm.getValues,
                 }) }, col.inputOptions, { children: col.options &&
                     col.options.map(function (op) { return (_jsx(Select.Option, __assign({ value: op.value }, { children: op.label }), op.value)); }) })));
         } }));

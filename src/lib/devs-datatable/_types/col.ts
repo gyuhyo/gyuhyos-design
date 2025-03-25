@@ -42,12 +42,10 @@ export interface IDataTableColumn {
     value,
     row,
     index,
-    getValue,
   }: {
     value: any;
     row: IDataSource;
     index: number;
-    getValue?: UseFormGetValues<IDataSource>;
   }) => any;
   mergeOptions?: ({
     prev,

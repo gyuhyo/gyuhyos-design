@@ -12,6 +12,7 @@ import {
   FieldValues,
   FormState,
   useForm,
+  UseFormGetValues,
   UseFormHandleSubmit,
   UseFormRegister,
   UseFormSetValue,
@@ -20,6 +21,7 @@ import { useMessage } from "../../alert-message/context/message-context";
 import { IDataSource, IDataTableColumn } from "../_types";
 import { useDt } from "../context/devs-dt-context";
 import DevsDtCell from "../devs-dt-cell";
+import dayjs from "dayjs";
 
 type TDevsDtRow = {
   data: IDataSource;
@@ -152,6 +154,30 @@ const RowExpandCell: React.FC<{
   );
 };
 
+const getDefaultValue = ({
+  col,
+  row,
+  rowIndex,
+  val,
+}: {
+  col: IDataTableColumn;
+  row: IDataSource;
+  rowIndex: number;
+  val: any;
+}) => {
+  if (col.defaultValue !== undefined) {
+    const value = col.defaultValue({
+      row,
+      value: val,
+      index: rowIndex,
+    });
+
+    return value;
+  }
+
+  return val;
+};
+
 function DevsDtRow({
   data,
   index,
@@ -179,8 +205,48 @@ function DevsDtRow({
   const idx: number =
     (currentPage - 1) * (options?.paginationLimit ?? 20) + index;
 
+  const getDefaultValues = React.useMemo(() => {
+    const hasDefaultValueColumns = lastNode
+      .filter((f) => f.defaultValue)
+      .reduce((prev: IDataSource, curr: IDataTableColumn) => {
+        prev[curr.field] = null;
+        return prev;
+      }, {});
+
+    const dataKeys = Object.keys(Object.assign(data, hasDefaultValueColumns));
+    const defaultValuesData = dataKeys.reduce(
+      (prev: IDataSource, curr: string) => {
+        const findKey = lastNode.find((f) => f.field === curr);
+
+        if (!findKey) {
+          prev[curr] = data[curr];
+        } else {
+          let d: any = null;
+          if (data[curr]) {
+            d =
+              findKey.type === "date" || findKey.type === "datetime"
+                ? dayjs(data[curr]).tz("Asia/Seoul")
+                : data[curr];
+          }
+
+          prev[curr] = getDefaultValue({
+            col: findKey,
+            row: data,
+            rowIndex: index,
+            val: d,
+          });
+        }
+
+        return prev;
+      },
+      {}
+    );
+
+    return defaultValuesData;
+  }, []);
+
   const form = useForm({
-    defaultValues: data,
+    defaultValues: getDefaultValues,
     mode: "onSubmit",
     reValidateMode: "onChange",
     criteriaMode: "all",
@@ -199,6 +265,7 @@ function DevsDtRow({
     setError,
     watch,
     trigger,
+    reset,
   } = form;
 
   const prevRow = React.useMemo(() => {
@@ -434,7 +501,7 @@ function DevsDtRow({
               nextRow={nextRow}
               setValue={setValue}
               merge={data._merge?.[col.field]}
-              rowIndex={idx}
+              rowIndex={index}
               getValue={getValues}
               trigger={trigger}
               watch={watch}

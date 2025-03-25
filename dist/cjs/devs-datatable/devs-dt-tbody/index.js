@@ -135,16 +135,14 @@ function DevsDtTBody(_a) {
         if (sorter.field === null || sorter.field === undefined) {
             if (options === null || options === void 0 ? void 0 : options.pagination) {
                 var limit = (_a = options === null || options === void 0 ? void 0 : options.paginationLimit) !== null && _a !== void 0 ? _a : 20;
-                return __spreadArray(__spreadArray([], __read((currentPage === 1 ? newRows : [])), false), __read(d
+                return __spreadArray([], __read(d
                     .filter(function (x) { return x.mode !== "c"; })
                     .sort(function (a, b) {
                     return a.originIndex - b.originIndex;
                 })
                     .slice((currentPage - 1) * limit, currentPage * limit)), false);
             }
-            return __spreadArray(__spreadArray([], __read(newRows), false), __read(d
-                .filter(function (x) { return x.mode !== "c"; })
-                .sort(function (a, b) { return a.originIndex - b.originIndex; })), false);
+            return __spreadArray([], __read(d.sort(function (a, b) { return a.originIndex - b.originIndex; })), false);
         }
         var sortedDataSource = d
             .filter(function (x, idx) {

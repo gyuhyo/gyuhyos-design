@@ -34,7 +34,6 @@ var SelectInput = react_1.default.memo(function (_a) {
             col: col,
             row: row,
             rowIndex: rowIndex,
-            getValue: focusedRowForm.getValues,
         }), rules: { required: col.required }, render: function (_a) {
             var onChange = _a.field.onChange;
             return ((0, jsx_runtime_1.jsx)(antd_1.Select, __assign({ status: (errors === null || errors === void 0 ? void 0 : errors.hasOwnProperty(col.field)) ? "error" : undefined, style: { width: "100%" }, showSearch: true, onChange: function (v) {
@@ -54,7 +53,6 @@ var SelectInput = react_1.default.memo(function (_a) {
                     col: col,
                     row: row,
                     rowIndex: rowIndex,
-                    getValue: focusedRowForm.getValues,
                 }) }, col.inputOptions, { children: col.options &&
                     col.options.map(function (op) { return ((0, jsx_runtime_1.jsx)(antd_1.Select.Option, __assign({ value: op.value }, { children: op.label }), op.value)); }) })));
         } }));

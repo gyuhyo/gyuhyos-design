@@ -30,7 +30,6 @@ const SelectInput: React.FC<any> = React.memo(
           col: col,
           row: row!,
           rowIndex,
-          getValue: focusedRowForm.getValues,
         })}
         rules={{ required: col.required }}
         render={({ field: { onChange } }) => (
@@ -56,7 +55,6 @@ const SelectInput: React.FC<any> = React.memo(
               col: col,
               row: row!,
               rowIndex,
-              getValue: focusedRowForm.getValues,
             })}
             {...col.inputOptions}
           >

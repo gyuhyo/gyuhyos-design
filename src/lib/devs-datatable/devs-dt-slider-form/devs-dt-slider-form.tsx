@@ -13,13 +13,11 @@ export const getDefaultValue = ({
   col,
   row,
   rowIndex,
-  getValue,
 }: {
   val: any;
   col: IDataTableColumn;
   row: IDataSource;
   rowIndex: number;
-  getValue: UseFormGetValues<IDataSource>;
 }) => {
   if (col?.defaultValue === undefined) return val;
 
@@ -27,7 +25,6 @@ export const getDefaultValue = ({
     row,
     value: val,
     index: rowIndex,
-    getValue,
   });
 };
 

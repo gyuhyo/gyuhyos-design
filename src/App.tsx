@@ -315,6 +315,7 @@ const App: React.FC<{}> = () => {
       ],
       width: 50,
       editorMerge: 4,
+      defaultValue: ({ value }) => "1",
     },
     {
       field: "opt2",
@@ -338,6 +339,7 @@ const App: React.FC<{}> = () => {
       required: true,
       resizing: false,
       sticky: true,
+      defaultValue: () => "123",
     },
 
     {
@@ -456,6 +458,7 @@ const App: React.FC<{}> = () => {
   const [cnt, setCnt] = React.useState(0);
 
   const handleAddClick = () => {
+    console.log(tb.current.api.getFocusedRowIndex);
     setDataSource((prev) => {
       return [{ checked: true, mode: "c" }, ...prev];
     });
@@ -557,15 +560,12 @@ const App: React.FC<{}> = () => {
             setFocusedRow(row);
           }}
           options={{
-            editMode: "slider",
             enabledClipboard: true,
             readonly: false,
             showRowNumber: true,
             enabledRowOrder: true,
             enabledRowCheck: true,
             enabledExpand: true,
-            pagination: true,
-            paginationLimit: 1,
           }}
           buttons={{
             custom: (

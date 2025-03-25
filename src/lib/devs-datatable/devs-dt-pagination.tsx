@@ -6,6 +6,7 @@ import { useDt } from "./context/devs-dt-context";
 const DevsDtPagination: React.FC<any> = () => {
   const { dataSource, options, currentPage, setCurrentPage } = useDt();
   const numberContainerRef = React.useRef<HTMLDivElement>(null);
+  const buttonContainerRef = React.useRef<HTMLDivElement>(null);
   const dataLength: number =
     dataSource?.filter((x) => x.mode !== "c").length ?? 0;
   const totalPageCount = Math.ceil(
@@ -48,62 +49,72 @@ const DevsDtPagination: React.FC<any> = () => {
     }
   }, [currentPage, totalPageCount]);
 
+  const countPageLabel = React.useMemo(() => {
+    if (options?.pagination) {
+      return `총 <strong>${dataLength}</strong>건 (<strong>${totalPageCount}</strong>${" "}
+        페이지)`;
+    }
+
+    return `총 <strong>${dataLength}</strong>건`;
+  }, [dataLength, options?.pagination, totalPageCount]);
+
+  React.useEffect(() => {
+    if (!buttonContainerRef.current) return;
+    buttonContainerRef.current.classList.add("pagination-container-bling");
+  }, []);
+
   return (
     <Pagination.Container>
-      <Pagination.DataCountLabel>
-        총 <strong>{dataLength}</strong>건 (<strong>{totalPageCount}</strong>{" "}
-        페이지)
-      </Pagination.DataCountLabel>
-      <Pagination.PageButtonContainer
-        ref={React.useCallback((node: HTMLDivElement) => {
-          if (!node) return;
-          node.classList.add("pagination-container-bling");
-        }, [])}
-      >
-        <Pagination.PageButton
-          data-disabled={currentPage <= 4}
-          onClick={() => onChangePage(1)}
-        >
-          &lt;&lt;
-        </Pagination.PageButton>
-        <Pagination.PageButton
-          data-disabled={currentPage <= 4}
-          onClick={onPrevPageMoveClick}
-        >
-          &lt;
-        </Pagination.PageButton>
-        <Pagination.PageNumberContainer
-          ref={numberContainerRef}
-          className="smooth-scrolling"
-        >
-          {dataLength === 0 && (
-            <Pagination.NumberButton data-is-current={true}>
-              1
-            </Pagination.NumberButton>
-          )}
-          {Array.from({ length: totalPageCount }, (n, i) => (
-            <Pagination.NumberButton
-              key={`page-${i + 1}`}
-              data-is-current={i + 1 === currentPage}
-              onClick={() => onChangePage(i + 1)}
-            >
-              {i + 1}
-            </Pagination.NumberButton>
-          ))}
-        </Pagination.PageNumberContainer>
-        <Pagination.PageButton
-          data-disabled={currentPage >= totalPageCount - 3}
-          onClick={onNextPageMoveClick}
-        >
-          &gt;
-        </Pagination.PageButton>
-        <Pagination.PageButton
-          data-disabled={currentPage >= totalPageCount - 3}
-          onClick={() => onChangePage(totalPageCount)}
-        >
-          &gt;&gt;
-        </Pagination.PageButton>
-      </Pagination.PageButtonContainer>
+      <Pagination.DataCountLabel
+        dangerouslySetInnerHTML={{ __html: countPageLabel }}
+      />
+      {options?.pagination && (
+        <Pagination.PageButtonContainer ref={buttonContainerRef}>
+          <Pagination.PageButton
+            data-disabled={currentPage <= 4}
+            onClick={() => onChangePage(1)}
+          >
+            &lt;&lt;
+          </Pagination.PageButton>
+          <Pagination.PageButton
+            data-disabled={currentPage <= 4}
+            onClick={onPrevPageMoveClick}
+          >
+            &lt;
+          </Pagination.PageButton>
+          <Pagination.PageNumberContainer
+            ref={numberContainerRef}
+            className="smooth-scrolling"
+          >
+            {dataLength === 0 && (
+              <Pagination.NumberButton data-is-current={true}>
+                1
+              </Pagination.NumberButton>
+            )}
+            {Array.from({ length: totalPageCount }, (n, i) => (
+              <Pagination.NumberButton
+                key={`page-${i + 1}`}
+                data-is-current={i + 1 === currentPage}
+                onClick={() => onChangePage(i + 1)}
+              >
+                {i + 1}
+              </Pagination.NumberButton>
+            ))}
+          </Pagination.PageNumberContainer>
+          <Pagination.PageButton
+            data-disabled={currentPage >= totalPageCount - 3}
+            onClick={onNextPageMoveClick}
+          >
+            &gt;
+          </Pagination.PageButton>
+          <Pagination.PageButton
+            data-disabled={currentPage >= totalPageCount - 3}
+            onClick={() => onChangePage(totalPageCount)}
+          >
+            &gt;&gt;
+          </Pagination.PageButton>
+        </Pagination.PageButtonContainer>
+      )}
     </Pagination.Container>
   );
 };

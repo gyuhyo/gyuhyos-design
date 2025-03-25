@@ -165,7 +165,9 @@ const DevsDataTable: React.FC<IDataTableProps> = (props) => {
         },
         getFocusedRow: focusedRow,
         getFocusedRowIndex:
-          focusedRow === null ? null : props.dataSource.indexOf(focusedRow),
+          focusedRow === null
+            ? null
+            : props.dataSource.findIndex((x) => x.rowId === focusedRow.rowId),
         getFocusedCell: { row: focusedRow, field: focusedCell },
         getCheckedRows: Object.values(formsRef.current)
           .filter((f) => f.getValues("checked"))
@@ -333,6 +335,7 @@ const DevsDataTable: React.FC<IDataTableProps> = (props) => {
       tbody={tbody}
       thead={thead}
       COLUMNS_STYLE_FORCE_UPDATE={COLUMNS_STYLE_FORCE_UPDATE}
+      setInnerLoading={setInnerLoading}
     >
       {(props.loading === true || innerLoading === true) && (
         <div className="loader-backdrop">
@@ -355,7 +358,7 @@ const DevsDataTable: React.FC<IDataTableProps> = (props) => {
       >
         <DevsDtTHead thead={thead} setHeaderWidth={setHeaderWidth} />
         <DevsDtTBody tbody={tbody} headerWidth={headerWidth} />
-        {props.options?.pagination && <DevsDtPagination />}
+        <DevsDtPagination />
         {(props.options?.editMode === "slider" ||
           props.options?.showEditModeSelector) && <DevsDtSliderForm />}
       </div>

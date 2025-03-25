@@ -127,6 +127,7 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
         currentPage,
         setCurrentPage,
         originalColumns: originalColumns.current,
+        setInnerLoading: props.setInnerLoading,
       }}
     >
       <MessageProvider>

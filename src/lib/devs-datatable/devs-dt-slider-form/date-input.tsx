@@ -30,7 +30,6 @@ const DateInput: React.FC<any> = React.memo(
           col: col,
           row: row!,
           rowIndex,
-          getValue: focusedRowForm.getValues,
         })}
         rules={{ required: col.required }}
         render={({ field: { onChange } }) => (
@@ -45,7 +44,6 @@ const DateInput: React.FC<any> = React.memo(
               col: col,
               row: row!,
               rowIndex,
-              getValue: focusedRowForm.getValues,
             })}
             onChange={(_, v) => {
               onChange(v);

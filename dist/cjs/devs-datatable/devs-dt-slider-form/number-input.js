@@ -34,7 +34,6 @@ var NumberInput = react_1.default.memo(function (_a) {
             col: col,
             row: row,
             rowIndex: rowIndex,
-            getValue: focusedRowForm.getValues,
         }), rules: { required: col.required }, render: function (_a) {
             var onChange = _a.field.onChange;
             return ((0, jsx_runtime_1.jsx)(antd_1.InputNumber, __assign({ status: (errors === null || errors === void 0 ? void 0 : errors.hasOwnProperty(col.field)) ? "error" : undefined, style: { width: "100%" }, defaultValue: (0, devs_dt_slider_form_1.getDefaultValue)({
@@ -42,7 +41,6 @@ var NumberInput = react_1.default.memo(function (_a) {
                     col: col,
                     row: row,
                     rowIndex: rowIndex,
-                    getValue: focusedRowForm.getValues,
                 }), onChange: function (v) {
                     onChange(v);
                     if (col.onChange !== undefined) {

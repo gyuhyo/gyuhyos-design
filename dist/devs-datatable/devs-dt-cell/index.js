@@ -172,21 +172,6 @@ function DevsDtCell(_a) {
         }
         return classes.join(" ");
     }, [col.sticky, error, focusedCell, focusedRow]);
-    var getDefaultValue = function (val) {
-        if (col.defaultValue !== undefined) {
-            var value = col.defaultValue({
-                row: row,
-                value: val,
-                index: rowIndex,
-                getValue: getValue,
-            });
-            if (val !== value && row.mode === "u") {
-                setValue(col.field, value);
-            }
-            return value;
-        }
-        return val;
-    };
     var onInputArrowClick = function (e) {
         if (e.key === "ArrowUp") {
             e.preventDefault();
@@ -218,10 +203,10 @@ function DevsDtCell(_a) {
     var cellComp = React.useMemo(function () {
         var _a, _b;
         if (col.editor !== undefined) {
-            return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue || null), rules: { required: col.required }, render: function (_a) {
+            return (_jsx(Controller, { control: control, name: col.field, defaultValue: defaultValue, rules: { required: col.required }, render: function (_a) {
                     var onChange = _a.field.onChange;
                     return col.editor({
-                        value: getDefaultValue(defaultValue || null),
+                        value: defaultValue,
                         row: row,
                         index: rowIndex,
                         onChange: onChange,
@@ -232,10 +217,10 @@ function DevsDtCell(_a) {
                 } }));
         }
         if (colType === "date") {
-            return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), rules: { required: col.required }, render: function (_a) {
+            return (_jsx(Controller, { control: control, name: col.field, defaultValue: defaultValue, rules: { required: col.required }, render: function (_a) {
                     var _b;
                     var onChange = _a.field.onChange;
-                    return (_jsx(DatePicker, __assign({ disabled: (_b = col.readonly) !== null && _b !== void 0 ? _b : false, size: "small", placeholder: "\uB0A0\uC9DC \uC120\uD0DD", defaultOpen: autoFocus, defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), onChange: function (_, v) {
+                    return (_jsx(DatePicker, __assign({ disabled: (_b = col.readonly) !== null && _b !== void 0 ? _b : false, size: "small", placeholder: "\uB0A0\uC9DC \uC120\uD0DD", defaultOpen: autoFocus, defaultValue: defaultValue, onChange: function (_, v) {
                             onChange(v);
                             if (col.onChange !== undefined) {
                                 col.onChange({
@@ -251,10 +236,10 @@ function DevsDtCell(_a) {
                 } }));
         }
         if (colType === "datetime") {
-            return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), rules: { required: col.required }, render: function (_a) {
+            return (_jsx(Controller, { control: control, name: col.field, defaultValue: defaultValue, rules: { required: col.required }, render: function (_a) {
                     var _b;
                     var onChange = _a.field.onChange;
-                    return (_jsx(DatePicker, __assign({ disabled: (_b = col.readonly) !== null && _b !== void 0 ? _b : false, size: "small", placeholder: "\uB0A0\uC9DC/\uC2DC\uAC04 \uC120\uD0DD", defaultOpen: autoFocus, defaultValue: getDefaultValue(defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null), showTime: true, onChange: function (_, v) {
+                    return (_jsx(DatePicker, __assign({ disabled: (_b = col.readonly) !== null && _b !== void 0 ? _b : false, size: "small", placeholder: "\uB0A0\uC9DC/\uC2DC\uAC04 \uC120\uD0DD", defaultOpen: autoFocus, defaultValue: defaultValue, showTime: true, onChange: function (_, v) {
                             onChange(v);
                             if (col.onChange !== undefined) {
                                 col.onChange({
@@ -270,7 +255,7 @@ function DevsDtCell(_a) {
                 } }));
         }
         if (colType === "select") {
-            return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue || null), rules: { required: col.required }, render: function (_a) {
+            return (_jsx(Controller, { control: control, name: col.field, defaultValue: defaultValue, rules: { required: col.required }, render: function (_a) {
                     var _b;
                     var onChange = _a.field.onChange;
                     return (_jsx(Select, __assign({ disabled: (_b = col.readonly) !== null && _b !== void 0 ? _b : false, size: "small", showSearch: true, defaultOpen: autoFocus, optionFilterProp: "label", onChange: function (v) {
@@ -285,11 +270,11 @@ function DevsDtCell(_a) {
                                     getValue: getValue,
                                 });
                             }
-                        }, defaultValue: getDefaultValue(defaultValue || null), autoFocus: (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click" ? true : autoFocus }, col.inputOptions, { options: col.options })));
+                        }, defaultValue: defaultValue, autoFocus: (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click" ? true : autoFocus }, col.inputOptions, { options: col.options })));
                 } }));
         }
         if (colType === "number") {
-            return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue || null), rules: { required: col.required }, render: function (_a) {
+            return (_jsx(Controller, { control: control, name: col.field, defaultValue: defaultValue, rules: { required: col.required }, render: function (_a) {
                     var _b;
                     var onChange = _a.field.onChange;
                     return (_jsx(InputNumber, __assign({ disabled: (_b = col.readonly) !== null && _b !== void 0 ? _b : false, size: "small", onChange: function (v) {
@@ -304,11 +289,11 @@ function DevsDtCell(_a) {
                                     getValue: getValue,
                                 });
                             }
-                        }, defaultValue: getDefaultValue(defaultValue || null), autoFocus: (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click" ? true : autoFocus }, col.inputOptions)));
+                        }, defaultValue: defaultValue, autoFocus: (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click" ? true : autoFocus }, col.inputOptions)));
                 } }));
         }
         if (colType === "radio") {
-            return (_jsx(Controller, { control: control, name: col.field, defaultValue: getDefaultValue(defaultValue || null), rules: { required: col.required }, render: function (_a) {
+            return (_jsx(Controller, { control: control, name: col.field, defaultValue: defaultValue, rules: { required: col.required }, render: function (_a) {
                     var onChange = _a.field.onChange;
                     return (_jsx(Radio.Group, __assign({ style: {
                             width: "100%",
@@ -325,7 +310,7 @@ function DevsDtCell(_a) {
                                     getValue: getValue,
                                 });
                             }
-                        }, defaultValue: getDefaultValue(defaultValue || null) }, { children: col.options &&
+                        }, defaultValue: defaultValue }, { children: col.options &&
                             col.options.map(function (op) { return (_jsx(Radio, { value: op.value }, op.value)); }) })));
                 } }));
         }
@@ -344,7 +329,7 @@ function DevsDtCell(_a) {
                         });
                     }
                 },
-            }), { disabled: (_a = col.readonly) !== null && _a !== void 0 ? _a : false, defaultValue: getDefaultValue(defaultValue || null), autoFocus: (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click" ? true : autoFocus }, col.inputOptions)));
+            }), { disabled: (_a = col.readonly) !== null && _a !== void 0 ? _a : false, defaultValue: defaultValue, autoFocus: (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click" ? true : autoFocus }, col.inputOptions)));
         }
         return (_jsx("input", __assign({}, register(col.field, {
             required: col.required,
@@ -360,7 +345,7 @@ function DevsDtCell(_a) {
                     });
                 }
             },
-        }), { onKeyDown: onInputArrowClick, disabled: (_b = col.readonly) !== null && _b !== void 0 ? _b : false, type: "text", defaultValue: getDefaultValue(defaultValue || null), autoFocus: (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click" ? true : autoFocus, autoComplete: "off" }, col.inputOptions)));
+        }), { onKeyDown: onInputArrowClick, disabled: (_b = col.readonly) !== null && _b !== void 0 ? _b : false, type: "text", defaultValue: defaultValue, autoFocus: (options === null || options === void 0 ? void 0 : options.cellEditClickType) === "click" ? true : autoFocus, autoComplete: "off" }, col.inputOptions)));
     }, [col, autoFocus, defaultValue, row, rowIndex]);
     var GetCell = function () {
         var _a, _b;

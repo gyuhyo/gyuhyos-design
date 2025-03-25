@@ -23,11 +23,10 @@ export interface IDataTableColumn {
     editorWidth?: number;
     footer?: (dataSource: IDataSource) => any;
     autoFocus?: (mode: string) => boolean;
-    defaultValue?: ({ value, row, index, getValue, }: {
+    defaultValue?: ({ value, row, index, }: {
         value: any;
         row: IDataSource;
         index: number;
-        getValue?: UseFormGetValues<IDataSource>;
     }) => any;
     mergeOptions?: ({ prev, curr, next, }: {
         prev: IDataSource;

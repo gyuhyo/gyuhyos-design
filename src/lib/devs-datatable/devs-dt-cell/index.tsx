@@ -212,25 +212,6 @@ function DevsDtCell({
     return classes.join(" ");
   }, [col.sticky, error, focusedCell, focusedRow]);
 
-  const getDefaultValue = (val: any) => {
-    if (col.defaultValue !== undefined) {
-      const value = col.defaultValue({
-        row,
-        value: val,
-        index: rowIndex,
-        getValue,
-      });
-
-      if (val !== value && row.mode === "u") {
-        setValue(col.field, value);
-      }
-
-      return value;
-    }
-
-    return val;
-  };
-
   const onInputArrowClick = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "ArrowUp") {
       e.preventDefault();
@@ -271,11 +252,11 @@ function DevsDtCell({
         <Controller
           control={control}
           name={col.field}
-          defaultValue={getDefaultValue(defaultValue || null)}
+          defaultValue={defaultValue}
           rules={{ required: col.required }}
           render={({ field: { onChange } }) =>
             col.editor!({
-              value: getDefaultValue(defaultValue || null),
+              value: defaultValue,
               row: row,
               index: rowIndex,
               onChange,
@@ -293,9 +274,7 @@ function DevsDtCell({
         <Controller
           control={control}
           name={col.field}
-          defaultValue={getDefaultValue(
-            defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null
-          )}
+          defaultValue={defaultValue}
           rules={{ required: col.required }}
           render={({ field: { onChange } }) => (
             <DatePicker
@@ -303,9 +282,7 @@ function DevsDtCell({
               size="small"
               placeholder="날짜 선택"
               defaultOpen={autoFocus}
-              defaultValue={getDefaultValue(
-                defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null
-              )}
+              defaultValue={defaultValue}
               onChange={(_, v) => {
                 onChange(v);
                 if (col.onChange !== undefined) {
@@ -334,9 +311,7 @@ function DevsDtCell({
         <Controller
           control={control}
           name={col.field}
-          defaultValue={getDefaultValue(
-            defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null
-          )}
+          defaultValue={defaultValue}
           rules={{ required: col.required }}
           render={({ field: { onChange } }) => (
             <DatePicker
@@ -344,9 +319,7 @@ function DevsDtCell({
               size="small"
               placeholder="날짜/시간 선택"
               defaultOpen={autoFocus}
-              defaultValue={getDefaultValue(
-                defaultValue ? dayjs(defaultValue).tz("Asia/Seoul") : null
-              )}
+              defaultValue={defaultValue}
               showTime={true}
               onChange={(_, v) => {
                 onChange(v);
@@ -376,7 +349,7 @@ function DevsDtCell({
         <Controller
           control={control}
           name={col.field}
-          defaultValue={getDefaultValue(defaultValue || null)}
+          defaultValue={defaultValue}
           rules={{ required: col.required }}
           render={({ field: { onChange } }) => (
             <Select
@@ -398,7 +371,7 @@ function DevsDtCell({
                   });
                 }
               }}
-              defaultValue={getDefaultValue(defaultValue || null)}
+              defaultValue={defaultValue}
               autoFocus={
                 options?.cellEditClickType === "click" ? true : autoFocus
               }
@@ -415,7 +388,7 @@ function DevsDtCell({
         <Controller
           control={control}
           name={col.field}
-          defaultValue={getDefaultValue(defaultValue || null)}
+          defaultValue={defaultValue}
           rules={{ required: col.required }}
           render={({ field: { onChange } }) => (
             <InputNumber
@@ -434,7 +407,7 @@ function DevsDtCell({
                   });
                 }
               }}
-              defaultValue={getDefaultValue(defaultValue || null)}
+              defaultValue={defaultValue}
               autoFocus={
                 options?.cellEditClickType === "click" ? true : autoFocus
               }
@@ -450,7 +423,7 @@ function DevsDtCell({
         <Controller
           control={control}
           name={col.field}
-          defaultValue={getDefaultValue(defaultValue || null)}
+          defaultValue={defaultValue}
           rules={{ required: col.required }}
           render={({ field: { onChange } }) => (
             <Radio.Group
@@ -471,7 +444,7 @@ function DevsDtCell({
                   });
                 }
               }}
-              defaultValue={getDefaultValue(defaultValue || null)}
+              defaultValue={defaultValue}
             >
               {col.options &&
                 col.options.map((op) => (
@@ -502,7 +475,7 @@ function DevsDtCell({
             },
           })}
           disabled={col.readonly ?? false}
-          defaultValue={getDefaultValue(defaultValue || null)}
+          defaultValue={defaultValue}
           autoFocus={options?.cellEditClickType === "click" ? true : autoFocus}
           {...col.inputOptions}
         />
@@ -529,7 +502,7 @@ function DevsDtCell({
         onKeyDown={onInputArrowClick}
         disabled={col.readonly ?? false}
         type="text"
-        defaultValue={getDefaultValue(defaultValue || null)}
+        defaultValue={defaultValue}
         autoFocus={options?.cellEditClickType === "click" ? true : autoFocus}
         autoComplete="off"
         {...col.inputOptions}

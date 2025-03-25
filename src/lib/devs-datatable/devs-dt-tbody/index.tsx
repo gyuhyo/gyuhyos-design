@@ -134,7 +134,6 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
           const limit = options?.paginationLimit ?? 20;
 
           return [
-            ...(currentPage === 1 ? newRows : []),
             ...d
               .filter((x) => x.mode !== "c")
               .sort(
@@ -146,12 +145,9 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
         }
 
         return [
-          ...newRows,
-          ...d
-            .filter((x) => x.mode !== "c")
-            .sort(
-              (a: IDataSource, b: IDataSource) => a.originIndex - b.originIndex
-            ),
+          ...d.sort(
+            (a: IDataSource, b: IDataSource) => a.originIndex - b.originIndex
+          ),
         ];
       }
 

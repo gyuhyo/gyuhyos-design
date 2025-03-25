@@ -73,7 +73,8 @@ var LayoutProvider = function (_a) {
     var path = isClient ? window.location.pathname : ""; // 클라이언트에서만 접근
     var user = (0, user_store_1.useUserStore)(function (state) { var _a; return (_a = state.me) === null || _a === void 0 ? void 0 : _a.userNo; });
     var setInitialMenus = (0, menu_store_1.useMenuStore)(function (state) { return state.setInitialMenus; });
-    var isDev = process.env.NODE_ENV === "development" && (window === null || window === void 0 ? void 0 : window.location.port) === "3000";
+    var isDev = process.env.NODE_ENV === "development" &&
+        ((window === null || window === void 0 ? void 0 : window.location.port) === "3000" || (window === null || window === void 0 ? void 0 : window.location.port) === "3001");
     var calculWidth = react_1.default.useMemo(function () {
         return menuType === "slide" || menuType === "multiple"
             ? "calc(100dvw - 55px)"

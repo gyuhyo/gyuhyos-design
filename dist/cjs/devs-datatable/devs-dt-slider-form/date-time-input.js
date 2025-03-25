@@ -36,7 +36,6 @@ var DateTimeInput = react_1.default.memo(function (_a) {
             col: col,
             row: row,
             rowIndex: rowIndex,
-            getValue: focusedRowForm.getValues,
         }), rules: { required: col.required }, render: function (_a) {
             var onChange = _a.field.onChange;
             return ((0, jsx_runtime_1.jsx)(antd_1.DatePicker, __assign({ status: (errors === null || errors === void 0 ? void 0 : errors.hasOwnProperty(col.field)) ? "error" : undefined, style: { width: "100%" }, placeholder: "\uB0A0\uC9DC/\uC2DC\uAC04 \uC120\uD0DD", showTime: true, defaultValue: (0, devs_dt_slider_form_1.getDefaultValue)({
@@ -46,7 +45,6 @@ var DateTimeInput = react_1.default.memo(function (_a) {
                     col: col,
                     row: row,
                     rowIndex: rowIndex,
-                    getValue: focusedRowForm.getValues,
                 }), onChange: function (_, v) {
                     onChange(v);
                     if (col.onChange !== undefined) {

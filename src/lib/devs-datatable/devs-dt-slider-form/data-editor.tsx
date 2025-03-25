@@ -26,7 +26,6 @@ const DataEditor: React.FC<any> = React.memo(
           col: col,
           row: row!,
           rowIndex,
-          getValue: focusedRowForm.getValues,
         })}
         rules={{ required: col.required }}
         render={({ field: { onChange } }) =>

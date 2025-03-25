@@ -49,7 +49,8 @@ export const LayoutProvider: React.FC<{
   const user = useUserStore((state) => state.me?.userNo);
   const setInitialMenus = useMenuStore((state) => state.setInitialMenus);
   const isDev =
-    process.env.NODE_ENV === "development" && window?.location.port === "3000";
+    process.env.NODE_ENV === "development" &&
+    (window?.location.port === "3000" || window?.location.port === "3001");
 
   const calculWidth = React.useMemo(() => {
     return menuType === "slide" || menuType === "multiple"

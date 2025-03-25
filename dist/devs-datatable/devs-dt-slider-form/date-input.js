@@ -31,7 +31,6 @@ var DateInput = React.memo(function (_a) {
             col: col,
             row: row,
             rowIndex: rowIndex,
-            getValue: focusedRowForm.getValues,
         }), rules: { required: col.required }, render: function (_a) {
             var onChange = _a.field.onChange;
             return (_jsx(DatePicker, __assign({ status: (errors === null || errors === void 0 ? void 0 : errors.hasOwnProperty(col.field)) ? "error" : undefined, style: { width: "100%" }, placeholder: "\uB0A0\uC9DC \uC120\uD0DD", defaultValue: getDefaultValue({
@@ -41,7 +40,6 @@ var DateInput = React.memo(function (_a) {
                     col: col,
                     row: row,
                     rowIndex: rowIndex,
-                    getValue: focusedRowForm.getValues,
                 }), onChange: function (_, v) {
                     onChange(v);
                     if (col.onChange !== undefined) {
