@@ -96,21 +96,21 @@ import DevsDtPagination from "./devs-dt-pagination";
 import "./assets/style.css";
 import { sleep } from "../utils/sleep";
 // DevsDataTable 컴포넌트 타입 설정 및 구현
-var DevsDataTable = function (props) {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
+var DevsDataTable = React.forwardRef(function (props, ref) {
+    var _a, _b, _c, _d, _e, _f, _g;
     if (((_a = props.options) === null || _a === void 0 ? void 0 : _a.showEditModeSelector) &&
         ((_b = props.options) === null || _b === void 0 ? void 0 : _b.editType) === "cell") {
         throw new Error("showEditModeSelector and editType cannot be used together.");
     }
-    var _j = __read(React.useState(0), 2), headerWidth = _j[0], setHeaderWidth = _j[1];
-    var _k = __read(React.useState(false), 2), innerLoading = _k[0], setInnerLoading = _k[1];
-    var _l = __read(React.useState(null), 2), focusedCell = _l[0], setFocusedCell = _l[1];
-    var _m = __read(React.useState(null), 2), focusedRow = _m[0], setFocusedRow = _m[1];
+    var _h = __read(React.useState(0), 2), headerWidth = _h[0], setHeaderWidth = _h[1];
+    var _j = __read(React.useState(false), 2), innerLoading = _j[0], setInnerLoading = _j[1];
+    var _k = __read(React.useState(null), 2), focusedCell = _k[0], setFocusedCell = _k[1];
+    var _l = __read(React.useState(null), 2), focusedRow = _l[0], setFocusedRow = _l[1];
     var formsRef = React.useRef({});
     var table = React.useRef(null);
     var thead = React.useRef(null);
     var tbody = React.useRef(null);
-    var _o = __read(React.useState(false), 2), columnsStyleForceUpdate = _o[0], COLUMNS_STYLE_FORCE_UPDATE = _o[1];
+    var _m = __read(React.useState(false), 2), columnsStyleForceUpdate = _m[0], COLUMNS_STYLE_FORCE_UPDATE = _m[1];
     var init = useInitDt({
         table: table,
         tbody: tbody,
@@ -154,7 +154,7 @@ var DevsDataTable = function (props) {
             }
         });
     }); };
-    React.useImperativeHandle(props.ref, function () { return ({
+    React.useImperativeHandle(ref, function () { return ({
         tbody: tbody.current,
         thead: thead.current,
         api: {
@@ -299,8 +299,8 @@ var DevsDataTable = function (props) {
     React.useEffect(function () {
         var _a;
         /* #########################################
-        추후 개발 예정 (엑셀 복사 내용 붙여넣기)
-        ############################################*/
+      추후 개발 예정 (엑셀 복사 내용 붙여넣기)
+      ############################################*/
         if (!table.current ||
             typeof window === undefined ||
             !((_a = props.options) === null || _a === void 0 ? void 0 : _a.enabledClipboard) ||
@@ -405,7 +405,7 @@ var DevsDataTable = function (props) {
     }, [(_c = props.options) === null || _c === void 0 ? void 0 : _c.initialAutoScroll, JSON.stringify(props.dataSource)]);
     if (!init)
         return _jsx(_Fragment, { children: "loading..." });
-    return (_jsxs(DevsDtProvider, __assign({ ref: props.ref, columns: props.columns, setColumns: props.setColumns, dataSource: props.dataSource, setDataSource: props.setDataSource, options: props.options, formsRef: formsRef, focusedRow: focusedRow, setFocusedRow: setFocusedRow, focusedCell: focusedCell, setFocusedCell: setFocusedCell, tbody: tbody, thead: thead, COLUMNS_STYLE_FORCE_UPDATE: COLUMNS_STYLE_FORCE_UPDATE, setInnerLoading: setInnerLoading }, { children: [(props.loading === true || innerLoading === true) && (_jsx("div", __assign({ className: "loader-backdrop" }, { children: _jsxs("div", __assign({ className: "loader-container" }, { children: [_jsx("span", { className: "spinner" }), _jsx("span", __assign({ style: { fontWeight: "bold" } }, { children: "\uB370\uC774\uD130 \uBD88\uB7EC\uC624\uB294 \uC911..." }))] })) }))), _jsx(DevsDtHeader, { title: props.title, buttons: props.buttons, options: props.options, setInnerLoading: setInnerLoading }), _jsxs("div", __assign({ ref: table, className: "dev-table-wrapper", css: css({ minWidth: (_e = (_d = props.options) === null || _d === void 0 ? void 0 : _d.minWidth) !== null && _e !== void 0 ? _e : 0 }) }, { children: [_jsx(DevsDtTHead, { thead: thead, setHeaderWidth: setHeaderWidth }), _jsx(DevsDtTBody, { tbody: tbody, headerWidth: headerWidth }), ((_f = props.options) === null || _f === void 0 ? void 0 : _f.pagination) && _jsx(DevsDtPagination, {}), (((_g = props.options) === null || _g === void 0 ? void 0 : _g.editMode) === "slider" ||
-                        ((_h = props.options) === null || _h === void 0 ? void 0 : _h.showEditModeSelector)) && _jsx(DevsDtSliderForm, {})] }))] })));
-};
+    return (_jsxs(DevsDtProvider, __assign({ columns: props.columns, setColumns: props.setColumns, dataSource: props.dataSource, setDataSource: props.setDataSource, options: props.options, formsRef: formsRef, focusedRow: focusedRow, setFocusedRow: setFocusedRow, focusedCell: focusedCell, setFocusedCell: setFocusedCell, tbody: tbody, thead: thead, COLUMNS_STYLE_FORCE_UPDATE: COLUMNS_STYLE_FORCE_UPDATE, setInnerLoading: setInnerLoading }, { children: [(props.loading === true || innerLoading === true) && (_jsx("div", __assign({ className: "loader-backdrop" }, { children: _jsxs("div", __assign({ className: "loader-container" }, { children: [_jsx("span", { className: "spinner" }), _jsx("span", __assign({ style: { fontWeight: "bold" } }, { children: "\uB370\uC774\uD130 \uBD88\uB7EC\uC624\uB294 \uC911..." }))] })) }))), _jsx(DevsDtHeader, { title: props.title, buttons: props.buttons, options: props.options, setInnerLoading: setInnerLoading }), _jsxs("div", __assign({ ref: table, className: "dev-table-wrapper", css: css({ minWidth: (_e = (_d = props.options) === null || _d === void 0 ? void 0 : _d.minWidth) !== null && _e !== void 0 ? _e : 0 }) }, { children: [_jsx(DevsDtTHead, { thead: thead, setHeaderWidth: setHeaderWidth }), _jsx(DevsDtTBody, { tbody: tbody, headerWidth: headerWidth }), _jsx(DevsDtPagination, {}), (((_f = props.options) === null || _f === void 0 ? void 0 : _f.editMode) === "slider" ||
+                        ((_g = props.options) === null || _g === void 0 ? void 0 : _g.showEditModeSelector)) && _jsx(DevsDtSliderForm, {})] }))] })));
+});
 export default React.memo(DevsDataTable);

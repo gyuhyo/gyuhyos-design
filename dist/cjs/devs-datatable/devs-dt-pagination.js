@@ -23,6 +23,7 @@ var DevsDtPagination = function () {
     var _a, _b;
     var _c = (0, devs_dt_context_1.useDt)(), dataSource = _c.dataSource, options = _c.options, currentPage = _c.currentPage, setCurrentPage = _c.setCurrentPage;
     var numberContainerRef = react_1.default.useRef(null);
+    var buttonContainerRef = react_1.default.useRef(null);
     var dataLength = (_a = dataSource === null || dataSource === void 0 ? void 0 : dataSource.filter(function (x) { return x.mode !== "c"; }).length) !== null && _a !== void 0 ? _a : 0;
     var totalPageCount = Math.ceil(dataLength / ((_b = options === null || options === void 0 ? void 0 : options.paginationLimit) !== null && _b !== void 0 ? _b : 20));
     react_1.default.useEffect(function () {
@@ -60,11 +61,20 @@ var DevsDtPagination = function () {
             setCurrentPage(currentPage + 7);
         }
     }, [currentPage, totalPageCount]);
-    return ((0, jsx_runtime_1.jsxs)(Pagination.Container, { children: [(0, jsx_runtime_1.jsxs)(Pagination.DataCountLabel, { children: ["\uCD1D ", (0, jsx_runtime_1.jsx)("strong", { children: dataLength }), "\uAC74 (", (0, jsx_runtime_1.jsx)("strong", { children: totalPageCount }), " ", "\uD398\uC774\uC9C0)"] }), (0, jsx_runtime_1.jsxs)(Pagination.PageButtonContainer, __assign({ ref: react_1.default.useCallback(function (node) {
-                    if (!node)
-                        return;
-                    node.classList.add("pagination-container-bling");
-                }, []) }, { children: [(0, jsx_runtime_1.jsx)(Pagination.PageButton, __assign({ "data-disabled": currentPage <= 4, onClick: function () { return onChangePage(1); } }, { children: "<<" })), (0, jsx_runtime_1.jsx)(Pagination.PageButton, __assign({ "data-disabled": currentPage <= 4, onClick: onPrevPageMoveClick }, { children: "<" })), (0, jsx_runtime_1.jsxs)(Pagination.PageNumberContainer, __assign({ ref: numberContainerRef, className: "smooth-scrolling" }, { children: [dataLength === 0 && ((0, jsx_runtime_1.jsx)(Pagination.NumberButton, __assign({ "data-is-current": true }, { children: "1" }))), Array.from({ length: totalPageCount }, function (n, i) { return ((0, jsx_runtime_1.jsx)(Pagination.NumberButton, __assign({ "data-is-current": i + 1 === currentPage, onClick: function () { return onChangePage(i + 1); } }, { children: i + 1 }), "page-".concat(i + 1))); })] })), (0, jsx_runtime_1.jsx)(Pagination.PageButton, __assign({ "data-disabled": currentPage >= totalPageCount - 3, onClick: onNextPageMoveClick }, { children: ">" })), (0, jsx_runtime_1.jsx)(Pagination.PageButton, __assign({ "data-disabled": currentPage >= totalPageCount - 3, onClick: function () { return onChangePage(totalPageCount); } }, { children: ">>" }))] }))] }));
+    var countPageLabel = react_1.default.useMemo(function () {
+        if (options === null || options === void 0 ? void 0 : options.pagination) {
+            return "\uCD1D <strong>".concat(dataLength, "</strong>\uAC74 (<strong>").concat(totalPageCount, "</strong>").concat(" ", "\n        \uD398\uC774\uC9C0)");
+        }
+        return "\uCD1D <strong>".concat(dataLength, "</strong>\uAC74");
+    }, [dataLength, options === null || options === void 0 ? void 0 : options.pagination, totalPageCount]);
+    react_1.default.useEffect(function () {
+        if (!buttonContainerRef.current)
+            return;
+        buttonContainerRef.current.classList.add("pagination-container-bling");
+    }, []);
+    if ((options === null || options === void 0 ? void 0 : options.showFooter) === false)
+        return null;
+    return ((0, jsx_runtime_1.jsxs)(Pagination.Container, { children: [(0, jsx_runtime_1.jsx)(Pagination.DataCountLabel, { dangerouslySetInnerHTML: { __html: countPageLabel } }), (options === null || options === void 0 ? void 0 : options.pagination) && ((0, jsx_runtime_1.jsxs)(Pagination.PageButtonContainer, __assign({ ref: buttonContainerRef }, { children: [(0, jsx_runtime_1.jsx)(Pagination.PageButton, __assign({ "data-disabled": currentPage <= 4, onClick: function () { return onChangePage(1); } }, { children: "<<" })), (0, jsx_runtime_1.jsx)(Pagination.PageButton, __assign({ "data-disabled": currentPage <= 4, onClick: onPrevPageMoveClick }, { children: "<" })), (0, jsx_runtime_1.jsxs)(Pagination.PageNumberContainer, __assign({ ref: numberContainerRef, className: "smooth-scrolling" }, { children: [dataLength === 0 && ((0, jsx_runtime_1.jsx)(Pagination.NumberButton, __assign({ "data-is-current": true }, { children: "1" }))), Array.from({ length: totalPageCount }, function (n, i) { return ((0, jsx_runtime_1.jsx)(Pagination.NumberButton, __assign({ "data-is-current": i + 1 === currentPage, onClick: function () { return onChangePage(i + 1); } }, { children: i + 1 }), "page-".concat(i + 1))); })] })), (0, jsx_runtime_1.jsx)(Pagination.PageButton, __assign({ "data-disabled": currentPage >= totalPageCount - 3, onClick: onNextPageMoveClick }, { children: ">" })), (0, jsx_runtime_1.jsx)(Pagination.PageButton, __assign({ "data-disabled": currentPage >= totalPageCount - 3, onClick: function () { return onChangePage(totalPageCount); } }, { children: ">>" }))] })))] }));
 };
 exports.default = react_1.default.memo(DevsDtPagination);
 var Pagination = {

@@ -19,8 +19,8 @@ export interface IDataTableProviderProps extends IDataTableProps {
   setFocusedCell: React.Dispatch<React.SetStateAction<null | string>>;
   focusedRow?: null | IDataSource;
   focusedCell?: null | string;
-  tbody?: React.RefObject<HTMLDivElement | null>;
-  thead?: React.RefObject<HTMLDivElement | null>;
+  tbody?: React.MutableRefObject<HTMLDivElement | null>;
+  thead?: React.MutableRefObject<HTMLDivElement | null>;
   COLUMNS_STYLE_FORCE_UPDATE: React.Dispatch<React.SetStateAction<boolean>>;
   setInnerLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -45,8 +45,8 @@ export interface IDataTableContextProps extends IDataTableProps {
   setEditMode: React.Dispatch<
     React.SetStateAction<undefined | "grid" | "slider">
   >;
-  tbody?: React.RefObject<HTMLDivElement | null>;
-  thead?: React.RefObject<HTMLDivElement | null>;
+  tbody?: React.MutableRefObject<HTMLDivElement | null>;
+  thead?: React.MutableRefObject<HTMLDivElement | null>;
   COLUMNS_STYLE_FORCE_UPDATE: React.Dispatch<React.SetStateAction<boolean>>;
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;

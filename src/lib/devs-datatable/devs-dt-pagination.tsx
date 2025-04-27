@@ -63,6 +63,8 @@ const DevsDtPagination: React.FC<any> = () => {
     buttonContainerRef.current.classList.add("pagination-container-bling");
   }, []);
 
+  if (options?.showFooter === false) return null;
+
   return (
     <Pagination.Container>
       <Pagination.DataCountLabel

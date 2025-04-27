@@ -1,7 +1,7 @@
 import React from "react";
 
 export const useResizeObserver = (
-  target: React.RefObject<HTMLDivElement | null> | undefined
+  target: React.MutableRefObject<HTMLDivElement | null> | undefined
 ) => {
   const [size, setSize] = React.useState({ width: 0, height: 0 });
 

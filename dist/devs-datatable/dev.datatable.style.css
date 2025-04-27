@@ -1,22 +1,30 @@
 :root {
   --width: 100px;
   --max-width: none;
+  --scrollbar-track-size: 15px;
+  --scrollbar-vertical-border: 1px solid #c6c6c6;
+  --scrollbar-horizontal-border: 1px solid #c6c6c6;
+  --scrollbar-border-width: 4px;
 }
 
 ::-webkit-scrollbar {
   position: relative;
-  width: 15px;
-  height: 15px;
+  width: var(--scrollbar-track-size);
+  height: 16px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #b0b0b0;
+  background-color: #868686;
   background-clip: padding-box;
-  border: 2px solid transparent;
+  border: var(--scrollbar-border-width) solid transparent;
   border-radius: 20px;
 }
 ::-webkit-scrollbar-track {
-  background-color: #dfdfdf;
+  box-shadow: inset 5px 5px 13px #00000020;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
 }
 
 .dev-table-wrapper {

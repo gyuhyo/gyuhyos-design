@@ -14,7 +14,7 @@ import useDtUtils from "../hooks/useDtUtils";
 import DevsDtTFoot from "../devs-dt-tfoot";
 
 type TDevsDtTBody = {
-  tbody: React.RefObject<HTMLDivElement | null>;
+  tbody: React.MutableRefObject<HTMLDivElement | null>;
   headerWidth: number;
 };
 

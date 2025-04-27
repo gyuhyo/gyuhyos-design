@@ -101,21 +101,21 @@ var devs_dt_pagination_1 = __importDefault(require("./devs-dt-pagination"));
 require("./assets/style.css");
 var sleep_1 = require("../utils/sleep");
 // DevsDataTable 컴포넌트 타입 설정 및 구현
-var DevsDataTable = function (props) {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
+var DevsDataTable = react_2.default.forwardRef(function (props, ref) {
+    var _a, _b, _c, _d, _e, _f, _g;
     if (((_a = props.options) === null || _a === void 0 ? void 0 : _a.showEditModeSelector) &&
         ((_b = props.options) === null || _b === void 0 ? void 0 : _b.editType) === "cell") {
         throw new Error("showEditModeSelector and editType cannot be used together.");
     }
-    var _j = __read(react_2.default.useState(0), 2), headerWidth = _j[0], setHeaderWidth = _j[1];
-    var _k = __read(react_2.default.useState(false), 2), innerLoading = _k[0], setInnerLoading = _k[1];
-    var _l = __read(react_2.default.useState(null), 2), focusedCell = _l[0], setFocusedCell = _l[1];
-    var _m = __read(react_2.default.useState(null), 2), focusedRow = _m[0], setFocusedRow = _m[1];
+    var _h = __read(react_2.default.useState(0), 2), headerWidth = _h[0], setHeaderWidth = _h[1];
+    var _j = __read(react_2.default.useState(false), 2), innerLoading = _j[0], setInnerLoading = _j[1];
+    var _k = __read(react_2.default.useState(null), 2), focusedCell = _k[0], setFocusedCell = _k[1];
+    var _l = __read(react_2.default.useState(null), 2), focusedRow = _l[0], setFocusedRow = _l[1];
     var formsRef = react_2.default.useRef({});
     var table = react_2.default.useRef(null);
     var thead = react_2.default.useRef(null);
     var tbody = react_2.default.useRef(null);
-    var _o = __read(react_2.default.useState(false), 2), columnsStyleForceUpdate = _o[0], COLUMNS_STYLE_FORCE_UPDATE = _o[1];
+    var _m = __read(react_2.default.useState(false), 2), columnsStyleForceUpdate = _m[0], COLUMNS_STYLE_FORCE_UPDATE = _m[1];
     var init = (0, useInitDt_1.useInitDt)({
         table: table,
         tbody: tbody,
@@ -159,7 +159,7 @@ var DevsDataTable = function (props) {
             }
         });
     }); };
-    react_2.default.useImperativeHandle(props.ref, function () { return ({
+    react_2.default.useImperativeHandle(ref, function () { return ({
         tbody: tbody.current,
         thead: thead.current,
         api: {
@@ -304,8 +304,8 @@ var DevsDataTable = function (props) {
     react_2.default.useEffect(function () {
         var _a;
         /* #########################################
-        추후 개발 예정 (엑셀 복사 내용 붙여넣기)
-        ############################################*/
+      추후 개발 예정 (엑셀 복사 내용 붙여넣기)
+      ############################################*/
         if (!table.current ||
             typeof window === undefined ||
             !((_a = props.options) === null || _a === void 0 ? void 0 : _a.enabledClipboard) ||
@@ -410,7 +410,7 @@ var DevsDataTable = function (props) {
     }, [(_c = props.options) === null || _c === void 0 ? void 0 : _c.initialAutoScroll, JSON.stringify(props.dataSource)]);
     if (!init)
         return (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: "loading..." });
-    return ((0, jsx_runtime_1.jsxs)(devs_dt_context_1.DevsDtProvider, __assign({ ref: props.ref, columns: props.columns, setColumns: props.setColumns, dataSource: props.dataSource, setDataSource: props.setDataSource, options: props.options, formsRef: formsRef, focusedRow: focusedRow, setFocusedRow: setFocusedRow, focusedCell: focusedCell, setFocusedCell: setFocusedCell, tbody: tbody, thead: thead, COLUMNS_STYLE_FORCE_UPDATE: COLUMNS_STYLE_FORCE_UPDATE, setInnerLoading: setInnerLoading }, { children: [(props.loading === true || innerLoading === true) && ((0, jsx_runtime_1.jsx)("div", __assign({ className: "loader-backdrop" }, { children: (0, jsx_runtime_1.jsxs)("div", __assign({ className: "loader-container" }, { children: [(0, jsx_runtime_1.jsx)("span", { className: "spinner" }), (0, jsx_runtime_1.jsx)("span", __assign({ style: { fontWeight: "bold" } }, { children: "\uB370\uC774\uD130 \uBD88\uB7EC\uC624\uB294 \uC911..." }))] })) }))), (0, jsx_runtime_1.jsx)(devs_dt_header_1.default, { title: props.title, buttons: props.buttons, options: props.options, setInnerLoading: setInnerLoading }), (0, jsx_runtime_1.jsxs)("div", __assign({ ref: table, className: "dev-table-wrapper", css: (0, react_1.css)({ minWidth: (_e = (_d = props.options) === null || _d === void 0 ? void 0 : _d.minWidth) !== null && _e !== void 0 ? _e : 0 }) }, { children: [(0, jsx_runtime_1.jsx)(devs_dt_thead_1.default, { thead: thead, setHeaderWidth: setHeaderWidth }), (0, jsx_runtime_1.jsx)(devs_dt_tbody_1.default, { tbody: tbody, headerWidth: headerWidth }), ((_f = props.options) === null || _f === void 0 ? void 0 : _f.pagination) && (0, jsx_runtime_1.jsx)(devs_dt_pagination_1.default, {}), (((_g = props.options) === null || _g === void 0 ? void 0 : _g.editMode) === "slider" ||
-                        ((_h = props.options) === null || _h === void 0 ? void 0 : _h.showEditModeSelector)) && (0, jsx_runtime_1.jsx)(devs_dt_slider_form_1.default, {})] }))] })));
-};
+    return ((0, jsx_runtime_1.jsxs)(devs_dt_context_1.DevsDtProvider, __assign({ columns: props.columns, setColumns: props.setColumns, dataSource: props.dataSource, setDataSource: props.setDataSource, options: props.options, formsRef: formsRef, focusedRow: focusedRow, setFocusedRow: setFocusedRow, focusedCell: focusedCell, setFocusedCell: setFocusedCell, tbody: tbody, thead: thead, COLUMNS_STYLE_FORCE_UPDATE: COLUMNS_STYLE_FORCE_UPDATE, setInnerLoading: setInnerLoading }, { children: [(props.loading === true || innerLoading === true) && ((0, jsx_runtime_1.jsx)("div", __assign({ className: "loader-backdrop" }, { children: (0, jsx_runtime_1.jsxs)("div", __assign({ className: "loader-container" }, { children: [(0, jsx_runtime_1.jsx)("span", { className: "spinner" }), (0, jsx_runtime_1.jsx)("span", __assign({ style: { fontWeight: "bold" } }, { children: "\uB370\uC774\uD130 \uBD88\uB7EC\uC624\uB294 \uC911..." }))] })) }))), (0, jsx_runtime_1.jsx)(devs_dt_header_1.default, { title: props.title, buttons: props.buttons, options: props.options, setInnerLoading: setInnerLoading }), (0, jsx_runtime_1.jsxs)("div", __assign({ ref: table, className: "dev-table-wrapper", css: (0, react_1.css)({ minWidth: (_e = (_d = props.options) === null || _d === void 0 ? void 0 : _d.minWidth) !== null && _e !== void 0 ? _e : 0 }) }, { children: [(0, jsx_runtime_1.jsx)(devs_dt_thead_1.default, { thead: thead, setHeaderWidth: setHeaderWidth }), (0, jsx_runtime_1.jsx)(devs_dt_tbody_1.default, { tbody: tbody, headerWidth: headerWidth }), (0, jsx_runtime_1.jsx)(devs_dt_pagination_1.default, {}), (((_f = props.options) === null || _f === void 0 ? void 0 : _f.editMode) === "slider" ||
+                        ((_g = props.options) === null || _g === void 0 ? void 0 : _g.showEditModeSelector)) && (0, jsx_runtime_1.jsx)(devs_dt_slider_form_1.default, {})] }))] })));
+});
 exports.default = react_2.default.memo(DevsDataTable);

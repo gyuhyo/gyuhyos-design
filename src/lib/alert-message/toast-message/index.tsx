@@ -170,7 +170,7 @@ const ToastMessageProgress = styled.div<IToastMessageProgress>((props) => {
 });
 
 interface IToastMessageContainer {
-  ref: React.RefObject<HTMLDivElement | null>;
+  ref: React.MutableRefObject<HTMLDivElement | null>;
   type: "success" | "error" | "warnning" | "info";
   align: "topLeft" | "topRight" | "bottomLeft" | "bottomRight";
   length: number;

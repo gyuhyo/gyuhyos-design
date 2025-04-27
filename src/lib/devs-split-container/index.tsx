@@ -114,7 +114,7 @@ const DevsSplitContainer: React.FC<TDevsSplitContainer> = React.memo(
       }
 
       const panels = containerRef.current.querySelectorAll(
-        "[data-split-type='panel']"
+        "& > [data-split-type='panel']"
       );
 
       for (const idx in size) {

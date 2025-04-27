@@ -559,14 +559,6 @@ const App: React.FC<{}> = () => {
           focusedRowChanged={(row) => {
             setFocusedRow(row);
           }}
-          options={{
-            enabledClipboard: true,
-            readonly: false,
-            showRowNumber: true,
-            enabledRowOrder: true,
-            enabledRowCheck: true,
-            enabledExpand: true,
-          }}
           buttons={{
             custom: (
               <DevsDatePicker

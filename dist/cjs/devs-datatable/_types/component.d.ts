@@ -20,6 +20,11 @@ export interface IDataTableOptions {
     editType?: "row" | "cell";
     cellEditClickType?: "click" | "doubleClick";
     minWidth?: number;
+    /**
+     * @description hidden row footer
+     * using condition pagination === undefined
+     */
+    showFooter?: boolean;
     pagination?: boolean;
     paginationLimit?: number;
     enabledEditingAutoColumnWidth?: boolean;

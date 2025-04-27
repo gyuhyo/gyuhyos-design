@@ -10,7 +10,7 @@ export interface ButtonProps
       HTMLButtonElement
     >,
     React.AriaAttributes {
-  btnref?: React.RefObject<HTMLButtonElement>;
+  btnref?: React.MutableRefObject<HTMLButtonElement>;
   bgColor?: string;
   color?: string;
   compact?: boolean;

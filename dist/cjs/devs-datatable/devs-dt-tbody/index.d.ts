@@ -1,6 +1,6 @@
 import React from "react";
 type TDevsDtTBody = {
-    tbody: React.RefObject<HTMLDivElement | null>;
+    tbody: React.MutableRefObject<HTMLDivElement | null>;
     headerWidth: number;
 };
 declare function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody): import("@emotion/react/jsx-runtime").JSX.Element;

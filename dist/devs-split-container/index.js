@@ -132,7 +132,7 @@ var DevsSplitContainer = React.memo(function (_a) {
                 }
             }
         }
-        var panels = containerRef.current.querySelectorAll("[data-split-type='panel']");
+        var panels = containerRef.current.querySelectorAll("& > [data-split-type='panel']");
         for (var idx in size) {
             if (panels === null || panels === void 0 ? void 0 : panels[idx]) {
                 panels[idx].style.flexBasis = size[idx];

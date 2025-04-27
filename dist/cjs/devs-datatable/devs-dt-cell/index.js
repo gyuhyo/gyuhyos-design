@@ -471,7 +471,9 @@ function DevsDtCell(_a) {
         }
     };
     return ((0, jsx_runtime_1.jsxs)("td", __assign({ ref: function (e) {
-            cellRef.current = e;
+            if (cellRef.current !== null) {
+                cellRef.current = e;
+            }
             if ((options === null || options === void 0 ? void 0 : options.editType) !== "cell" &&
                 mode !== "r" &&
                 col.editorMerge !== undefined) {

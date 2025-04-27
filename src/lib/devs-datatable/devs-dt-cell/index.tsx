@@ -97,7 +97,7 @@ function DevsDtCell({
     return (row.editedCells as string[])?.includes(col.field);
   }, [options?.editType, row]);
 
-  const cellRef = React.useRef<HTMLTableCellElement>(null);
+  const cellRef = React.useRef<HTMLTableCellElement | null>(null);
   const divRef = React.useRef<HTMLDivElement>(null);
 
   const updateColumnWidth = (
@@ -675,7 +675,10 @@ function DevsDtCell({
   return (
     <td
       ref={(e) => {
-        cellRef.current = e;
+        if (cellRef.current !== null) {
+          cellRef.current = e;
+        }
+
         if (
           options?.editType !== "cell" &&
           mode !== "r" &&
