@@ -7,10 +7,12 @@ export type TDevsSplitContainer = {
   children: React.ReactNode | React.ReactNode[];
   align?: "column" | "row";
   sizes?: Array<number | string>;
+  onSizeChanged?: (sizes: number[]) => void;
+  disabled?: Array<boolean>;
 };
 
 const DevsSplitContainer: React.FC<TDevsSplitContainer> = React.memo(
-  ({ children, align = "column", sizes }) => {
+  ({ children, align = "column", sizes, onSizeChanged, disabled }) => {
     const selectorRef = React.useRef<{
       target: HTMLDivElement;
       startPosition: number;
@@ -117,14 +119,31 @@ const DevsSplitContainer: React.FC<TDevsSplitContainer> = React.memo(
         "& > [data-split-type='panel']"
       );
 
+      const containerSize =
+        realAlign === "column"
+          ? containerRef.current.clientHeight
+          : containerRef.current.clientWidth;
+
       for (const idx in size) {
+        const sizeNumber = parseFloat(size[idx].replace("px", ""));
+        if (
+          sizeNumber > containerSize ||
+          sizeNumber > 10000 ||
+          containerSize > 10000
+        )
+          continue;
         if (panels?.[idx]) {
           (panels[idx] as HTMLDivElement).style.flexBasis = size[idx];
         }
       }
     }, [width, height, usingSize, realAlign]);
 
-    const onSplitBarMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
+    const onSplitBarMouseDown = (
+      e: React.MouseEvent | React.TouchEvent,
+      index: number
+    ) => {
+      if (disabled?.[index] ?? false) return;
+
       changedPanelsPercent.current = [];
       const prev = e.currentTarget.parentElement!
         .previousElementSibling as HTMLDivElement;
@@ -206,16 +225,22 @@ const DevsSplitContainer: React.FC<TDevsSplitContainer> = React.memo(
       if (!selectorRef.current) return;
 
       selectorRef.current = null;
-      const panels = containerRef.current!.querySelectorAll(
-        "[data-split-type='panel']"
+      const panels = Array.from(containerRef.current!.children).filter(
+        (el) => el.getAttribute("data-split-type") === "panel"
       );
+
+      const sizes = [];
       for (const panel of panels) {
         const p = panel as HTMLDivElement;
         const flexBasis = parseFloat(p.style.flexBasis.replace("px", ""));
 
+        sizes.push(flexBasis);
         const per = (flexBasis / availableSize) * 100;
         changedPanelsPercent.current.push(per);
       }
+
+      onSizeChanged?.(sizes);
+
       document.removeEventListener("mousemove", onSplitBarMouseMove);
       document.removeEventListener("mouseup", onSplitBarMouseUp);
       document.removeEventListener("touchmove", onSplitBarMouseMove);
@@ -237,8 +262,9 @@ const DevsSplitContainer: React.FC<TDevsSplitContainer> = React.memo(
                 <SplitterTrack
                   data-split-type="track"
                   align={realAlign}
-                  onMouseDown={onSplitBarMouseDown}
-                  onTouchStart={onSplitBarMouseDown}
+                  onMouseDown={(e) => onSplitBarMouseDown(e, i)}
+                  onTouchStart={(e) => onSplitBarMouseDown(e, i)}
+                  disabled={disabled?.[i] ?? false}
                 />
                 <Splitter data-split-type="splitter" align={realAlign} />
                 {/* {realAlign === "row" && (
@@ -261,27 +287,37 @@ export default DevsSplitContainer;
 type TSplitContainer = {
   align: "column" | "row";
 };
-const SplitterTrack = styled.div<TSplitContainer>((props) => ({
-  position: "absolute",
-  width: props.align === "row" ? "7px" : "100%",
-  height: props.align === "row" ? "100%" : "7px",
-  background: "#b2d7ff",
-  top: props.align === "row" ? 0 : 1,
-  left: props.align === "row" ? 1 : 0,
-  borderRadius: "5px",
-  opacity: 0,
-  "&:hover": {
-    opacity: 1,
-    transition: "opacity 200ms ease-in",
-    cursor: props.align === "row" ? "col-resize" : "row-resize",
-  },
-  "&:active": {
-    opacity: 1,
-    transition: "opacity 200ms ease-in",
-    background: "#8ac2ff",
-    cursor: props.align === "row" ? "col-resize" : "row-resize",
-  },
-}));
+const SplitterTrack = styled.div<TSplitContainer & { disabled: boolean }>(
+  (props) => ({
+    position: "absolute",
+    width: props.align === "row" ? "7px" : "100%",
+    height: props.align === "row" ? "100%" : "7px",
+    background: "#b2d7ff",
+    top: props.align === "row" ? 0 : 1,
+    left: props.align === "row" ? 1 : 0,
+    borderRadius: "5px",
+    opacity: 0,
+    "&:hover": {
+      opacity: props.disabled ? 0 : 1,
+      transition: "opacity 200ms ease-in",
+      cursor: props.disabled
+        ? "not-allowed"
+        : props.align === "row"
+        ? "col-resize"
+        : "row-resize",
+    },
+    "&:active": {
+      opacity: props.disabled ? 0 : 1,
+      transition: "opacity 200ms ease-in",
+      background: "#8ac2ff",
+      cursor: props.disabled
+        ? "not-allowed"
+        : props.align === "row"
+        ? "col-resize"
+        : "row-resize",
+    },
+  })
+);
 
 const Splitter = styled.div<TSplitContainer>((props) => ({
   position: "absolute",

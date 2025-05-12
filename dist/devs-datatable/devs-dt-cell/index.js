@@ -45,7 +45,7 @@ var __values = (this && this.__values) || function(o) {
     };
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
-import { jsx as _jsx, jsxs as _jsxs } from "@emotion/react/jsx-runtime";
+import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "@emotion/react/jsx-runtime";
 /** @jsxImportSource @emotion/react */
 import { DatePicker, InputNumber, Radio, Select } from "antd";
 import dayjs from "dayjs";
@@ -61,6 +61,7 @@ import weekYear from "dayjs/plugin/weekYear";
 import React from "react";
 import { Controller, } from "react-hook-form";
 import { useDt } from "../context/devs-dt-context";
+import { useIntersectionObserver } from "../../hooks";
 dayjs.extend(customParseFormat);
 dayjs.extend(advancedFormat);
 dayjs.extend(weekday);
@@ -75,6 +76,18 @@ function DevsDtCell(_a) {
     var _b, _c, _d, _e, _f, _g, _h, _j;
     var register = _a.register, control = _a.control, col = _a.col, mode = _a.mode, defaultValue = _a.defaultValue, error = _a.error, autoFocus = _a.autoFocus, row = _a.row, merge = _a.merge, setValue = _a.setValue, getValue = _a.getValue, rowIndex = _a.rowIndex, trigger = _a.trigger, watch = _a.watch, prevRow = _a.prevRow, nextRow = _a.nextRow;
     var _k = useDt(), focusedRow = _k.focusedRow, focusedCell = _k.focusedCell, setFocusedCell = _k.setFocusedCell, setFocusedRow = _k.setFocusedRow, setDataSource = _k.setDataSource, setColumns = _k.setColumns, options = _k.options, editMode = _k.editMode, tbody = _k.tbody, formsRef = _k.formsRef;
+    var _l = __read(React.useState(true), 2), isIntersecting = _l[0], setIsIntersecting = _l[1];
+    var onIntersect = function (entries) {
+        var _a;
+        var localIsIntersecting = ((_a = entries === null || entries === void 0 ? void 0 : entries[0]) === null || _a === void 0 ? void 0 : _a.isIntersecting) || false;
+        if (isIntersecting !== localIsIntersecting) {
+            setIsIntersecting(localIsIntersecting);
+        }
+        return;
+    };
+    var setTarget = useIntersectionObserver(onIntersect, {
+        root: tbody.current,
+    }).setTarget;
     var colType = typeof col.type === "function" ? col.type(row) : col.type;
     var isCellEdit = React.useMemo(function () {
         var _a;
@@ -465,32 +478,35 @@ function DevsDtCell(_a) {
             }
         }
     };
-    return (_jsxs("td", __assign({ ref: function (e) {
+    return (_jsx("td", __assign({ ref: function (e) {
             if (cellRef.current !== null) {
                 cellRef.current = e;
+            }
+            if (e) {
+                setTarget(e);
             }
             if ((options === null || options === void 0 ? void 0 : options.editType) !== "cell" &&
                 mode !== "r" &&
                 col.editorMerge !== undefined) {
                 onEditorColspan(e);
             }
-        }, className: classString, rowSpan: merge === null || merge === void 0 ? void 0 : merge.rowSpan, "data-field": col.field, "data-hidden": false, "data-width": (_c = col.width) !== null && _c !== void 0 ? _c : 100, "data-edit-mode": isCellEdit, "data-editable": (_d = col.editable) !== null && _d !== void 0 ? _d : true, "data-updatable": (_e = col.updatable) !== null && _e !== void 0 ? _e : true, "data-required": (_f = col.required) !== null && _f !== void 0 ? _f : false, onClick: function () {
+        }, className: classString, rowSpan: merge === null || merge === void 0 ? void 0 : merge.rowSpan, "data-is-intersecting": isIntersecting, "data-field": col.field, "data-hidden": false, "data-width": (_c = col.width) !== null && _c !== void 0 ? _c : 100, "data-edit-mode": isCellEdit, "data-editable": (_d = col.editable) !== null && _d !== void 0 ? _d : true, "data-updatable": (_e = col.updatable) !== null && _e !== void 0 ? _e : true, "data-required": (_f = col.required) !== null && _f !== void 0 ? _f : false, onClick: function () {
             setFocusedCell(col.field);
             onCellEditChange("click");
         }, onDoubleClick: function () { return onCellEditChange("doubleClick"); }, style: __assign({ "--width": col.width ? "".concat(col.width, "px") : "100px", textAlign: (_g = col.align) !== null && _g !== void 0 ? _g : "left" }, (_h = col.style) === null || _h === void 0 ? void 0 : _h.call(col, {
             target: "tbody",
             value: defaultValue,
             row: row,
-        })), colSpan: mode !== "r" ? (_j = col.editorMerge) !== null && _j !== void 0 ? _j : 1 : 1 }, { children: [_jsx("div", __assign({ ref: divRef, style: {
-                    position: "relative",
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    textOverflow: "ellipsis",
-                    wordBreak: "break-all",
-                    width: "100%",
-                    height: "100%",
-                    alignContent: "center",
-                    zIndex: 2,
-                } }, { children: Cell })), _jsx("div", { className: "devs-dt-bg-cell" }), _jsx("div", { className: "devs-dt-required-sig" })] })));
+        })), colSpan: mode !== "r" ? (_j = col.editorMerge) !== null && _j !== void 0 ? _j : 1 : 1 }, { children: isIntersecting && (_jsxs(_Fragment, { children: [_jsx("div", __assign({ ref: divRef, style: {
+                        position: "relative",
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                        textOverflow: "ellipsis",
+                        wordBreak: "break-all",
+                        width: "100%",
+                        height: "100%",
+                        alignContent: "center",
+                        zIndex: 2,
+                    } }, { children: Cell })), _jsx("div", { className: "devs-dt-bg-cell" }), _jsx("div", { className: "devs-dt-required-sig" })] })) })));
 }
 export default React.memo(DevsDtCell);

@@ -20,6 +20,7 @@ export interface IDataTableProviderProps extends IDataTableProps {
     thead?: React.MutableRefObject<HTMLDivElement | null>;
     COLUMNS_STYLE_FORCE_UPDATE: React.Dispatch<React.SetStateAction<boolean>>;
     setInnerLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    wrapper: React.MutableRefObject<HTMLDivElement | null>;
 }
 export interface IDataTableContextProps extends IDataTableProps {
     keyField?: string;
@@ -44,4 +45,5 @@ export interface IDataTableContextProps extends IDataTableProps {
     setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
     originalColumns: IDataTableColumn[];
     setInnerLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    wrapper: React.MutableRefObject<HTMLDivElement | null>;
 }

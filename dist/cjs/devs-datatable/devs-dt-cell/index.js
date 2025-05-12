@@ -66,6 +66,7 @@ var weekYear_1 = __importDefault(require("dayjs/plugin/weekYear"));
 var react_1 = __importDefault(require("react"));
 var react_hook_form_1 = require("react-hook-form");
 var devs_dt_context_1 = require("../context/devs-dt-context");
+var hooks_1 = require("../../hooks");
 dayjs_1.default.extend(customParseFormat_1.default);
 dayjs_1.default.extend(advancedFormat_1.default);
 dayjs_1.default.extend(weekday_1.default);
@@ -80,6 +81,18 @@ function DevsDtCell(_a) {
     var _b, _c, _d, _e, _f, _g, _h, _j;
     var register = _a.register, control = _a.control, col = _a.col, mode = _a.mode, defaultValue = _a.defaultValue, error = _a.error, autoFocus = _a.autoFocus, row = _a.row, merge = _a.merge, setValue = _a.setValue, getValue = _a.getValue, rowIndex = _a.rowIndex, trigger = _a.trigger, watch = _a.watch, prevRow = _a.prevRow, nextRow = _a.nextRow;
     var _k = (0, devs_dt_context_1.useDt)(), focusedRow = _k.focusedRow, focusedCell = _k.focusedCell, setFocusedCell = _k.setFocusedCell, setFocusedRow = _k.setFocusedRow, setDataSource = _k.setDataSource, setColumns = _k.setColumns, options = _k.options, editMode = _k.editMode, tbody = _k.tbody, formsRef = _k.formsRef;
+    var _l = __read(react_1.default.useState(true), 2), isIntersecting = _l[0], setIsIntersecting = _l[1];
+    var onIntersect = function (entries) {
+        var _a;
+        var localIsIntersecting = ((_a = entries === null || entries === void 0 ? void 0 : entries[0]) === null || _a === void 0 ? void 0 : _a.isIntersecting) || false;
+        if (isIntersecting !== localIsIntersecting) {
+            setIsIntersecting(localIsIntersecting);
+        }
+        return;
+    };
+    var setTarget = (0, hooks_1.useIntersectionObserver)(onIntersect, {
+        root: tbody.current,
+    }).setTarget;
     var colType = typeof col.type === "function" ? col.type(row) : col.type;
     var isCellEdit = react_1.default.useMemo(function () {
         var _a;
@@ -470,32 +483,35 @@ function DevsDtCell(_a) {
             }
         }
     };
-    return ((0, jsx_runtime_1.jsxs)("td", __assign({ ref: function (e) {
+    return ((0, jsx_runtime_1.jsx)("td", __assign({ ref: function (e) {
             if (cellRef.current !== null) {
                 cellRef.current = e;
+            }
+            if (e) {
+                setTarget(e);
             }
             if ((options === null || options === void 0 ? void 0 : options.editType) !== "cell" &&
                 mode !== "r" &&
                 col.editorMerge !== undefined) {
                 onEditorColspan(e);
             }
-        }, className: classString, rowSpan: merge === null || merge === void 0 ? void 0 : merge.rowSpan, "data-field": col.field, "data-hidden": false, "data-width": (_c = col.width) !== null && _c !== void 0 ? _c : 100, "data-edit-mode": isCellEdit, "data-editable": (_d = col.editable) !== null && _d !== void 0 ? _d : true, "data-updatable": (_e = col.updatable) !== null && _e !== void 0 ? _e : true, "data-required": (_f = col.required) !== null && _f !== void 0 ? _f : false, onClick: function () {
+        }, className: classString, rowSpan: merge === null || merge === void 0 ? void 0 : merge.rowSpan, "data-is-intersecting": isIntersecting, "data-field": col.field, "data-hidden": false, "data-width": (_c = col.width) !== null && _c !== void 0 ? _c : 100, "data-edit-mode": isCellEdit, "data-editable": (_d = col.editable) !== null && _d !== void 0 ? _d : true, "data-updatable": (_e = col.updatable) !== null && _e !== void 0 ? _e : true, "data-required": (_f = col.required) !== null && _f !== void 0 ? _f : false, onClick: function () {
             setFocusedCell(col.field);
             onCellEditChange("click");
         }, onDoubleClick: function () { return onCellEditChange("doubleClick"); }, style: __assign({ "--width": col.width ? "".concat(col.width, "px") : "100px", textAlign: (_g = col.align) !== null && _g !== void 0 ? _g : "left" }, (_h = col.style) === null || _h === void 0 ? void 0 : _h.call(col, {
             target: "tbody",
             value: defaultValue,
             row: row,
-        })), colSpan: mode !== "r" ? (_j = col.editorMerge) !== null && _j !== void 0 ? _j : 1 : 1 }, { children: [(0, jsx_runtime_1.jsx)("div", __assign({ ref: divRef, style: {
-                    position: "relative",
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    textOverflow: "ellipsis",
-                    wordBreak: "break-all",
-                    width: "100%",
-                    height: "100%",
-                    alignContent: "center",
-                    zIndex: 2,
-                } }, { children: Cell })), (0, jsx_runtime_1.jsx)("div", { className: "devs-dt-bg-cell" }), (0, jsx_runtime_1.jsx)("div", { className: "devs-dt-required-sig" })] })));
+        })), colSpan: mode !== "r" ? (_j = col.editorMerge) !== null && _j !== void 0 ? _j : 1 : 1 }, { children: isIntersecting && ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)("div", __assign({ ref: divRef, style: {
+                        position: "relative",
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                        textOverflow: "ellipsis",
+                        wordBreak: "break-all",
+                        width: "100%",
+                        height: "100%",
+                        alignContent: "center",
+                        zIndex: 2,
+                    } }, { children: Cell })), (0, jsx_runtime_1.jsx)("div", { className: "devs-dt-bg-cell" }), (0, jsx_runtime_1.jsx)("div", { className: "devs-dt-required-sig" })] })) })));
 }
 exports.default = react_1.default.memo(DevsDtCell);

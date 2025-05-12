@@ -35,16 +35,33 @@ import { useLayout } from "../contexts/layout-context";
 import RootLayoutHeaderMenuPop from "./root-layout-header-menu-pop/root-layout-header-menu-pop";
 var RootLayoutMenu = React.memo(function () {
     var openMenu = useMenuStore(function (state) { return state.openMenu; });
+    var menuSearchInputRef = React.useRef(null);
     var items = useMenuStore(function (state) { return state.menus; });
     var menuType = useLayout().menuType;
     var _a = __read(React.useState(""), 2), searchMenuText = _a[0], setSearchMenuText = _a[1];
     var _b = __read(React.useState(false), 2), isPopShow = _b[0], setIsPopShow = _b[1];
+    React.useEffect(function () {
+        if (typeof window === "undefined")
+            return;
+        var openMenuWithShortKey = function (e) {
+            if (e.key === "f" && e.ctrlKey) {
+                setIsPopShow(true);
+                menuSearchInputRef.current.focus();
+            }
+        };
+        window.addEventListener("keydown", openMenuWithShortKey);
+        return function () { return window.removeEventListener("keydown", openMenuWithShortKey); };
+    }, []);
     var onMenuSearch = function (search) {
         setSearchMenuText(search);
     };
     var onRemoveSearchText = function () {
         setSearchMenuText("");
+        menuSearchInputRef.current.value = "";
     };
+    React.useEffect(function () {
+        console.log(searchMenuText);
+    }, [searchMenuText]);
     var CreatedMenus = function (menus, depth) {
         if (depth === void 0) { depth = 0; }
         var menuContainerCss = function () {
@@ -175,12 +192,17 @@ var RootLayoutMenu = React.memo(function () {
                 borderRadius: "7px",
                 display: "flex",
                 flexDirection: "row",
-            }) }, { children: [_jsx("input", { type: "text", placeholder: "\uBA54\uB274 \uAC80\uC0C9", css: css({
+            }) }, { children: [_jsx("input", { ref: menuSearchInputRef, type: "text", placeholder: "\uBA54\uB274 \uAC80\uC0C9", css: css({
                         flex: "1 1 0%",
                         borderRadius: "7px",
                         paddingLeft: "7px",
-                    }), value: searchMenuText, onChange: function (e) { return onMenuSearch(e.target.value); }, onFocus: function () { return setIsPopShow(true); }, onBlur: function () { return setIsPopShow(false); } }), _jsx(Button, __assign({ onClick: onRemoveSearchText, css: css({
-                        visibility: searchMenuText ? "visible" : "hidden",
-                    }), compact: true }, { children: "\u2715" })), _jsx(RootLayoutHeaderMenuPop, { isPopShow: isPopShow, value: searchMenuText, onRemoveSearchText: onRemoveSearchText })] }))) : (CreatedMenus(items)) }));
+                    }), value: searchMenuText, onChange: function (e) { return onMenuSearch(e.target.value); }, onFocus: function () { return setIsPopShow(true); } }), searchMenuText ? (_jsx(Button, __assign({ onClick: function (e) {
+                        onRemoveSearchText();
+                    }, compact: true }, { children: "\u2715" }))) : (_jsxs("p", __assign({ css: css({
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "anchor-center",
+                        marginRight: 7,
+                    }) }, { children: [_jsx("kbd", { children: "Ctrl" }), "+", _jsx("kbd", { children: "F" })] }))), _jsx(RootLayoutHeaderMenuPop, { isPopShow: isPopShow, value: searchMenuText, onRemoveSearchText: onRemoveSearchText })] }))) : (CreatedMenus(items)) }));
 });
 export default RootLayoutMenu;

@@ -66,7 +66,7 @@ const ToastMessage: React.FC<IToastMessageComponent> = React.memo((props) => {
 
   return (
     <ToastMessageContainer
-      ref={containerRef}
+      containerRef={containerRef}
       align={props.align}
       length={props.length}
       type={props.type}
@@ -170,7 +170,7 @@ const ToastMessageProgress = styled.div<IToastMessageProgress>((props) => {
 });
 
 interface IToastMessageContainer {
-  ref: React.MutableRefObject<HTMLDivElement | null>;
+  containerRef: React.MutableRefObject<HTMLDivElement | null>;
   type: "success" | "error" | "warnning" | "info";
   align: "topLeft" | "topRight" | "bottomLeft" | "bottomRight";
   length: number;
@@ -228,7 +228,7 @@ const ToastMessageContainer: React.FC<IToastMessageContainer> = (props) => {
         );
         props.setIsHover(false);
       }}
-      ref={props.ref}
+      ref={props.containerRef}
       css={css({
         display: "flex",
         flexDirection: "column",

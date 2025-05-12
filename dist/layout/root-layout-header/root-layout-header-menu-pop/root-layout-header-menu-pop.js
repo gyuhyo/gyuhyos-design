@@ -50,8 +50,10 @@ import { jsx as _jsx, jsxs as _jsxs } from "@emotion/react/jsx-runtime";
 import { css } from "@emotion/react";
 import * as React from "react";
 import { useMenuStore } from "../../stores/menu-store";
+import { convertQwertyToHangul, getChoseong } from "es-hangul";
 function RootLayoutHeaderMenuPop(_a) {
     var isPopShow = _a.isPopShow, value = _a.value, onRemoveSearchText = _a.onRemoveSearchText;
+    var menuPopRef = React.useRef(null);
     var openMenu = useMenuStore(function (state) { return state.openMenu; });
     var menus = useMenuStore(function (state) { return state.menus; });
     var filteredMenus = React.useMemo(function () {
@@ -63,7 +65,16 @@ function RootLayoutHeaderMenuPop(_a) {
         try {
             for (var menus_1 = __values(menus), menus_1_1 = menus_1.next(); !menus_1_1.done; menus_1_1 = menus_1.next()) {
                 var m = menus_1_1.value;
-                var mns = (_b = m.children) === null || _b === void 0 ? void 0 : _b.filter(function (m) { var _a; return m.title.includes(value) || ((_a = m.shortKey) === null || _a === void 0 ? void 0 : _a.includes(value)); });
+                var mns = (_b = m.children) === null || _b === void 0 ? void 0 : _b.filter(function (m) {
+                    var _a;
+                    var val = value.replace(/ /g, "");
+                    var title = m.title.replace(/ /g, "");
+                    return (title.includes(val) ||
+                        ((_a = m.shortKey) === null || _a === void 0 ? void 0 : _a.includes(value)) ||
+                        getChoseong(title).includes(val) ||
+                        title.includes(convertQwertyToHangul(val)) ||
+                        getChoseong(title).includes(convertQwertyToHangul(val)));
+                });
                 if (mns) {
                     searchMenus.push.apply(searchMenus, __spreadArray([], __read(mns), false));
                 }
@@ -82,11 +93,23 @@ function RootLayoutHeaderMenuPop(_a) {
         openMenu(menu);
         onRemoveSearchText();
     };
-    return (_jsxs("div", __assign({ css: css({
-            visibility: isPopShow || value ? "visible" : "hidden",
+    React.useEffect(function () {
+        if (!menuPopRef.current)
+            return;
+        if (!value) {
+            setTimeout(function () {
+                menuPopRef.current.style.visibility = "hidden";
+            }, 300);
+        }
+        else {
+            menuPopRef.current.style.visibility = "visible";
+        }
+    }, [isPopShow, value]);
+    return (_jsxs("div", __assign({ ref: menuPopRef, css: css({
+            visibility: "hidden",
             position: "absolute",
             overflow: "auto",
-            top: "42px",
+            top: value ? "42px" : "22px",
             left: "0px",
             width: 300,
             height: 150,
@@ -94,6 +117,8 @@ function RootLayoutHeaderMenuPop(_a) {
             boxShadow: "3px 3px 11px rgba(0, 0, 0, 0.5)",
             borderRadius: "7px",
             zIndex: 4,
+            opacity: value ? 1 : 0,
+            transition: "opacity 200ms ease-in-out, top 200ms ease-in-out",
         }) }, { children: [!value && (_jsx("p", __assign({ css: css({
                     textAlign: "center",
                     height: "100%",

@@ -116,7 +116,7 @@ function getMaxDepth(columns, currentDepth) {
 }
 function DevsDtTHead(_a) {
     var thead = _a.thead, setHeaderWidth = _a.setHeaderWidth;
-    var _b = (0, devs_dt_context_1.useDt)(), columns = _b.columns, options = _b.options, setDataSource = _b.setDataSource, setColumns = _b.setColumns, sorter = _b.sorter, setSorter = _b.setSorter, tbody = _b.tbody, COLUMNS_STYLE_FORCE_UPDATE = _b.COLUMNS_STYLE_FORCE_UPDATE;
+    var _b = (0, devs_dt_context_1.useDt)(), columns = _b.columns, options = _b.options, setDataSource = _b.setDataSource, setColumns = _b.setColumns, sorter = _b.sorter, setSorter = _b.setSorter, tbody = _b.tbody, COLUMNS_STYLE_FORCE_UPDATE = _b.COLUMNS_STYLE_FORCE_UPDATE, wrapper = _b.wrapper;
     var isResizingRef = react_1.default.useRef(false);
     var resizingColumnRef = react_1.default.useRef(null);
     var rows = generateTableRows(columns);

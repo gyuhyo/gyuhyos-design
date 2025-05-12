@@ -336,6 +336,7 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
         setFocusedCell={setFocusedCell}
         tbody={tbody}
         thead={thead}
+        wrapper={table}
         COLUMNS_STYLE_FORCE_UPDATE={COLUMNS_STYLE_FORCE_UPDATE}
         setInnerLoading={setInnerLoading}
       >

@@ -4,6 +4,7 @@ import { css } from "@emotion/react";
 import * as React from "react";
 import { useMenuStore } from "../../stores/menu-store";
 import { SideMenuItemsChildProps } from "../../types/side-menu-item-props";
+import { convertQwertyToHangul, getChoseong } from "es-hangul";
 function RootLayoutHeaderMenuPop({
   isPopShow,
   value,
@@ -13,6 +14,7 @@ function RootLayoutHeaderMenuPop({
   value?: string;
   onRemoveSearchText: () => void;
 }) {
+  const menuPopRef = React.useRef<HTMLDivElement>(null);
   const openMenu = useMenuStore((state) => state.openMenu);
   const menus = useMenuStore((state) => state.menus);
 
@@ -22,9 +24,18 @@ function RootLayoutHeaderMenuPop({
     let searchMenus = [];
 
     for (let m of menus) {
-      const mns = m.children?.filter(
-        (m) => m.title.includes(value) || m.shortKey?.includes(value)
-      );
+      const mns = m.children?.filter((m) => {
+        const val = value.replace(/ /g, "");
+        const title = m.title.replace(/ /g, "");
+
+        return (
+          title.includes(val) ||
+          m.shortKey?.includes(value) ||
+          getChoseong(title).includes(val) ||
+          title.includes(convertQwertyToHangul(val)) ||
+          getChoseong(title).includes(convertQwertyToHangul(val))
+        );
+      });
 
       if (mns) {
         searchMenus.push(...mns);
@@ -39,13 +50,26 @@ function RootLayoutHeaderMenuPop({
     onRemoveSearchText();
   };
 
+  React.useEffect(() => {
+    if (!menuPopRef.current) return;
+
+    if (!value) {
+      setTimeout(() => {
+        menuPopRef.current!.style.visibility = "hidden";
+      }, 300);
+    } else {
+      menuPopRef.current!.style.visibility = "visible";
+    }
+  }, [isPopShow, value]);
+
   return (
     <div
+      ref={menuPopRef}
       css={css({
-        visibility: isPopShow || value ? "visible" : "hidden",
+        visibility: "hidden",
         position: "absolute",
         overflow: "auto",
-        top: "42px",
+        top: value ? "42px" : "22px",
         left: "0px",
         width: 300,
         height: 150,
@@ -53,6 +77,8 @@ function RootLayoutHeaderMenuPop({
         boxShadow: "3px 3px 11px rgba(0, 0, 0, 0.5)",
         borderRadius: "7px",
         zIndex: 4,
+        opacity: value ? 1 : 0,
+        transition: "opacity 200ms ease-in-out, top 200ms ease-in-out",
       })}
     >
       {!value && (

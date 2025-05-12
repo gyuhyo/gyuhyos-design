@@ -9,588 +9,119 @@ import DevsDatePicker from "./lib/devs-date-picker";
 import DevSplitContainer from "./lib/devs-split-container";
 import dayjs from "dayjs";
 
-const LayerPopup = React.lazy(() => import("./lib/layer-popup/index"));
-
-const dummyData = [
+const cols = [
   {
-    "1": "Group 1",
-    "2": "Option A123123123123123",
-    "3": "2024-11-01",
-    "4": "Batch A",
-    "5": "Category X",
-    "6": "2024-12-01",
-    "112": 1,
-    "33": null,
+    field: "prdCode",
+    title: "제품 코드",
+    merge: true,
+    width: 150,
+    sticky: true,
   },
   {
-    "1": "Group 1",
-    "2": "Option A",
-    "3": "2024-11-01",
-    "4": "Batch A",
-    "5": "Category Y",
-    "6": "2024-12-02",
-    "112": 3,
+    field: "prdName",
+    title: "제품명",
+    merge: true,
+    width: 200,
+    sticky: true,
   },
   {
-    "1": "Group 1",
-    "2": "Option B\naaaaaaa\naaaaaaaaaaaaaaaaaa\naaaaaaaaaaa\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\naaaaaaaaaaa\naaaaaaa",
-    "3": "2024-11-02",
-    "4": "Batch A",
-    "5": "Category Z",
-    "6": "2024-12-03",
-    "112": 2,
+    field: "prodType",
+    title: "생산 구분",
+    merge: true,
+    width: 100,
+    sticky: true,
+    sortable: false,
+    resizing: false,
+    align: "center",
   },
   {
-    "1": "Group 2",
-    "2": "Option A",
-    "3": "2024-11-03",
-    "4": "Batch B",
-    "5": "Category X",
-    "6": "2024-12-04",
-  },
-  {
-    "1": "Group 2",
-    "2": "Option A",
-    "3": "2024-11-03",
-    "4": "Batch B",
-    "5": "Category Y",
-    "6": "2024-12-05",
-  },
-  {
-    "1": "Group 2",
-    "2": "Option B",
-    "3": "2024-11-04",
-    "4": "Batch B",
-    "5": "Category Z",
-    "6": "2024-12-06",
-  },
-  {
-    "1": "Group 3",
-    "2": "Option C",
-
-    "4": "Batch C",
-    "5": "Category X",
-    "6": "2024-12-07",
-  },
-  {
-    "1": "Group 3",
-    "2": "Option C",
-
-    "4": "Batch C",
-    "5": "Category Y",
-    "6": "2024-12-08",
-  },
-  {
-    "1": "Group 3",
-    "2": "Option C",
-    "6": null,
-  },
-  {
-    "4": "Batch C",
-    "5": "Category Z",
-    "6": "2024-12-09",
-  },
-  {
-    "1": "Group 1",
-    "2": "Option A123123123123123",
-    "3": "2024-11-01",
-    "4": "Batch A",
-    "5": "Category X",
-    "6": "2024-12-01",
-    "112": 1,
-    "33": null,
-  },
-  {
-    "1": "Group 1",
-    "2": "Option A",
-    "3": "2024-11-01",
-    "4": "Batch A",
-    "5": "Category Y",
-    "6": "2024-12-02",
-    "112": 3,
-  },
-  {
-    "1": "Group 1",
-    "2": "Option B\naaaaaaa\naaaaaaaaaaaaaaaaaa\naaaaaaaaaaa\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\naaaaaaaaaaa\naaaaaaa",
-    "3": "2024-11-02",
-    "4": "Batch A",
-    "5": "Category Z",
-    "6": "2024-12-03",
-    "112": 2,
-  },
-  {
-    "1": "Group 2",
-    "2": "Option A",
-    "3": "2024-11-03",
-    "4": "Batch B",
-    "5": "Category X",
-    "6": "2024-12-04",
-  },
-  {
-    "1": "Group 2",
-    "2": "Option A",
-    "3": "2024-11-03",
-    "4": "Batch B",
-    "5": "Category Y",
-    "6": "2024-12-05",
-  },
-  {
-    "1": "Group 2",
-    "2": "Option B",
-    "3": "2024-11-04",
-    "4": "Batch B",
-    "5": "Category Z",
-    "6": "2024-12-06",
-  },
-  {
-    "1": "Group 3",
-    "2": "Option C",
-
-    "4": "Batch C",
-    "5": "Category X",
-    "6": "2024-12-07",
-  },
-  {
-    "1": "Group 3",
-    "2": "Option C",
-
-    "4": "Batch C",
-    "5": "Category Y",
-    "6": "2024-12-08",
-  },
-  {
-    "1": "Group 3",
-    "2": "Option C",
-    "6": null,
-  },
-  {
-    "4": "Batch C",
-    "5": "Category Z",
-    "6": "2024-12-09",
-  },
-  {
-    "1": "Group 1",
-    "2": "Option A123123123123123",
-    "3": "2024-11-01",
-    "4": "Batch A",
-    "5": "Category X",
-    "6": "2024-12-01",
-    "112": 1,
-    "33": null,
-  },
-  {
-    "1": "Group 1",
-    "2": "Option A",
-    "3": "2024-11-01",
-    "4": "Batch A",
-    "5": "Category Y",
-    "6": "2024-12-02",
-    "112": 3,
-  },
-  {
-    "1": "Group 1",
-    "2": "Option B\naaaaaaa\naaaaaaaaaaaaaaaaaa\naaaaaaaaaaa\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\naaaaaaaaaaa\naaaaaaa",
-    "3": "2024-11-02",
-    "4": "Batch A",
-    "5": "Category Z",
-    "6": "2024-12-03",
-    "112": 2,
-  },
-  {
-    "1": "Group 2",
-    "2": "Option A",
-    "3": "2024-11-03",
-    "4": "Batch B",
-    "5": "Category X",
-    "6": "2024-12-04",
-  },
-  {
-    "1": "Group 2",
-    "2": "Option A",
-    "3": "2024-11-03",
-    "4": "Batch B",
-    "5": "Category Y",
-    "6": "2024-12-05",
-  },
-  {
-    "1": "Group 2",
-    "2": "Option B",
-    "3": "2024-11-04",
-    "4": "Batch B",
-    "5": "Category Z",
-    "6": "2024-12-06",
-  },
-  {
-    "1": "Group 3",
-    "2": "Option C",
-
-    "4": "Batch C",
-    "5": "Category X",
-    "6": "2024-12-07",
-  },
-  {
-    "1": "Group 3",
-    "2": "Option C",
-
-    "4": "Batch C",
-    "5": "Category Y",
-    "6": "2024-12-08",
-  },
-  {
-    "1": "Group 3",
-    "2": "Option C",
-    "6": null,
-  },
-  {
-    "4": "Batch C",
-    "5": "Category Z",
-    "6": "2024-12-09",
+    field: "dayNightType",
+    title: "주야 구분",
+    width: 100,
+    sticky: true,
+    sortable: false,
+    resizing: false,
+    align: "center",
   },
 ];
 
-function generateDummyData() {
-  const options = ["0", "1", "2"];
-  const data: { "1": any; "2": any; "3": any; "4": any; "5": any; "6": any }[] =
-    [];
-
-  for (let i = 1; i <= 30; i++) {
-    data.push({
-      "1": i % 3 === 0 ? `Group ${Math.ceil(i / 3)}` : `Item ${i}`,
-      "2": options[i % options.length],
-      "3": i % 2 === 0 ? `2024-11-${(i % 30) + 1}` : `2024-10-${(i % 30) + 1}`,
-      "4": i % 5 === 0 ? `Batch ${Math.ceil(i / 5)}` : `Detail ${i}`,
-      "5": options[(i + 1) % options.length],
-      "6": i % 2 === 1 ? `2024-12-${(i % 30) + 1}` : `2024-09-${(i % 30) + 1}`,
-    });
-  }
-
-  return data;
-}
-
-const App: React.FC<{}> = () => {
-  const { showMessage, showToastMessage } = useMessage();
-  const tb = React.useRef<any>(null);
-  const tb2 = React.useRef<any>(null);
-  const [selectedDate, setSelectedDate] = React.useState<dayjs.Dayjs>(dayjs());
-  const [focusedRow, setFocusedRow] = React.useState<IDataSource | null>(null);
-  const [isLayerPopOpen, setIsLayerPopOpen] = React.useState<boolean>(false);
-  const [dataSource, setDataSource] = React.useState<IDataSource[]>([
-    ...dummyData.map((x, indx) => ({ ...x, "1": indx })),
-    // ...dummyData,
-    // ...dummyData,
-    // ...dummyData,
-    // ...dummyData,
-    // ...dummyData,
-    // ...dummyData,
-    // ...dummyData,
-    // ...dummyData,
-    // ...dummyData,
-    // ...dummyData,
-    // ...dummyData,
-    // ...dummyData,
-    // ...dummyData,
-  ]);
-  const [columns, setColumns] = React.useState<IDataTableColumn[]>([
-    {
-      field: "opt1",
-      title: "1",
-      type: "select",
-      options: [
-        {
-          value: "1",
-          label: "Level 1",
-        },
-        {
-          value: "2",
-          label: "Level 2",
-        },
-        {
-          value: "3",
-          label: "Level 3",
-        },
-        {
-          value: "4",
-          label: "Level 4",
-        },
-      ],
-      width: 50,
-      editorMerge: 4,
-      defaultValue: ({ value }) => "1",
-    },
-    {
-      field: "opt2",
-      title: "2",
-      width: 50,
-    },
-    {
-      field: "opt3",
-      title: "3",
-      width: 50,
-    },
-    {
-      field: "opt4",
-      title: "4",
-      width: 50,
-    },
-    {
-      key: true,
-      field: "1",
-      title: "1dwvdwdwv1edw1dwsd1v2wde1cfwdc1wcdsqcqdc",
-      required: true,
-      resizing: false,
-      sticky: true,
-      defaultValue: () => "123",
-    },
-
-    {
-      field: "4",
-      title: "4",
-      width: 200,
-      sticky: true,
-    },
-    {
-      key: true,
-      field: "112",
-      title: "1",
-      type: "number",
-      isNotNullSort: true,
-      sticky: true,
-    },
-    {
-      field: "5",
-      title: "5",
-      type: "select",
-      editorWidth: 500,
-      options: [
-        { value: "0", label: "0" },
-        { value: "1", label: "1" },
-        { value: "2", label: "2" },
-      ],
-    },
-    {
-      field: "mergedheader",
-      title: "merge",
-      style: () => ({
-        borderRight: "2px solid #000",
-        color: "red",
-      }),
-      children: [
-        {
-          field: "11",
-          title: "1",
-          type: "select",
-          options: [
-            { value: "0", label: "0" },
-            { value: "1", label: "1" },
-            { value: "2", label: "2" },
-          ],
-        },
-        {
-          field: "2",
-          title: "2",
-          type: "select",
-          updatable: false,
-          render: ({ value }) => {
-            if (value === "Option A") {
-              return "asdasd";
-            }
-
-            return value;
-          },
-          options: [
-            { value: "0", label: "0" },
-            { value: "1", label: "1" },
-            { value: "2", label: "2" },
-          ],
-        },
-        {
-          field: "3",
-          title: "3",
-          type: "date",
-          required: true,
-          style: () => ({
-            borderRight: "2px solid #000",
-            color: "red",
-          }),
-        },
-      ],
-    },
-    {
-      field: "6",
-      title: "6",
-      children: [
-        {
-          field: "111",
-          title: "1",
-          type: "select",
-          options: [
-            { value: "0", label: "0" },
-            { value: "1", label: "1" },
-            { value: "2", label: "2" },
-          ],
-        },
-        {
-          field: "22",
-          title: "2",
-          type: "select",
-          options: [
-            { value: "0", label: "0" },
-            { value: "1", label: "1" },
-            { value: "2", label: "2" },
-          ],
-        },
-        {
-          field: "33",
-          title: "3",
-          width: 150,
-          type: "datetime",
-          required: true,
-        },
-      ],
-    },
-    // ...(Array.from(Array(dayjs().daysInMonth()), (_, day) => ({
-    //   field: `pspDay_${day + 1}`,
-    //   title: `${day + 1}일`,
-    //   align: "right",
-    //   type: "number",
-    // })) as IDataTableColumn[]),
-  ]);
-  const [cnt, setCnt] = React.useState(0);
-
-  const handleAddClick = () => {
-    console.log(tb.current.api.getFocusedRowIndex);
-    setDataSource((prev) => {
-      return [{ checked: true, mode: "c" }, ...prev];
-    });
-  };
-
-  const handleSaveClick = async () => {
-    if (!tb.current) return;
-
-    //setIsLayerPopOpen(true);
-
-    const { data, valid } = await tb.current.api.validate();
-    console.log(data);
-
-    if (!valid) {
-      showMessage({
-        title: "필수 입력값 누락",
-        type: "error",
-        message: "필수 입력값이 누락되었습니다.",
-        isCancelButtonVisible: false,
-        onOkClick: (e: any) => {},
+const App = () => {
+  const [selectedDate, setSelectedDate] = React.useState(dayjs());
+  const [jsonData, setJsonData] = React.useState([]);
+  const [dataColumns, setDataColumns] = React.useState([]);
+  const getJsonData = () => {
+    fetch("http://localhost:3095/quality.chart/month.production.error")
+      .then((res) => res.json())
+      .then((data) => {
+        setJsonData(data);
+      })
+      .catch((err) => {
+        console.error(err);
       });
-      return;
-    }
-
-    // await showMessage({
-    //   title: "저장 완료",
-    //   type: "success",
-    //   message: "저장되었습니다.",
-    //   isCancelButtonVisible: false,
-    //   onOkClick: (e: any) => {
-    //     dummyData[0]["1"] = "123123";
-    //     setDataSource(dummyData);
-    //   },
-    // });
   };
 
-  const handleDeleteClick = async () => {
-    if (!tb.current) return;
+  React.useEffect(() => {
+    getJsonData();
+  }, []);
 
-    const checkedRows = tb.current.api.getCheckedRows;
+  React.useEffect(() => {
+    const lastDate = selectedDate.daysInMonth();
 
-    setDataSource((prev) => prev.filter((f) => !checkedRows.includes(f)));
-  };
+    const dates = Array.from({ length: lastDate }, (_, i) => {
+      const date = i + 1;
 
-  const todayField = React.useMemo(() => {
-    if (dayjs().format("YYYY-MM") !== dayjs(selectedDate).format("YYYY-MM")) {
-      return null;
-    }
+      return {
+        field: `day-${date}-err`,
+        title: `${date}일`,
+        align: "right",
+        width: 70,
+        sortable: false,
+        resizing: false,
+        children: [
+          {
+            field: `day-${date}-err-count`,
+            title: `불량 수량`,
+            align: "right",
+            width: 70,
+            sortable: false,
+            resizing: false,
+          },
+          {
+            field: `day-${date}-err-ppm`,
+            title: `ppm`,
+            align: "right",
+            width: 70,
+            sortable: false,
+            resizing: false,
+          },
+        ],
+      };
+    });
 
-    return `pspDay_${dayjs().date()}`;
+    setDataColumns([...cols, ...dates]);
   }, [selectedDate]);
 
-  const handleSearchClick = () => {
-    showToastMessage({
-      title: "test",
-      message: "ttestt",
-      type: "warnning",
-      align: "topLeft",
-      duration: 3000,
-    });
-
-    setCnt((prev) => ++prev);
-  };
-
   return (
-    <div
-      style={{
-        height: "100dvh",
-        maxHeight: "100dvh",
-        overflow: "hidden",
-        padding: "12px 7px 20px 7px",
-        display: "flex",
-        flexDirection: "column",
+    <DevsDataTable
+      title="제품별 월 생산 불량 현황"
+      columns={dataColumns}
+      setColumns={setDataColumns}
+      dataSource={jsonData}
+      setDataSource={setJsonData}
+      options={{
+        pagination: true,
+        paginationLimit: 30,
       }}
-    >
-      <DevSplitContainer align="row" sizes={["60%"]}>
-        <DevsDataTable
-          ref={tb}
-          title={
-            <Button
-              onClick={() => {
-                if (focusedRow) {
-                  tb.current.api.setValue({
-                    rowId: focusedRow.rowId,
-                    field: "1",
-                    value: "123",
-                  });
-                }
-              }}
-            >
-              123
-            </Button>
-          }
-          columns={columns}
-          setColumns={setColumns}
-          dataSource={dataSource}
-          setDataSource={setDataSource}
-          focusedRowChanged={(row) => {
-            setFocusedRow(row);
-          }}
-          buttons={{
-            custom: (
-              <DevsDatePicker
-                selectedDate={selectedDate}
-                setSelectedDate={setSelectedDate}
-              />
-            ),
-            export: {
-              visible: true,
-              excel: true,
-              print: true,
-            },
-            onSearchClick: handleSearchClick,
-            onSaveClick: handleSaveClick,
-            onAddClick: handleAddClick,
-            onDeleteClick: handleDeleteClick,
-          }}
-        />
-      </DevSplitContainer>
-      {isLayerPopOpen && (
-        <React.Suspense>
-          <LayerPopup
-            title={"test"}
-            width={1200}
-            footer={<>asd</>}
-            onCloseClick={() => setIsLayerPopOpen(false)}
-          >
-            품목
-          </LayerPopup>
-        </React.Suspense>
-      )}
-    </div>
+      buttons={{
+        custom: (
+          <DevsDatePicker
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+          />
+        ),
+        onSearchClick: getJsonData,
+      }}
+    />
   );
 };
 

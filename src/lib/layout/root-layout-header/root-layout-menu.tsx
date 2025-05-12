@@ -13,6 +13,7 @@ import RootLayoutHeaderMenuPop from "./root-layout-header-menu-pop/root-layout-h
 
 const RootLayoutMenu: React.FC<any> = React.memo(() => {
   const openMenu = useMenuStore((state) => state.openMenu);
+  const menuSearchInputRef = React.useRef<HTMLInputElement>(null);
   const items = useMenuStore<(SideMenuItemsProps | SideMenuItemsChildProps)[]>(
     (state) => state.menus
   );
@@ -20,13 +21,33 @@ const RootLayoutMenu: React.FC<any> = React.memo(() => {
   const [searchMenuText, setSearchMenuText] = React.useState<string>("");
   const [isPopShow, setIsPopShow] = React.useState<boolean>(false);
 
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const openMenuWithShortKey = (e: KeyboardEvent) => {
+      if (e.key === "f" && e.ctrlKey) {
+        setIsPopShow(true);
+        menuSearchInputRef.current!.focus();
+      }
+    };
+
+    window.addEventListener("keydown", openMenuWithShortKey);
+
+    return () => window.removeEventListener("keydown", openMenuWithShortKey);
+  }, []);
+
   const onMenuSearch = (search: string) => {
     setSearchMenuText(search);
   };
 
   const onRemoveSearchText = () => {
     setSearchMenuText("");
+    menuSearchInputRef.current!.value = "";
   };
+
+  React.useEffect(() => {
+    console.log(searchMenuText);
+  }, [searchMenuText]);
 
   const CreatedMenus = (menus: SideMenuItemsChildProps[], depth = 0) => {
     const menuContainerCss = () => {
@@ -207,6 +228,7 @@ const RootLayoutMenu: React.FC<any> = React.memo(() => {
           })}
         >
           <input
+            ref={menuSearchInputRef}
             type="text"
             placeholder="메뉴 검색"
             css={css({
@@ -217,17 +239,28 @@ const RootLayoutMenu: React.FC<any> = React.memo(() => {
             value={searchMenuText}
             onChange={(e: any) => onMenuSearch(e.target.value)}
             onFocus={() => setIsPopShow(true)}
-            onBlur={() => setIsPopShow(false)}
           />
-          <Button
-            onClick={onRemoveSearchText}
-            css={css({
-              visibility: searchMenuText ? "visible" : "hidden",
-            })}
-            compact
-          >
-            ✕
-          </Button>
+          {searchMenuText ? (
+            <Button
+              onClick={(e) => {
+                onRemoveSearchText();
+              }}
+              compact
+            >
+              ✕
+            </Button>
+          ) : (
+            <p
+              css={css({
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "anchor-center",
+                marginRight: 7,
+              })}
+            >
+              <kbd>Ctrl</kbd>+<kbd>F</kbd>
+            </p>
+          )}
           <RootLayoutHeaderMenuPop
             isPopShow={isPopShow}
             value={searchMenuText}

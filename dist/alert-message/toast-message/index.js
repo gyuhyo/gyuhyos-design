@@ -68,7 +68,7 @@ var ToastMessage = React.memo(function (props) {
             clearInterval(timer);
         };
     }, [isHover, pauseTime]);
-    return (_jsxs(ToastMessageContainer, __assign({ ref: containerRef, align: props.align, length: props.length, type: props.type, setIsHover: setIsHover, setPauseStartTime: setPauseStartTime, setPauseTime: setPauseTime, pauseStartTime: pauseStartTime }, { children: [_jsxs(ToastMessageHeader, __assign({ type: props.type }, { children: [_jsx("p", __assign({ style: { fontWeight: "bold" } }, { children: props.title })), _jsx(ToastMessageHeaderCloseButton, { onClick: closeToastMessage })] })), _jsx(ToastMessageBody, { children: props.message }), _jsx(ToastMessageProgress, { ref: progressRef, type: props.type })] })));
+    return (_jsxs(ToastMessageContainer, __assign({ containerRef: containerRef, align: props.align, length: props.length, type: props.type, setIsHover: setIsHover, setPauseStartTime: setPauseStartTime, setPauseTime: setPauseTime, pauseStartTime: pauseStartTime }, { children: [_jsxs(ToastMessageHeader, __assign({ type: props.type }, { children: [_jsx("p", __assign({ style: { fontWeight: "bold" } }, { children: props.title })), _jsx(ToastMessageHeaderCloseButton, { onClick: closeToastMessage })] })), _jsx(ToastMessageBody, { children: props.message }), _jsx(ToastMessageProgress, { ref: progressRef, type: props.type })] })));
 });
 var ToastMessageBody = styled.div({
     padding: 12,
@@ -177,7 +177,7 @@ var ToastMessageContainer = function (props) {
         }, onMouseLeave: function () {
             props.setPauseTime(function (prev) { return prev + (Date.now() - props.pauseStartTime); });
             props.setIsHover(false);
-        }, ref: props.ref, css: css({
+        }, ref: props.containerRef, css: css({
             display: "flex",
             flexDirection: "column",
             position: "fixed",

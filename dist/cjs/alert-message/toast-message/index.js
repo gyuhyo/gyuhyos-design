@@ -73,7 +73,7 @@ var ToastMessage = react_2.default.memo(function (props) {
             clearInterval(timer);
         };
     }, [isHover, pauseTime]);
-    return ((0, jsx_runtime_1.jsxs)(ToastMessageContainer, __assign({ ref: containerRef, align: props.align, length: props.length, type: props.type, setIsHover: setIsHover, setPauseStartTime: setPauseStartTime, setPauseTime: setPauseTime, pauseStartTime: pauseStartTime }, { children: [(0, jsx_runtime_1.jsxs)(ToastMessageHeader, __assign({ type: props.type }, { children: [(0, jsx_runtime_1.jsx)("p", __assign({ style: { fontWeight: "bold" } }, { children: props.title })), (0, jsx_runtime_1.jsx)(ToastMessageHeaderCloseButton, { onClick: closeToastMessage })] })), (0, jsx_runtime_1.jsx)(ToastMessageBody, { children: props.message }), (0, jsx_runtime_1.jsx)(ToastMessageProgress, { ref: progressRef, type: props.type })] })));
+    return ((0, jsx_runtime_1.jsxs)(ToastMessageContainer, __assign({ containerRef: containerRef, align: props.align, length: props.length, type: props.type, setIsHover: setIsHover, setPauseStartTime: setPauseStartTime, setPauseTime: setPauseTime, pauseStartTime: pauseStartTime }, { children: [(0, jsx_runtime_1.jsxs)(ToastMessageHeader, __assign({ type: props.type }, { children: [(0, jsx_runtime_1.jsx)("p", __assign({ style: { fontWeight: "bold" } }, { children: props.title })), (0, jsx_runtime_1.jsx)(ToastMessageHeaderCloseButton, { onClick: closeToastMessage })] })), (0, jsx_runtime_1.jsx)(ToastMessageBody, { children: props.message }), (0, jsx_runtime_1.jsx)(ToastMessageProgress, { ref: progressRef, type: props.type })] })));
 });
 var ToastMessageBody = styled_1.default.div({
     padding: 12,
@@ -182,7 +182,7 @@ var ToastMessageContainer = function (props) {
         }, onMouseLeave: function () {
             props.setPauseTime(function (prev) { return prev + (Date.now() - props.pauseStartTime); });
             props.setIsHover(false);
-        }, ref: props.ref, css: (0, react_1.css)({
+        }, ref: props.containerRef, css: (0, react_1.css)({
             display: "flex",
             flexDirection: "column",
             position: "fixed",

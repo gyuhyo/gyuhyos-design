@@ -40,16 +40,33 @@ var layout_context_1 = require("../contexts/layout-context");
 var root_layout_header_menu_pop_1 = __importDefault(require("./root-layout-header-menu-pop/root-layout-header-menu-pop"));
 var RootLayoutMenu = react_2.default.memo(function () {
     var openMenu = (0, menu_store_1.useMenuStore)(function (state) { return state.openMenu; });
+    var menuSearchInputRef = react_2.default.useRef(null);
     var items = (0, menu_store_1.useMenuStore)(function (state) { return state.menus; });
     var menuType = (0, layout_context_1.useLayout)().menuType;
     var _a = __read(react_2.default.useState(""), 2), searchMenuText = _a[0], setSearchMenuText = _a[1];
     var _b = __read(react_2.default.useState(false), 2), isPopShow = _b[0], setIsPopShow = _b[1];
+    react_2.default.useEffect(function () {
+        if (typeof window === "undefined")
+            return;
+        var openMenuWithShortKey = function (e) {
+            if (e.key === "f" && e.ctrlKey) {
+                setIsPopShow(true);
+                menuSearchInputRef.current.focus();
+            }
+        };
+        window.addEventListener("keydown", openMenuWithShortKey);
+        return function () { return window.removeEventListener("keydown", openMenuWithShortKey); };
+    }, []);
     var onMenuSearch = function (search) {
         setSearchMenuText(search);
     };
     var onRemoveSearchText = function () {
         setSearchMenuText("");
+        menuSearchInputRef.current.value = "";
     };
+    react_2.default.useEffect(function () {
+        console.log(searchMenuText);
+    }, [searchMenuText]);
     var CreatedMenus = function (menus, depth) {
         if (depth === void 0) { depth = 0; }
         var menuContainerCss = function () {
@@ -180,12 +197,17 @@ var RootLayoutMenu = react_2.default.memo(function () {
                 borderRadius: "7px",
                 display: "flex",
                 flexDirection: "row",
-            }) }, { children: [(0, jsx_runtime_1.jsx)("input", { type: "text", placeholder: "\uBA54\uB274 \uAC80\uC0C9", css: (0, react_1.css)({
+            }) }, { children: [(0, jsx_runtime_1.jsx)("input", { ref: menuSearchInputRef, type: "text", placeholder: "\uBA54\uB274 \uAC80\uC0C9", css: (0, react_1.css)({
                         flex: "1 1 0%",
                         borderRadius: "7px",
                         paddingLeft: "7px",
-                    }), value: searchMenuText, onChange: function (e) { return onMenuSearch(e.target.value); }, onFocus: function () { return setIsPopShow(true); }, onBlur: function () { return setIsPopShow(false); } }), (0, jsx_runtime_1.jsx)(button_1.default, __assign({ onClick: onRemoveSearchText, css: (0, react_1.css)({
-                        visibility: searchMenuText ? "visible" : "hidden",
-                    }), compact: true }, { children: "\u2715" })), (0, jsx_runtime_1.jsx)(root_layout_header_menu_pop_1.default, { isPopShow: isPopShow, value: searchMenuText, onRemoveSearchText: onRemoveSearchText })] }))) : (CreatedMenus(items)) }));
+                    }), value: searchMenuText, onChange: function (e) { return onMenuSearch(e.target.value); }, onFocus: function () { return setIsPopShow(true); } }), searchMenuText ? ((0, jsx_runtime_1.jsx)(button_1.default, __assign({ onClick: function (e) {
+                        onRemoveSearchText();
+                    }, compact: true }, { children: "\u2715" }))) : ((0, jsx_runtime_1.jsxs)("p", __assign({ css: (0, react_1.css)({
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "anchor-center",
+                        marginRight: 7,
+                    }) }, { children: [(0, jsx_runtime_1.jsx)("kbd", { children: "Ctrl" }), "+", (0, jsx_runtime_1.jsx)("kbd", { children: "F" })] }))), (0, jsx_runtime_1.jsx)(root_layout_header_menu_pop_1.default, { isPopShow: isPopShow, value: searchMenuText, onRemoveSearchText: onRemoveSearchText })] }))) : (CreatedMenus(items)) }));
 });
 exports.default = RootLayoutMenu;

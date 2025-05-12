@@ -42,7 +42,7 @@ import styled from "@emotion/styled";
 import React from "react";
 import { useResizeObserver } from "../devs-datatable/hooks/useResizeObserver";
 var DevsSplitContainer = React.memo(function (_a) {
-    var children = _a.children, _b = _a.align, align = _b === void 0 ? "column" : _b, sizes = _a.sizes;
+    var children = _a.children, _b = _a.align, align = _b === void 0 ? "column" : _b, sizes = _a.sizes, onSizeChanged = _a.onSizeChanged, disabled = _a.disabled;
     var selectorRef = React.useRef(null);
     var changedPanelsPercent = React.useRef([]);
     var _c = __read(React.useState(false), 2), isSet = _c[0], setIsSet = _c[1];
@@ -133,13 +133,24 @@ var DevsSplitContainer = React.memo(function (_a) {
             }
         }
         var panels = containerRef.current.querySelectorAll("& > [data-split-type='panel']");
+        var containerSize = realAlign === "column"
+            ? containerRef.current.clientHeight
+            : containerRef.current.clientWidth;
         for (var idx in size) {
+            var sizeNumber = parseFloat(size[idx].replace("px", ""));
+            if (sizeNumber > containerSize ||
+                sizeNumber > 10000 ||
+                containerSize > 10000)
+                continue;
             if (panels === null || panels === void 0 ? void 0 : panels[idx]) {
                 panels[idx].style.flexBasis = size[idx];
             }
         }
     }, [width, height, usingSize, realAlign]);
-    var onSplitBarMouseDown = function (e) {
+    var onSplitBarMouseDown = function (e, index) {
+        var _a;
+        if ((_a = disabled === null || disabled === void 0 ? void 0 : disabled[index]) !== null && _a !== void 0 ? _a : false)
+            return;
         changedPanelsPercent.current = [];
         var prev = e.currentTarget.parentElement
             .previousElementSibling;
@@ -210,12 +221,14 @@ var DevsSplitContainer = React.memo(function (_a) {
         if (!selectorRef.current)
             return;
         selectorRef.current = null;
-        var panels = containerRef.current.querySelectorAll("[data-split-type='panel']");
+        var panels = Array.from(containerRef.current.children).filter(function (el) { return el.getAttribute("data-split-type") === "panel"; });
+        var sizes = [];
         try {
             for (var panels_1 = __values(panels), panels_1_1 = panels_1.next(); !panels_1_1.done; panels_1_1 = panels_1.next()) {
                 var panel = panels_1_1.value;
                 var p = panel;
                 var flexBasis = parseFloat(p.style.flexBasis.replace("px", ""));
+                sizes.push(flexBasis);
                 var per = (flexBasis / availableSize) * 100;
                 changedPanelsPercent.current.push(per);
             }
@@ -227,14 +240,15 @@ var DevsSplitContainer = React.memo(function (_a) {
             }
             finally { if (e_1) throw e_1.error; }
         }
+        onSizeChanged === null || onSizeChanged === void 0 ? void 0 : onSizeChanged(sizes);
         document.removeEventListener("mousemove", onSplitBarMouseMove);
         document.removeEventListener("mouseup", onSplitBarMouseUp);
         document.removeEventListener("touchmove", onSplitBarMouseMove);
         document.removeEventListener("touchend", onSplitBarMouseUp);
     };
     return (_jsx(SplitContainer, __assign({ ref: containerRef, align: realAlign }, { children: Array.from({ length: childrenLength }, function (v, i) {
-            var _a;
-            return (_jsxs(React.Fragment, { children: [_jsx(SplitPanel, __assign({ "data-split-type": "panel", size: Array.isArray(children) ? (_a = sizes === null || sizes === void 0 ? void 0 : sizes[i]) !== null && _a !== void 0 ? _a : "100%" : "100%" }, { children: Array.isArray(children) ? children[i] : children })), i !== childrenLength - 1 && (_jsxs(SplitBar, __assign({ align: realAlign, fullSize: usingSize }, { children: [_jsx(SplitterTrack, { "data-split-type": "track", align: realAlign, onMouseDown: onSplitBarMouseDown, onTouchStart: onSplitBarMouseDown }), _jsx(Splitter, { "data-split-type": "splitter", align: realAlign })] })))] }, "spanel-".concat(i)));
+            var _a, _b;
+            return (_jsxs(React.Fragment, { children: [_jsx(SplitPanel, __assign({ "data-split-type": "panel", size: Array.isArray(children) ? (_a = sizes === null || sizes === void 0 ? void 0 : sizes[i]) !== null && _a !== void 0 ? _a : "100%" : "100%" }, { children: Array.isArray(children) ? children[i] : children })), i !== childrenLength - 1 && (_jsxs(SplitBar, __assign({ align: realAlign, fullSize: usingSize }, { children: [_jsx(SplitterTrack, { "data-split-type": "track", align: realAlign, onMouseDown: function (e) { return onSplitBarMouseDown(e, i); }, onTouchStart: function (e) { return onSplitBarMouseDown(e, i); }, disabled: (_b = disabled === null || disabled === void 0 ? void 0 : disabled[i]) !== null && _b !== void 0 ? _b : false }), _jsx(Splitter, { "data-split-type": "splitter", align: realAlign })] })))] }, "spanel-".concat(i)));
         }) })));
 });
 export default DevsSplitContainer;
@@ -248,15 +262,23 @@ var SplitterTrack = styled.div(function (props) { return ({
     borderRadius: "5px",
     opacity: 0,
     "&:hover": {
-        opacity: 1,
+        opacity: props.disabled ? 0 : 1,
         transition: "opacity 200ms ease-in",
-        cursor: props.align === "row" ? "col-resize" : "row-resize",
+        cursor: props.disabled
+            ? "not-allowed"
+            : props.align === "row"
+                ? "col-resize"
+                : "row-resize",
     },
     "&:active": {
-        opacity: 1,
+        opacity: props.disabled ? 0 : 1,
         transition: "opacity 200ms ease-in",
         background: "#8ac2ff",
-        cursor: props.align === "row" ? "col-resize" : "row-resize",
+        cursor: props.disabled
+            ? "not-allowed"
+            : props.align === "row"
+                ? "col-resize"
+                : "row-resize",
     },
 }); });
 var Splitter = styled.div(function (props) { return ({

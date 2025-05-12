@@ -110,6 +110,7 @@ var DevsDtProviderComponent = function (props) {
             setCurrentPage: setCurrentPage,
             originalColumns: originalColumns.current,
             setInnerLoading: props.setInnerLoading,
+            wrapper: props.wrapper,
         } }, { children: _jsx(MessageProvider, { children: _jsx("div", __assign({ style: {
                     height: "100%",
                     display: "flex",

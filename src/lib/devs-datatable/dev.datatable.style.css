@@ -100,6 +100,7 @@
 .devs-dt-thead-wrapper {
   flex: none;
   overflow: hidden;
+  will-change: scroll-position;
 }
 
 .devs-dt-tbody-wrapper {
@@ -107,6 +108,7 @@
   height: 100%;
   overflow: scroll;
   position: relative;
+  will-change: scroll-position;
 }
 
 .devs-dt-table {
@@ -341,6 +343,7 @@
 .devs-dt-sticky-col {
   position: sticky;
   z-index: 3;
+  will-change: transform, left, top;
 }
 
 .devs-dt-sticky-col-last::after {
