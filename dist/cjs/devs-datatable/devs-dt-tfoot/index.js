@@ -91,17 +91,16 @@ var DevsDtTFoot = react_2.default.memo(function () {
                             left: 0,
                             "--width": "".concat(mergedCellsCount.widths, "px"),
                             borderTop: "1px solid #c6c6c6",
-                            textAlign: "right",
+                            textAlign: "center",
                         } }, { children: "\uD569\uACC4" }))), lastNode &&
                         lastNode.map(function (col) {
-                            var _a, _b;
+                            var _a, _b, _c, _d;
                             var className = "devs-dt-cell";
                             if (col.sticky)
                                 className += " devs-dt-sticky-col";
-                            return ((0, jsx_runtime_1.jsx)("td", __assign({ "data-cell-type": "data-cell", "data-field": col.field, className: className, style: {
-                                    borderTop: "1px solid #c6c6c6",
-                                    "--width": "".concat((_a = col.width) !== null && _a !== void 0 ? _a : 100, "px"),
-                                } }, { children: (0, jsx_runtime_1.jsx)("div", __assign({ style: {
+                            return ((0, jsx_runtime_1.jsx)("td", __assign({ "data-cell-type": "data-cell", "data-field": col.field, className: className, style: __assign({ borderTop: "1px solid #c6c6c6", "--width": "".concat((_a = col.width) !== null && _a !== void 0 ? _a : 100, "px"), textAlign: (_b = col.align) !== null && _b !== void 0 ? _b : "left" }, (_c = col.style) === null || _c === void 0 ? void 0 : _c.call(col, {
+                                    target: "tfoot",
+                                })) }, { children: (0, jsx_runtime_1.jsx)("div", __assign({ style: {
                                         position: "relative",
                                         overflow: "hidden",
                                         whiteSpace: "pre",
@@ -111,7 +110,7 @@ var DevsDtTFoot = react_2.default.memo(function () {
                                         height: "100%",
                                         alignContent: "center",
                                         zIndex: 2,
-                                    } }, { children: (_b = col.footer) === null || _b === void 0 ? void 0 : _b.call(col, dataSource) })) }), col.field));
+                                    } }, { children: (_d = col.footer) === null || _d === void 0 ? void 0 : _d.call(col, dataSource) })) }), col.field));
                         })] })) })) })));
 });
 exports.default = DevsDtTFoot;

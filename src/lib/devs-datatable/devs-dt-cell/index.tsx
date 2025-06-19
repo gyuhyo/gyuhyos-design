@@ -56,6 +56,7 @@ type TDevsDtCell = {
   watch: UseFormWatch<IDataSource>;
   prevRow: IDataSource;
   nextRow: IDataSource;
+  forceRerender: () => void;
 };
 
 function DevsDtCell({
@@ -75,6 +76,7 @@ function DevsDtCell({
   watch,
   prevRow,
   nextRow,
+  forceRerender,
 }: TDevsDtCell) {
   const {
     focusedRow,
@@ -88,21 +90,7 @@ function DevsDtCell({
     tbody,
     formsRef,
   } = useDt();
-
-  const [isIntersecting, setIsIntersecting] = React.useState(true);
-
-  const onIntersect = (entries: IntersectionObserverEntry[]) => {
-    const localIsIntersecting = entries?.[0]?.isIntersecting || false;
-    if (isIntersecting !== localIsIntersecting) {
-      setIsIntersecting(localIsIntersecting);
-    }
-    return;
-  };
-
-  const { setTarget } = useIntersectionObserver(onIntersect, {
-    root: tbody!.current,
-  });
-
+  const [forceReRender, setForeceReRender] = React.useState(0);
   const colType = typeof col.type === "function" ? col.type(row) : col.type;
 
   const isCellEdit = React.useMemo(() => {
@@ -278,6 +266,7 @@ function DevsDtCell({
               setValue,
               getValue,
               setDataSource,
+              forceRerender,
             })
           }
         />
@@ -308,6 +297,7 @@ function DevsDtCell({
                     setDataSource: setDataSource,
                     setValue: setValue,
                     getValue,
+                    forceRerender,
                   });
                 }
               }}
@@ -346,6 +336,7 @@ function DevsDtCell({
                     setDataSource: setDataSource,
                     setValue: setValue,
                     getValue,
+                    forceRerender,
                   });
                 }
               }}
@@ -383,6 +374,7 @@ function DevsDtCell({
                     setDataSource: setDataSource,
                     setValue: setValue,
                     getValue,
+                    forceRerender,
                   });
                 }
               }}
@@ -419,6 +411,7 @@ function DevsDtCell({
                     setDataSource: setDataSource,
                     setValue: setValue,
                     getValue,
+                    forceRerender,
                   });
                 }
               }}
@@ -426,7 +419,13 @@ function DevsDtCell({
               autoFocus={
                 options?.cellEditClickType === "click" ? true : autoFocus
               }
-              {...col.inputOptions}
+              {...col.inputOptions?.({
+                onChange: onChange,
+                form: formsRef.current[row.rowId],
+                defaultValue,
+                row: row,
+                forceRerender: forceRerender,
+              })}
             />
           )}
         />
@@ -456,6 +455,7 @@ function DevsDtCell({
                     setDataSource: setDataSource,
                     setValue: setValue,
                     getValue,
+                    forceRerender,
                   });
                 }
               }}
@@ -485,6 +485,7 @@ function DevsDtCell({
                   setDataSource: setDataSource,
                   setValue: setValue,
                   getValue,
+                  forceRerender,
                 });
               }
             },
@@ -510,6 +511,7 @@ function DevsDtCell({
                 setDataSource: setDataSource,
                 setValue: setValue,
                 getValue,
+                forceRerender,
               });
             }
           },
@@ -690,14 +692,7 @@ function DevsDtCell({
   return (
     <td
       ref={(e) => {
-        if (cellRef.current !== null) {
-          cellRef.current = e;
-        }
-
-        if (e) {
-          setTarget(e);
-        }
-
+        cellRef.current = e;
         if (
           options?.editType !== "cell" &&
           mode !== "r" &&
@@ -708,7 +703,6 @@ function DevsDtCell({
       }}
       className={classString}
       rowSpan={merge?.rowSpan}
-      data-is-intersecting={isIntersecting}
       data-field={col.field}
       data-hidden={false}
       data-width={col.width ?? 100}
@@ -734,28 +728,24 @@ function DevsDtCell({
       }
       colSpan={mode !== "r" ? col.editorMerge ?? 1 : 1}
     >
-      {isIntersecting && (
-        <>
-          <div
-            ref={divRef}
-            style={{
-              position: "relative",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-              wordBreak: "break-all",
-              width: "100%",
-              height: "100%",
-              alignContent: "center",
-              zIndex: 2,
-            }}
-          >
-            {Cell}
-          </div>
-          <div className="devs-dt-bg-cell" />
-          <div className="devs-dt-required-sig" />
-        </>
-      )}
+      <div
+        ref={divRef}
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+          textOverflow: "ellipsis",
+          wordBreak: "break-all",
+          width: "100%",
+          height: "100%",
+          alignContent: "center",
+          zIndex: 2,
+        }}
+      >
+        {Cell}
+      </div>
+      <div className="devs-dt-bg-cell" />
+      <div className="devs-dt-required-sig" />
     </td>
   );
 }

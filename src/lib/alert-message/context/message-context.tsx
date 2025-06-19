@@ -34,6 +34,8 @@ export const MessageProvider = React.memo(
             okCaption: props.okCaption ?? "확인",
             cancelCaption: props.cancelCaption ?? "취소",
             isOkButtonVisible: props.isOkButtonVisible ?? true,
+            input: props.input ?? false,
+            inputOption: props.inputOption ?? {},
             onOkClick: (e) => {
               if (props.onOkClick) props.onOkClick(e);
               resolve(true); // 확인 버튼 클릭 시 Promise 해결
@@ -123,6 +125,8 @@ export const MessageProvider = React.memo(
             onCloseClick={msg.onCloseClick!}
             footerStart={msg.footerStart}
             duration={msg.duration}
+            input={msg.input!}
+            inputOption={msg.inputOption!}
           />
         ))}
         {toastMessages &&

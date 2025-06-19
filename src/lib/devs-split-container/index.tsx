@@ -8,11 +8,27 @@ export type TDevsSplitContainer = {
   align?: "column" | "row";
   sizes?: Array<number | string>;
   onSizeChanged?: (sizes: number[]) => void;
+  onLoaded?: ({
+    width,
+    height,
+    sizes,
+  }: {
+    width: number;
+    height: number;
+    sizes: number[];
+  }) => void;
   disabled?: Array<boolean>;
 };
 
 const DevsSplitContainer: React.FC<TDevsSplitContainer> = React.memo(
-  ({ children, align = "column", sizes, onSizeChanged, disabled }) => {
+  ({
+    children,
+    align = "column",
+    sizes,
+    onSizeChanged,
+    onLoaded,
+    disabled,
+  }) => {
     const selectorRef = React.useRef<{
       target: HTMLDivElement;
       startPosition: number;
@@ -136,6 +152,13 @@ const DevsSplitContainer: React.FC<TDevsSplitContainer> = React.memo(
           (panels[idx] as HTMLDivElement).style.flexBasis = size[idx];
         }
       }
+
+      onLoaded?.({
+        width: containerRef.current.clientWidth,
+        height: containerRef.current.clientHeight,
+        sizes: size.map((s) => parseFloat(s.replace("px", ""))),
+      });
+      onSizeChanged?.(size.map((s) => parseFloat(s.replace("px", ""))));
     }, [width, height, usingSize, realAlign]);
 
     const onSplitBarMouseDown = (

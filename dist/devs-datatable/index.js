@@ -246,15 +246,26 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
                 }
             }); }); },
             focusedRowIndex: function (index) {
-                if (props.dataSource.length > index) {
-                    setFocusedRow(props.dataSource[index]);
+                if (Object.values(formsRef.current).map(function (x) { return x.getValues(); }).length >
+                    index) {
+                    setFocusedRow(Object.values(formsRef.current).map(function (x) { return x.getValues(); })[index]);
                 }
             },
             focusedRow: function (row) { return setFocusedRow(row); },
             addRow: function (defaultValues) {
-                return props.setDataSource(function (prev) { return __spreadArray([
+                props.setDataSource(function (prev) { return __spreadArray([
                     __assign({ checked: true, mode: "c" }, defaultValues)
                 ], __read(prev), false); });
+                setFocusedRow(Object.values(formsRef.current).map(function (x) { return x.getValues(); })[0]);
+            },
+            focusedRowForm: focusedRow
+                ? formsRef.current[focusedRow.rowId]
+                : null,
+            forceRerender: function (rowId) {
+                var form = formsRef.current[rowId];
+                if (form) {
+                    form.forceRerender();
+                }
             },
             setValue: function (_a) {
                 var rowId = _a.rowId, field = _a.field, value = _a.value;
@@ -268,6 +279,11 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
                         });
                     });
                     form.trigger();
+                    form.forceRerender();
+                    return { result: true, form: form, dataSource: props.dataSource };
+                }
+                else {
+                    return { result: false };
                 }
             },
             setFocus: function (_a) {

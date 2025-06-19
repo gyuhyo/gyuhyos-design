@@ -32,7 +32,7 @@ function RootLayout() {
             height: "100dvh",
             display: "flex",
             flexDirection: "row",
-        }) }, { children: [(menuType === "slide" || menuType === "multiple") && ((0, jsx_runtime_1.jsx)(side_menu_container_1.default, {})), (0, jsx_runtime_1.jsxs)("div", __assign({ css: (0, react_1.css)({
+        }) }, { children: [(menuType === "slide" || menuType === "multiple") && ((0, jsx_runtime_1.jsx)(side_menu_container_1.default, {})), (0, jsx_runtime_1.jsxs)("div", __assign({ id: "gyud_main_container", css: (0, react_1.css)({
                     width: calculWidth,
                     height: "100dvh",
                     display: "flex",

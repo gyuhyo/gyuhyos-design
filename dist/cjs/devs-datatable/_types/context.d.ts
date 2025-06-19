@@ -2,8 +2,11 @@ import React from "react";
 import { IDataSource, IDataTableProps } from "./component";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { IDataTableColumn } from "./col";
+export type FormWithForce = ReturnType<typeof useForm<IDataSource>> & {
+    forceRerender: () => void;
+};
 export interface IFormsRef {
-    [key: string]: ReturnType<typeof useForm<IDataSource>>;
+    [key: string]: FormWithForce;
 }
 export interface IDataTableSorterProps {
     field: string | null;

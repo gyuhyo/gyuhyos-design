@@ -2,9 +2,11 @@ import { SetStateAction } from "react";
 import { IDataSource } from "./component";
 import {
   UseFormGetValues,
+  UseFormReturn,
   UseFormSetValue,
   UseFormWatch,
 } from "react-hook-form";
+import { IFormsRef } from "./context";
 
 export interface IDataTableSelectorOptionsProps {
   value: string;
@@ -77,6 +79,7 @@ export interface IDataTableColumn {
     getValue,
     setValue,
     setDataSource,
+    forceRerender,
   }: {
     value?: any;
     row: IDataSource;
@@ -85,6 +88,7 @@ export interface IDataTableColumn {
     getValue: UseFormGetValues<IDataSource>;
     setValue: UseFormSetValue<IDataSource>;
     setDataSource: React.Dispatch<React.SetStateAction<IDataSource[]>>;
+    forceRerender?: () => void;
   }) => any;
   onChange?: ({
     value,
@@ -93,6 +97,7 @@ export interface IDataTableColumn {
     setDataSource,
     setValue,
     getValue,
+    forceRerender,
   }: {
     value: any;
     row: IDataSource;
@@ -100,8 +105,21 @@ export interface IDataTableColumn {
     setDataSource: React.Dispatch<SetStateAction<IDataSource[]>>;
     setValue: UseFormSetValue<IDataSource>;
     getValue: UseFormGetValues<IDataSource>;
+    forceRerender?: () => void;
   }) => void;
-  inputOptions?: any;
+  inputOptions?: ({
+    onChange,
+    defaultValue,
+    row,
+    form,
+    forceRerender,
+  }: {
+    onChange: (...event: any[]) => void;
+    defaultValue: any;
+    row: IDataSource;
+    form: UseFormReturn<IDataSource, any, undefined>;
+    forceRerender?: () => void;
+  }) => any;
   style?: ({
     target,
     value,

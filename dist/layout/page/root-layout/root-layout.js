@@ -27,7 +27,7 @@ function RootLayout() {
             height: "100dvh",
             display: "flex",
             flexDirection: "row",
-        }) }, { children: [(menuType === "slide" || menuType === "multiple") && (_jsx(SideMenuContainer, {})), _jsxs("div", __assign({ css: css({
+        }) }, { children: [(menuType === "slide" || menuType === "multiple") && (_jsx(SideMenuContainer, {})), _jsxs("div", __assign({ id: "gyud_main_container", css: css({
                     width: calculWidth,
                     height: "100dvh",
                     display: "flex",

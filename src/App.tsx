@@ -1,6 +1,12 @@
 import React from "react";
 import "./App.css";
-import { Button, DevsSplitContainer, MesButton, useMessage } from "./lib/index";
+import {
+  Button,
+  DevsSplitContainer,
+  LayerPopup,
+  MesButton,
+  useMessage,
+} from "./lib/index";
 import uuid from "react-uuid";
 import { IDataSource, IDataTableColumn } from "./lib/devs-datatable/_types";
 import DevsDataTable from "./lib/devs-datatable";
@@ -49,6 +55,7 @@ const App = () => {
   const [selectedDate, setSelectedDate] = React.useState(dayjs());
   const [jsonData, setJsonData] = React.useState([]);
   const [dataColumns, setDataColumns] = React.useState([]);
+  const { showMessage } = useMessage();
   const getJsonData = () => {
     fetch("http://localhost:3095/quality.chart/month.production.error")
       .then((res) => res.json())
@@ -97,32 +104,22 @@ const App = () => {
         ],
       };
     });
-
-    setDataColumns([...cols, ...dates]);
   }, [selectedDate]);
 
-  return (
-    <DevsDataTable
-      title="제품별 월 생산 불량 현황"
-      columns={dataColumns}
-      setColumns={setDataColumns}
-      dataSource={jsonData}
-      setDataSource={setJsonData}
-      options={{
-        pagination: true,
-        paginationLimit: 30,
-      }}
-      buttons={{
-        custom: (
-          <DevsDatePicker
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-          />
-        ),
-        onSearchClick: getJsonData,
-      }}
-    />
-  );
+  const onButtonClick = () => {
+    showMessage({
+      type: "success",
+      title: "a",
+      message: "d",
+      input: true,
+      inputOption: {
+        type: "number",
+        placeholder: "입력",
+      },
+      onOkClick: (e) => console.log(e),
+    });
+  };
+  return <Button onClick={onButtonClick}>123</Button>;
 };
 
 export default App;

@@ -61,8 +61,9 @@ var hiddenAlert = css({
     transition: "opacity 200ms ease-in-out, visibility 0ms ease-in-out 200ms",
 });
 var AlertMessage = function (props) {
-    var setIsShow = props.setIsShow, type = props.type, title = props.title, message = props.message, okCaption = props.okCaption, cancelCaption = props.cancelCaption, isOkButtonVisible = props.isOkButtonVisible, onOkClick = props.onOkClick, isCancelButtonVisible = props.isCancelButtonVisible, onCancelClick = props.onCancelClick, isCloseButtonVisible = props.isCloseButtonVisible, onCloseClick = props.onCloseClick, footerStart = props.footerStart;
-    var _a = __read(React.useState(true), 2), isShowState = _a[0], setIsShowState = _a[1];
+    var setIsShow = props.setIsShow, type = props.type, title = props.title, message = props.message, okCaption = props.okCaption, cancelCaption = props.cancelCaption, isOkButtonVisible = props.isOkButtonVisible, onOkClick = props.onOkClick, isCancelButtonVisible = props.isCancelButtonVisible, onCancelClick = props.onCancelClick, isCloseButtonVisible = props.isCloseButtonVisible, onCloseClick = props.onCloseClick, footerStart = props.footerStart, input = props.input, inputOption = props.inputOption;
+    var _a = __read(React.useState(""), 2), value = _a[0], setValue = _a[1];
+    var _b = __read(React.useState(true), 2), isShowState = _b[0], setIsShowState = _b[1];
     var closeAlert = function () {
         setIsShowState(false);
         var timer = setTimeout(function () {
@@ -89,6 +90,6 @@ var AlertMessage = function (props) {
             window.removeEventListener("keydown", closeKeyDownPopup);
         };
     }, []);
-    return (_jsx("div", __assign({ css: [backdrop, isShowState ? visibleAlert : hiddenAlert] }, { children: _jsxs("div", __assign({ className: "alertMessageWrapper ".concat(isShowState ? undefined : "alertMessageWrapperClose") }, { children: [_jsx(AlertMessageHeader, { type: type, title: title, isCloseButtonVisible: isCloseButtonVisible, onCloseClick: onCloseClick, closeAlert: closeAlert }), _jsx(AlertMessageBody, { message: message }), _jsx(AlertMessageFooter, { footerStart: footerStart, isOkButtonVisible: isOkButtonVisible, onOkClick: onOkClick, okCaption: okCaption, closeAlert: closeAlert, isCancelButtonVisible: isCancelButtonVisible, onCancelClick: onCancelClick, cancelCaption: cancelCaption })] })) })));
+    return (_jsx("div", __assign({ css: [backdrop, isShowState ? visibleAlert : hiddenAlert] }, { children: _jsxs("div", __assign({ className: "alertMessageWrapper ".concat(isShowState ? undefined : "alertMessageWrapperClose") }, { children: [_jsx(AlertMessageHeader, { type: type, title: title, isCloseButtonVisible: isCloseButtonVisible, onCloseClick: onCloseClick, closeAlert: closeAlert }), _jsx(AlertMessageBody, { message: message, input: input, inputOption: inputOption, value: value, setValue: setValue }), _jsx(AlertMessageFooter, { footerStart: footerStart, isOkButtonVisible: isOkButtonVisible, onOkClick: onOkClick, okCaption: okCaption, closeAlert: closeAlert, isCancelButtonVisible: isCancelButtonVisible, onCancelClick: onCancelClick, cancelCaption: cancelCaption, value: value, input: input })] })) })));
 };
 export default React.memo(AlertMessage);

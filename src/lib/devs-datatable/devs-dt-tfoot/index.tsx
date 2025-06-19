@@ -81,7 +81,7 @@ const DevsDtTFoot = React.memo(() => {
                   left: 0,
                   "--width": `${mergedCellsCount.widths}px`,
                   borderTop: "1px solid #c6c6c6",
-                  textAlign: "right",
+                  textAlign: "center",
                 } as React.CSSProperties
               }
             >
@@ -103,6 +103,10 @@ const DevsDtTFoot = React.memo(() => {
                     {
                       borderTop: "1px solid #c6c6c6",
                       "--width": `${col.width ?? 100}px`,
+                      textAlign: col.align ?? "left",
+                      ...col.style?.({
+                        target: "tfoot",
+                      }),
                     } as React.CSSProperties
                   }
                 >

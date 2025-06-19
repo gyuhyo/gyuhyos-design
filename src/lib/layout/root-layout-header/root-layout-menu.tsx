@@ -45,10 +45,6 @@ const RootLayoutMenu: React.FC<any> = React.memo(() => {
     menuSearchInputRef.current!.value = "";
   };
 
-  React.useEffect(() => {
-    console.log(searchMenuText);
-  }, [searchMenuText]);
-
   const CreatedMenus = (menus: SideMenuItemsChildProps[], depth = 0) => {
     const menuContainerCss = () => {
       const commonChildrenStyle: SerializedStyles = css({

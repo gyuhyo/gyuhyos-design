@@ -23,14 +23,14 @@ var alertMessageFooter = css({
     alignItems: "center",
 });
 var AlertMessageFooter = React.memo(function (_a) {
-    var footerStart = _a.footerStart, isOkButtonVisible = _a.isOkButtonVisible, onOkClick = _a.onOkClick, okCaption = _a.okCaption, closeAlert = _a.closeAlert, isCancelButtonVisible = _a.isCancelButtonVisible, onCancelClick = _a.onCancelClick, cancelCaption = _a.cancelCaption;
+    var footerStart = _a.footerStart, isOkButtonVisible = _a.isOkButtonVisible, onOkClick = _a.onOkClick, okCaption = _a.okCaption, closeAlert = _a.closeAlert, isCancelButtonVisible = _a.isCancelButtonVisible, onCancelClick = _a.onCancelClick, cancelCaption = _a.cancelCaption, value = _a.value, input = _a.input;
     return (_jsxs("div", __assign({ css: alertMessageFooter }, { children: [_jsx("div", { children: footerStart }), _jsxs("div", __assign({ css: css({
                     display: "flex",
                     flexDirection: "row",
                     columnGap: 7,
                 }) }, { children: [isOkButtonVisible && (_jsx(Button, __assign({ bgColor: "#1f619d", color: "#fff", onClick: function (e) {
                             if (onOkClick) {
-                                var next = onOkClick();
+                                var next = onOkClick(value);
                                 if (typeof next === "boolean" && !next)
                                     return;
                             }

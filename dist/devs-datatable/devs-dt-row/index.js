@@ -9,6 +9,22 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
 import { jsx as _jsx, jsxs as _jsxs } from "@emotion/react/jsx-runtime";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
@@ -79,8 +95,9 @@ var getDefaultValue = function (_a) {
 function DevsDtRow(_a) {
     var _b, _c, _d, _e;
     var data = _a.data, index = _a.index, rowKey = _a.rowKey, lastNode = _a.lastNode, dragProvided = _a.dragProvided, dragSnapshot = _a.dragSnapshot;
+    var _f = __read(React.useState(0), 2), forceReRender = _f[0], setForceReRender = _f[1];
     var showMessage = useMessage().showMessage;
-    var _f = useDt(), setDataSource = _f.setDataSource, options = _f.options, formsRef = _f.formsRef, focusedRow = _f.focusedRow, setFocusedRow = _f.setFocusedRow, editCount = _f.editCount, dataSource = _f.dataSource, setSliderFormOpen = _f.setSliderFormOpen, setFocusedRowForm = _f.setFocusedRowForm, editMode = _f.editMode, currentPage = _f.currentPage, focusedCell = _f.focusedCell;
+    var _g = useDt(), setDataSource = _g.setDataSource, options = _g.options, formsRef = _g.formsRef, focusedRow = _g.focusedRow, setFocusedRow = _g.setFocusedRow, editCount = _g.editCount, dataSource = _g.dataSource, setSliderFormOpen = _g.setSliderFormOpen, setFocusedRowForm = _g.setFocusedRowForm, editMode = _g.editMode, currentPage = _g.currentPage, focusedCell = _g.focusedCell;
     var idx = (currentPage - 1) * ((_b = options === null || options === void 0 ? void 0 : options.paginationLimit) !== null && _b !== void 0 ? _b : 20) + index;
     var getDefaultValues = React.useMemo(function () {
         var hasDefaultValueColumns = lastNode
@@ -133,7 +150,7 @@ function DevsDtRow(_a) {
     }, [dataSource[idx + 1]]);
     React.useEffect(function () {
         if (!Object.keys(formsRef.current).includes(rowKey)) {
-            formsRef.current[rowKey] = form;
+            formsRef.current[rowKey] = __assign(__assign({}, form), { forceRerender: function () { return setForceReRender(function (prev) { return ++prev; }); } });
         }
     }, []);
     React.useEffect(function () {
@@ -264,6 +281,9 @@ function DevsDtRow(_a) {
         }
         return false;
     }, [lastNode, data, focusedCell]);
+    var RowForceRerender = function () {
+        setForceReRender(function (prev) { return ++prev; });
+    };
     return (_jsxs("tr", __assign({ className: "devs-dt-row".concat((focusedRow === null || focusedRow === void 0 ? void 0 : focusedRow.rowId) === data.rowId ? " devs-dt-focused-row" : "").concat(data.checked === true ? " devs-dt-checked-row" : ""), onDoubleClick: onEditModeClick, onClick: function () {
             setFocusedRow(data);
             if (data.mode === "r") {
@@ -283,7 +303,7 @@ function DevsDtRow(_a) {
                             value: watch(col.field),
                         });
                     }
-                    return (_jsx(DevsDtCell, { register: register, control: control, col: col, mode: data.mode, defaultValue: watch(col.field), error: errors.hasOwnProperty(col.field), autoFocus: (_b = (_a = col.autoFocus) === null || _a === void 0 ? void 0 : _a.call(col, data.mode)) !== null && _b !== void 0 ? _b : GetAutoFocus(col.field), row: data, prevRow: prevRow, nextRow: nextRow, setValue: setValue, merge: (_c = data._merge) === null || _c === void 0 ? void 0 : _c[col.field], rowIndex: index, getValue: getValues, trigger: trigger, watch: watch }, "".concat(rowKey, "-").concat(col.field)));
+                    return (_jsx(DevsDtCell, { register: register, control: control, col: col, mode: data.mode, defaultValue: watch(col.field), error: errors.hasOwnProperty(col.field), autoFocus: (_b = (_a = col.autoFocus) === null || _a === void 0 ? void 0 : _a.call(col, data.mode)) !== null && _b !== void 0 ? _b : GetAutoFocus(col.field), row: data, prevRow: prevRow, nextRow: nextRow, setValue: setValue, merge: (_c = data._merge) === null || _c === void 0 ? void 0 : _c[col.field], rowIndex: index, getValue: getValues, trigger: trigger, watch: watch, forceRerender: RowForceRerender }, "".concat(rowKey, "-").concat(forceReRender, "-").concat(col.field)));
                 })] })));
 }
 export default React.memo(DevsDtRow);

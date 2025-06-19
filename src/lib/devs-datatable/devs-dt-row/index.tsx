@@ -186,6 +186,7 @@ function DevsDtRow({
   dragProvided,
   dragSnapshot,
 }: TDevsDtRow) {
+  const [forceReRender, setForceReRender] = React.useState<number>(0);
   const { showMessage } = useMessage();
   const {
     setDataSource,
@@ -278,7 +279,10 @@ function DevsDtRow({
 
   React.useEffect(() => {
     if (!Object.keys(formsRef.current).includes(rowKey)) {
-      formsRef.current[rowKey] = form;
+      formsRef.current[rowKey] = {
+        ...form,
+        forceRerender: () => setForceReRender((prev) => ++prev),
+      };
     }
   }, []);
 
@@ -429,6 +433,10 @@ function DevsDtRow({
     [lastNode, data, focusedCell]
   );
 
+  const RowForceRerender = () => {
+    setForceReRender((prev) => ++prev);
+  };
+
   return (
     <tr
       className={`devs-dt-row${
@@ -488,7 +496,7 @@ function DevsDtRow({
           }
           return (
             <DevsDtCell
-              key={`${rowKey}-${col.field}`}
+              key={`${rowKey}-${forceReRender}-${col.field}`}
               register={register}
               control={control}
               col={col}
@@ -505,6 +513,7 @@ function DevsDtRow({
               getValue={getValues}
               trigger={trigger}
               watch={watch}
+              forceRerender={RowForceRerender}
             />
           );
         })}

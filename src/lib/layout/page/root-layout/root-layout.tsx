@@ -25,6 +25,7 @@ function RootLayout() {
         <SideMenuContainer />
       )}
       <div
+        id="gyud_main_container"
         css={css({
           width: calculWidth,
           height: "100dvh",

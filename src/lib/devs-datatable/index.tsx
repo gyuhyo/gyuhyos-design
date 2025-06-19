@@ -177,17 +177,35 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
             .map((x) => x.getValues()),
           getCheckedRowsData: async () => await getCheckedRows(),
           focusedRowIndex: (index: number) => {
-            if (props.dataSource.length > index) {
-              setFocusedRow(props.dataSource[index]);
+            if (
+              Object.values(formsRef.current).map((x) => x.getValues()).length >
+              index
+            ) {
+              setFocusedRow(
+                Object.values(formsRef.current).map((x) => x.getValues())[index]
+              );
             }
           },
           focusedRow: (row: IDataSource) => setFocusedRow(row),
-          addRow: (defaultValues?: IDataSource) =>
+          addRow: (defaultValues?: IDataSource) => {
             props.setDataSource((prev) => [
               { checked: true, mode: "c", ...defaultValues },
               ...prev,
-            ]),
+            ]);
 
+            setFocusedRow(
+              Object.values(formsRef.current).map((x) => x.getValues())[0]
+            );
+          },
+          focusedRowForm: focusedRow
+            ? formsRef.current[focusedRow.rowId]
+            : null,
+          forceRerender: (rowId: string) => {
+            const form = formsRef.current[rowId];
+            if (form) {
+              form.forceRerender();
+            }
+          },
           setValue: ({ rowId, field, value }) => {
             const form = formsRef.current[rowId];
 
@@ -199,6 +217,11 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
                 )
               );
               form.trigger();
+              form.forceRerender();
+
+              return { result: true, form: form, dataSource: props.dataSource };
+            } else {
+              return { result: false };
             }
           },
           setFocus: ({ rowId, field }) => {

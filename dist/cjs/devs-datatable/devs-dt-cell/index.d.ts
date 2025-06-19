@@ -23,7 +23,8 @@ type TDevsDtCell = {
     watch: UseFormWatch<IDataSource>;
     prevRow: IDataSource;
     nextRow: IDataSource;
+    forceRerender: () => void;
 };
-declare function DevsDtCell({ register, control, col, mode, defaultValue, error, autoFocus, row, merge, setValue, getValue, rowIndex, trigger, watch, prevRow, nextRow, }: TDevsDtCell): import("@emotion/react/jsx-runtime").JSX.Element;
+declare function DevsDtCell({ register, control, col, mode, defaultValue, error, autoFocus, row, merge, setValue, getValue, rowIndex, trigger, watch, prevRow, nextRow, forceRerender, }: TDevsDtCell): import("@emotion/react/jsx-runtime").JSX.Element;
 declare const _default: React.MemoExoticComponent<typeof DevsDtCell>;
 export default _default;

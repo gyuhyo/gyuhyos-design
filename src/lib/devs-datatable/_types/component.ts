@@ -1,6 +1,7 @@
+import { CSSInterpolation } from "@emotion/serialize";
 import React, { JSX } from "react";
 import { IDataTableColumn } from "./col";
-import { CSSInterpolation } from "@emotion/serialize";
+import { FormWithForce } from "./context";
 
 export interface IDataSource {
   [key: string]: any;
@@ -110,6 +111,7 @@ export interface DevsDataTableRef {
     getFocusedRow: null | IDataSource;
     getFocusedCell: null | { row: null | IDataSource; field: null | string };
     getCheckedRows: IDataSource[];
+    focusedRowForm: null | FormWithForce;
     getCheckedRowsData: () => Promise<IDataSource[]>;
     addRow: (defaultValues?: IDataSource) => void;
     setFocus: ({ rowId, field }: { rowId: string; field: string }) => void;
@@ -126,6 +128,7 @@ export interface DevsDataTableRef {
     focusedRow: (row: IDataSource) => void;
     focusedRowIndex: (index: number) => void;
     getFocusedRowIndex: null | number;
+    forceRerender: (rowId: string) => void;
   };
 }
 

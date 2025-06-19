@@ -12,13 +12,19 @@ export interface MessageShowProps {
   okCaption?: string;
   cancelCaption?: string;
   isOkButtonVisible?: boolean;
-  onOkClick?: (e?: MouseEvent<HTMLButtonElement>) => void | boolean;
+  onOkClick?: (e?: any) => void | boolean;
   isCancelButtonVisible?: boolean;
   onCancelClick?: (e?: MouseEvent<HTMLButtonElement>) => void;
   isCloseButtonVisible?: boolean;
   onCloseClick?: (e?: MouseEvent<HTMLDivElement>) => void;
   footerStart?: React.ReactNode;
   duration?: number;
+  input?: boolean;
+  inputOption?: React.DetailedHTMLProps<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    HTMLInputElement
+  > &
+    React.AriaAttributes;
 }
 
 export interface MessageContextTypes
@@ -34,6 +40,12 @@ export interface MessageContextTypes
   onCancelClick: (e?: MouseEvent<HTMLButtonElement>) => void;
   isCloseButtonVisible: boolean;
   onCloseClick: (e?: MouseEvent<HTMLDivElement>) => void;
+  input: boolean;
+  inputOption: React.DetailedHTMLProps<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    HTMLInputElement
+  > &
+    React.AriaAttributes;
 }
 
 export interface IToastMessage {

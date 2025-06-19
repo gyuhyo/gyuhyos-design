@@ -79,7 +79,7 @@ exports.MessageProvider = react_1.default.memo(function (_a) {
     var showMessage = function (props) {
         return new Promise(function (resolve) {
             setMessages(function (prev) {
-                var _a, _b, _c, _d, _e, _f, _g, _h;
+                var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
                 return __spreadArray(__spreadArray([], __read(prev), false), [
                     {
                         alertID: Date.now().toString(),
@@ -89,27 +89,29 @@ exports.MessageProvider = react_1.default.memo(function (_a) {
                         okCaption: (_c = props.okCaption) !== null && _c !== void 0 ? _c : "확인",
                         cancelCaption: (_d = props.cancelCaption) !== null && _d !== void 0 ? _d : "취소",
                         isOkButtonVisible: (_e = props.isOkButtonVisible) !== null && _e !== void 0 ? _e : true,
+                        input: (_f = props.input) !== null && _f !== void 0 ? _f : false,
+                        inputOption: (_g = props.inputOption) !== null && _g !== void 0 ? _g : {},
                         onOkClick: function (e) {
                             if (props.onOkClick)
                                 props.onOkClick(e);
                             resolve(true); // 확인 버튼 클릭 시 Promise 해결
                             removeMessage(Date.now().toString());
                         },
-                        isCancelButtonVisible: (_f = props.isCancelButtonVisible) !== null && _f !== void 0 ? _f : true,
+                        isCancelButtonVisible: (_h = props.isCancelButtonVisible) !== null && _h !== void 0 ? _h : true,
                         onCancelClick: function (e) {
                             if (props.onCancelClick)
                                 props.onCancelClick(e);
                             resolve(false); // 취소 버튼 클릭 시 Promise 해결
                             removeMessage(Date.now().toString());
                         },
-                        isCloseButtonVisible: (_g = props.isCloseButtonVisible) !== null && _g !== void 0 ? _g : true,
+                        isCloseButtonVisible: (_j = props.isCloseButtonVisible) !== null && _j !== void 0 ? _j : true,
                         onCloseClick: function (e) {
                             if (props.onCloseClick)
                                 props.onCloseClick(e);
                             resolve(false); // 닫기 버튼 클릭 시 Promise 해결
                             removeMessage(Date.now().toString());
                         },
-                        footerStart: (_h = props.footerStart) !== null && _h !== void 0 ? _h : undefined,
+                        footerStart: (_k = props.footerStart) !== null && _k !== void 0 ? _k : undefined,
                         duration: props.duration,
                     },
                 ], false);
@@ -154,7 +156,7 @@ exports.MessageProvider = react_1.default.memo(function (_a) {
                             return current.filter(function (m) { return m.alertID !== msg.alertID; });
                         });
                     }
-                }, type: msg.type, title: msg.title, message: msg.message, okCaption: msg.okCaption, cancelCaption: msg.cancelCaption, isOkButtonVisible: msg.isOkButtonVisible, onOkClick: msg.onOkClick, isCancelButtonVisible: msg.isCancelButtonVisible, onCancelClick: msg.onCancelClick, isCloseButtonVisible: msg.isCancelButtonVisible, onCloseClick: msg.onCloseClick, footerStart: msg.footerStart, duration: msg.duration }, msg.alertID)); }), toastMessages &&
+                }, type: msg.type, title: msg.title, message: msg.message, okCaption: msg.okCaption, cancelCaption: msg.cancelCaption, isOkButtonVisible: msg.isOkButtonVisible, onOkClick: msg.onOkClick, isCancelButtonVisible: msg.isCancelButtonVisible, onCancelClick: msg.onCancelClick, isCloseButtonVisible: msg.isCancelButtonVisible, onCloseClick: msg.onCloseClick, footerStart: msg.footerStart, duration: msg.duration, input: msg.input, inputOption: msg.inputOption }, msg.alertID)); }), toastMessages &&
                 toastMessages.map(function (msg) { return ((0, jsx_runtime_1.jsx)(toast_message_1.default, { id: msg.id, length: msg.length, align: msg.align, title: msg.title, message: msg.message, type: msg.type, duration: msg.duration, startAt: msg.startAt, endAt: msg.endAt, removeToastMessage: removeToastMessage }, msg.id)); })] })));
 });
 var ToastMessageContainer = styled_1.default.div({

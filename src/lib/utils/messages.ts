@@ -9,6 +9,18 @@ const messages = {
       body: "데이터 조회 도중 오류가 발생했습니다.",
     },
   },
+  add: {
+    parent: {
+      unsaved: {
+        title: "추가 실패",
+        body: "부모 데이터를 먼저 저장 해주세요.",
+      },
+      unfocused: {
+        title: "선택된 부모 데이터 오류",
+        body: "선택된 부모 데이터가 존재하지 않습니다.",
+      },
+    },
+  },
   save: {
     parent: {
       unsaved: {

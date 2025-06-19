@@ -59,9 +59,6 @@ var RootLayoutMenu = React.memo(function () {
         setSearchMenuText("");
         menuSearchInputRef.current.value = "";
     };
-    React.useEffect(function () {
-        console.log(searchMenuText);
-    }, [searchMenuText]);
     var CreatedMenus = function (menus, depth) {
         if (depth === void 0) { depth = 0; }
         var menuContainerCss = function () {

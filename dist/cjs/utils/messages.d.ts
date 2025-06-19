@@ -9,6 +9,18 @@ declare const messages: {
             body: string;
         };
     };
+    add: {
+        parent: {
+            unsaved: {
+                title: string;
+                body: string;
+            };
+            unfocused: {
+                title: string;
+                body: string;
+            };
+        };
+    };
     save: {
         parent: {
             unsaved: {

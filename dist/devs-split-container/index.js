@@ -42,7 +42,7 @@ import styled from "@emotion/styled";
 import React from "react";
 import { useResizeObserver } from "../devs-datatable/hooks/useResizeObserver";
 var DevsSplitContainer = React.memo(function (_a) {
-    var children = _a.children, _b = _a.align, align = _b === void 0 ? "column" : _b, sizes = _a.sizes, onSizeChanged = _a.onSizeChanged, disabled = _a.disabled;
+    var children = _a.children, _b = _a.align, align = _b === void 0 ? "column" : _b, sizes = _a.sizes, onSizeChanged = _a.onSizeChanged, onLoaded = _a.onLoaded, disabled = _a.disabled;
     var selectorRef = React.useRef(null);
     var changedPanelsPercent = React.useRef([]);
     var _c = __read(React.useState(false), 2), isSet = _c[0], setIsSet = _c[1];
@@ -146,6 +146,12 @@ var DevsSplitContainer = React.memo(function (_a) {
                 panels[idx].style.flexBasis = size[idx];
             }
         }
+        onLoaded === null || onLoaded === void 0 ? void 0 : onLoaded({
+            width: containerRef.current.clientWidth,
+            height: containerRef.current.clientHeight,
+            sizes: size.map(function (s) { return parseFloat(s.replace("px", "")); }),
+        });
+        onSizeChanged === null || onSizeChanged === void 0 ? void 0 : onSizeChanged(size.map(function (s) { return parseFloat(s.replace("px", "")); }));
     }, [width, height, usingSize, realAlign]);
     var onSplitBarMouseDown = function (e, index) {
         var _a;

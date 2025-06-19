@@ -25,8 +25,8 @@ function RootLayoutHeaderMenuPop({
 
     for (let m of menus) {
       const mns = m.children?.filter((m) => {
-        const val = value.replace(/ /g, "");
-        const title = m.title.replace(/ /g, "");
+        const val = value.toLowerCase().replace(/ /g, "");
+        const title = m.title.toLowerCase().replace(/ /g, "");
 
         return (
           title.includes(val) ||

@@ -79,7 +79,9 @@ const ToastMessage: React.FC<IToastMessageComponent> = React.memo((props) => {
         <p style={{ fontWeight: "bold" }}>{props.title}</p>
         <ToastMessageHeaderCloseButton onClick={closeToastMessage} />
       </ToastMessageHeader>
-      <ToastMessageBody>{props.message}</ToastMessageBody>
+      <ToastMessageBody>
+        <pre>{props.message}</pre>
+      </ToastMessageBody>
       <ToastMessageProgress ref={progressRef} type={props.type} />
     </ToastMessageContainer>
   );

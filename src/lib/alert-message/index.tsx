@@ -52,8 +52,10 @@ const AlertMessage: React.FC<MessageContextTypes> = (props) => {
     isCloseButtonVisible,
     onCloseClick,
     footerStart,
+    input,
+    inputOption,
   } = props;
-
+  const [value, setValue] = React.useState<any>("");
   const [isShowState, setIsShowState] = React.useState(true);
 
   const closeAlert = () => {
@@ -102,7 +104,13 @@ const AlertMessage: React.FC<MessageContextTypes> = (props) => {
           onCloseClick={onCloseClick}
           closeAlert={closeAlert}
         />
-        <AlertMessageBody message={message} />
+        <AlertMessageBody
+          message={message}
+          input={input}
+          inputOption={inputOption}
+          value={value}
+          setValue={setValue}
+        />
         <AlertMessageFooter
           footerStart={footerStart}
           isOkButtonVisible={isOkButtonVisible}
@@ -112,6 +120,8 @@ const AlertMessage: React.FC<MessageContextTypes> = (props) => {
           isCancelButtonVisible={isCancelButtonVisible}
           onCancelClick={onCancelClick}
           cancelCaption={cancelCaption}
+          value={value}
+          input={input}
         />
       </div>
     </div>

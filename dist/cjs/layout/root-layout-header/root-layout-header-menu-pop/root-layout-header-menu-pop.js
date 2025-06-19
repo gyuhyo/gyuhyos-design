@@ -92,8 +92,8 @@ function RootLayoutHeaderMenuPop(_a) {
                 var m = menus_1_1.value;
                 var mns = (_b = m.children) === null || _b === void 0 ? void 0 : _b.filter(function (m) {
                     var _a;
-                    var val = value.replace(/ /g, "");
-                    var title = m.title.replace(/ /g, "");
+                    var val = value.toLowerCase().replace(/ /g, "");
+                    var title = m.title.toLowerCase().replace(/ /g, "");
                     return (title.includes(val) ||
                         ((_a = m.shortKey) === null || _a === void 0 ? void 0 : _a.includes(value)) ||
                         (0, es_hangul_1.getChoseong)(title).includes(val) ||

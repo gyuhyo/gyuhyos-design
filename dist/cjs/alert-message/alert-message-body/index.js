@@ -33,10 +33,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsx_runtime_1 = require("@emotion/react/jsx-runtime");
 /** @jsxImportSource @emotion/react */
 var react_1 = require("@emotion/react");
+var styled_1 = __importDefault(require("@emotion/styled"));
 var React = __importStar(require("react"));
 var alertMessageBody = (0, react_1.css)({
     flex: "1 1 0%",
@@ -45,7 +49,18 @@ var alertMessageBody = (0, react_1.css)({
     alignContent: "center",
 });
 var AlertMessageBody = React.memo(function (_a) {
-    var message = _a.message;
-    return ((0, jsx_runtime_1.jsx)("div", __assign({ css: alertMessageBody }, { children: typeof message === "string" ? ((0, jsx_runtime_1.jsx)("p", __assign({ css: (0, react_1.css)({ whiteSpace: "pre-wrap" }) }, { children: message }))) : (message) })));
+    var message = _a.message, input = _a.input, inputOption = _a.inputOption, value = _a.value, setValue = _a.setValue;
+    return ((0, jsx_runtime_1.jsxs)("div", __assign({ css: alertMessageBody }, { children: [typeof message === "string" ? ((0, jsx_runtime_1.jsx)("p", __assign({ css: (0, react_1.css)({ whiteSpace: "pre-wrap" }) }, { children: message }))) : (message), input && ((0, jsx_runtime_1.jsx)(InputBox, { children: (0, jsx_runtime_1.jsx)(Input, __assign({ value: value, onChange: function (e) { return setValue(e.target.value); } }, inputOption)) }))] })));
+});
+var InputBox = styled_1.default.div({
+    marginTop: 12,
+});
+var Input = styled_1.default.input({
+    width: "100%",
+    height: 30,
+    maxWidth: 400,
+    border: "1px solid #ddd",
+    padding: "14px 7px",
+    marginTop: 3,
 });
 exports.default = AlertMessageBody;
