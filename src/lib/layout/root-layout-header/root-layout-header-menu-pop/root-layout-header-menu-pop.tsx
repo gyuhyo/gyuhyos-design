@@ -29,11 +29,12 @@ function RootLayoutHeaderMenuPop({
         const title = m.title.toLowerCase().replace(/ /g, "");
 
         return (
-          title.includes(val) ||
-          m.shortKey?.includes(value) ||
-          getChoseong(title).includes(val) ||
-          title.includes(convertQwertyToHangul(val)) ||
-          getChoseong(title).includes(convertQwertyToHangul(val))
+          (title.includes(val) ||
+            m.shortKey?.includes(value) ||
+            getChoseong(title).includes(val) ||
+            title.includes(convertQwertyToHangul(val)) ||
+            getChoseong(title).includes(convertQwertyToHangul(val))) &&
+          m.visible
         );
       });
 

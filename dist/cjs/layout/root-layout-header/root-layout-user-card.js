@@ -28,13 +28,20 @@ var RootLayoutUserCard = react_1.default.memo(function () {
     var signIn = (0, user_store_1.useUserStore)(function (state) { return state.signIn; });
     var user = (0, user_store_1.useUserStore)(function (state) { return state.me; });
     var showMessage = (0, message_context_1.useMessage)().showMessage;
-    var _a = (0, layout_context_1.useLayout)(), refreshTokenUrl = _a.refreshTokenUrl, languages = _a.languages, handleLanguageChange = _a.handleLanguageChange;
+    var _a = (0, layout_context_1.useLayout)(), host = _a.host, refreshTokenUrl = _a.refreshTokenUrl, languages = _a.languages, handleLanguageChange = _a.handleLanguageChange;
     var onSignOutClick = function () {
         showMessage({
             title: "로그아웃 확인",
             message: "정말 로그아웃 하시겠습니까?",
             onOkClick: function () {
-                signOut();
+                fetch("".concat(host, "/smart.device/logout/").concat(user.userNo), {
+                    method: "get",
+                    headers: {
+                        Authorization: "Bearer ".concat(user.accessToken),
+                    },
+                }).finally(function () {
+                    signOut();
+                });
             },
         });
     };

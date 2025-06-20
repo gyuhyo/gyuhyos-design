@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useIntersectionObserver = exports.sleep = exports.messages = exports.DevsSplitContainer = exports.DevsDatePicker = exports.GyudAccessProvider = exports.ContextMenu = exports.LayerPopup = exports.setDefaultTitle = exports.moveUrl = exports.useUserStore = exports.LayoutProvider = exports.MessageProvider = exports.useMessage = exports.MesButton = exports.Button = exports.DevsDataTable = void 0;
+exports.useIntersectionObserver = exports.sleep = exports.messages = exports.DevsSplitContainer = exports.DevsDatePicker = exports.GyudAccessProvider = exports.ContextMenu = exports.LayerPopup = exports.setDefaultTitle = exports.moveUrl = exports.useUserStore = exports.useMenuStore = exports.LayoutProvider = exports.MessageProvider = exports.useMessage = exports.MesButton = exports.Button = exports.DevsDataTable = void 0;
 var devs_datatable_1 = require("./devs-datatable");
 Object.defineProperty(exports, "DevsDataTable", { enumerable: true, get: function () { return __importDefault(devs_datatable_1).default; } });
 var button_1 = require("./button");
@@ -14,6 +14,8 @@ Object.defineProperty(exports, "useMessage", { enumerable: true, get: function (
 Object.defineProperty(exports, "MessageProvider", { enumerable: true, get: function () { return message_context_1.MessageProvider; } });
 var layout_context_1 = require("./layout/contexts/layout-context");
 Object.defineProperty(exports, "LayoutProvider", { enumerable: true, get: function () { return layout_context_1.LayoutProvider; } });
+var menu_store_1 = require("./layout/stores/menu-store");
+Object.defineProperty(exports, "useMenuStore", { enumerable: true, get: function () { return menu_store_1.useMenuStore; } });
 var user_store_1 = require("./layout/stores/user-store");
 Object.defineProperty(exports, "useUserStore", { enumerable: true, get: function () { return user_store_1.useUserStore; } });
 var moveUrl_1 = require("./layout/utils/moveUrl");

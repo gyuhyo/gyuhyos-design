@@ -23,6 +23,10 @@ function SideMenuItemContainer(_a) {
             height: "calc(100dvh - 60px)",
             letterSpacing: 3,
         }) }, { children: items &&
-            items.map(function (group) { return (_jsx(SideMenuItemGroup, { isShow: isShow, group: group }, group.key)); }) })));
+            items
+                .filter(function (f) {
+                return f.children && f.children.filter(function (c) { return c.visible; }).length > 0;
+            })
+                .map(function (group) { return (_jsx(SideMenuItemGroup, { isShow: isShow, group: group }, group.key)); }) })));
 }
 export default SideMenuItemContainer;

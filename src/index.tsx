@@ -12,6 +12,84 @@ const a = React.memo(() => {
   return <>123</>;
 });
 
+const menus = [
+  {
+    main: true,
+    key: "main",
+    group: "main",
+    title: "통합조회",
+    iconName: "chart-simple",
+    component: a,
+  },
+  {
+    key: "masterData",
+    group: "masterData",
+    title: "기준정보",
+    iconName: "database",
+    children: [
+      {
+        key: "product",
+        shortKey: "prd",
+        group: "masterData",
+        title: "품목관리",
+        component: App,
+      },
+      {
+        key: "users",
+        shortKey: "usr",
+        group: "masterData",
+        title: "사원관리",
+      },
+    ],
+  },
+  {
+    key: "delivery",
+    group: "delivery",
+    title: "납품관리",
+    iconName: "truck",
+    children: [
+      {
+        key: "delivery",
+        shortKey: "usr",
+        group: "masterData",
+        title: "사원관리",
+        children: [
+          {
+            key: "product",
+            shortKey: "prd",
+            group: "masterData",
+            title: "품목관리",
+            hasClose: true,
+            component: App,
+          },
+          {
+            key: "product2",
+            shortKey: "prd",
+            group: "masterData",
+            title: "품목관리",
+            component: App,
+          },
+        ],
+      },
+      {
+        key: "delivery2",
+        shortKey: "usr",
+        group: "masterData",
+        title: "사원관리",
+        children: [
+          {
+            key: "product",
+            shortKey: "prd",
+            group: "masterData",
+            title: "품목관리",
+            component: App,
+          },
+        ],
+      },
+    ],
+  },
+];
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
@@ -30,83 +108,7 @@ root.render(
               <div>123</div>
             </React.Fragment>
           }
-          menus={[
-            {
-              main: true,
-              key: "main",
-              group: "main",
-              title: "통합조회",
-              iconName: "chart-simple",
-              component: a,
-            },
-            {
-              key: "masterData",
-              group: "masterData",
-              title: "기준정보",
-              iconName: "database",
-              children: [
-                {
-                  key: "product",
-                  shortKey: "prd",
-                  group: "masterData",
-                  title: "품목관리",
-                  component: App,
-                },
-                {
-                  key: "users",
-                  shortKey: "usr",
-                  group: "masterData",
-                  title: "사원관리",
-                },
-              ],
-            },
-            {
-              key: "delivery",
-              group: "delivery",
-              title: "납품관리",
-              iconName: "truck",
-              children: [
-                {
-                  key: "delivery",
-                  shortKey: "usr",
-                  group: "masterData",
-                  title: "사원관리",
-                  children: [
-                    {
-                      key: "product",
-                      shortKey: "prd",
-                      group: "masterData",
-                      title: "품목관리",
-                      hasClose: true,
-                      component: App,
-                    },
-                    {
-                      key: "product2",
-                      shortKey: "prd",
-                      group: "masterData",
-                      title: "품목관리",
-                      component: App,
-                    },
-                  ],
-                },
-                {
-                  key: "delivery2",
-                  shortKey: "usr",
-                  group: "masterData",
-                  title: "사원관리",
-                  children: [
-                    {
-                      key: "product",
-                      shortKey: "prd",
-                      group: "masterData",
-                      title: "품목관리",
-                      component: App,
-                    },
-                  ],
-                },
-              ],
-            },
-          ]}
+          menus={[]}
         >
           <App />
         </LayoutProvider>

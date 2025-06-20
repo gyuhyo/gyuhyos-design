@@ -69,11 +69,12 @@ function RootLayoutHeaderMenuPop(_a) {
                     var _a;
                     var val = value.toLowerCase().replace(/ /g, "");
                     var title = m.title.toLowerCase().replace(/ /g, "");
-                    return (title.includes(val) ||
+                    return ((title.includes(val) ||
                         ((_a = m.shortKey) === null || _a === void 0 ? void 0 : _a.includes(value)) ||
                         getChoseong(title).includes(val) ||
                         title.includes(convertQwertyToHangul(val)) ||
-                        getChoseong(title).includes(convertQwertyToHangul(val)));
+                        getChoseong(title).includes(convertQwertyToHangul(val))) &&
+                        m.visible);
                 });
                 if (mns) {
                     searchMenus.push.apply(searchMenus, __spreadArray([], __read(mns), false));

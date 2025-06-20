@@ -24,9 +24,13 @@ function SideMenuItemContainer({ isShow }: { isShow: boolean }) {
       })}
     >
       {items &&
-        items.map((group) => (
-          <SideMenuItemGroup isShow={isShow} key={group.key} group={group} />
-        ))}
+        items
+          .filter((f) => {
+            return f.children && f.children.filter((c) => c.visible).length > 0;
+          })
+          .map((group) => (
+            <SideMenuItemGroup isShow={isShow} key={group.key} group={group} />
+          ))}
     </ul>
   );
 }

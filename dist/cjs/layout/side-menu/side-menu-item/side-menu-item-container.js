@@ -28,6 +28,10 @@ function SideMenuItemContainer(_a) {
             height: "calc(100dvh - 60px)",
             letterSpacing: 3,
         }) }, { children: items &&
-            items.map(function (group) { return ((0, jsx_runtime_1.jsx)(side_menu_item_group_1.default, { isShow: isShow, group: group }, group.key)); }) })));
+            items
+                .filter(function (f) {
+                return f.children && f.children.filter(function (c) { return c.visible; }).length > 0;
+            })
+                .map(function (group) { return ((0, jsx_runtime_1.jsx)(side_menu_item_group_1.default, { isShow: isShow, group: group }, group.key)); }) })));
 }
 exports.default = SideMenuItemContainer;

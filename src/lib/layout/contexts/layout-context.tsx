@@ -18,29 +18,43 @@ interface LayoutContextProps {
   languages: languagesProps[];
   handleLanguageChange: (lang: languagesProps) => void;
   customSettings?: React.ReactNode;
+  host: string;
 }
 
 const languages = [
   { code: "ko", name: "한국어", flag: "kr" }, // 한국어
   { code: "en", name: "English", flag: "us" }, // 영어
+  { code: "es", name: "Spanish", flag: "es" },
 ];
 
 const LayoutContext = createContext<LayoutContextProps | undefined>(undefined);
 
 export const LayoutProvider: React.FC<{
   children: React.ReactNode;
+  host: string;
   menus: SideMenuItemsProps[];
   authUrl: string;
   refreshTokenUrl: string;
   menuType?: "slide" | "header" | "multiple";
   customSettings?: React.ReactNode;
+  onMenuPermission?: ({
+    userNo,
+    menus,
+  }: {
+    userNo: string;
+    menus: SideMenuItemsProps[];
+  }) => Promise<SideMenuItemsProps[]>;
+  statics?: string[];
 }> = ({
   children,
+  host,
   menus,
   refreshTokenUrl,
   authUrl,
   menuType = "slide",
   customSettings,
+  onMenuPermission,
+  statics,
 }) => {
   const isAccess = useGyudAccess();
   const [isLoaded, setIsLoaded] = React.useState(false);
@@ -92,8 +106,12 @@ export const LayoutProvider: React.FC<{
     }
   }, [user, authUrl, path, isClient]);
 
+  const getPermissionMenus = async () => {
+    return (await onMenuPermission?.({ userNo: user!, menus: menus })) || menus;
+  };
+
   React.useEffect(() => {
-    if (!isClient) return;
+    if (!user || !isClient) return;
 
     if (menus === undefined || menus.length === 0) {
       throw new Error(
@@ -110,8 +128,12 @@ export const LayoutProvider: React.FC<{
       throw new Error("반드시 한개의 메인 메뉴가 존재해야 합니다.");
     }
 
-    setInitialMenus(menus);
-  }, [menus, isClient]);
+    if (path !== authUrl) {
+      getPermissionMenus().then((permissionMenus) => {
+        setInitialMenus(permissionMenus);
+      });
+    }
+  }, [user, menus, isClient, path]);
 
   React.useEffect(() => {
     if (!isLoaded || !isClient) return;
@@ -147,7 +169,7 @@ export const LayoutProvider: React.FC<{
       new window.google.translate.TranslateElement(
         {
           pageLanguage: "ko",
-          includedLanguages: "ko,en",
+          includedLanguages: "ko,en,es",
           autoDisplay: true,
         },
         "google_translate_element"
@@ -182,7 +204,11 @@ export const LayoutProvider: React.FC<{
     throw new Error("You do not have permission to use package 'gyud'.");
   }
 
-  if (!isClient || path === authUrl || path.includes("popup")) {
+  if (
+    !isClient ||
+    [...(statics || []), authUrl].includes(path) ||
+    path.includes("popup")
+  ) {
     return <React.Fragment>{children}</React.Fragment>;
   }
 
@@ -199,6 +225,7 @@ export const LayoutProvider: React.FC<{
         languages,
         handleLanguageChange,
         customSettings,
+        host,
       }}
     >
       <div id="google_translate_element"></div>

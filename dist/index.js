@@ -2,6 +2,7 @@ export { default as DevsDataTable } from "./devs-datatable";
 export { default as Button, MesButton } from "./button";
 export { useMessage, MessageProvider, } from "./alert-message/context/message-context";
 export { LayoutProvider } from "./layout/contexts/layout-context";
+export { useMenuStore } from "./layout/stores/menu-store";
 export { useUserStore } from "./layout/stores/user-store";
 export { moveUrl, setDefaultTitle } from "./layout/utils/moveUrl";
 export { default as LayerPopup } from "./layer-popup";

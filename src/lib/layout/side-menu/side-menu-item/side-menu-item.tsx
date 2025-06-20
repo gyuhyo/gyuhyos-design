@@ -17,6 +17,7 @@ function SideMenuItem({ item }: SideMenuItemProps) {
   const onMenuClick = () => {
     openMenu(item);
   };
+
   return (
     <li onClick={onMenuClick}>
       <span

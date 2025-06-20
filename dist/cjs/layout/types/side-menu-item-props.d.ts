@@ -18,6 +18,7 @@ interface SideMenuItemsProps {
     component?: React.FunctionComponent | React.FC<any>;
     hasClose?: boolean;
     children?: SideMenuItemsChildProps[];
+    visible?: boolean;
 }
 interface SideMenuItemsChildProps extends Omit<SideMenuItemsProps, "iconType" | "iconName"> {
 }

@@ -13,14 +13,22 @@ const RootLayoutUserCard: React.FC<any> = React.memo(() => {
   const signIn = useUserStore((state) => state.signIn);
   const user = useUserStore((state) => state.me);
   const { showMessage } = useMessage();
-  const { refreshTokenUrl, languages, handleLanguageChange } = useLayout();
+  const { host, refreshTokenUrl, languages, handleLanguageChange } =
+    useLayout();
 
   const onSignOutClick = () => {
     showMessage({
       title: "로그아웃 확인",
       message: "정말 로그아웃 하시겠습니까?",
       onOkClick: () => {
-        signOut();
+        fetch(`${host}/smart.device/logout/${user.userNo}`, {
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }).finally(() => {
+          signOut();
+        });
       },
     });
   };

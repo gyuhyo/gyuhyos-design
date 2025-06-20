@@ -100,7 +100,11 @@ function SideMenuItemGroup({ group, isShow }: SideMenuItemGroupProps) {
           lineHeight: "40px",
           borderBottom: "#000",
           height: groupOpened
-            ? `${(group.children ? group.children.length : 0) * 40}px`
+            ? `${
+                (group.children
+                  ? group.children.filter((f) => f.visible).length
+                  : 0) * 40
+              }px`
             : "0px",
           transition: "height 200ms ease-in-out",
           overflow: "hidden",
@@ -112,9 +116,11 @@ function SideMenuItemGroup({ group, isShow }: SideMenuItemGroupProps) {
         })}
       >
         {group.children &&
-          group.children.map((itm) => (
-            <SideMenuItem key={`${group.key}-${itm.key}`} item={itm} />
-          ))}
+          group.children
+            .filter((f) => f.visible)
+            .map((itm) => (
+              <SideMenuItem key={`${group.key}-${itm.key}`} item={itm} />
+            ))}
       </ul>
     </li>
   );

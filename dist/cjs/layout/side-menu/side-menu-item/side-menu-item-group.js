@@ -119,7 +119,9 @@ function SideMenuItemGroup(_a) {
                     lineHeight: "40px",
                     borderBottom: "#000",
                     height: groupOpened
-                        ? "".concat((group.children ? group.children.length : 0) * 40, "px")
+                        ? "".concat((group.children
+                            ? group.children.filter(function (f) { return f.visible; }).length
+                            : 0) * 40, "px")
                         : "0px",
                     transition: "height 200ms ease-in-out",
                     overflow: "hidden",
@@ -129,6 +131,8 @@ function SideMenuItemGroup(_a) {
                         cursor: "pointer",
                     },
                 }) }, { children: group.children &&
-                    group.children.map(function (itm) { return ((0, jsx_runtime_1.jsx)(side_menu_item_1.default, { item: itm }, "".concat(group.key, "-").concat(itm.key))); }) }))] }));
+                    group.children
+                        .filter(function (f) { return f.visible; })
+                        .map(function (itm) { return ((0, jsx_runtime_1.jsx)(side_menu_item_1.default, { item: itm }, "".concat(group.key, "-").concat(itm.key))); }) }))] }));
 }
 exports.default = SideMenuItemGroup;

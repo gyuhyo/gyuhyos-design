@@ -21,6 +21,7 @@ export type {
   SideMenuItemsProps,
   SideMenuItemsChildProps,
 } from "./layout/types/side-menu-item-props";
+export { useMenuStore } from "./layout/stores/menu-store";
 export { useUserStore } from "./layout/stores/user-store";
 export type {
   IUser,
