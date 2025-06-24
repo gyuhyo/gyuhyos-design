@@ -14,13 +14,13 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #868686;
+  background-color: #5d5d5d;
   background-clip: padding-box;
   border: var(--scrollbar-border-width) solid transparent;
   border-radius: 20px;
 }
 ::-webkit-scrollbar-track {
-  box-shadow: inset 5px 5px 13px #00000020;
+  box-shadow: inset 5px 5px 13px #00000030;
 }
 
 ::-webkit-scrollbar-corner {
