@@ -85,16 +85,31 @@ import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "@emotion/reac
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import React from "react";
+import { sleep } from "../utils/sleep";
+import "./assets/style.css";
 import { DevsDtProvider } from "./context/devs-dt-context";
 import "./dev.datatable.style.css";
 import DevsDtHeader from "./devs-dt-header";
+import DevsDtPagination from "./devs-dt-pagination";
 import DevsDtSliderForm from "./devs-dt-slider-form/devs-dt-slider-form";
 import DevsDtTBody from "./devs-dt-tbody";
 import DevsDtTHead from "./devs-dt-thead";
 import { useInitDt } from "./hooks/useInitDt";
-import DevsDtPagination from "./devs-dt-pagination";
-import "./assets/style.css";
-import { sleep } from "../utils/sleep";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+var getLastNodes = function (columns) {
+    var lastNodes = [];
+    var findLastNodes = function (column) {
+        if (column.children && column.children.length > 0) {
+            column.children.forEach(findLastNodes);
+        }
+        else {
+            lastNodes.push(column);
+        }
+    };
+    columns.forEach(findLastNodes);
+    return lastNodes;
+};
 // DevsDataTable 컴포넌트 타입 설정 및 구현
 var DevsDataTable = React.forwardRef(function (props, ref) {
     var _a, _b, _c, _d, _e, _f, _g;
@@ -102,6 +117,7 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
         ((_b = props.options) === null || _b === void 0 ? void 0 : _b.editType) === "cell") {
         throw new Error("showEditModeSelector and editType cannot be used together.");
     }
+    var xlsTableRef = React.useRef(null);
     var _h = __read(React.useState(0), 2), headerWidth = _h[0], setHeaderWidth = _h[1];
     var _j = __read(React.useState(false), 2), innerLoading = _j[0], setInnerLoading = _j[1];
     var _k = __read(React.useState(null), 2), focusedCell = _k[0], setFocusedCell = _k[1];
@@ -117,6 +133,7 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
         thead: thead,
         columnsStyleForceUpdate: columnsStyleForceUpdate,
     });
+    var lastNode = React.useMemo(function () { return getLastNodes(props.columns); }, [props.columns]);
     React.useEffect(function () {
         if (!thead.current)
             return;
@@ -300,8 +317,39 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
                     form.setError(field, { type: "required" });
                 }
             },
+            export: function (_a) {
+                var data = _a.data, fileName = _a.fileName, sheetName = _a.sheetName, onMutateWorksheet = _a.onMutateWorksheet;
+                return onDownloadExcel({ data: data, fileName: fileName, sheetName: sheetName, onMutateWorksheet: onMutateWorksheet });
+            },
         },
     }); }, [props.dataSource, props.options, focusedRow, focusedCell]);
+    var onDownloadExcel = function (_a) {
+        var data = _a.data, fileName = _a.fileName, sheetName = _a.sheetName, onMutateWorksheet = _a.onMutateWorksheet;
+        var headerKeys = lastNode.map(function (node) { return node.field; });
+        var headerMap = lastNode.reduce(function (prev, curr) {
+            prev[curr.field] = curr.title;
+            return prev;
+        }, {});
+        var headerTitles = headerKeys.map(function (key) { return headerMap[key]; });
+        var excelData = data || props.dataSource;
+        var worksheet = XLSX.utils.aoa_to_sheet(__spreadArray([
+            headerTitles
+        ], __read(excelData.map(function (row) { return headerKeys.map(function (key) { return row[key]; }); })), false));
+        // 🔧 클라이언트에 worksheet를 넘겨서 수정 기회 제공
+        if (onMutateWorksheet) {
+            onMutateWorksheet(worksheet, XLSX.utils);
+        }
+        var workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+        var excelBuffer = XLSX.write(workbook, {
+            bookType: "xlsx",
+            type: "array",
+        });
+        var file = new Blob([excelBuffer], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        saveAs(file, "".concat(fileName, ".xlsx"));
+    };
     React.useEffect(function () {
         if (props.focusedRowChanged !== undefined) {
             props.focusedRowChanged(focusedRow);

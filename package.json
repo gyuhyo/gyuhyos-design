@@ -1,6 +1,6 @@
 {
   "name": "gyud",
-  "version": "1.2.29",
+  "version": "1.2.34",
   "description": "Copyright Gyuhyos Design Components",
   "license": "MIT",
   "author": {
@@ -34,6 +34,7 @@
     "@types/react-dom": "^18.3.1",
     "dayjs": "^1.11.13",
     "es-hangul": "^2.3.3",
+    "file-saver": "^2.0.5",
     "persist-and-sync": "^1.2.1",
     "react-hook-form": "^7.54.1",
     "react-is": "^19.0.0",
@@ -42,6 +43,7 @@
     "typescript": "^4.9.5",
     "usehooks-ts": "^3.1.1",
     "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5",
     "zustand": "^5.0.2"
   },
   "resolutions": {
@@ -88,6 +90,7 @@
   },
   "type": "module",
   "devDependencies": {
+    "@types/file-saver": "^2.0.7",
     "@types/react-is": "^19.0.0",
     "antd": "^5.21.6",
     "copyfiles": "^2.4.1",

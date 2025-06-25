@@ -2,6 +2,7 @@ import { CSSInterpolation } from "@emotion/serialize";
 import React, { JSX } from "react";
 import { IDataTableColumn } from "./col";
 import { FormWithForce } from "./context";
+import * as XLSX from "xlsx";
 export interface IDataSource {
     [key: string]: any;
 }
@@ -117,6 +118,12 @@ export interface DevsDataTableRef {
         focusedRowIndex: (index: number) => void;
         getFocusedRowIndex: null | number;
         forceRerender: (rowId: string) => void;
+        export: ({ data, fileName, sheetName, onMutateWorksheet, }: {
+            data?: IDataSource[];
+            fileName: string;
+            sheetName: string;
+            onMutateWorksheet?: (worksheet: XLSX.WorkSheet, utils: typeof XLSX.utils) => void;
+        }) => void;
     };
 }
 export interface IDataTableProps {

@@ -2,22 +2,40 @@
 
 import { css } from "@emotion/react";
 import React from "react";
+import { sleep } from "../utils/sleep";
 import {
   DevsDataTableRef,
   IDataSource,
+  IDataTableColumn,
   IDataTableProps,
   IFormsRef,
 } from "./_types";
+import "./assets/style.css";
 import { DevsDtProvider } from "./context/devs-dt-context";
 import "./dev.datatable.style.css";
 import DevsDtHeader from "./devs-dt-header";
+import DevsDtPagination from "./devs-dt-pagination";
 import DevsDtSliderForm from "./devs-dt-slider-form/devs-dt-slider-form";
 import DevsDtTBody from "./devs-dt-tbody";
 import DevsDtTHead from "./devs-dt-thead";
 import { useInitDt } from "./hooks/useInitDt";
-import DevsDtPagination from "./devs-dt-pagination";
-import "./assets/style.css";
-import { sleep } from "../utils/sleep";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+
+const getLastNodes = (columns: IDataTableColumn[]): IDataTableColumn[] => {
+  let lastNodes: IDataTableColumn[] = [];
+
+  const findLastNodes = (column: IDataTableColumn) => {
+    if (column.children && column.children.length > 0) {
+      column.children.forEach(findLastNodes);
+    } else {
+      lastNodes.push(column);
+    }
+  };
+
+  columns.forEach(findLastNodes);
+  return lastNodes;
+};
 
 // DevsDataTable 컴포넌트 타입 설정 및 구현
 const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
@@ -30,6 +48,7 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
         "showEditModeSelector and editType cannot be used together."
       );
     }
+    const xlsTableRef = React.useRef<any>(null);
     const [headerWidth, setHeaderWidth] = React.useState<number>(0);
     const [innerLoading, setInnerLoading] = React.useState<boolean>(false);
     const [focusedCell, setFocusedCell] = React.useState<null | string>(null);
@@ -48,6 +67,11 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
       thead: thead,
       columnsStyleForceUpdate,
     });
+
+    const lastNode = React.useMemo(
+      () => getLastNodes(props.columns),
+      [props.columns]
+    );
 
     React.useEffect(() => {
       if (!thead.current) return;
@@ -238,10 +262,62 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
               form.setError(field, { type: "required" });
             }
           },
+          export: ({ data, fileName, sheetName, onMutateWorksheet }) =>
+            onDownloadExcel({ data, fileName, sheetName, onMutateWorksheet }),
         },
       }),
       [props.dataSource, props.options, focusedRow, focusedCell]
     );
+
+    const onDownloadExcel = ({
+      data,
+      fileName,
+      sheetName,
+      onMutateWorksheet,
+    }: {
+      data?: IDataSource[];
+      fileName: string;
+      sheetName: string;
+      onMutateWorksheet?: (
+        worksheet: XLSX.WorkSheet,
+        utils: typeof XLSX.utils
+      ) => void;
+    }) => {
+      const headerKeys = lastNode.map((node) => node.field);
+      const headerMap: Record<string, string> = lastNode.reduce(
+        (prev: Record<string, string>, curr) => {
+          prev[curr.field] = curr.title;
+          return prev;
+        },
+        {}
+      );
+
+      const headerTitles = headerKeys.map((key) => headerMap[key]);
+      const excelData = data || props.dataSource;
+      const worksheet = XLSX.utils.aoa_to_sheet([
+        headerTitles,
+        ...excelData.map((row) => headerKeys.map((key) => row[key])),
+      ]);
+
+      // 🔧 클라이언트에 worksheet를 넘겨서 수정 기회 제공
+      if (onMutateWorksheet) {
+        onMutateWorksheet(worksheet, XLSX.utils);
+      }
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array",
+      });
+
+      const file = new Blob([excelBuffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      saveAs(file, `${fileName}.xlsx`);
+    };
 
     React.useEffect(() => {
       if (props.focusedRowChanged !== undefined) {

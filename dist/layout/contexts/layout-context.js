@@ -131,7 +131,7 @@ export var LayoutProvider = function (_a) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, (onMenuPermission === null || onMenuPermission === void 0 ? void 0 : onMenuPermission({ userNo: user, menus: menus }))];
-                case 1: return [2 /*return*/, (_a.sent()) || menus];
+                case 1: return [2 /*return*/, _a.sent()];
             }
         });
     }); };
@@ -149,9 +149,14 @@ export var LayoutProvider = function (_a) {
             throw new Error("반드시 한개의 메인 메뉴가 존재해야 합니다.");
         }
         if (path !== authUrl) {
-            getPermissionMenus().then(function (permissionMenus) {
-                setInitialMenus(permissionMenus);
-            });
+            if (onMenuPermission) {
+                getPermissionMenus().then(function (permissionMenus) {
+                    setInitialMenus(permissionMenus);
+                });
+            }
+            else {
+                setInitialMenus(menus);
+            }
         }
     }, [user, menus, isClient, path]);
     React.useEffect(function () {

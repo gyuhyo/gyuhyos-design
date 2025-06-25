@@ -10,6 +10,29 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -90,16 +113,31 @@ var jsx_runtime_1 = require("@emotion/react/jsx-runtime");
 /** @jsxImportSource @emotion/react */
 var react_1 = require("@emotion/react");
 var react_2 = __importDefault(require("react"));
+var sleep_1 = require("../utils/sleep");
+require("./assets/style.css");
 var devs_dt_context_1 = require("./context/devs-dt-context");
 require("./dev.datatable.style.css");
 var devs_dt_header_1 = __importDefault(require("./devs-dt-header"));
+var devs_dt_pagination_1 = __importDefault(require("./devs-dt-pagination"));
 var devs_dt_slider_form_1 = __importDefault(require("./devs-dt-slider-form/devs-dt-slider-form"));
 var devs_dt_tbody_1 = __importDefault(require("./devs-dt-tbody"));
 var devs_dt_thead_1 = __importDefault(require("./devs-dt-thead"));
 var useInitDt_1 = require("./hooks/useInitDt");
-var devs_dt_pagination_1 = __importDefault(require("./devs-dt-pagination"));
-require("./assets/style.css");
-var sleep_1 = require("../utils/sleep");
+var XLSX = __importStar(require("xlsx"));
+var file_saver_1 = require("file-saver");
+var getLastNodes = function (columns) {
+    var lastNodes = [];
+    var findLastNodes = function (column) {
+        if (column.children && column.children.length > 0) {
+            column.children.forEach(findLastNodes);
+        }
+        else {
+            lastNodes.push(column);
+        }
+    };
+    columns.forEach(findLastNodes);
+    return lastNodes;
+};
 // DevsDataTable 컴포넌트 타입 설정 및 구현
 var DevsDataTable = react_2.default.forwardRef(function (props, ref) {
     var _a, _b, _c, _d, _e, _f, _g;
@@ -107,6 +145,7 @@ var DevsDataTable = react_2.default.forwardRef(function (props, ref) {
         ((_b = props.options) === null || _b === void 0 ? void 0 : _b.editType) === "cell") {
         throw new Error("showEditModeSelector and editType cannot be used together.");
     }
+    var xlsTableRef = react_2.default.useRef(null);
     var _h = __read(react_2.default.useState(0), 2), headerWidth = _h[0], setHeaderWidth = _h[1];
     var _j = __read(react_2.default.useState(false), 2), innerLoading = _j[0], setInnerLoading = _j[1];
     var _k = __read(react_2.default.useState(null), 2), focusedCell = _k[0], setFocusedCell = _k[1];
@@ -122,6 +161,7 @@ var DevsDataTable = react_2.default.forwardRef(function (props, ref) {
         thead: thead,
         columnsStyleForceUpdate: columnsStyleForceUpdate,
     });
+    var lastNode = react_2.default.useMemo(function () { return getLastNodes(props.columns); }, [props.columns]);
     react_2.default.useEffect(function () {
         if (!thead.current)
             return;
@@ -305,8 +345,39 @@ var DevsDataTable = react_2.default.forwardRef(function (props, ref) {
                     form.setError(field, { type: "required" });
                 }
             },
+            export: function (_a) {
+                var data = _a.data, fileName = _a.fileName, sheetName = _a.sheetName, onMutateWorksheet = _a.onMutateWorksheet;
+                return onDownloadExcel({ data: data, fileName: fileName, sheetName: sheetName, onMutateWorksheet: onMutateWorksheet });
+            },
         },
     }); }, [props.dataSource, props.options, focusedRow, focusedCell]);
+    var onDownloadExcel = function (_a) {
+        var data = _a.data, fileName = _a.fileName, sheetName = _a.sheetName, onMutateWorksheet = _a.onMutateWorksheet;
+        var headerKeys = lastNode.map(function (node) { return node.field; });
+        var headerMap = lastNode.reduce(function (prev, curr) {
+            prev[curr.field] = curr.title;
+            return prev;
+        }, {});
+        var headerTitles = headerKeys.map(function (key) { return headerMap[key]; });
+        var excelData = data || props.dataSource;
+        var worksheet = XLSX.utils.aoa_to_sheet(__spreadArray([
+            headerTitles
+        ], __read(excelData.map(function (row) { return headerKeys.map(function (key) { return row[key]; }); })), false));
+        // 🔧 클라이언트에 worksheet를 넘겨서 수정 기회 제공
+        if (onMutateWorksheet) {
+            onMutateWorksheet(worksheet, XLSX.utils);
+        }
+        var workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+        var excelBuffer = XLSX.write(workbook, {
+            bookType: "xlsx",
+            type: "array",
+        });
+        var file = new Blob([excelBuffer], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        (0, file_saver_1.saveAs)(file, "".concat(fileName, ".xlsx"));
+    };
     react_2.default.useEffect(function () {
         if (props.focusedRowChanged !== undefined) {
             props.focusedRowChanged(focusedRow);

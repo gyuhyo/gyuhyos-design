@@ -107,7 +107,7 @@ export const LayoutProvider: React.FC<{
   }, [user, authUrl, path, isClient]);
 
   const getPermissionMenus = async () => {
-    return (await onMenuPermission?.({ userNo: user!, menus: menus })) || menus;
+    return await onMenuPermission?.({ userNo: user!, menus: menus });
   };
 
   React.useEffect(() => {
@@ -129,9 +129,13 @@ export const LayoutProvider: React.FC<{
     }
 
     if (path !== authUrl) {
-      getPermissionMenus().then((permissionMenus) => {
-        setInitialMenus(permissionMenus);
-      });
+      if (onMenuPermission) {
+        getPermissionMenus().then((permissionMenus) => {
+          setInitialMenus(permissionMenus as SideMenuItemsProps[]);
+        });
+      } else {
+        setInitialMenus(menus);
+      }
     }
   }, [user, menus, isClient, path]);
 

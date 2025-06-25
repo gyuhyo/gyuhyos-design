@@ -20,6 +20,7 @@ const menus = [
     title: "통합조회",
     iconName: "chart-simple",
     component: a,
+    visible: true,
   },
   {
     key: "masterData",
@@ -33,12 +34,14 @@ const menus = [
         group: "masterData",
         title: "품목관리",
         component: App,
+        visible: true,
       },
       {
         key: "users",
         shortKey: "usr",
         group: "masterData",
         title: "사원관리",
+        visible: true,
       },
     ],
   },
@@ -61,6 +64,7 @@ const menus = [
             title: "품목관리",
             hasClose: true,
             component: App,
+            visible: true,
           },
           {
             key: "product2",
@@ -68,6 +72,7 @@ const menus = [
             group: "masterData",
             title: "품목관리",
             component: App,
+            visible: true,
           },
         ],
       },
@@ -99,19 +104,7 @@ root.render(
   <React.StrictMode>
     <GyudAccessProvider>
       <MessageProvider>
-        <LayoutProvider
-          refreshTokenUrl="/auth/refresh"
-          authUrl="/auth"
-          menuType="slide"
-          customSettings={
-            <React.Fragment>
-              <div>123</div>
-            </React.Fragment>
-          }
-          menus={[]}
-        >
-          <App />
-        </LayoutProvider>
+        <App />
       </MessageProvider>
     </GyudAccessProvider>
   </React.StrictMode>

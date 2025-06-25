@@ -1,125 +1,322 @@
-import React from "react";
-import "./App.css";
-import {
-  Button,
-  DevsSplitContainer,
-  LayerPopup,
-  MesButton,
-  useMessage,
-} from "./lib/index";
-import uuid from "react-uuid";
-import { IDataSource, IDataTableColumn } from "./lib/devs-datatable/_types";
-import DevsDataTable from "./lib/devs-datatable";
-import { DatePicker } from "antd";
-import DevsDatePicker from "./lib/devs-date-picker";
-import DevSplitContainer from "./lib/devs-split-container";
 import dayjs from "dayjs";
+import { DevsDataTable, DevsDatePicker, messages, useMessage } from "./lib";
+import React from "react";
+import { Button } from "./lib";
+import { IDataTableColumn } from "./lib";
 
-const cols = [
+const NumberFormatter = (number) => {
+  const parse = parseInt(number);
+  return isNaN(parse) ? null : parse.toLocaleString();
+};
+
+const IsNum = (number) => {
+  return (
+    number !== undefined && number !== null && number !== 0 && !isNaN(number)
+  );
+};
+
+const generateFoundryProductionColumns = [
   {
     field: "prdCode",
     title: "제품 코드",
-    merge: true,
-    width: 150,
     sticky: true,
+    updatable: false,
+    width: 150,
+    align: "center",
   },
   {
     field: "prdName",
     title: "제품명",
-    merge: true,
-    width: 200,
     sticky: true,
+    updatable: false,
+    width: 150,
   },
   {
-    field: "prodType",
-    title: "생산 구분",
-    merge: true,
-    width: 100,
+    field: "totalProductionPlanCount",
+    title: "계획량",
     sticky: true,
-    sortable: false,
-    resizing: false,
-    align: "center",
+    updatable: false,
+    align: "right",
+    type: "number",
+    render: ({ value }) => (IsNum(value) ? value?.toLocaleString() : "-"),
+    style: ({ target }) => {
+      if (target === "tbody") {
+        return {
+          background: "#E0F2FE",
+        };
+      }
+    },
   },
   {
-    field: "dayNightType",
-    title: "주야 구분",
-    width: 100,
+    field: "remainingCount",
+    title: "잔량",
     sticky: true,
-    sortable: false,
-    resizing: false,
+    updatable: false,
+    align: "right",
+    type: "number",
+    render: ({ value }) => (IsNum(value) ? value?.toLocaleString() : "-"),
+    style: ({ target }) => {
+      if (target === "tbody") {
+        return {
+          background: "#E0F2FE",
+        };
+      }
+    },
+  },
+  {
+    field: "profRate",
+    title: "계획대비",
+    sticky: true,
+    updatable: false,
     align: "center",
+    width: 75,
+    render: ({ value }) => (IsNum(value) ? `${value}%` : "-"),
+    style: ({ target }) => {
+      if (target === "tbody") {
+        return {
+          background: "#E0F2FE",
+        };
+      }
+    },
+  },
+  {
+    field: "totalCount",
+    title: "총 생산",
+    sticky: true,
+    updatable: false,
+    align: "right",
+    type: "number",
+    render: ({ value }) => (IsNum(value) ? value?.toLocaleString() : "-"),
+    style: ({ target }) => {
+      if (target === "tbody") {
+        return {
+          color: "#1D4ED8",
+          background: "#BBF7D0",
+        };
+      }
+    },
+  },
+  {
+    field: "totalOkCount",
+    title: "총 양품",
+    sticky: true,
+    updatable: false,
+    align: "right",
+    type: "number",
+    render: ({ row }) => {
+      const totalOkCount = row.totalCount - row.totalNgCount;
+      return IsNum(totalOkCount) ? totalOkCount?.toLocaleString() : "-";
+    },
+    style: ({ target }) => {
+      if (target === "tbody") {
+        return {
+          color: "#1D4ED8",
+          background: "#BBF7D0",
+        };
+      }
+    },
+  },
+  {
+    field: "totalNgCount",
+    title: "총 불량",
+    sticky: true,
+    updatable: false,
+    align: "right",
+    type: "number",
+    width: 75,
+    render: ({ value }) => (IsNum(value) ? value?.toLocaleString() : "-"),
+    style: ({ target }) => {
+      if (target === "tbody") {
+        return {
+          background: "#FEE2E2",
+          color: "#FF0000",
+        };
+      }
+    },
+  },
+  {
+    field: "foundryProductionErrorPPMRate",
+    title: "불량율\n(PPM)",
+    sticky: true,
+    updatable: false,
+    align: "right",
+    type: "number",
+    render: ({ row }) => {
+      const ppm = (row.totalNgCount / row.totalCount) * 100 * 10000;
+      return IsNum(ppm) ? parseInt(ppm.toString())?.toLocaleString() : "-";
+    },
+    style: ({ target }) => {
+      if (target === "tbody") {
+        return {
+          background: "#FEE2E2",
+          color: "#FF0000",
+        };
+      }
+    },
   },
 ];
 
 const App = () => {
-  const [selectedDate, setSelectedDate] = React.useState(dayjs());
-  const [jsonData, setJsonData] = React.useState([]);
-  const [dataColumns, setDataColumns] = React.useState([]);
+  const gridRef = React.useRef(null);
   const { showMessage } = useMessage();
-  const getJsonData = () => {
-    fetch("http://localhost:3095/quality.chart/month.production.error")
+  const [selectedMonth, setSelectedMonth] = React.useState(dayjs());
+  const [dataSource, setDataSource] = React.useState([]);
+  const [columns, setColumns] = React.useState<IDataTableColumn[]>([]);
+  const [isHideFixColumn, setIsHideFixColumn] = React.useState(false);
+
+  const getDataList = () => {
+    fetch(
+      `http://sqw.iptime.org:3095/production/foundry/${selectedMonth.format(
+        "YYYY-MM"
+      )}`
+    )
       .then((res) => res.json())
       .then((data) => {
-        setJsonData(data);
+        setDataSource(data);
       })
-      .catch((err) => {
-        console.error(err);
+      .catch(() => {
+        showMessage({
+          type: "error",
+          title: messages.search.error.title,
+          message: messages.search.error.body,
+          isCancelButtonVisible: false,
+        });
       });
   };
 
-  React.useEffect(() => {
-    getJsonData();
-  }, []);
+  const getColumn = () => {
+    return [
+      ...generateFoundryProductionColumns.filter((f) =>
+        isHideFixColumn
+          ? f.sticky != true || f.field === "prdCode" || f.field === "prdName"
+          : true
+      ),
+      ...Array.from(Array(dayjs(selectedMonth).daysInMonth()), (_, day) => {
+        const date = dayjs(selectedMonth)
+          .set("date", day + 1)
+          .format("YYYY-MM-DD");
+
+        const dateProductionCount = (row) =>
+          (row.dates[date]?.day?.profCount ?? 0) +
+          (row.dates[date]?.night?.profCount ?? 0);
+
+        const dateProductionNgCount = (row) =>
+          (row.dates[date]?.day?.profNgCount ?? 0) +
+          (row.dates[date]?.night?.profNgCount ?? 0);
+
+        return {
+          field: `profDay_${day + 1}`,
+          title: `${day + 1}일`,
+          align: "right",
+          type: "number",
+          //editorWidth: 400,
+          render: ({ row }) => {
+            const totalCount = dateProductionCount(row);
+            const totalNgCount = dateProductionNgCount(row);
+            if (totalCount === 0 && totalNgCount === 0) return "-";
+
+            return (
+              <div style={{ display: "flex", justifyContent: "end" }}>
+                <p>{totalCount?.toLocaleString()}</p>/
+                <p style={{ color: "red" }}>{totalNgCount?.toLocaleString()}</p>
+              </div>
+            );
+          },
+        };
+      }),
+    ];
+  };
 
   React.useEffect(() => {
-    const lastDate = selectedDate.daysInMonth();
+    setColumns(getColumn());
 
-    const dates = Array.from({ length: lastDate }, (_, i) => {
-      const date = i + 1;
+    getDataList();
+  }, [selectedMonth, isHideFixColumn]);
 
+  const onHideFixColumnClick = () => {
+    if (!gridRef.current) return;
+
+    const replaceDataSource = dataSource.map((d: any) => {
+      const dateData = Object.keys(d.dates).reduce((prev, curr) => {
+        const day = d.dates[curr].day;
+        const night = d.dates[curr].night;
+        const success = (day?.profCount || 0) + (night?.profCount || 0);
+        const error = (day?.profNgCount || 0) + (night?.profNgCount || 0);
+
+        const text = `${success === 0 ? "-" : success} / ${
+          error === 0 ? "-" : error
+        }`;
+        prev[`profDay_${dayjs(curr).format("D")}`] = text;
+        return prev;
+      }, {});
+
+      const getPPM = () => {
+        const ppm = (d.totalNgCount / d.totalCount) * 100 * 10000;
+        return IsNum(ppm) ? parseInt(ppm.toString())?.toLocaleString() : "-";
+      };
       return {
-        field: `day-${date}-err`,
-        title: `${date}일`,
-        align: "right",
-        width: 70,
-        sortable: false,
-        resizing: false,
-        children: [
-          {
-            field: `day-${date}-err-count`,
-            title: `불량 수량`,
-            align: "right",
-            width: 70,
-            sortable: false,
-            resizing: false,
-          },
-          {
-            field: `day-${date}-err-ppm`,
-            title: `ppm`,
-            align: "right",
-            width: 70,
-            sortable: false,
-            resizing: false,
-          },
-        ],
+        ...d,
+        foundryProductionErrorPPMRate: getPPM(),
+        ...dateData,
       };
     });
-  }, [selectedDate]);
+    gridRef.current.api.export({
+      data: replaceDataSource,
+      fileName: "test",
+      sheetName: "test",
+      onMutateWorksheet: (worksheet, utils) => {
+        // 👉 병합 셀 예시
+        worksheet["!merges"] = [
+          { s: { r: 0, c: 0 }, e: { r: 0, c: 2 } }, // A1~C1 병합
+        ];
 
-  const onButtonClick = () => {
-    showMessage({
-      type: "success",
-      title: "a",
-      message: "d",
-      input: true,
-      inputOption: {
-        type: "number",
-        placeholder: "입력",
+        // 👉 열 너비 조정 예시
+        worksheet["!cols"] = [{ wch: 20 }, { wch: 10 }, { wch: 30 }];
+
+        // 👉 특정 셀에 수동 값 추가
+        worksheet["D2"] = { v: "수정됨", t: "s" };
+        worksheet["!ref"] = "A1:D10";
       },
-      onOkClick: (e) => console.log(e),
     });
   };
-  return <Button onClick={onButtonClick}>123</Button>;
+
+  return (
+    <DevsDataTable
+      ref={gridRef}
+      title="주조 생산 등록"
+      columns={columns}
+      setColumns={setColumns}
+      dataSource={dataSource}
+      setDataSource={setDataSource}
+      options={{
+        editType: "cell",
+        cellEditClickType: "click",
+        showRowNumber: true,
+      }}
+      buttons={{
+        custom: (
+          <>
+            <Button
+              bgColor="#df4873"
+              color="#fff"
+              borderColor="#df4873"
+              border={true}
+              compact={false}
+              onClick={onHideFixColumnClick}
+            >
+              asd
+            </Button>
+            <DevsDatePicker
+              picker="month"
+              selectedDate={selectedMonth}
+              setSelectedDate={setSelectedMonth}
+            />
+          </>
+        ),
+        onSearchClick: getDataList,
+      }}
+    />
+  );
 };
 
 export default App;
