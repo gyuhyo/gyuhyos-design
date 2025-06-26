@@ -116,6 +116,7 @@ var DevsDtProviderComponent = function (props) {
                     display: "flex",
                     flexDirection: "column",
                     position: "relative",
+                    overflow: "hidden",
                 } }, { children: props.children })) }) })));
 };
 export var DevsDtProvider = React.memo(DevsDtProviderComponent);

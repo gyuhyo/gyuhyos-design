@@ -138,6 +138,7 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
             display: "flex",
             flexDirection: "column",
             position: "relative",
+            overflow: "hidden",
           }}
         >
           {props.children}

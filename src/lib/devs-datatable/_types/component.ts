@@ -134,15 +134,17 @@ export interface DevsDataTableRef {
       data,
       fileName,
       sheetName,
-      onMutateWorksheet,
+      onBefore,
+      onAfter,
     }: {
       data?: IDataSource[];
       fileName: string;
       sheetName: string;
-      onMutateWorksheet?: (
+      onBefore?: (
         worksheet: XLSX.WorkSheet,
         utils: typeof XLSX.utils
-      ) => void;
+      ) => number | undefined;
+      onAfter?: (worksheet: XLSX.WorkSheet, utils: typeof XLSX.utils) => void;
     }) => void;
   };
 }

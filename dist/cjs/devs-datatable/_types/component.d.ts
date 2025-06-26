@@ -118,11 +118,12 @@ export interface DevsDataTableRef {
         focusedRowIndex: (index: number) => void;
         getFocusedRowIndex: null | number;
         forceRerender: (rowId: string) => void;
-        export: ({ data, fileName, sheetName, onMutateWorksheet, }: {
+        export: ({ data, fileName, sheetName, onBefore, onAfter, }: {
             data?: IDataSource[];
             fileName: string;
             sheetName: string;
-            onMutateWorksheet?: (worksheet: XLSX.WorkSheet, utils: typeof XLSX.utils) => void;
+            onBefore?: (worksheet: XLSX.WorkSheet, utils: typeof XLSX.utils) => number | undefined;
+            onAfter?: (worksheet: XLSX.WorkSheet, utils: typeof XLSX.utils) => void;
         }) => void;
     };
 }

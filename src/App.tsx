@@ -264,18 +264,15 @@ const App = () => {
       data: replaceDataSource,
       fileName: "test",
       sheetName: "test",
-      onMutateWorksheet: (worksheet, utils) => {
-        // 👉 병합 셀 예시
-        worksheet["!merges"] = [
-          { s: { r: 0, c: 0 }, e: { r: 0, c: 2 } }, // A1~C1 병합
-        ];
-
-        // 👉 열 너비 조정 예시
-        worksheet["!cols"] = [{ wch: 20 }, { wch: 10 }, { wch: 30 }];
-
-        // 👉 특정 셀에 수동 값 추가
-        worksheet["D2"] = { v: "수정됨", t: "s" };
-        worksheet["!ref"] = "A1:D10";
+      onBefore: (worksheet, utils) => {
+        utils.sheet_add_aoa(
+          worksheet,
+          [
+            ["사용자명", "홍길동"],
+            ["생성일", new Date().toLocaleString()],
+          ],
+          { origin: "A1" }
+        );
       },
     });
   };

@@ -122,6 +122,7 @@ var DevsDtProviderComponent = function (props) {
                     display: "flex",
                     flexDirection: "column",
                     position: "relative",
+                    overflow: "hidden",
                 } }, { children: props.children })) }) })));
 };
 exports.DevsDtProvider = react_1.default.memo(DevsDtProviderComponent);

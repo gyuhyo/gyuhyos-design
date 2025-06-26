@@ -495,7 +495,25 @@ function DevsDtCell(_a) {
         }, className: classString, rowSpan: merge === null || merge === void 0 ? void 0 : merge.rowSpan, "data-field": col.field, "data-hidden": false, "data-width": (_c = col.width) !== null && _c !== void 0 ? _c : 100, "data-edit-mode": isCellEdit, "data-editable": (_d = col.editable) !== null && _d !== void 0 ? _d : true, "data-updatable": (_e = col.updatable) !== null && _e !== void 0 ? _e : true, "data-required": (_f = col.required) !== null && _f !== void 0 ? _f : false, onClick: function () {
             setFocusedCell(col.field);
             onCellEditChange("click");
-        }, onDoubleClick: function () { return onCellEditChange("doubleClick"); }, style: __assign({ "--width": col.width ? "".concat(col.width, "px") : "100px", textAlign: (_g = col.align) !== null && _g !== void 0 ? _g : "left" }, (_h = col.style) === null || _h === void 0 ? void 0 : _h.call(col, {
+            if (col === null || col === void 0 ? void 0 : col.onClick) {
+                col.onClick({
+                    value: defaultValue,
+                    row: row,
+                    col: col,
+                    cell: GetCell(),
+                });
+            }
+        }, onDoubleClick: function () {
+            onCellEditChange("doubleClick");
+            if (col === null || col === void 0 ? void 0 : col.onDoubleClick) {
+                col.onDoubleClick({
+                    value: defaultValue,
+                    row: row,
+                    col: col,
+                    cell: GetCell(),
+                });
+            }
+        }, style: __assign({ "--width": col.width ? "".concat(col.width, "px") : "100px", textAlign: (_g = col.align) !== null && _g !== void 0 ? _g : "left" }, (_h = col.style) === null || _h === void 0 ? void 0 : _h.call(col, {
             target: "tbody",
             value: defaultValue,
             row: row,

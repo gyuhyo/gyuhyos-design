@@ -262,8 +262,8 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
               form.setError(field, { type: "required" });
             }
           },
-          export: ({ data, fileName, sheetName, onMutateWorksheet }) =>
-            onDownloadExcel({ data, fileName, sheetName, onMutateWorksheet }),
+          export: ({ data, fileName, sheetName, onBefore, onAfter }) =>
+            onDownloadExcel({ data, fileName, sheetName, onBefore, onAfter }),
         },
       }),
       [props.dataSource, props.options, focusedRow, focusedCell]
@@ -273,15 +273,17 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
       data,
       fileName,
       sheetName,
-      onMutateWorksheet,
+      onBefore,
+      onAfter,
     }: {
       data?: IDataSource[];
       fileName: string;
       sheetName: string;
-      onMutateWorksheet?: (
+      onBefore?: (
         worksheet: XLSX.WorkSheet,
         utils: typeof XLSX.utils
-      ) => void;
+      ) => number | undefined;
+      onAfter?: (worksheet: XLSX.WorkSheet, utils: typeof XLSX.utils) => void;
     }) => {
       const headerKeys = lastNode.map((node) => node.field);
       const headerMap: Record<string, string> = lastNode.reduce(
@@ -294,14 +296,38 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
 
       const headerTitles = headerKeys.map((key) => headerMap[key]);
       const excelData = data || props.dataSource;
-      const worksheet = XLSX.utils.aoa_to_sheet([
-        headerTitles,
-        ...excelData.map((row) => headerKeys.map((key) => row[key])),
-      ]);
+      const worksheet = XLSX.utils.aoa_to_sheet([]); // 빈 시트 생성
+
+      // ✅ 사용자 조작 기회
+      let jumpRowCount = 1;
+      if (onBefore) {
+        const count = onBefore(worksheet, XLSX.utils);
+
+        if (count && count > 0) {
+          jumpRowCount += count;
+        }
+      }
+
+      // ✅ 현재 시트의 마지막 행 찾기
+      const range = XLSX.utils.decode_range(worksheet["!ref"] || "A1");
+      const startRow = range.e.r + jumpRowCount; // 2줄 띄우고 추가
+
+      // ✅ 헤더 삽입
+      XLSX.utils.sheet_add_aoa(worksheet, [headerTitles], {
+        origin: { r: startRow, c: 0 },
+      });
+
+      // ✅ 데이터 삽입
+      const dataRows = excelData.map((row) =>
+        headerKeys.map((key) => row[key])
+      );
+      XLSX.utils.sheet_add_aoa(worksheet, dataRows, {
+        origin: { r: startRow + 1, c: 0 },
+      });
 
       // 🔧 클라이언트에 worksheet를 넘겨서 수정 기회 제공
-      if (onMutateWorksheet) {
-        onMutateWorksheet(worksheet, XLSX.utils);
+      if (onAfter) {
+        onAfter(worksheet, XLSX.utils);
       }
 
       const workbook = XLSX.utils.book_new();

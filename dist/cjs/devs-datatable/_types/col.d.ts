@@ -79,4 +79,16 @@ export interface IDataTableColumn {
     options?: IDataTableSelectorOptionsProps[];
     children?: IDataTableColumn[];
     readonly?: boolean;
+    onClick?: ({ value, row, col, cell, }: {
+        value: any;
+        row: IDataSource;
+        col: IDataTableColumn;
+        cell: any;
+    }) => void;
+    onDoubleClick?: ({ value, row, col, cell, }: {
+        value: any;
+        row: IDataSource;
+        col: IDataTableColumn;
+        cell: any;
+    }) => void;
 }

@@ -713,8 +713,26 @@ function DevsDtCell({
       onClick={() => {
         setFocusedCell(col.field);
         onCellEditChange("click");
+        if (col?.onClick) {
+          col.onClick({
+            value: defaultValue,
+            row: row,
+            col: col,
+            cell: GetCell(),
+          });
+        }
       }}
-      onDoubleClick={() => onCellEditChange("doubleClick")}
+      onDoubleClick={() => {
+        onCellEditChange("doubleClick");
+        if (col?.onDoubleClick) {
+          col.onDoubleClick({
+            value: defaultValue,
+            row: row,
+            col: col,
+            cell: GetCell(),
+          });
+        }
+      }}
       style={
         {
           "--width": col.width ? `${col.width}px` : `100px`,
