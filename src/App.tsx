@@ -23,6 +23,7 @@ const generateFoundryProductionColumns = [
     updatable: false,
     width: 150,
     align: "center",
+    message: "가나다라",
   },
   {
     field: "prdName",
@@ -86,6 +87,7 @@ const generateFoundryProductionColumns = [
     updatable: false,
     align: "right",
     type: "number",
+    message: "가나다라",
     render: ({ value }) => (IsNum(value) ? value?.toLocaleString() : "-"),
     style: ({ target }) => {
       if (target === "tbody") {
@@ -285,10 +287,14 @@ const App = () => {
       setColumns={setColumns}
       dataSource={dataSource}
       setDataSource={setDataSource}
+      onCheckedRowsChanged={(rows) => {
+        console.log(rows);
+      }}
       options={{
         editType: "cell",
         cellEditClickType: "click",
         showRowNumber: true,
+        enabledRowCheck: true,
       }}
       buttons={{
         custom: (

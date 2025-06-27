@@ -467,6 +467,20 @@
   border: none !important;
 }
 
+.devs-dt-message-ico {
+  width: 12px !important;
+  height: 12px !important;
+  font-size: 9px !important;
+  background: #3a3a3a;
+  color: #fff !important;
+  border-radius: 50%;
+  margin-left: 3px !important;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
 .devs-dt-resize-col {
   position: absolute;
   top: 0;

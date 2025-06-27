@@ -116,6 +116,18 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
         .map((form) => form.getValues());
     };
 
+    const checkedRowsCount = React.useMemo(() => {
+      return Object.values(formsRef.current).filter((f) =>
+        f.getValues("checked")
+      );
+    }, [props.dataSource]);
+
+    React.useEffect(() => {
+      props?.onCheckedRowsChanged?.(
+        checkedRowsCount.map((form) => form.getValues())
+      );
+    }, [checkedRowsCount.length]);
+
     React.useImperativeHandle(
       ref,
       (): DevsDataTableRef => ({

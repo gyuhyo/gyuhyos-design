@@ -347,6 +347,7 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
               column.children === undefined &&
               (column.sortable === undefined || column.sortable === true)
             }
+            title={column.message}
             data-sorted={sorter.field === column.field}
             onClick={(e) => {
               if (
@@ -404,6 +405,11 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
               >
                 {column.title}
               </p>
+              {column.message && (
+                <>
+                  <p className="devs-dt-message-ico">?</p>
+                </>
+              )}
               {column.children === undefined &&
                 (column.sortable === undefined || column.sortable === true) && (
                   <div>

@@ -274,7 +274,7 @@ function DevsDtTHead(_a) {
                 if (depth === 1)
                     idx++;
                 rows[depth].push((0, jsx_runtime_1.jsxs)("th", __assign({ className: classString, rowSpan: rowspan, colSpan: colspan, "data-field": column.field, "data-col": true, "data-sortable": column.children === undefined &&
-                        (column.sortable === undefined || column.sortable === true), "data-sorted": sorter.field === column.field, onClick: function (e) {
+                        (column.sortable === undefined || column.sortable === true), title: column.message, "data-sorted": sorter.field === column.field, onClick: function (e) {
                         if (column.children === undefined &&
                             (column.sortable === undefined || column.sortable === true) &&
                             !isResizingRef.current) {
@@ -306,7 +306,7 @@ function DevsDtTHead(_a) {
                                         whiteSpace: "pre-wrap",
                                         overflow: "hidden",
                                         textOverflow: "ellipsis",
-                                    } }, { children: column.title })), column.children === undefined &&
+                                    } }, { children: column.title })), column.message && ((0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: (0, jsx_runtime_1.jsx)("p", __assign({ className: "devs-dt-message-ico" }, { children: "?" })) })), column.children === undefined &&
                                     (column.sortable === undefined || column.sortable === true) && ((0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("span", { className: "asc_ico".concat(sorter.field === column.field && sorter.type === "asc"
                                                 ? " sorter_active"
                                                 : "") }), (0, jsx_runtime_1.jsx)("span", { className: "desc_ico".concat(sorter.field === column.field && sorter.type === "desc"

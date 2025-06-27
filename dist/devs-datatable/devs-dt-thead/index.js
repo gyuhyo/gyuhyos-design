@@ -45,7 +45,7 @@ var __values = (this && this.__values) || function(o) {
     };
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
-import { jsx as _jsx, jsxs as _jsxs } from "@emotion/react/jsx-runtime";
+import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "@emotion/react/jsx-runtime";
 import React from "react";
 import { useDt } from "../context/devs-dt-context";
 var RowNumberCell = function (_a) {
@@ -269,7 +269,7 @@ function DevsDtTHead(_a) {
                 if (depth === 1)
                     idx++;
                 rows[depth].push(_jsxs("th", __assign({ className: classString, rowSpan: rowspan, colSpan: colspan, "data-field": column.field, "data-col": true, "data-sortable": column.children === undefined &&
-                        (column.sortable === undefined || column.sortable === true), "data-sorted": sorter.field === column.field, onClick: function (e) {
+                        (column.sortable === undefined || column.sortable === true), title: column.message, "data-sorted": sorter.field === column.field, onClick: function (e) {
                         if (column.children === undefined &&
                             (column.sortable === undefined || column.sortable === true) &&
                             !isResizingRef.current) {
@@ -301,7 +301,7 @@ function DevsDtTHead(_a) {
                                         whiteSpace: "pre-wrap",
                                         overflow: "hidden",
                                         textOverflow: "ellipsis",
-                                    } }, { children: column.title })), column.children === undefined &&
+                                    } }, { children: column.title })), column.message && (_jsx(_Fragment, { children: _jsx("p", __assign({ className: "devs-dt-message-ico" }, { children: "?" })) })), column.children === undefined &&
                                     (column.sortable === undefined || column.sortable === true) && (_jsxs("div", { children: [_jsx("span", { className: "asc_ico".concat(sorter.field === column.field && sorter.type === "asc"
                                                 ? " sorter_active"
                                                 : "") }), _jsx("span", { className: "desc_ico".concat(sorter.field === column.field && sorter.type === "desc"

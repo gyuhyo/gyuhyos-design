@@ -199,6 +199,15 @@ var DevsDataTable = react_2.default.forwardRef(function (props, ref) {
             }
         });
     }); };
+    var checkedRowsCount = react_2.default.useMemo(function () {
+        return Object.values(formsRef.current).filter(function (f) {
+            return f.getValues("checked");
+        });
+    }, [props.dataSource]);
+    react_2.default.useEffect(function () {
+        var _a;
+        (_a = props === null || props === void 0 ? void 0 : props.onCheckedRowsChanged) === null || _a === void 0 ? void 0 : _a.call(props, checkedRowsCount.map(function (form) { return form.getValues(); }));
+    }, [checkedRowsCount.length]);
     react_2.default.useImperativeHandle(ref, function () { return ({
         tbody: tbody.current,
         thead: thead.current,

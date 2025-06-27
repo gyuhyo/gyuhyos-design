@@ -1,6 +1,6 @@
 {
   "name": "gyud",
-  "version": "1.2.38",
+  "version": "1.2.41",
   "description": "Copyright Gyuhyos Design Components",
   "license": "MIT",
   "author": {
@@ -58,7 +58,7 @@
     "react-dom": "^18.3.1 || ^17.0.0"
   },
   "scripts": {
-    "dev": "set PORT=3001 && react-scripts start",
+    "dev": "set PORT=3000 && react-scripts start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

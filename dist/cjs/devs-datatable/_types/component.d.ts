@@ -134,6 +134,7 @@ export interface IDataTableProps {
     setColumns: React.Dispatch<React.SetStateAction<IDataTableColumn[]>>;
     dataSource: IDataSource[];
     setDataSource: React.Dispatch<React.SetStateAction<IDataSource[]>>;
+    onCheckedRowsChanged?: (rows: IDataSource[]) => void;
     focusedRowChanged?: (row: IDataSource | null) => void;
     focusedCellChanged?: ({ row, field, }: {
         row: IDataSource | null;

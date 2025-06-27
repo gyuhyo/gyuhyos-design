@@ -16,6 +16,7 @@ export interface IDataTableColumn {
     required?: boolean;
     sticky?: boolean;
     resizing?: boolean;
+    message?: string;
     type?: "date" | "select" | "number" | "textarea" | "datetime" | "radio" | ((row: IDataSource) => "date" | "select" | "number" | "textarea" | "datetime" | "radio");
     editorMerge?: number;
     align?: string;

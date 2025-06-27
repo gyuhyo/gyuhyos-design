@@ -24,6 +24,7 @@ export interface IDataTableColumn {
   required?: boolean;
   sticky?: boolean;
   resizing?: boolean;
+  message?: string;
   type?:
     | "date"
     | "select"
