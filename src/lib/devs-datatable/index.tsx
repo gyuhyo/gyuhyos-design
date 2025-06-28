@@ -19,7 +19,7 @@ import DevsDtSliderForm from "./devs-dt-slider-form/devs-dt-slider-form";
 import DevsDtTBody from "./devs-dt-tbody";
 import DevsDtTHead from "./devs-dt-thead";
 import { useInitDt } from "./hooks/useInitDt";
-import * as XLSX from "xlsx";
+import * as XLSX from "sheetjs-style";
 import { saveAs } from "file-saver";
 
 const getLastNodes = (columns: IDataTableColumn[]): IDataTableColumn[] => {
@@ -292,10 +292,15 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
       fileName: string;
       sheetName: string;
       onBefore?: (
-        worksheet: XLSX.WorkSheet,
-        utils: typeof XLSX.utils
+        ws: XLSX.WorkSheet,
+        utils: typeof XLSX.utils,
+        xlsx: typeof XLSX
       ) => number | undefined;
-      onAfter?: (worksheet: XLSX.WorkSheet, utils: typeof XLSX.utils) => void;
+      onAfter?: (
+        ws: XLSX.WorkSheet,
+        utils: typeof XLSX.utils,
+        xlsx: typeof XLSX
+      ) => void;
     }) => {
       const headerKeys = lastNode.map((node) => node.field);
       const headerMap: Record<string, string> = lastNode.reduce(
@@ -311,9 +316,9 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
       const worksheet = XLSX.utils.aoa_to_sheet([]); // 빈 시트 생성
 
       // ✅ 사용자 조작 기회
-      let jumpRowCount = 1;
+      let jumpRowCount = 0;
       if (onBefore) {
-        const count = onBefore(worksheet, XLSX.utils);
+        const count = onBefore(worksheet, XLSX.utils, XLSX);
 
         if (count && count > 0) {
           jumpRowCount += count;
@@ -339,7 +344,7 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
 
       // 🔧 클라이언트에 worksheet를 넘겨서 수정 기회 제공
       if (onAfter) {
-        onAfter(worksheet, XLSX.utils);
+        onAfter(worksheet, XLSX.utils, XLSX);
       }
 
       const workbook = XLSX.utils.book_new();

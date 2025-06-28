@@ -40,10 +40,10 @@
     "react-is": "^19.0.0",
     "react-scripts": "5.0.1",
     "react-uuid": "^2.0.0",
+    "sheetjs-style": "^0.15.8",
     "typescript": "^4.9.5",
     "usehooks-ts": "^3.1.1",
     "web-vitals": "^2.1.4",
-    "xlsx": "^0.18.5",
     "zustand": "^5.0.2"
   },
   "resolutions": {

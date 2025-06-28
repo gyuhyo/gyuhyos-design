@@ -262,19 +262,81 @@ const App = () => {
         ...dateData,
       };
     });
+
+    // 스타일 예제
+    const headerStyle = {
+      font: { name: "Arial", sz: 14, bold: true, color: { rgb: "FFFFFF" } },
+      fill: { fgColor: { rgb: "4F81BD" } },
+      alignment: { horizontal: "center", vertical: "center" },
+      border: {
+        top: { style: "thin", color: { rgb: "000000" } },
+        bottom: { style: "thin", color: { rgb: "000000" } },
+        left: { style: "thin", color: { rgb: "000000" } },
+        right: { style: "thin", color: { rgb: "000000" } },
+      },
+    };
+
+    // 병합 (예: A1~C1 병합)
+    //ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 2 } }];
+
     gridRef.current.api.export({
       data: replaceDataSource,
-      fileName: "test",
-      sheetName: "test",
-      onBefore: (worksheet, utils) => {
-        utils.sheet_add_aoa(
-          worksheet,
-          [
-            ["사용자명", "홍길동"],
-            ["생성일", new Date().toLocaleString()],
-          ],
-          { origin: "A1" }
-        );
+      fileName: `${selectedMonth.format("YYYY년 MM월 주조 생산")}`,
+      sheetName: "주조",
+      onBefore: (ws, utils) => {
+        ws["!cols"] = [];
+        ws["!rows"] = [];
+        ws["!cols"][0] = { wch: 20 };
+        ws["!cols"][1] = { wch: 30 };
+        ws["!cols"][8] = { wch: 15 };
+        ws["!rows"][0] = { hpt: 30 };
+        // utils.sheet_add_aoa(
+        //   ws,
+        //   [
+        //     ["사용자명", "홍길동"],
+        //     ["생성일", new Date().toLocaleString()],
+        //   ],
+        //   { origin: "A1" }
+        // );
+      },
+      onAfter: (ws, utils, xlsx) => {
+        const range = utils.decode_range(ws["!ref"]);
+        console.log(ws, ws["!ref"], range);
+
+        for (let col = range.s.c; col <= range.e.c; col++) {
+          const cellAddress = utils.encode_cell({ r: 0, c: col });
+
+          ws[cellAddress].s = {
+            font: { bold: true },
+            fill: { fgColor: { rgb: "ececec" } },
+            alignment: { horizontal: "center", vertical: "center" },
+            border: {
+              top: { style: "thin", color: { rgb: "000000" } },
+              bottom: { style: "thin", color: { rgb: "000000" } },
+              left: { style: "thin", color: { rgb: "000000" } },
+              right: { style: "thin", color: { rgb: "000000" } },
+            },
+          };
+        }
+
+        for (let row = range.s.r + 1; row <= range.e.r; row++) {
+          for (let col = range.s.c; col <= range.e.c; col++) {
+            const cellAddress = utils.encode_cell({ r: row, c: col });
+
+            if (!ws[cellAddress]) {
+              ws[cellAddress] = { t: "s", v: "" }; // string 타입, 빈 값
+            }
+
+            ws[cellAddress].s = {
+              border: {
+                top: { style: "thin", color: { rgb: "000000" } },
+                bottom: { style: "thin", color: { rgb: "000000" } },
+                left: { style: "thin", color: { rgb: "000000" } },
+                right: { style: "thin", color: { rgb: "000000" } },
+              },
+            };
+          }
+        }
       },
     });
   };
