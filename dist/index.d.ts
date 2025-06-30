@@ -20,4 +20,4 @@ export { default as DevsSplitContainer } from "./devs-split-container";
 export type { TDevsSplitContainer } from "./devs-split-container";
 export { default as messages } from "./utils/messages";
 export { sleep } from "./utils/sleep";
-export { useIntersectionObserver } from "./hooks";
+export { useIntersectionObserver, useDevsXlsx } from "./hooks";

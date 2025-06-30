@@ -2,7 +2,7 @@ import { CSSInterpolation } from "@emotion/serialize";
 import React, { JSX } from "react";
 import { IDataTableColumn } from "./col";
 import { FormWithForce } from "./context";
-import * as XLSX from "xlsx";
+import * as XLSX from "sheetjs-style";
 export interface IDataSource {
     [key: string]: any;
 }
@@ -122,9 +122,14 @@ export interface DevsDataTableRef {
             data?: IDataSource[];
             fileName: string;
             sheetName: string;
-            onBefore?: (worksheet: XLSX.WorkSheet, utils: typeof XLSX.utils) => number | undefined;
-            onAfter?: (worksheet: XLSX.WorkSheet, utils: typeof XLSX.utils) => void;
+            onBefore?: (worksheet: XLSX.WorkSheet, utils: typeof XLSX.utils, xlsx: typeof XLSX) => number | undefined;
+            onAfter?: (worksheet: XLSX.WorkSheet, utils: typeof XLSX.utils, xlsx: typeof XLSX) => void;
         }) => void;
+        getSheet: ({ data, onBefore, onAfter, }: {
+            data?: IDataSource[];
+            onBefore?: (worksheet: XLSX.WorkSheet, utils: typeof XLSX.utils, xlsx: typeof XLSX) => number | undefined;
+            onAfter?: (worksheet: XLSX.WorkSheet, utils: typeof XLSX.utils, xlsx: typeof XLSX) => void;
+        }) => XLSX.WorkSheet;
     };
 }
 export interface IDataTableProps {

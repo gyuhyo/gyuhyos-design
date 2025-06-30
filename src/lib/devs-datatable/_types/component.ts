@@ -151,6 +151,23 @@ export interface DevsDataTableRef {
         xlsx: typeof XLSX
       ) => void;
     }) => void;
+    getSheet: ({
+      data,
+      onBefore,
+      onAfter,
+    }: {
+      data?: IDataSource[];
+      onBefore?: (
+        worksheet: XLSX.WorkSheet,
+        utils: typeof XLSX.utils,
+        xlsx: typeof XLSX
+      ) => number | undefined;
+      onAfter?: (
+        worksheet: XLSX.WorkSheet,
+        utils: typeof XLSX.utils,
+        xlsx: typeof XLSX
+      ) => void;
+    }) => XLSX.WorkSheet;
   };
 }
 

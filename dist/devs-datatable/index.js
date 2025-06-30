@@ -95,7 +95,7 @@ import DevsDtSliderForm from "./devs-dt-slider-form/devs-dt-slider-form";
 import DevsDtTBody from "./devs-dt-tbody";
 import DevsDtTHead from "./devs-dt-thead";
 import { useInitDt } from "./hooks/useInitDt";
-import * as XLSX from "xlsx";
+import * as XLSX from "sheetjs-style";
 import { saveAs } from "file-saver";
 var getLastNodes = function (columns) {
     var lastNodes = [];
@@ -330,10 +330,14 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
                 var data = _a.data, fileName = _a.fileName, sheetName = _a.sheetName, onBefore = _a.onBefore, onAfter = _a.onAfter;
                 return onDownloadExcel({ data: data, fileName: fileName, sheetName: sheetName, onBefore: onBefore, onAfter: onAfter });
             },
+            getSheet: function (_a) {
+                var data = _a.data, onBefore = _a.onBefore, onAfter = _a.onAfter;
+                return onGetSheet({ data: data, onBefore: onBefore, onAfter: onAfter });
+            },
         },
     }); }, [props.dataSource, props.options, focusedRow, focusedCell]);
-    var onDownloadExcel = function (_a) {
-        var data = _a.data, fileName = _a.fileName, sheetName = _a.sheetName, onBefore = _a.onBefore, onAfter = _a.onAfter;
+    var onGetSheet = function (_a) {
+        var data = _a.data, onBefore = _a.onBefore, onAfter = _a.onAfter;
         var headerKeys = lastNode.map(function (node) { return node.field; });
         var headerMap = lastNode.reduce(function (prev, curr) {
             prev[curr.field] = curr.title;
@@ -343,9 +347,9 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
         var excelData = data || props.dataSource;
         var worksheet = XLSX.utils.aoa_to_sheet([]); // 빈 시트 생성
         // ✅ 사용자 조작 기회
-        var jumpRowCount = 1;
+        var jumpRowCount = 0;
         if (onBefore) {
-            var count = onBefore(worksheet, XLSX.utils);
+            var count = onBefore(worksheet, XLSX.utils, XLSX);
             if (count && count > 0) {
                 jumpRowCount += count;
             }
@@ -366,7 +370,45 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
         });
         // 🔧 클라이언트에 worksheet를 넘겨서 수정 기회 제공
         if (onAfter) {
-            onAfter(worksheet, XLSX.utils);
+            onAfter(worksheet, XLSX.utils, XLSX);
+        }
+        return worksheet;
+    };
+    var onDownloadExcel = function (_a) {
+        var data = _a.data, fileName = _a.fileName, sheetName = _a.sheetName, onBefore = _a.onBefore, onAfter = _a.onAfter;
+        var headerKeys = lastNode.map(function (node) { return node.field; });
+        var headerMap = lastNode.reduce(function (prev, curr) {
+            prev[curr.field] = curr.title;
+            return prev;
+        }, {});
+        var headerTitles = headerKeys.map(function (key) { return headerMap[key]; });
+        var excelData = data || props.dataSource;
+        var worksheet = XLSX.utils.aoa_to_sheet([]); // 빈 시트 생성
+        // ✅ 사용자 조작 기회
+        var jumpRowCount = 0;
+        if (onBefore) {
+            var count = onBefore(worksheet, XLSX.utils, XLSX);
+            if (count && count > 0) {
+                jumpRowCount += count;
+            }
+        }
+        // ✅ 현재 시트의 마지막 행 찾기
+        var range = XLSX.utils.decode_range(worksheet["!ref"] || "A1");
+        var startRow = range.e.r + jumpRowCount; // 2줄 띄우고 추가
+        // ✅ 헤더 삽입
+        XLSX.utils.sheet_add_aoa(worksheet, [headerTitles], {
+            origin: { r: startRow, c: 0 },
+        });
+        // ✅ 데이터 삽입
+        var dataRows = excelData.map(function (row) {
+            return headerKeys.map(function (key) { return row[key]; });
+        });
+        XLSX.utils.sheet_add_aoa(worksheet, dataRows, {
+            origin: { r: startRow + 1, c: 0 },
+        });
+        // 🔧 클라이언트에 worksheet를 넘겨서 수정 기회 제공
+        if (onAfter) {
+            onAfter(worksheet, XLSX.utils, XLSX);
         }
         var workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);

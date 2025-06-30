@@ -276,10 +276,77 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
           },
           export: ({ data, fileName, sheetName, onBefore, onAfter }) =>
             onDownloadExcel({ data, fileName, sheetName, onBefore, onAfter }),
+          getSheet: ({ data, onBefore, onAfter }) =>
+            onGetSheet({ data, onBefore, onAfter }),
         },
       }),
       [props.dataSource, props.options, focusedRow, focusedCell]
     );
+
+    const onGetSheet = ({
+      data,
+      onBefore,
+      onAfter,
+    }: {
+      data?: IDataSource[];
+      onBefore?: (
+        ws: XLSX.WorkSheet,
+        utils: typeof XLSX.utils,
+        xlsx: typeof XLSX
+      ) => number | undefined;
+      onAfter?: (
+        ws: XLSX.WorkSheet,
+        utils: typeof XLSX.utils,
+        xlsx: typeof XLSX
+      ) => void;
+    }) => {
+      const headerKeys = lastNode.map((node) => node.field);
+      const headerMap: Record<string, string> = lastNode.reduce(
+        (prev: Record<string, string>, curr) => {
+          prev[curr.field] = curr.title;
+          return prev;
+        },
+        {}
+      );
+
+      const headerTitles = headerKeys.map((key) => headerMap[key]);
+      const excelData = data || props.dataSource;
+      const worksheet = XLSX.utils.aoa_to_sheet([]); // 빈 시트 생성
+
+      // ✅ 사용자 조작 기회
+      let jumpRowCount = 0;
+      if (onBefore) {
+        const count = onBefore(worksheet, XLSX.utils, XLSX);
+
+        if (count && count > 0) {
+          jumpRowCount += count;
+        }
+      }
+
+      // ✅ 현재 시트의 마지막 행 찾기
+      const range = XLSX.utils.decode_range(worksheet["!ref"] || "A1");
+      const startRow = range.e.r + jumpRowCount; // 2줄 띄우고 추가
+
+      // ✅ 헤더 삽입
+      XLSX.utils.sheet_add_aoa(worksheet, [headerTitles], {
+        origin: { r: startRow, c: 0 },
+      });
+
+      // ✅ 데이터 삽입
+      const dataRows = excelData.map((row) =>
+        headerKeys.map((key) => row[key])
+      );
+      XLSX.utils.sheet_add_aoa(worksheet, dataRows, {
+        origin: { r: startRow + 1, c: 0 },
+      });
+
+      // 🔧 클라이언트에 worksheet를 넘겨서 수정 기회 제공
+      if (onAfter) {
+        onAfter(worksheet, XLSX.utils, XLSX);
+      }
+
+      return worksheet;
+    };
 
     const onDownloadExcel = ({
       data,

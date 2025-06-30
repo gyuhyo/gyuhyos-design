@@ -3,6 +3,7 @@ import { DevsDataTable, DevsDatePicker, messages, useMessage } from "./lib";
 import React from "react";
 import { Button } from "./lib";
 import { IDataTableColumn } from "./lib";
+import { useDevsXlsx } from "./lib/hooks";
 
 const NumberFormatter = (number) => {
   const parse = parseInt(number);
@@ -159,6 +160,10 @@ const generateFoundryProductionColumns = [
 ];
 
 const App = () => {
+  const { sheets, utils, xlsx, onSave } = useDevsXlsx({
+    fileName: "test",
+    sheets: ["test1", "test2"],
+  });
   const gridRef = React.useRef(null);
   const { showMessage } = useMessage();
   const [selectedMonth, setSelectedMonth] = React.useState(dayjs());
