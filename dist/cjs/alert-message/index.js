@@ -99,14 +99,17 @@ var AlertMessage = function (props) {
         }, 500);
         return function () { return clearTimeout(timer); };
     };
+    var handleOkClick = React.useCallback(function () {
+        return onOkClick(value);
+    }, [value]);
     React.useEffect(function () {
         if (typeof window === undefined)
             return;
-        document.activeElement.blur();
         var closeKeyDownPopup = function (e) {
             if (e.key === "Enter") {
-                if (onOkClick) {
-                    var next = onOkClick();
+                document.activeElement.blur();
+                if (typeof onOkClick !== "undefined") {
+                    var next = onOkClick(value);
                     if (typeof next === "boolean" && !next)
                         return;
                 }
@@ -117,7 +120,7 @@ var AlertMessage = function (props) {
         return function () {
             window.removeEventListener("keydown", closeKeyDownPopup);
         };
-    }, []);
+    }, [value]);
     return ((0, jsx_runtime_1.jsx)("div", __assign({ css: [backdrop, isShowState ? visibleAlert : hiddenAlert] }, { children: (0, jsx_runtime_1.jsxs)("div", __assign({ className: "alertMessageWrapper ".concat(isShowState ? undefined : "alertMessageWrapperClose") }, { children: [(0, jsx_runtime_1.jsx)(alert_message_header_1.default, { type: type, title: title, isCloseButtonVisible: isCloseButtonVisible, onCloseClick: onCloseClick, closeAlert: closeAlert }), (0, jsx_runtime_1.jsx)(alert_message_body_1.default, { message: message, input: input, inputOption: inputOption, value: value, setValue: setValue }), (0, jsx_runtime_1.jsx)(alert_message_footer_1.default, { footerStart: footerStart, isOkButtonVisible: isOkButtonVisible, onOkClick: onOkClick, okCaption: okCaption, closeAlert: closeAlert, isCancelButtonVisible: isCancelButtonVisible, onCancelClick: onCancelClick, cancelCaption: cancelCaption, value: value, input: input })] })) })));
 };
 exports.default = React.memo(AlertMessage);

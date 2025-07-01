@@ -1,3 +1,6 @@
+import React from "react";
+import { DevsDataTableRef } from "./devs-datatable/_types";
+export type { DevsDataTableRef } from "./devs-datatable/_types";
 export { default as DevsDataTable } from "./devs-datatable";
 export type { IDataTableSelectorOptionsProps, IDataTableColumn, IDataSource, IDataTableButtons, IDataTableProps, IFormsRef, IDataTableProviderProps, IDataTableContextProps, ICellProps, } from "./devs-datatable/_types";
 export { default as Button, MesButton } from "./button";
@@ -21,3 +24,4 @@ export type { TDevsSplitContainer } from "./devs-split-container";
 export { default as messages } from "./utils/messages";
 export { sleep } from "./utils/sleep";
 export { useIntersectionObserver, useDevsXlsx } from "./hooks";
+export declare const useDataTableRef: () => React.RefObject<DevsDataTableRef>;

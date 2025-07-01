@@ -1,3 +1,4 @@
+import React from "react";
 export { default as DevsDataTable } from "./devs-datatable";
 export { default as Button, MesButton } from "./button";
 export { useMessage, MessageProvider, } from "./alert-message/context/message-context";
@@ -13,3 +14,6 @@ export { default as DevsSplitContainer } from "./devs-split-container";
 export { default as messages } from "./utils/messages";
 export { sleep } from "./utils/sleep";
 export { useIntersectionObserver, useDevsXlsx } from "./hooks";
+export var useDataTableRef = function () {
+    return React.useRef(null);
+};

@@ -6,6 +6,7 @@ export interface DevsDatePickerProps {
     setSelectedDate: React.Dispatch<React.SetStateAction<dayjs.Dayjs>>;
     picker?: "date" | "month" | "year" | undefined;
     minDate?: string;
+    setIsLoading?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 declare function DevsDatePicker(props: DevsDatePickerProps): import("@emotion/react/jsx-runtime").JSX.Element;
 export default DevsDatePicker;

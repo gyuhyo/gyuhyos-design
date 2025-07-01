@@ -334,8 +334,18 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
 
       // ✅ 데이터 삽입
       const dataRows = excelData.map((row) =>
-        headerKeys.map((key) => row[key])
+        headerKeys.map((key) => {
+          const col = lastNode.find((f) => f.field === key);
+          if (col?.render) {
+            const value = col.render({ value: row[key], row: row });
+            if (typeof value !== "object") {
+              return value;
+            }
+          }
+          return row[key];
+        })
       );
+
       XLSX.utils.sheet_add_aoa(worksheet, dataRows, {
         origin: { r: startRow + 1, c: 0 },
       });
@@ -403,8 +413,18 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
 
       // ✅ 데이터 삽입
       const dataRows = excelData.map((row) =>
-        headerKeys.map((key) => row[key])
+        headerKeys.map((key) => {
+          const col = lastNode.find((f) => f.field === key);
+          if (col?.render) {
+            const value = col.render({ value: row[key], row: row });
+            if (typeof value !== "object") {
+              return value;
+            }
+          }
+          return row[key];
+        })
       );
+
       XLSX.utils.sheet_add_aoa(worksheet, dataRows, {
         origin: { r: startRow + 1, c: 0 },
       });

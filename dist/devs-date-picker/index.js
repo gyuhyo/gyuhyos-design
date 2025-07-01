@@ -34,62 +34,76 @@ import React from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { css } from "@emotion/react";
 function DevsDatePicker(props) {
-    var selectedDate = props.selectedDate, setSelectedDate = props.setSelectedDate, _a = props.picker, picker = _a === void 0 ? "month" : _a, _b = props.minDate, minDate = _b === void 0 ? "1990-01-01" : _b;
+    var selectedDate = props.selectedDate, setSelectedDate = props.setSelectedDate, _a = props.picker, picker = _a === void 0 ? "month" : _a, _b = props.minDate, minDate = _b === void 0 ? "1990-01-01" : _b, setIsLoading = props.setIsLoading;
     var matches = useMediaQuery("(min-width: 600px)");
     var showButton = matches;
-    var _c = __read(React.useState(false), 2), monthPickerButtonHidden = _c[0], setMonthPickerButtonHidden = _c[1];
+    var _c = __read(React.useState(selectedDate), 2), datePickerValue = _c[0], setDatePickerValue = _c[1];
+    var _d = __read(React.useState(false), 2), monthPickerButtonHidden = _d[0], setMonthPickerButtonHidden = _d[1];
     React.useEffect(function () {
         typeof window !== "undefined" && matches
             ? setMonthPickerButtonHidden(false)
             : setMonthPickerButtonHidden(true);
     }, [matches]);
+    var timer;
+    React.useEffect(function () {
+        if (setIsLoading)
+            setIsLoading(true);
+        timer = setTimeout(function () {
+            setSelectedDate(datePickerValue);
+        }, 300);
+        return function () {
+            clearTimeout(timer);
+        };
+    }, [datePickerValue]);
     var onPrevClick = function () {
-        if (picker === "date" && selectedDate.add(-1, "day") >= dayjs(minDate)) {
-            setSelectedDate(selectedDate.add(-1, "day"));
+        if (picker === "date" && datePickerValue.add(-1, "day") >= dayjs(minDate)) {
+            setDatePickerValue(datePickerValue.add(-1, "day"));
         }
-        if (picker === "month" && selectedDate.add(-1, "month") >= dayjs(minDate)) {
-            setSelectedDate(selectedDate.add(-1, "month"));
+        if (picker === "month" &&
+            datePickerValue.add(-1, "month") >= dayjs(minDate)) {
+            setDatePickerValue(datePickerValue.add(-1, "month"));
         }
-        if (picker === "year" && selectedDate.add(-1, "year") >= dayjs(minDate)) {
-            setSelectedDate(selectedDate.add(-1, "year"));
+        if (picker === "year" &&
+            datePickerValue.add(-1, "year") >= dayjs(minDate)) {
+            setDatePickerValue(datePickerValue.add(-1, "year"));
         }
     };
     var onNextClick = function () {
         if (picker === "date") {
-            setSelectedDate(selectedDate.add(+1, "day"));
+            setDatePickerValue(datePickerValue.add(+1, "day"));
         }
         if (picker === "month") {
-            setSelectedDate(selectedDate.add(+1, "month"));
+            setDatePickerValue(datePickerValue.add(+1, "month"));
         }
         if (picker === "year") {
-            setSelectedDate(selectedDate.add(+1, "year"));
+            setDatePickerValue(datePickerValue.add(+1, "year"));
         }
     };
     var onMonthChaged = function (e, dateString) {
-        setSelectedDate(dayjs(dateString));
+        setDatePickerValue(dayjs(dateString));
     };
     var prevTitle = React.useMemo(function () {
         if (picker === "date") {
-            return dayjs(selectedDate).add(-1, "day").format("YYYY-MM-DD");
+            return dayjs(datePickerValue).add(-1, "day").format("YYYY-MM-DD");
         }
         if (picker === "month") {
-            return dayjs(selectedDate).add(-1, "month").format("YYYY-MM");
+            return dayjs(datePickerValue).add(-1, "month").format("YYYY-MM");
         }
         if (picker === "year") {
-            return dayjs(selectedDate).add(-1, "year").format("YYYY");
+            return dayjs(datePickerValue).add(-1, "year").format("YYYY");
         }
-    }, [picker, selectedDate]);
+    }, [picker, datePickerValue]);
     var nextTitle = React.useMemo(function () {
         if (picker === "date") {
-            return dayjs(selectedDate).add(+1, "day").format("YYYY-MM-DD");
+            return dayjs(datePickerValue).add(+1, "day").format("YYYY-MM-DD");
         }
         if (picker === "month") {
-            return dayjs(selectedDate).add(+1, "month").format("YYYY-MM");
+            return dayjs(datePickerValue).add(+1, "month").format("YYYY-MM");
         }
         if (picker === "year") {
-            return dayjs(selectedDate).add(+1, "year").format("YYYY");
+            return dayjs(datePickerValue).add(+1, "year").format("YYYY");
         }
-    }, [picker, selectedDate]);
+    }, [picker, datePickerValue]);
     return (_jsxs("div", __assign({ css: css({
             display: "flex",
             flexDirection: "row",
@@ -125,7 +139,7 @@ function DevsDatePicker(props) {
                         display: monthPickerButtonHidden
                             ? "none !important"
                             : "block !important",
-                    }) }) })), _jsx(Tooltip, __assign({ placement: "bottom", title: "\uC870\uD68C\uC77C\uC790" }, { children: _jsx(DatePicker, { picker: picker, value: selectedDate, onChange: onMonthChaged, allowClear: false, inputReadOnly: true, minDate: dayjs(minDate), css: css({
+                    }) }) })), _jsx(Tooltip, __assign({ placement: "bottom", title: "\uC870\uD68C\uC77C\uC790" }, { children: _jsx(DatePicker, { picker: picker, value: datePickerValue, onChange: onMonthChaged, allowClear: false, inputReadOnly: true, minDate: dayjs(minDate), css: css({
                         minWidth: "120px !important",
                         height: monthPickerButtonHidden ? "26px" : "100%",
                     }) }) })), _jsx(Tooltip, __assign({ placement: "bottom", title: nextTitle }, { children: _jsx(Button, { icon: _jsx(RightOutlined, {}), onClick: onNextClick, css: css({

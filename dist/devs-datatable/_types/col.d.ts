@@ -39,7 +39,7 @@ export interface IDataTableColumn {
         row: IDataSource;
         index?: number;
         getValue?: UseFormGetValues<IDataSource>;
-        watch: UseFormWatch<IDataSource>;
+        watch?: UseFormWatch<IDataSource>;
     }) => any;
     editor?: ({ value, row, index, onChange, getValue, setValue, setDataSource, forceRerender, }: {
         value?: any;

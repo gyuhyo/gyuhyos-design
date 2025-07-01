@@ -12,6 +12,7 @@ export interface DevsDatePickerProps {
   setSelectedDate: React.Dispatch<React.SetStateAction<dayjs.Dayjs>>;
   picker?: "date" | "month" | "year" | undefined;
   minDate?: string;
+  setIsLoading?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function DevsDatePicker(props: DevsDatePickerProps) {
@@ -20,9 +21,11 @@ function DevsDatePicker(props: DevsDatePickerProps) {
     setSelectedDate,
     picker = "month",
     minDate = "1990-01-01",
+    setIsLoading,
   } = props;
   const matches = useMediaQuery("(min-width: 600px)");
   const showButton = matches;
+  const [datePickerValue, setDatePickerValue] = React.useState(selectedDate);
   const [monthPickerButtonHidden, setMonthPickerButtonHidden] =
     React.useState(false);
 
@@ -32,65 +35,83 @@ function DevsDatePicker(props: DevsDatePickerProps) {
       : setMonthPickerButtonHidden(true);
   }, [matches]);
 
+  let timer: NodeJS.Timeout;
+  React.useEffect(() => {
+    if (setIsLoading) setIsLoading(true);
+
+    timer = setTimeout(() => {
+      setSelectedDate(datePickerValue);
+    }, 300);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [datePickerValue]);
+
   const onPrevClick = () => {
-    if (picker === "date" && selectedDate.add(-1, "day") >= dayjs(minDate)) {
-      setSelectedDate(selectedDate.add(-1, "day"));
+    if (picker === "date" && datePickerValue.add(-1, "day") >= dayjs(minDate)) {
+      setDatePickerValue(datePickerValue.add(-1, "day"));
     }
 
-    if (picker === "month" && selectedDate.add(-1, "month") >= dayjs(minDate)) {
-      setSelectedDate(selectedDate.add(-1, "month"));
+    if (
+      picker === "month" &&
+      datePickerValue.add(-1, "month") >= dayjs(minDate)
+    ) {
+      setDatePickerValue(datePickerValue.add(-1, "month"));
     }
 
-    if (picker === "year" && selectedDate.add(-1, "year") >= dayjs(minDate)) {
-      setSelectedDate(selectedDate.add(-1, "year"));
+    if (
+      picker === "year" &&
+      datePickerValue.add(-1, "year") >= dayjs(minDate)
+    ) {
+      setDatePickerValue(datePickerValue.add(-1, "year"));
     }
   };
 
   const onNextClick = () => {
     if (picker === "date") {
-      setSelectedDate(selectedDate.add(+1, "day"));
+      setDatePickerValue(datePickerValue.add(+1, "day"));
     }
 
     if (picker === "month") {
-      setSelectedDate(selectedDate.add(+1, "month"));
+      setDatePickerValue(datePickerValue.add(+1, "month"));
     }
 
     if (picker === "year") {
-      setSelectedDate(selectedDate.add(+1, "year"));
+      setDatePickerValue(datePickerValue.add(+1, "year"));
     }
   };
 
   const onMonthChaged = (e: any, dateString: string | string[]) => {
-    setSelectedDate(dayjs(dateString as dayjs.ConfigType));
+    setDatePickerValue(dayjs(dateString as dayjs.ConfigType));
   };
 
   const prevTitle = React.useMemo(() => {
     if (picker === "date") {
-      return dayjs(selectedDate).add(-1, "day").format("YYYY-MM-DD");
+      return dayjs(datePickerValue).add(-1, "day").format("YYYY-MM-DD");
     }
 
     if (picker === "month") {
-      return dayjs(selectedDate).add(-1, "month").format("YYYY-MM");
+      return dayjs(datePickerValue).add(-1, "month").format("YYYY-MM");
     }
 
     if (picker === "year") {
-      return dayjs(selectedDate).add(-1, "year").format("YYYY");
+      return dayjs(datePickerValue).add(-1, "year").format("YYYY");
     }
-  }, [picker, selectedDate]);
+  }, [picker, datePickerValue]);
 
   const nextTitle = React.useMemo(() => {
     if (picker === "date") {
-      return dayjs(selectedDate).add(+1, "day").format("YYYY-MM-DD");
+      return dayjs(datePickerValue).add(+1, "day").format("YYYY-MM-DD");
     }
 
     if (picker === "month") {
-      return dayjs(selectedDate).add(+1, "month").format("YYYY-MM");
+      return dayjs(datePickerValue).add(+1, "month").format("YYYY-MM");
     }
 
     if (picker === "year") {
-      return dayjs(selectedDate).add(+1, "year").format("YYYY");
+      return dayjs(datePickerValue).add(+1, "year").format("YYYY");
     }
-  }, [picker, selectedDate]);
+  }, [picker, datePickerValue]);
 
   return (
     <div
@@ -141,7 +162,7 @@ function DevsDatePicker(props: DevsDatePickerProps) {
       <Tooltip placement="bottom" title="조회일자">
         <DatePicker
           picker={picker}
-          value={selectedDate}
+          value={datePickerValue}
           onChange={onMonthChaged}
           allowClear={false}
           inputReadOnly={true}

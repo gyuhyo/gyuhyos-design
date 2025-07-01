@@ -34,6 +34,7 @@ const AlertMessageBody: React.FC<AlertMessageBodyProps> = React.memo(
           <InputBox>
             <Input
               value={value}
+              autoFocus={true}
               onChange={(e) => setValue(e.target.value)}
               {...inputOption}
             />

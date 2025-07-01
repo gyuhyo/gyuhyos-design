@@ -68,15 +68,18 @@ const AlertMessage: React.FC<MessageContextTypes> = (props) => {
     return () => clearTimeout(timer);
   };
 
+  const handleOkClick = React.useCallback((): void | boolean => {
+    return onOkClick(value);
+  }, [value]);
+
   React.useEffect(() => {
     if (typeof window === undefined) return;
 
-    (document.activeElement! as HTMLElement).blur();
-
     const closeKeyDownPopup = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
-        if (onOkClick) {
-          const next = onOkClick();
+        (document.activeElement! as HTMLElement).blur();
+        if (typeof onOkClick !== "undefined") {
+          const next = onOkClick(value);
           if (typeof next === "boolean" && !next) return;
         }
         closeAlert();
@@ -88,7 +91,7 @@ const AlertMessage: React.FC<MessageContextTypes> = (props) => {
     return () => {
       window.removeEventListener("keydown", closeKeyDownPopup);
     };
-  }, []);
+  }, [value]);
 
   return (
     <div css={[backdrop, isShowState ? visibleAlert : hiddenAlert]}>

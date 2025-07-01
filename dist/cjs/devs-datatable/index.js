@@ -391,7 +391,16 @@ var DevsDataTable = react_2.default.forwardRef(function (props, ref) {
         });
         // ✅ 데이터 삽입
         var dataRows = excelData.map(function (row) {
-            return headerKeys.map(function (key) { return row[key]; });
+            return headerKeys.map(function (key) {
+                var col = lastNode.find(function (f) { return f.field === key; });
+                if (col === null || col === void 0 ? void 0 : col.render) {
+                    var value = col.render({ value: row[key], row: row });
+                    if (typeof value !== "object") {
+                        return value;
+                    }
+                }
+                return row[key];
+            });
         });
         XLSX.utils.sheet_add_aoa(worksheet, dataRows, {
             origin: { r: startRow + 1, c: 0 },
@@ -429,7 +438,16 @@ var DevsDataTable = react_2.default.forwardRef(function (props, ref) {
         });
         // ✅ 데이터 삽입
         var dataRows = excelData.map(function (row) {
-            return headerKeys.map(function (key) { return row[key]; });
+            return headerKeys.map(function (key) {
+                var col = lastNode.find(function (f) { return f.field === key; });
+                if (col === null || col === void 0 ? void 0 : col.render) {
+                    var value = col.render({ value: row[key], row: row });
+                    if (typeof value !== "object") {
+                        return value;
+                    }
+                }
+                return row[key];
+            });
         });
         XLSX.utils.sheet_add_aoa(worksheet, dataRows, {
             origin: { r: startRow + 1, c: 0 },

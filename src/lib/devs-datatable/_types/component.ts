@@ -103,7 +103,7 @@ export interface IDataTableButtons {
   onExportClick?: () => void;
 }
 
-export interface DevsDataTableRef {
+export type DevsDataTableRef = {
   tbody: HTMLDivElement | null;
   thead: HTMLDivElement | null;
   api: {
@@ -169,7 +169,7 @@ export interface DevsDataTableRef {
       ) => void;
     }) => XLSX.WorkSheet;
   };
-}
+};
 
 export interface IDataTableProps {
   title?: any;
