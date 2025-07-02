@@ -85,7 +85,6 @@ import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "@emotion/reac
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import React from "react";
-import { sleep } from "../utils/sleep";
 import "./assets/style.css";
 import { DevsDtProvider } from "./context/devs-dt-context";
 import "./dev.datatable.style.css";
@@ -517,45 +516,48 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
         window.addEventListener("paste", pasteListener);
         return function () { return window.removeEventListener("paste", pasteListener); };
     }, [props.columns.length]);
-    React.useEffect(function () {
+    var InitializeTableFromAutoScrolling = function () {
         var _a;
-        if (!((_a = props.options) === null || _a === void 0 ? void 0 : _a.initialAutoScroll) ||
-            !thead.current ||
+        if (!init ||
+            !((_a = props.options) === null || _a === void 0 ? void 0 : _a.autoScrollKey) ||
             !tbody.current ||
-            props.dataSource.length === 0)
+            !thead.current)
             return;
-        var initialScrolling = function () { return __awaiter(void 0, void 0, void 0, function () {
-            var scrollField, th, tbodtTable;
-            var _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        scrollField = (_a = props.options) === null || _a === void 0 ? void 0 : _a.initialAutoScroll;
-                        th = tbody.current.querySelector("table tbody tr:first-child td[data-field='".concat(scrollField, "']"));
-                        tbodtTable = tbody.current.querySelector("table");
-                        if (!th) return [3 /*break*/, 2];
-                        return [4 /*yield*/, sleep(100)];
-                    case 1:
-                        _b.sent();
-                        th.scrollIntoView({
-                            behavior: "smooth",
-                            inline: "end",
-                        });
-                        return [3 /*break*/, 4];
-                    case 2: return [4 /*yield*/, sleep(100)];
-                    case 3:
-                        _b.sent();
-                        tbodtTable.scrollTo({
-                            left: 0,
-                            behavior: "smooth",
-                        });
-                        _b.label = 4;
-                    case 4: return [2 /*return*/];
+        setTimeout(function () {
+            var e_3, _a;
+            var col = tbody.current.querySelector("td[data-field='".concat(props.options.autoScrollKey, "']"));
+            if (col) {
+                var stickyColsWidthSummary = 0;
+                var stickyCols = thead.current.querySelectorAll("th.devs-dt-sticky-col[rowspan='1'][colspan='1'], th.devs-dt-sticky-col.devs-dt-th-bottom-border");
+                try {
+                    for (var stickyCols_1 = __values(stickyCols), stickyCols_1_1 = stickyCols_1.next(); !stickyCols_1_1.done; stickyCols_1_1 = stickyCols_1.next()) {
+                        var elem = stickyCols_1_1.value;
+                        stickyColsWidthSummary += elem.getBoundingClientRect().width;
+                    }
                 }
-            });
-        }); };
-        initialScrolling();
-    }, [(_c = props.options) === null || _c === void 0 ? void 0 : _c.initialAutoScroll, JSON.stringify(props.dataSource)]);
+                catch (e_3_1) { e_3 = { error: e_3_1 }; }
+                finally {
+                    try {
+                        if (stickyCols_1_1 && !stickyCols_1_1.done && (_a = stickyCols_1.return)) _a.call(stickyCols_1);
+                    }
+                    finally { if (e_3) throw e_3.error; }
+                }
+                var container = tbody.current.getBoundingClientRect();
+                var noStickySize = container.width - stickyColsWidthSummary - 1;
+                var noStickySizeHalf = noStickySize / 2;
+                var scrollLeft = ((col === null || col === void 0 ? void 0 : col.getBoundingClientRect().left) || 0) -
+                    stickyColsWidthSummary -
+                    noStickySizeHalf;
+                tbody.current.scrollTo({
+                    behavior: "smooth",
+                    left: scrollLeft,
+                });
+            }
+        }, 100);
+    };
+    React.useEffect(function () {
+        InitializeTableFromAutoScrolling();
+    }, [init, (_c = props.options) === null || _c === void 0 ? void 0 : _c.autoScrollKey]);
     if (!init)
         return _jsx(_Fragment, { children: "loading..." });
     return (_jsxs(DevsDtProvider, __assign({ columns: props.columns, setColumns: props.setColumns, dataSource: props.dataSource, setDataSource: props.setDataSource, options: props.options, formsRef: formsRef, focusedRow: focusedRow, setFocusedRow: setFocusedRow, focusedCell: focusedCell, setFocusedCell: setFocusedCell, tbody: tbody, thead: thead, wrapper: table, COLUMNS_STYLE_FORCE_UPDATE: COLUMNS_STYLE_FORCE_UPDATE, setInnerLoading: setInnerLoading }, { children: [(props.loading === true || innerLoading === true) && (_jsx("div", __assign({ className: "loader-backdrop" }, { children: _jsxs("div", __assign({ className: "loader-container" }, { children: [_jsx("span", { className: "spinner" }), _jsx("span", __assign({ style: { fontWeight: "bold" } }, { children: "\uB370\uC774\uD130 \uBD88\uB7EC\uC624\uB294 \uC911..." }))] })) }))), _jsx(DevsDtHeader, { title: props.title, buttons: props.buttons, options: props.options, setInnerLoading: setInnerLoading }), _jsxs("div", __assign({ ref: table, className: "dev-table-wrapper", css: css({ minWidth: (_e = (_d = props.options) === null || _d === void 0 ? void 0 : _d.minWidth) !== null && _e !== void 0 ? _e : 0 }) }, { children: [_jsx(DevsDtTHead, { thead: thead, setHeaderWidth: setHeaderWidth }), _jsx(DevsDtTBody, { tbody: tbody, headerWidth: headerWidth }), _jsx(DevsDtPagination, {}), (((_f = props.options) === null || _f === void 0 ? void 0 : _f.editMode) === "slider" ||

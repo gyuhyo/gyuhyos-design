@@ -10,6 +10,17 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __read = (this && this.__read) || function (o, n) {
     var m = typeof Symbol === "function" && o[Symbol.iterator];
     if (!m) return o;
@@ -39,7 +50,7 @@ var react_1 = __importDefault(require("react"));
 var usehooks_ts_1 = require("usehooks-ts");
 var react_2 = require("@emotion/react");
 function DevsDatePicker(props) {
-    var selectedDate = props.selectedDate, setSelectedDate = props.setSelectedDate, _a = props.picker, picker = _a === void 0 ? "month" : _a, _b = props.minDate, minDate = _b === void 0 ? "1990-01-01" : _b, setIsLoading = props.setIsLoading;
+    var selectedDate = props.selectedDate, setSelectedDate = props.setSelectedDate, _a = props.picker, picker = _a === void 0 ? "month" : _a, _b = props.minDate, minDate = _b === void 0 ? "1990-01-01" : _b, setIsLoading = props.setIsLoading, config = __rest(props, ["selectedDate", "setSelectedDate", "picker", "minDate", "setIsLoading"]);
     var matches = (0, usehooks_ts_1.useMediaQuery)("(min-width: 600px)");
     var showButton = matches;
     var _c = __read(react_1.default.useState(selectedDate), 2), datePickerValue = _c[0], setDatePickerValue = _c[1];
@@ -144,10 +155,10 @@ function DevsDatePicker(props) {
                         display: monthPickerButtonHidden
                             ? "none !important"
                             : "block !important",
-                    }) }) })), (0, jsx_runtime_1.jsx)(antd_1.Tooltip, __assign({ placement: "bottom", title: "\uC870\uD68C\uC77C\uC790" }, { children: (0, jsx_runtime_1.jsx)(antd_1.DatePicker, { picker: picker, value: datePickerValue, onChange: onMonthChaged, allowClear: false, inputReadOnly: true, minDate: (0, dayjs_1.default)(minDate), css: (0, react_2.css)({
+                    }) }) })), (0, jsx_runtime_1.jsx)(antd_1.Tooltip, __assign({ placement: "bottom", title: "\uC870\uD68C\uC77C\uC790" }, { children: (0, jsx_runtime_1.jsx)(antd_1.DatePicker, __assign({ picker: picker, value: datePickerValue, onChange: onMonthChaged, allowClear: false, inputReadOnly: true, minDate: (0, dayjs_1.default)(minDate), css: (0, react_2.css)({
                         minWidth: "120px !important",
                         height: monthPickerButtonHidden ? "26px" : "100%",
-                    }) }) })), (0, jsx_runtime_1.jsx)(antd_1.Tooltip, __assign({ placement: "bottom", title: nextTitle }, { children: (0, jsx_runtime_1.jsx)(antd_1.Button, { icon: (0, jsx_runtime_1.jsx)(icons_1.RightOutlined, {}), onClick: onNextClick, css: (0, react_2.css)({
+                    }) }, config)) })), (0, jsx_runtime_1.jsx)(antd_1.Tooltip, __assign({ placement: "bottom", title: nextTitle }, { children: (0, jsx_runtime_1.jsx)(antd_1.Button, { icon: (0, jsx_runtime_1.jsx)(icons_1.RightOutlined, {}), onClick: onNextClick, css: (0, react_2.css)({
                         display: monthPickerButtonHidden
                             ? "none !important"
                             : "block !important",

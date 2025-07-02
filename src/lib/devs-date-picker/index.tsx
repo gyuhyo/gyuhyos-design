@@ -22,6 +22,7 @@ function DevsDatePicker(props: DevsDatePickerProps) {
     picker = "month",
     minDate = "1990-01-01",
     setIsLoading,
+    ...config
   } = props;
   const matches = useMediaQuery("(min-width: 600px)");
   const showButton = matches;
@@ -171,6 +172,7 @@ function DevsDatePicker(props: DevsDatePickerProps) {
             minWidth: "120px !important",
             height: monthPickerButtonHidden ? "26px" : "100%",
           })}
+          {...config}
         />
       </Tooltip>
       <Tooltip placement="bottom" title={nextTitle}>

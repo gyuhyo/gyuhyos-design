@@ -77,6 +77,7 @@ export interface IDataTableOptions {
     nextRow: IDataSource;
     prevRow: IDataSource;
   }) => CSSInterpolation;
+  autoScrollKey?: string;
 }
 
 export interface IDataTableExportButtonProps {

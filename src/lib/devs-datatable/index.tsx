@@ -513,41 +513,50 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
       return () => window.removeEventListener("paste", pasteListener);
     }, [props.columns.length]);
 
-    React.useEffect(() => {
+    const InitializeTableFromAutoScrolling = () => {
       if (
-        !props.options?.initialAutoScroll ||
-        !thead.current ||
+        !init ||
+        !props.options?.autoScrollKey ||
         !tbody.current ||
-        props.dataSource.length === 0
+        !thead.current
       )
         return;
 
-      const initialScrolling = async () => {
-        const scrollField = props.options?.initialAutoScroll;
-        const th = tbody.current!.querySelector(
-          `table tbody tr:first-child td[data-field='${scrollField}']`
+      setTimeout(() => {
+        const col = tbody.current!.querySelector(
+          `td[data-field='${props.options!.autoScrollKey}']`
         );
-        const tbodtTable = tbody.current!.querySelector("table");
 
-        if (th) {
-          await sleep(100);
+        if (col) {
+          let stickyColsWidthSummary = 0;
+          const stickyCols = thead.current!.querySelectorAll(
+            "th.devs-dt-sticky-col[rowspan='1'][colspan='1'], th.devs-dt-sticky-col.devs-dt-th-bottom-border"
+          );
 
-          th.scrollIntoView({
+          for (var elem of stickyCols) {
+            stickyColsWidthSummary += elem.getBoundingClientRect().width;
+          }
+
+          const container = tbody.current!.getBoundingClientRect();
+
+          const noStickySize = container.width - stickyColsWidthSummary - 1;
+          const noStickySizeHalf = noStickySize / 2;
+          const scrollLeft =
+            (col?.getBoundingClientRect().left || 0) -
+            stickyColsWidthSummary -
+            noStickySizeHalf;
+
+          tbody.current!.scrollTo({
             behavior: "smooth",
-            inline: "end",
-          });
-        } else {
-          await sleep(100);
-
-          tbodtTable!.scrollTo({
-            left: 0,
-            behavior: "smooth",
+            left: scrollLeft,
           });
         }
-      };
+      }, 100);
+    };
 
-      initialScrolling();
-    }, [props.options?.initialAutoScroll, JSON.stringify(props.dataSource)]);
+    React.useEffect(() => {
+      InitializeTableFromAutoScrolling();
+    }, [init, props.options?.autoScrollKey]);
 
     if (!init) return <>loading...</>;
 

@@ -362,6 +362,7 @@ const App = () => {
         cellEditClickType: "click",
         showRowNumber: true,
         enabledRowCheck: true,
+        autoScrollKey: "profDay_20",
       }}
       buttons={{
         custom: (
