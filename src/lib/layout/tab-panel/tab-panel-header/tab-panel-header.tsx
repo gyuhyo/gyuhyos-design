@@ -171,6 +171,29 @@ function TabPanelHeader() {
     [openedMenus]
   );
 
+  React.useEffect(() => {
+    if (!containerRef.current) return;
+
+    const element = containerRef.current;
+    if (element) {
+      // 'wheel' 이벤트 리스너 추가
+      const onWheel = (e: any) => {
+        // 기본 세로 스크롤 동작을 막음
+        e.preventDefault();
+        // 휠의 Y축 움직임(e.deltaY)을 X축 스크롤(element.scrollLeft)에 더해줌
+        element.scrollTo({
+          left: element.scrollLeft + e.deltaY,
+          behavior: "smooth", // 부드럽게 스크롤
+        });
+      };
+
+      element.addEventListener("wheel", onWheel);
+
+      // 컴포넌트가 언마운트될 때 이벤트 리스너 제거 (메모리 누수 방지)
+      return () => element.removeEventListener("wheel", onWheel);
+    }
+  }, []); // 빈 배열을 전달하여 컴포넌트 마운트 시 한 번만 실행
+
   return (
     <DragDropContext onDragEnd={setRowOrderChange}>
       <Droppable
@@ -201,8 +224,13 @@ function TabPanelHeader() {
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
-                overflow: "hidden",
+                overflowY: "hidden",
+                overflowX: "auto",
                 position: "relative",
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+                scrollbarWidth: "none",
               })}
             >
               {openedMenus &&

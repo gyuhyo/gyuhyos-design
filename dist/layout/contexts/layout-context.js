@@ -135,8 +135,16 @@ export var LayoutProvider = function (_a) {
             }
         });
     }); };
+    var setMenusVisible = function (mns) {
+        return mns.map(function (mn) {
+            if (mn.children && mn.children.length > 0) {
+                return __assign(__assign({}, mn), { visible: true, children: setMenusVisible(mn.children) });
+            }
+            return __assign(__assign({}, mn), { visible: true });
+        });
+    };
     React.useEffect(function () {
-        if (!user || !isClient)
+        if (!isDev && (!user || !isClient))
             return;
         if (menus === undefined || menus.length === 0) {
             throw new Error("메뉴가 등록되지 않았습니다.\n메뉴를 먼저 등록 후 레이아웃을 사용해 주세요.");
@@ -155,7 +163,8 @@ export var LayoutProvider = function (_a) {
                 });
             }
             else {
-                setInitialMenus(menus);
+                var mns = setMenusVisible(menus);
+                setInitialMenus(mns);
             }
         }
     }, [user, menus, isClient, path]);

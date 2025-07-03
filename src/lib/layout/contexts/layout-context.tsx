@@ -1,6 +1,9 @@
 import React, { createContext, useContext } from "react";
 import RootLayout from "../page/root-layout/root-layout";
-import { SideMenuItemsProps } from "../types/side-menu-item-props";
+import {
+  SideMenuItemsChildProps,
+  SideMenuItemsProps,
+} from "../types/side-menu-item-props";
 import { useMenuStore } from "../stores/menu-store";
 import { useUserStore } from "../stores/user-store";
 import { useGyudAccess } from "../../access-context";
@@ -110,8 +113,25 @@ export const LayoutProvider: React.FC<{
     return await onMenuPermission?.({ userNo: user!, menus: menus });
   };
 
+  const setMenusVisible = (mns: SideMenuItemsProps[]): SideMenuItemsProps[] => {
+    return mns.map((mn) => {
+      if (mn.children && mn.children.length > 0) {
+        return {
+          ...mn,
+          visible: true,
+          children: setMenusVisible(mn.children as SideMenuItemsProps[]),
+        };
+      }
+
+      return {
+        ...mn,
+        visible: true,
+      };
+    });
+  };
+
   React.useEffect(() => {
-    if (!user || !isClient) return;
+    if (!isDev && (!user || !isClient)) return;
 
     if (menus === undefined || menus.length === 0) {
       throw new Error(
@@ -134,7 +154,8 @@ export const LayoutProvider: React.FC<{
           setInitialMenus(permissionMenus as SideMenuItemsProps[]);
         });
       } else {
-        setInitialMenus(menus);
+        const mns = setMenusVisible(menus);
+        setInitialMenus(mns);
       }
     }
   }, [user, menus, isClient, path]);

@@ -518,7 +518,9 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
         !init ||
         !props.options?.autoScrollKey ||
         !tbody.current ||
-        !thead.current
+        !thead.current ||
+        !props.columns ||
+        props.columns.length === 0
       )
         return;
 
@@ -556,7 +558,7 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
 
     React.useEffect(() => {
       InitializeTableFromAutoScrolling();
-    }, [init, props.options?.autoScrollKey]);
+    }, [init, props.options?.autoScrollKey, props.columns.length]);
 
     if (!init) return <>loading...</>;
 

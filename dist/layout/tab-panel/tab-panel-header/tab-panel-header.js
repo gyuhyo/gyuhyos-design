@@ -167,6 +167,26 @@ function TabPanelHeader() {
         newDataSource.splice(endIndex, 0, removed);
         menuOrderChanges(newDataSource);
     }, [openedMenus]);
+    React.useEffect(function () {
+        if (!containerRef.current)
+            return;
+        var element = containerRef.current;
+        if (element) {
+            // 'wheel' 이벤트 리스너 추가
+            var onWheel_1 = function (e) {
+                // 기본 세로 스크롤 동작을 막음
+                e.preventDefault();
+                // 휠의 Y축 움직임(e.deltaY)을 X축 스크롤(element.scrollLeft)에 더해줌
+                element.scrollTo({
+                    left: element.scrollLeft + e.deltaY,
+                    behavior: "smooth", // 부드럽게 스크롤
+                });
+            };
+            element.addEventListener("wheel", onWheel_1);
+            // 컴포넌트가 언마운트될 때 이벤트 리스너 제거 (메모리 누수 방지)
+            return function () { return element.removeEventListener("wheel", onWheel_1); };
+        }
+    }, []); // 빈 배열을 전달하여 컴포넌트 마운트 시 한 번만 실행
     return (_jsx(DragDropContext, __assign({ onDragEnd: setRowOrderChange }, { children: _jsx(Droppable, __assign({ droppableId: "droppable", mode: "standard", type: "", direction: "horizontal", isDropDisabled: isDrop }, { children: function (provided) {
                 var combinedRef = function (element) {
                     if (containerRef && containerRef.current !== element) {
@@ -183,8 +203,14 @@ function TabPanelHeader() {
                         display: "flex",
                         flexDirection: "row",
                         alignItems: "center",
-                        overflow: "hidden",
+                        overflowY: "hidden",
+                        overflowX: "auto",
                         position: "relative",
+                        "&::-webkit-scrollbar": {
+                            display: "none",
+                        },
+                        "-ms-overflow-style": "none",
+                        scrollbarWidth: "none",
                     }) }, { children: [openedMenus &&
                             openedMenus.map(function (menu, index) { return (_jsx(Draggable, __assign({ draggableId: "".concat(menu.group, "-").concat(menu.key), index: index, isDragDisabled: menu.main }, { children: function (provided2, snapshot) {
                                     var style = provided2.draggableProps.style;
