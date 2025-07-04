@@ -209,7 +209,6 @@ function TabPanelHeader() {
                         "&::-webkit-scrollbar": {
                             display: "none",
                         },
-                        "-ms-overflow-style": "none",
                         scrollbarWidth: "none",
                     }) }, { children: [openedMenus &&
                             openedMenus.map(function (menu, index) { return (_jsx(Draggable, __assign({ draggableId: "".concat(menu.group, "-").concat(menu.key), index: index, isDragDisabled: menu.main }, { children: function (provided2, snapshot) {

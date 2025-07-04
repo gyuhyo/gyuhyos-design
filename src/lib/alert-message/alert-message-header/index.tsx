@@ -61,8 +61,10 @@ type AlertMessageHeaderProps = {
 const AlertMessageHeader: React.FC<AlertMessageHeaderProps> = React.memo(
   ({ type, title, isCloseButtonVisible, onCloseClick, closeAlert }) => {
     return (
-      <div css={alertMessageHeader(type)}>
-        <p css={css({ fontWeight: "bold" })}>{title}</p>
+      <div css={alertMessageHeader(type)} className="alert-message-header">
+        <p css={css({ fontWeight: "bold" })} className="alert-message-title">
+          {title}
+        </p>
         {isCloseButtonVisible && (
           <div
             css={alertMessageCloseButton}

@@ -39,14 +39,15 @@ const AlertMessageFooter: React.FC<AlertMessageFooterProps> = React.memo(
     input,
   }) => {
     return (
-      <div css={alertMessageFooter}>
-        <div>{footerStart}</div>
+      <div css={alertMessageFooter} className="alert-message-footer">
+        <div className="alert-message-footer-left">{footerStart}</div>
         <div
           css={css({
             display: "flex",
             flexDirection: "row",
             columnGap: 7,
           })}
+          className="alert-message-footer-right"
         >
           {isOkButtonVisible && (
             <Button
