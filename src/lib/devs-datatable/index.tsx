@@ -524,36 +524,64 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
       )
         return;
 
-      setTimeout(() => {
-        const col = tbody.current!.querySelector(
-          `td[data-field='${props.options!.autoScrollKey}']`
-        );
+      try {
+        setTimeout(() => {
+          const col = tbody.current!.querySelector(
+            `td[data-field='${props.options!.autoScrollKey}']`
+          ) as HTMLElement;
 
-        if (col) {
-          let stickyColsWidthSummary = 0;
-          const stickyCols = thead.current!.querySelectorAll(
-            "th.devs-dt-sticky-col[rowspan='1'][colspan='1'], th.devs-dt-sticky-col.devs-dt-th-bottom-border"
-          );
+          if (col) {
+            let stickyColsWidthSummary = 0;
+            const stickyCols = thead.current!.querySelectorAll(
+              "th.devs-dt-sticky-col[rowspan='1'][colspan='1'], th.devs-dt-sticky-col.devs-dt-th-bottom-border"
+            );
 
-          for (var elem of stickyCols) {
-            stickyColsWidthSummary += elem.getBoundingClientRect().width;
+            for (var elem of stickyCols) {
+              stickyColsWidthSummary += elem.getBoundingClientRect().width;
+            }
+
+            // scroll-padding-left 설정은 직접 계산 방식에서는 필수는 아니지만,
+            // 키보드 탭 이동 등 다른 스크롤 이벤트에 대비해 유지하는 것이 좋습니다.
+            tbody.current!.style.scrollPaddingLeft = `${stickyColsWidthSummary}px`;
+
+            const containerVisibleWidth = tbody.current!.clientWidth;
+            const targetLeft = col.offsetLeft;
+            const targetRight = targetLeft + col.offsetWidth;
+            const currentScrollLeft = tbody.current!.scrollLeft;
+            const visibleAreaLeft = currentScrollLeft + stickyColsWidthSummary;
+            const visibleAreaRight = currentScrollLeft + containerVisibleWidth;
+
+            if (
+              targetLeft < visibleAreaLeft ||
+              targetRight > visibleAreaRight
+            ) {
+              // ==========  sostituzione Inizia Qui ==========
+
+              // 1. 목표 셀의 중심 좌표를 계산합니다.
+              const targetCenter = col.offsetLeft + col.offsetWidth / 2;
+
+              // 2. sticky 컬럼을 제외한 "실제 보이는 영역"의 중심 좌표를 계산합니다.
+              const effectiveViewportCenter =
+                stickyColsWidthSummary +
+                (tbody.current!.clientWidth - stickyColsWidthSummary) / 2;
+
+              // 3. 최종 스크롤할 위치(scrollLeft)를 계산합니다.
+              // (목표 셀의 중심 - 실제 보이는 영역의 중심)
+              const newScrollLeft = targetCenter - effectiveViewportCenter;
+
+              // 4. scrollTo를 사용하여 계산된 위치로 스크롤합니다.
+              tbody.current!.scrollTo({
+                left: newScrollLeft,
+                behavior: "smooth",
+              });
+
+              // ========== Sostituzione Finisce Qui ==========
+            }
           }
-
-          const container = tbody.current!.getBoundingClientRect();
-
-          const noStickySize = container.width - stickyColsWidthSummary - 1;
-          const noStickySizeHalf = noStickySize / 2;
-          const scrollLeft =
-            (col?.getBoundingClientRect().left || 0) -
-            stickyColsWidthSummary -
-            noStickySizeHalf;
-
-          tbody.current!.scrollTo({
-            behavior: "smooth",
-            left: scrollLeft,
-          });
-        }
-      }, 100);
+        }, 100);
+      } catch (err) {
+        console.error("scroll fail");
+      }
     };
 
     React.useEffect(() => {

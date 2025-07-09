@@ -50,7 +50,7 @@ var alertMessageBody = (0, react_1.css)({
 });
 var AlertMessageBody = React.memo(function (_a) {
     var message = _a.message, input = _a.input, inputOption = _a.inputOption, value = _a.value, setValue = _a.setValue;
-    return ((0, jsx_runtime_1.jsxs)("div", __assign({ css: alertMessageBody }, { children: [typeof message === "string" ? ((0, jsx_runtime_1.jsx)("p", __assign({ css: (0, react_1.css)({ whiteSpace: "pre-wrap" }) }, { children: message }))) : (message), input && ((0, jsx_runtime_1.jsx)(InputBox, { children: (0, jsx_runtime_1.jsx)(Input, __assign({ value: value, autoFocus: true, onChange: function (e) { return setValue(e.target.value); } }, inputOption)) }))] })));
+    return ((0, jsx_runtime_1.jsxs)("div", __assign({ css: alertMessageBody, className: "alert-message-body" }, { children: [typeof message === "string" ? ((0, jsx_runtime_1.jsx)("p", __assign({ css: (0, react_1.css)({ whiteSpace: "pre-wrap" }), className: "alert-message-content" }, { children: message }))) : (message), input && ((0, jsx_runtime_1.jsx)(InputBox, { children: (0, jsx_runtime_1.jsx)(Input, __assign({ value: value, autoFocus: true, onChange: function (e) { return setValue(e.target.value); } }, inputOption)) }))] })));
 });
 var InputBox = styled_1.default.div({
     marginTop: 12,

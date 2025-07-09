@@ -22,7 +22,7 @@ var alertMessageBody = css({
 });
 var AlertMessageBody = React.memo(function (_a) {
     var message = _a.message, input = _a.input, inputOption = _a.inputOption, value = _a.value, setValue = _a.setValue;
-    return (_jsxs("div", __assign({ css: alertMessageBody }, { children: [typeof message === "string" ? (_jsx("p", __assign({ css: css({ whiteSpace: "pre-wrap" }) }, { children: message }))) : (message), input && (_jsx(InputBox, { children: _jsx(Input, __assign({ value: value, autoFocus: true, onChange: function (e) { return setValue(e.target.value); } }, inputOption)) }))] })));
+    return (_jsxs("div", __assign({ css: alertMessageBody, className: "alert-message-body" }, { children: [typeof message === "string" ? (_jsx("p", __assign({ css: css({ whiteSpace: "pre-wrap" }), className: "alert-message-content" }, { children: message }))) : (message), input && (_jsx(InputBox, { children: _jsx(Input, __assign({ value: value, autoFocus: true, onChange: function (e) { return setValue(e.target.value); } }, inputOption)) }))] })));
 });
 var InputBox = newStyled.div({
     marginTop: 12,

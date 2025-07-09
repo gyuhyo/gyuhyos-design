@@ -52,11 +52,11 @@ var alertMessageFooter = (0, react_1.css)({
 });
 var AlertMessageFooter = React.memo(function (_a) {
     var footerStart = _a.footerStart, isOkButtonVisible = _a.isOkButtonVisible, onOkClick = _a.onOkClick, okCaption = _a.okCaption, closeAlert = _a.closeAlert, isCancelButtonVisible = _a.isCancelButtonVisible, onCancelClick = _a.onCancelClick, cancelCaption = _a.cancelCaption, value = _a.value, input = _a.input;
-    return ((0, jsx_runtime_1.jsxs)("div", __assign({ css: alertMessageFooter }, { children: [(0, jsx_runtime_1.jsx)("div", { children: footerStart }), (0, jsx_runtime_1.jsxs)("div", __assign({ css: (0, react_1.css)({
+    return ((0, jsx_runtime_1.jsxs)("div", __assign({ css: alertMessageFooter, className: "alert-message-footer" }, { children: [(0, jsx_runtime_1.jsx)("div", __assign({ className: "alert-message-footer-left" }, { children: footerStart })), (0, jsx_runtime_1.jsxs)("div", __assign({ css: (0, react_1.css)({
                     display: "flex",
                     flexDirection: "row",
                     columnGap: 7,
-                }) }, { children: [isOkButtonVisible && ((0, jsx_runtime_1.jsx)(button_1.default, __assign({ bgColor: "#1f619d", color: "#fff", onClick: function (e) {
+                }), className: "alert-message-footer-right" }, { children: [isOkButtonVisible && ((0, jsx_runtime_1.jsx)(button_1.default, __assign({ bgColor: "#1f619d", color: "#fff", onClick: function (e) {
                             if (onOkClick) {
                                 var next = onOkClick(value);
                                 if (typeof next === "boolean" && !next)

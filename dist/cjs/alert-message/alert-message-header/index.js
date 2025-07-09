@@ -82,7 +82,7 @@ var alertMessageCloseButton = (0, react_1.css)({
 });
 var AlertMessageHeader = React.memo(function (_a) {
     var type = _a.type, title = _a.title, isCloseButtonVisible = _a.isCloseButtonVisible, onCloseClick = _a.onCloseClick, closeAlert = _a.closeAlert;
-    return ((0, jsx_runtime_1.jsxs)("div", __assign({ css: alertMessageHeader(type) }, { children: [(0, jsx_runtime_1.jsx)("p", __assign({ css: (0, react_1.css)({ fontWeight: "bold" }) }, { children: title })), isCloseButtonVisible && ((0, jsx_runtime_1.jsx)("div", { css: alertMessageCloseButton, onClick: function (e) {
+    return ((0, jsx_runtime_1.jsxs)("div", __assign({ css: alertMessageHeader(type), className: "alert-message-header" }, { children: [(0, jsx_runtime_1.jsx)("p", __assign({ css: (0, react_1.css)({ fontWeight: "bold" }), className: "alert-message-title" }, { children: title })), isCloseButtonVisible && ((0, jsx_runtime_1.jsx)("div", { css: alertMessageCloseButton, onClick: function (e) {
                     if (onCloseClick) {
                         onCloseClick(e);
                     }

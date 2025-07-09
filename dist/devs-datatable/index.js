@@ -525,37 +525,59 @@ var DevsDataTable = React.forwardRef(function (props, ref) {
             !props.columns ||
             props.columns.length === 0)
             return;
-        setTimeout(function () {
-            var e_3, _a;
-            var col = tbody.current.querySelector("td[data-field='".concat(props.options.autoScrollKey, "']"));
-            if (col) {
-                var stickyColsWidthSummary = 0;
-                var stickyCols = thead.current.querySelectorAll("th.devs-dt-sticky-col[rowspan='1'][colspan='1'], th.devs-dt-sticky-col.devs-dt-th-bottom-border");
-                try {
-                    for (var stickyCols_1 = __values(stickyCols), stickyCols_1_1 = stickyCols_1.next(); !stickyCols_1_1.done; stickyCols_1_1 = stickyCols_1.next()) {
-                        var elem = stickyCols_1_1.value;
-                        stickyColsWidthSummary += elem.getBoundingClientRect().width;
-                    }
-                }
-                catch (e_3_1) { e_3 = { error: e_3_1 }; }
-                finally {
+        try {
+            setTimeout(function () {
+                var e_3, _a;
+                var col = tbody.current.querySelector("td[data-field='".concat(props.options.autoScrollKey, "']"));
+                if (col) {
+                    var stickyColsWidthSummary = 0;
+                    var stickyCols = thead.current.querySelectorAll("th.devs-dt-sticky-col[rowspan='1'][colspan='1'], th.devs-dt-sticky-col.devs-dt-th-bottom-border");
                     try {
-                        if (stickyCols_1_1 && !stickyCols_1_1.done && (_a = stickyCols_1.return)) _a.call(stickyCols_1);
+                        for (var stickyCols_1 = __values(stickyCols), stickyCols_1_1 = stickyCols_1.next(); !stickyCols_1_1.done; stickyCols_1_1 = stickyCols_1.next()) {
+                            var elem = stickyCols_1_1.value;
+                            stickyColsWidthSummary += elem.getBoundingClientRect().width;
+                        }
                     }
-                    finally { if (e_3) throw e_3.error; }
+                    catch (e_3_1) { e_3 = { error: e_3_1 }; }
+                    finally {
+                        try {
+                            if (stickyCols_1_1 && !stickyCols_1_1.done && (_a = stickyCols_1.return)) _a.call(stickyCols_1);
+                        }
+                        finally { if (e_3) throw e_3.error; }
+                    }
+                    // scroll-padding-left 설정은 직접 계산 방식에서는 필수는 아니지만,
+                    // 키보드 탭 이동 등 다른 스크롤 이벤트에 대비해 유지하는 것이 좋습니다.
+                    tbody.current.style.scrollPaddingLeft = "".concat(stickyColsWidthSummary, "px");
+                    var containerVisibleWidth = tbody.current.clientWidth;
+                    var targetLeft = col.offsetLeft;
+                    var targetRight = targetLeft + col.offsetWidth;
+                    var currentScrollLeft = tbody.current.scrollLeft;
+                    var visibleAreaLeft = currentScrollLeft + stickyColsWidthSummary;
+                    var visibleAreaRight = currentScrollLeft + containerVisibleWidth;
+                    if (targetLeft < visibleAreaLeft ||
+                        targetRight > visibleAreaRight) {
+                        // ==========  sostituzione Inizia Qui ==========
+                        // 1. 목표 셀의 중심 좌표를 계산합니다.
+                        var targetCenter = col.offsetLeft + col.offsetWidth / 2;
+                        // 2. sticky 컬럼을 제외한 "실제 보이는 영역"의 중심 좌표를 계산합니다.
+                        var effectiveViewportCenter = stickyColsWidthSummary +
+                            (tbody.current.clientWidth - stickyColsWidthSummary) / 2;
+                        // 3. 최종 스크롤할 위치(scrollLeft)를 계산합니다.
+                        // (목표 셀의 중심 - 실제 보이는 영역의 중심)
+                        var newScrollLeft = targetCenter - effectiveViewportCenter;
+                        // 4. scrollTo를 사용하여 계산된 위치로 스크롤합니다.
+                        tbody.current.scrollTo({
+                            left: newScrollLeft,
+                            behavior: "smooth",
+                        });
+                        // ========== Sostituzione Finisce Qui ==========
+                    }
                 }
-                var container = tbody.current.getBoundingClientRect();
-                var noStickySize = container.width - stickyColsWidthSummary - 1;
-                var noStickySizeHalf = noStickySize / 2;
-                var scrollLeft = ((col === null || col === void 0 ? void 0 : col.getBoundingClientRect().left) || 0) -
-                    stickyColsWidthSummary -
-                    noStickySizeHalf;
-                tbody.current.scrollTo({
-                    behavior: "smooth",
-                    left: scrollLeft,
-                });
-            }
-        }, 100);
+            }, 100);
+        }
+        catch (err) {
+            console.error("scroll fail");
+        }
     };
     React.useEffect(function () {
         InitializeTableFromAutoScrolling();
