@@ -118,7 +118,7 @@ function DevsDtRow(_a) {
                 prev[curr] = data[curr];
             }
             else {
-                var d = null;
+                var d = (data === null || data === void 0 ? void 0 : data[curr]) === null ? null : data[curr];
                 if (data[curr]) {
                     d =
                         findKey.type === "date" || findKey.type === "datetime"

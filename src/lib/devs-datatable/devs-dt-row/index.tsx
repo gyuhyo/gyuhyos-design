@@ -222,7 +222,7 @@ function DevsDtRow({
         if (!findKey) {
           prev[curr] = data[curr];
         } else {
-          let d: any = null;
+          let d: any = data?.[curr] === null ? null : data[curr];
           if (data[curr]) {
             d =
               findKey.type === "date" || findKey.type === "datetime"

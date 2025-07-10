@@ -148,6 +148,7 @@ var LayoutProvider = function (_a) {
         if (!isClient || !authUrl)
             return;
         if (!isDev &&
+            !__spreadArray(__spreadArray([], __read((statics || [])), false), [authUrl], false).includes(path) &&
             !path.includes("popup") &&
             path !== authUrl &&
             (user === undefined || user === null)) {

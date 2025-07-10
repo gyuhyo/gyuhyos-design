@@ -99,6 +99,7 @@ export const LayoutProvider: React.FC<{
     if (!isClient || !authUrl) return;
     if (
       !isDev &&
+      ![...(statics || []), authUrl].includes(path) &&
       !path.includes("popup") &&
       path !== authUrl &&
       (user === undefined || user === null)
