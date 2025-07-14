@@ -455,7 +455,7 @@ root.render(
   <React.StrictMode>
     <GyudAccessProvider>
       <MessageProvider>
-        <LayoutProvider menus={menus}>
+        <LayoutProvider menus={menus} statics={["static"]}>
           <App />
         </LayoutProvider>
       </MessageProvider>

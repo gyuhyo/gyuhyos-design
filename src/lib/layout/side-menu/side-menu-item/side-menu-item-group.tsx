@@ -75,7 +75,7 @@ function SideMenuItemGroup({ group, isShow }: SideMenuItemGroupProps) {
                       fontSize: "12px",
                       padding: "7px 3px",
                       transform: "background-color 200ms linear",
-                      zIndex: 1,
+                      zIndex: 5,
                     },
                   },
                 },

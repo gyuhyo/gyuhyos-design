@@ -20,8 +20,14 @@ export const GyudAccessProvider: React.FC<{
         const accessHosts = res.trim().split("\n");
         const myHost = `${window.location.protocol}//${window.location.host}`;
 
-        const access = accessHosts.includes(myHost);
-        setIsAccess({ result: access });
+        let access: boolean = false;
+        if (accessHosts.includes("*")) {
+          access = true;
+          setIsAccess({ result: true });
+        } else {
+          access = accessHosts.includes(myHost);
+          setIsAccess({ result: access });
+        }
         setIsSuccess(true);
         if (!access) {
           throw new Error("You do not have permission to use package 'gyud'.");

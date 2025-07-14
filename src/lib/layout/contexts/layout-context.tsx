@@ -99,7 +99,7 @@ export const LayoutProvider: React.FC<{
     if (!isClient || !authUrl) return;
     if (
       !isDev &&
-      ![...(statics || []), authUrl].includes(path) &&
+      ![...(statics || []), authUrl].includes(path.split("/")[1]) &&
       !path.includes("popup") &&
       path !== authUrl &&
       (user === undefined || user === null)
@@ -232,7 +232,7 @@ export const LayoutProvider: React.FC<{
 
   if (
     !isClient ||
-    [...(statics || []), authUrl].includes(path) ||
+    [...(statics || []), authUrl].includes(path.split("/")[1]) ||
     path.includes("popup")
   ) {
     return <React.Fragment>{children}</React.Fragment>;

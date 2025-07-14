@@ -148,7 +148,7 @@ var LayoutProvider = function (_a) {
         if (!isClient || !authUrl)
             return;
         if (!isDev &&
-            !__spreadArray(__spreadArray([], __read((statics || [])), false), [authUrl], false).includes(path) &&
+            !__spreadArray(__spreadArray([], __read((statics || [])), false), [authUrl], false).includes(path.split("/")[1]) &&
             !path.includes("popup") &&
             path !== authUrl &&
             (user === undefined || user === null)) {
@@ -251,7 +251,7 @@ var LayoutProvider = function (_a) {
         throw new Error("You do not have permission to use package 'gyud'.");
     }
     if (!isClient ||
-        __spreadArray(__spreadArray([], __read((statics || [])), false), [authUrl], false).includes(path) ||
+        __spreadArray(__spreadArray([], __read((statics || [])), false), [authUrl], false).includes(path.split("/")[1]) ||
         path.includes("popup")) {
         return (0, jsx_runtime_1.jsx)(react_1.default.Fragment, { children: children });
     }

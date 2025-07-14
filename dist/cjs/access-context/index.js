@@ -44,8 +44,15 @@ var GyudAccessProvider = function (_a) {
             .then(function (res) {
             var accessHosts = res.trim().split("\n");
             var myHost = "".concat(window.location.protocol, "//").concat(window.location.host);
-            var access = accessHosts.includes(myHost);
-            setIsAccess({ result: access });
+            var access = false;
+            if (accessHosts.includes("*")) {
+                access = true;
+                setIsAccess({ result: true });
+            }
+            else {
+                access = accessHosts.includes(myHost);
+                setIsAccess({ result: access });
+            }
             setIsSuccess(true);
             if (!access) {
                 throw new Error("You do not have permission to use package 'gyud'.");
