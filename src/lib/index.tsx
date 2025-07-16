@@ -1,3 +1,4 @@
+import "./styles.css";
 import React from "react";
 import { DevsDataTableRef } from "./devs-datatable/_types";
 

@@ -1,3 +1,4 @@
+import "./styles.css";
 import React from "react";
 export { default as DevsDataTable } from "./devs-datatable";
 export { default as Button, MesButton } from "./button";
