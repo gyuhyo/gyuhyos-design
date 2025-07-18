@@ -43,10 +43,8 @@ const DevsDtHeader: React.FC<DevsDtHeaderProps> = (props) => {
             marginBottom: 7,
             flexWrap: "wrap",
             gap: "7px",
-            background:
-              "linear-gradient(180deg, rgb(231, 231, 231), rgb(215, 215, 215), rgb(231, 231, 231))",
-            border: "1px solid rgb(199, 199, 199)",
-
+            background: "var(--dt-header-color)",
+            border: "1px solid var(--border-color)",
             padding: "0.5rem 0.75rem",
           }}
         >
@@ -80,8 +78,8 @@ const DevsDtHeader: React.FC<DevsDtHeaderProps> = (props) => {
                         : "0px",
                   }}
                 >
-                  (<span style={{ color: "#000" }}>*</span>) 입력 가능 (
-                  <span style={{ color: "red" }}>*</span>) 필수입력
+                  (<span style={{ color: "var(--text-color)" }}>*</span>) 입력
+                  가능 (<span style={{ color: "red" }}>*</span>) 필수입력
                 </span>
               )}
             </div>

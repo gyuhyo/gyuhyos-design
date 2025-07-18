@@ -15,8 +15,8 @@ export const layerPopupStyles = (props: LayerPopupStyleProps) =>
     zIndex: 3,
 
     "[data-name='layer-popup-container']": {
-      background: "#fff",
-      border: "1px solid #c7c7c7",
+      background: "rgb(var(--background-color))",
+      border: "1px solid var(--border-color)",
       borderRadius: "7px",
       boxShadow: "1px 1px 11px #00000050",
       position: "relative",
@@ -27,10 +27,9 @@ export const layerPopupStyles = (props: LayerPopupStyleProps) =>
     "[data-name='layer-popup-header']": {
       flex: "none",
       borderRadius: "7px 7px 0px 0px",
-      background:
-        "linear-gradient(rgb(221, 221, 221), rgb(206, 206, 206), rgb(221, 221, 221))",
+      background: "var(--dt-header-color)",
       lineHeight: "30px",
-      borderBottom: "1px solid #c7c7c7",
+      borderBottom: "1px solid var(--border-color)",
       padding: "0px 7px",
       display: "flex",
       flexDirection: "row",
@@ -86,7 +85,7 @@ export const layerPopupStyles = (props: LayerPopupStyleProps) =>
 
     "[data-name='layer-popup-footer']": {
       flex: "none",
-      borderTop: "1px solid rgb(224, 224, 224)",
+      borderTop: "1px solid var(--border-color)",
       padding: "0px 7px",
     },
   });

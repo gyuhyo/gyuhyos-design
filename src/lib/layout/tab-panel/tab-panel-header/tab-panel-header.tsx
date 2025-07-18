@@ -220,7 +220,7 @@ function TabPanelHeader() {
               css={css({
                 flex: "none",
                 height: "35px",
-                background: "#fff",
+                background: "rgb(var(--background-color))",
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
@@ -278,7 +278,7 @@ function TabPanelHeader() {
                   top: 0,
                   padding: "5px 7px",
                   height: "100%",
-                  background: "#fff",
+                  background: "rgb(var(--background-color))",
                   boxShadow: "-1px 0px 15px 7px rgba(0, 0, 0, 0.5)",
                   zIndex: 2,
                 })}

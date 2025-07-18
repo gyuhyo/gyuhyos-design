@@ -13,14 +13,20 @@ const RootLayoutUserCard: React.FC<any> = React.memo(() => {
   const signIn = useUserStore((state) => state.signIn);
   const user = useUserStore((state) => state.me);
   const { showMessage } = useMessage();
-  const { host, refreshTokenUrl, languages, handleLanguageChange } =
-    useLayout();
+  const {
+    host,
+    refreshTokenUrl,
+    languages,
+    handleLanguageChange,
+    onBeforeLogout,
+  } = useLayout();
 
   const onSignOutClick = () => {
     showMessage({
       title: "로그아웃 확인",
       message: "정말 로그아웃 하시겠습니까?",
       onOkClick: () => {
+        if (onBeforeLogout) onBeforeLogout(user);
         fetch(`${host}/smart.device/logout/${user.userNo}`, {
           method: "get",
           headers: {
@@ -61,7 +67,7 @@ const RootLayoutUserCard: React.FC<any> = React.memo(() => {
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
-          border: "1px solid #ddd",
+          border: "1px solid var(--default-border-color)",
           fontSize: "20px",
           padding: "3px 5px",
         })}
@@ -91,7 +97,7 @@ const RootLayoutUserCard: React.FC<any> = React.memo(() => {
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
-          border: "1px solid #ddd",
+          border: "1px solid var(--default-border-color)",
           fontSize: "0.85rem",
         })}
       >
@@ -110,7 +116,6 @@ const RootLayoutUserCard: React.FC<any> = React.memo(() => {
           color="#fff"
           compact={true}
           rounded={false}
-          border={false}
           onClick={onSignOutClick}
         >
           로그아웃
@@ -122,7 +127,7 @@ const RootLayoutUserCard: React.FC<any> = React.memo(() => {
           display: "none",
           flexDirection: "row",
           alignItems: "center",
-          border: "1px solid #ddd",
+          border: "1px solid var(--default-border-color)",
           fontSize: "0.85rem",
           "@media (min-width: 650px)": {
             display: "flex",
@@ -132,7 +137,8 @@ const RootLayoutUserCard: React.FC<any> = React.memo(() => {
         <p
           css={css({
             padding: "0px 7px",
-            background: "#fff",
+            background: "rgb(var(--background-color))",
+            height: "-webkit-fill-available",
           })}
         >
           {`${user.userName}님`}

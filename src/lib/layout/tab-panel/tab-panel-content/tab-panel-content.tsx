@@ -12,7 +12,7 @@ function TabPanelContent({ children }: { children: React.ReactNode }) {
       css={css({
         flex: "1 1 0%",
         marginTop: "-1px",
-        borderTop: "1px solid #1f619d",
+        borderTop: "1px solid rgb(var(--panel-border-color))",
         position: "relative",
         overflow: "hidden",
       })}

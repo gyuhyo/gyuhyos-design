@@ -122,9 +122,9 @@ function DevsDatePicker(props: DevsDatePickerProps) {
         justifyContent: "center",
         alignItems: "center",
         borderRadius: "5px",
-        border: showButton ? "1px solid #cecece" : "none",
+        border: showButton ? "1px solid var(--default-border-color)" : "none",
         "& button, .ant-picker": {
-          border: showButton ? "none" : "1px solid #cecece",
+          border: showButton ? "none" : "1px solid var(--default-border-color)",
         },
         "& button": {
           width: "30px",
@@ -133,11 +133,11 @@ function DevsDatePicker(props: DevsDatePickerProps) {
             borderColor: "inherit !important",
           },
           "&:first-of-type": {
-            borderInlineEnd: "1px solid #cecece",
+            borderInlineEnd: "1px solid var(--default-border-color)",
             borderRadius: "5px 0px 0px 5px",
           },
           "&:last-of-type": {
-            borderInlineStart: "1px solid #cecece",
+            borderInlineStart: "1px solid var(--default-border-color)",
             borderRadius: "0px 5px 5px 0px",
           },
         },

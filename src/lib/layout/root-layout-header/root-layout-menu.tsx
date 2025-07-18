@@ -216,8 +216,8 @@ const RootLayoutMenu: React.FC<any> = React.memo(() => {
             overflow: "visible",
             width: 300,
             lineHeight: "35px",
-            background: "#fff",
-            border: "1px solid #c0c0c0",
+            background: "rgb(var(--background-color))",
+            border: "1px solid var(--default-border-color)",
             borderRadius: "7px",
             display: "flex",
             flexDirection: "row",
@@ -231,6 +231,7 @@ const RootLayoutMenu: React.FC<any> = React.memo(() => {
               flex: "1 1 0%",
               borderRadius: "7px",
               paddingLeft: "7px",
+              background: "rgb(var(--background-color))",
             })}
             value={searchMenuText}
             onChange={(e: any) => onMenuSearch(e.target.value)}

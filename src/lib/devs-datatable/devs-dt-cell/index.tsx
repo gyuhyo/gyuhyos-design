@@ -25,6 +25,7 @@ import {
 import { IDataSource, IDataTableColumn } from "../_types";
 import { useDt } from "../context/devs-dt-context";
 import { useIntersectionObserver } from "../../hooks";
+import { useLayout } from "../../layout/contexts/layout-context";
 dayjs.extend(customParseFormat);
 dayjs.extend(advancedFormat);
 dayjs.extend(weekday);
@@ -78,6 +79,7 @@ function DevsDtCell({
   nextRow,
   forceRerender,
 }: TDevsDtCell) {
+  const { theme } = useLayout();
   const {
     focusedRow,
     focusedCell,
@@ -741,6 +743,7 @@ function DevsDtCell({
             target: "tbody",
             value: defaultValue,
             row: row,
+            theme: theme,
           }),
         } as React.CSSProperties
       }

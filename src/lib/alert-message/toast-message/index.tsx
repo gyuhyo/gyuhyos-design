@@ -237,7 +237,7 @@ const ToastMessageContainer: React.FC<IToastMessageContainer> = (props) => {
         position: "fixed",
         minWidth: "300px",
         height: `${HEIGHT}px`,
-        background: "#ffffff90",
+        background: "rgba(var(--background-color), 0.9)",
         borderRadius: "5px",
         zIndex: 4,
         transition: "top 200ms ease-in, left 200ms ease-in",

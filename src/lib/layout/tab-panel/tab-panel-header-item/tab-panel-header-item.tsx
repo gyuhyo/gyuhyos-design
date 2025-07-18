@@ -62,9 +62,13 @@ function TabPanelHeaderItem({
         position: "relative",
         height: "100%",
         padding: isVisibilityCloseButton ? "0px 7px" : "0px 7px",
-        borderInline: `1px solid #1f619d${active ? "99" : "00"}`,
-        borderBottom: `1px solid rgba(255, 255, 255, ${active ? "1" : "0"})`,
-        background: "#ffffff99",
+        borderInline: `1px solid rgba(var(--panel-border-color), ${
+          active ? "0.9" : "0"
+        })`,
+        borderBottom: `1px solid rgba(var(--background-color), ${
+          active ? "1" : "0"
+        })`,
+        background: "rgba(var(--background-color), 0.9)",
         alignContent: "center",
         zIndex: active ? 2 : "",
         display: "flex",
@@ -77,9 +81,9 @@ function TabPanelHeaderItem({
           top: 0,
           left: 0,
           width: "100%",
-          borderTop: active ? "6px solid #1f619d" : "",
-          borderRight: active ? "1px solid #1f619d" : "",
-          borderLeft: active ? "1px solid #1f619d" : "",
+          borderTop: active ? "6px solid rgb(var(--panel-border-color))" : "",
+          borderRight: active ? "1px solid rgb(var(--panel-border-color))" : "",
+          borderLeft: active ? "1px solid rgb(var(--panel-border-color))" : "",
           transition: "border 200ms linear",
         },
         "&::after": {
@@ -95,7 +99,7 @@ function TabPanelHeaderItem({
           transform: "translateY(-50%)",
         },
         "&:hover": {
-          background: active ? "" : "#e5edf4",
+          background: active ? "" : "var(--panel-hover-color)",
           transition: "background-color 200ms linear",
         },
       })}

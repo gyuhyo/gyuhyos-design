@@ -6,10 +6,11 @@ import { css } from "@emotion/react";
 import Button from "../../button";
 import Backdrop from "../backdrop/backdrop";
 import { useLayout } from "../contexts/layout-context";
+import RadioButton from "../../radio-button";
 function SideSettingSliderContainer() {
   const [fontSize, setFontSize] = React.useState(0.95);
   const [isShow, setIsShow] = React.useState(false);
-  const { customSettings } = useLayout();
+  const { customSettings, themeChange, theme } = useLayout();
 
   React.useEffect(() => {
     if (typeof window !== "undefined") {
@@ -76,6 +77,32 @@ function SideSettingSliderContainer() {
         >
           <div
             css={css({
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            })}
+          >
+            <p>Theme</p>
+            <RadioButton
+              background="#000000"
+              color="#ffdd02"
+              defaultValue={theme}
+              onChange={(value) => themeChange(value as "light" | "dark")}
+              items={[
+                {
+                  value: "light",
+                  label: <i className="fa-solid fa-sun" />,
+                },
+                {
+                  value: "dark",
+                  label: <i className="fa-solid fa-moon" />,
+                },
+              ]}
+            />
+          </div>
+          <div
+            css={css({
               lineHeight: "30px",
               display: "flex",
               flexDirection: "row",
@@ -89,7 +116,7 @@ function SideSettingSliderContainer() {
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
-                border: "1px solid #ddd",
+                border: "1px solid var(--default-border-color)",
                 fontSize: "0.85rem",
               })}
             >
@@ -105,7 +132,7 @@ function SideSettingSliderContainer() {
               <p
                 css={css({
                   padding: "0px 7px",
-                  background: "#fff",
+                  background: "rgb(var(--background-color))",
                 })}
               >
                 {fontSize.toFixed(2)}

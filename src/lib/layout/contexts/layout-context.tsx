@@ -5,8 +5,9 @@ import {
   SideMenuItemsProps,
 } from "../types/side-menu-item-props";
 import { useMenuStore } from "../stores/menu-store";
-import { useUserStore } from "../stores/user-store";
+import { IUser, useUserStore } from "../stores/user-store";
 import { useGyudAccess } from "../../access-context";
+import { ConfigProvider, theme as themes } from "antd";
 
 interface languagesProps {
   code: string;
@@ -21,7 +22,10 @@ interface LayoutContextProps {
   languages: languagesProps[];
   handleLanguageChange: (lang: languagesProps) => void;
   customSettings?: React.ReactNode;
+  themeChange: (theme: "light" | "dark") => void;
+  theme: "light" | "dark";
   host: string;
+  onBeforeLogout?: (user: IUser) => void;
 }
 
 const languages = [
@@ -48,6 +52,7 @@ export const LayoutProvider: React.FC<{
     menus: SideMenuItemsProps[];
   }) => Promise<SideMenuItemsProps[]>;
   statics?: string[];
+  onBeforeLogout?: (user: IUser) => void;
 }> = ({
   children,
   host,
@@ -58,7 +63,12 @@ export const LayoutProvider: React.FC<{
   customSettings,
   onMenuPermission,
   statics,
+  onBeforeLogout,
 }) => {
+  const { defaultAlgorithm, darkAlgorithm } = themes;
+  const initialTheme: "light" | "dark" = (localStorage.getItem("theme") ||
+    "light") as "light" | "dark";
+  const [theme, setTheme] = React.useState<"light" | "dark">(initialTheme);
   const isAccess = useGyudAccess();
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [isClient, setIsClient] = React.useState(false); // 클라이언트 체크
@@ -74,6 +84,17 @@ export const LayoutProvider: React.FC<{
       ? "calc(100dvw - 55px)"
       : "100dvw";
   }, [menuType]);
+
+  React.useEffect(() => {
+    // html 문서의 최상위 요소에 'data-theme' 속성 설정
+    document.documentElement.setAttribute("data-theme", theme);
+    // 사용자의 테마 선택을 localStorage에 저장
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const themeChange = (theme: "light" | "dark") => {
+    setTheme(theme);
+  };
 
   // 클라이언트 체크
   React.useEffect(() => {
@@ -251,11 +272,20 @@ export const LayoutProvider: React.FC<{
         languages,
         handleLanguageChange,
         customSettings,
+        themeChange,
+        theme,
         host,
+        onBeforeLogout,
       }}
     >
       <div id="google_translate_element"></div>
-      <RootLayout />
+      <ConfigProvider
+        theme={{
+          algorithm: theme === "dark" ? darkAlgorithm : defaultAlgorithm,
+        }}
+      >
+        <RootLayout />
+      </ConfigProvider>
     </LayoutContext.Provider>
   );
 };

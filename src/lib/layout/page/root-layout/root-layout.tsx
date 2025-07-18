@@ -40,7 +40,7 @@ function RootLayout() {
         <div css={css({ flex: "1 1 0%", overflow: "hidden" })}>
           <TabPanelContainer />
         </div>
-        <div
+        {/* <div
           css={css({
             height: "30px",
             flex: "none",
@@ -54,7 +54,7 @@ function RootLayout() {
           })}
         >
           <p>시스템 메시지</p>
-        </div>
+        </div> */}
       </div>
     </div>
   );

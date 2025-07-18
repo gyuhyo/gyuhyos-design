@@ -50,7 +50,7 @@ export const useInitDt = ({
       if (tbody.current!.scrollTop > 0) {
         thead.current!.style.transition = "box-shadow 200ms ease-in-out";
         thead.current!.style.boxShadow = "0px 5px 12px #00000050";
-        thead.current!.style.zIndex = "4";
+        thead.current!.style.zIndex = "5";
       } else {
         thead.current!.style.transition = "box-shadow 200ms ease-in-out";
         thead.current!.style.boxShadow = "none";

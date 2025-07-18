@@ -115,7 +115,7 @@ const TabPanelContentDynamicComponent: React.FC<any> = React.memo(() => {
   }, [menus]);
 
   const tabPanelFullContentCss = css({
-    height: "calc(100dvh - 125px)",
+    height: "calc(100dvh - 95px)",
     width: calculWidth,
     minWidth: calculWidth,
     maxWidth: calculWidth,

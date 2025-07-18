@@ -126,11 +126,13 @@ export interface IDataTableColumn {
     value,
     row,
     getValue,
+    theme,
   }: {
     target: string;
     value?: any;
     row?: IDataSource | null;
     getValue?: UseFormGetValues<IDataSource>;
+    theme: "dark" | "light";
   }) => React.CSSProperties;
   sortable?: boolean;
   isNotNullSort?: boolean;

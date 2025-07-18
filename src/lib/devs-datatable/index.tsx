@@ -13,6 +13,7 @@ import {
 import "./assets/style.css";
 import { DevsDtProvider } from "./context/devs-dt-context";
 import "./dev.datatable.style.css";
+import "./dev.datatable.style2.css";
 import DevsDtHeader from "./devs-dt-header";
 import DevsDtPagination from "./devs-dt-pagination";
 import DevsDtSliderForm from "./devs-dt-slider-form/devs-dt-slider-form";

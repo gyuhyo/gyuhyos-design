@@ -25,7 +25,7 @@ const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
     children,
     compact = false,
     rounded = true,
-    border = false,
+    border = true,
     borderColor = "#cecece",
     bgColor = "#eeeeee",
     color,
@@ -44,7 +44,13 @@ const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
         padding: compact ? "0px 7px" : "5px 20px",
         borderRadius: rounded ? 5 : 0,
         background: `linear-gradient(180deg, ${bgColor}90 0%, ${bgColor} 50%, ${bgColor}90 100%)`,
-        border: border ? `1px solid ${borderColor}` : undefined,
+        border: border
+          ? `1px solid ${
+              bgColor !== "#eeeeee" && borderColor === "#cecece"
+                ? bgColor
+                : borderColor
+            }`
+          : undefined,
         boxShadow:
           "inset 1px 1px 3px #ffffff97, inset -0.5px -0.5px 1px #00000030",
         color: color ? `${color} !important` : "#000",

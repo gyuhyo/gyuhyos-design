@@ -41,10 +41,11 @@ const generateFoundryProductionColumns = [
     align: "right",
     type: "number",
     render: ({ value }) => (IsNum(value) ? value?.toLocaleString() : "-"),
-    style: ({ target }) => {
+    style: ({ target, theme }) => {
       if (target === "tbody") {
         return {
           background: "#E0F2FE",
+          color: "#000",
         };
       }
     },
@@ -215,7 +216,7 @@ const App = () => {
           field: `profDay_${day + 1}`,
           title: `${day + 1}일`,
           align: "right",
-          type: "number",
+          type: "date",
           //editorWidth: 400,
           render: ({ row }) => {
             const totalCount = dateProductionCount(row);

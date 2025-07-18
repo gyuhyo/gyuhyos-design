@@ -4,8 +4,8 @@ import { css } from "@emotion/react";
 
 export const rootLayoutHeaderStyle = css({
   height: "60px",
-  background: "linear-gradient(to bottom, #bbbbbb, #d3d3d3, #f3f3f3)",
-  borderBottom: "1px solid #e3e3e3",
+  background: "var(--layout-header-color)",
+  borderBottom: "1px solid var(--layout-header-border-color)",
   display: "flex",
   flexDirection: "row",
   justifyContent: "end",

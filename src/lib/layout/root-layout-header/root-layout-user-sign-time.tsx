@@ -67,7 +67,8 @@ const RootLayoutUserSignTime: React.FC<any> = React.memo(() => {
     <p
       css={css({
         padding: "0px 7px",
-        background: "#fff",
+        background: "rgb(var(--background-color))",
+        height: "-webkit-fill-available",
       })}
     >
       {expiredTime} 남음

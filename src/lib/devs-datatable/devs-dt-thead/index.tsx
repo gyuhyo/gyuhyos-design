@@ -2,6 +2,7 @@ import React, { JSX } from "react";
 import { useDt } from "../context/devs-dt-context";
 import DevsDtTh from "./devs-dt-th";
 import { IDataSource, IDataTableColumn } from "../_types";
+import { useLayout } from "../../layout/contexts/layout-context";
 
 type TDevsDtThead = {
   thead: React.MutableRefObject<HTMLDivElement | null>;
@@ -383,7 +384,12 @@ function DevsDtTHead({ thead, setHeaderWidth }: TDevsDtThead) {
                   (column.sortable === undefined || column.sortable === true)
                     ? "pointer"
                     : "inherit",
-                ...column.style?.({ target: "thead", value: null, row: null }),
+                ...column.style?.({
+                  target: "thead",
+                  value: null,
+                  row: null,
+                  theme: "light",
+                }),
               } as React.CSSProperties
             }
           >

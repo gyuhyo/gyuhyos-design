@@ -3,6 +3,7 @@ import { css } from "@emotion/react";
 import React from "react";
 import { useDt } from "../context/devs-dt-context";
 import { IDataTableColumn } from "../_types";
+import { useLayout } from "../../layout/contexts/layout-context";
 
 const getLastNodes = (columns: IDataTableColumn[]): IDataTableColumn[] => {
   let lastNodes: IDataTableColumn[] = [];
@@ -20,6 +21,7 @@ const getLastNodes = (columns: IDataTableColumn[]): IDataTableColumn[] => {
 };
 
 const DevsDtTFoot = React.memo(() => {
+  const { theme } = useLayout();
   const footRef = React.useRef<HTMLTableElement | null>(null);
   const { options, dataSource, columns, tbody } = useDt();
   const [position, setPosition] = React.useState<
@@ -67,7 +69,7 @@ const DevsDtTFoot = React.memo(() => {
         height: 40,
         position: position,
         bottom: 0,
-        zIndex: 3,
+        zIndex: 4,
         boxShadow: "0px -5px 12px #00000050",
       })}
     >
@@ -106,6 +108,7 @@ const DevsDtTFoot = React.memo(() => {
                       textAlign: col.align ?? "left",
                       ...col.style?.({
                         target: "tfoot",
+                        theme: theme,
                       }),
                     } as React.CSSProperties
                   }

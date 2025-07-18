@@ -52,6 +52,8 @@ const AlertMessageFooter: React.FC<AlertMessageFooterProps> = React.memo(
           {isOkButtonVisible && (
             <Button
               bgColor="#1f619d"
+              border={true}
+              borderColor="#1f619d"
               color="#fff"
               onClick={(e) => {
                 if (onOkClick) {

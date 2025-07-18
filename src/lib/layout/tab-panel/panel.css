@@ -1,0 +1,9 @@
+:root {
+  --panel-border-color: 31, 97, 157;
+  --panel-hover-color: #e5edf4;
+}
+
+[data-theme="dark"] {
+  --panel-border-color: 84, 86, 87;
+  --panel-hover-color: #3a3a3a;
+}

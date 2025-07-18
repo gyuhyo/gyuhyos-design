@@ -8,6 +8,7 @@ import { TabPanelLoading } from "./tab-panel-components/loading";
 import ContextMenu from "../../context-menu";
 import { useMessage } from "../../alert-message/context/message-context";
 import { useMenuStore } from "../stores/menu-store";
+import "./panel.css";
 
 const TabPanelContentDynamicComponent = React.lazy(
   () =>

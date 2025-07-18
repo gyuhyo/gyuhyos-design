@@ -125,7 +125,7 @@ export default React.memo(DevsDtPagination);
 
 const Pagination = {
   Container: styled.div({
-    borderTop: "1px solid #c7c7c7",
+    borderTop: "1px solid var(--border-color)",
     height: "40px",
     display: "flex",
     flexDirection: "row",
