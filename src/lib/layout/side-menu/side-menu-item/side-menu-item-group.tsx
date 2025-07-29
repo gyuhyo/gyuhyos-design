@@ -94,34 +94,36 @@ function SideMenuItemGroup({ group, isShow }: SideMenuItemGroupProps) {
           />
         )}
       </div>
-      <ul
-        css={css({
-          background: "#002230",
-          lineHeight: "40px",
-          borderBottom: "#000",
-          height: groupOpened
-            ? `${
-                (group.children
-                  ? group.children.filter((f) => f.visible).length
-                  : 0) * 40
-              }px`
-            : "0px",
-          transition: "height 200ms ease-in-out",
-          overflow: "hidden",
-          "& > li:hover": {
-            background: "#00000040",
-            color: "#00b5ff",
-            cursor: "pointer",
-          },
-        })}
-      >
-        {group.children &&
-          group.children
-            .filter((f) => f.visible)
-            .map((itm) => (
-              <SideMenuItem key={`${group.key}-${itm.key}`} item={itm} />
-            ))}
-      </ul>
+      {isShow && (
+        <ul
+          css={css({
+            background: "#002230",
+            lineHeight: "40px",
+            borderBottom: "#000",
+            height: groupOpened
+              ? `${
+                  (group.children
+                    ? group.children.filter((f) => f.visible).length
+                    : 0) * 40
+                }px`
+              : "0px",
+            transition: "height 200ms ease-in-out",
+            overflow: "hidden",
+            "& > li:hover": {
+              background: "#00000040",
+              color: "#00b5ff",
+              cursor: "pointer",
+            },
+          })}
+        >
+          {group.children &&
+            group.children
+              .filter((f) => f.visible)
+              .map((itm) => (
+                <SideMenuItem key={`${group.key}-${itm.key}`} item={itm} />
+              ))}
+        </ul>
+      )}
     </li>
   );
 }
