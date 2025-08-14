@@ -455,7 +455,14 @@ root.render(
   <React.StrictMode>
     <GyudAccessProvider>
       <MessageProvider>
-        <LayoutProvider menus={menus} statics={["static"]}>
+        <LayoutProvider
+          menus={menus}
+          statics={["static"]}
+          host="http://localhost:3000"
+          authUrl="http://localhost:3000/auth"
+          refreshTokenUrl="http://localhost:3000/refresh-token"
+          useChatbot={true}
+        >
           <App />
         </LayoutProvider>
       </MessageProvider>

@@ -8,6 +8,7 @@ import { useMenuStore } from "../stores/menu-store";
 import { IUser, useUserStore } from "../stores/user-store";
 import { useGyudAccess } from "../../access-context";
 import { ConfigProvider, theme as themes } from "antd";
+import MesChatBot from "../../mes-chat-bot";
 
 interface languagesProps {
   code: string;
@@ -26,6 +27,7 @@ interface LayoutContextProps {
   theme: "light" | "dark";
   host: string;
   onBeforeLogout?: (user: IUser) => void;
+  useChatbot?: boolean;
 }
 
 const languages = [
@@ -53,6 +55,7 @@ export const LayoutProvider: React.FC<{
   }) => Promise<SideMenuItemsProps[]>;
   statics?: string[];
   onBeforeLogout?: (user: IUser) => void;
+  useChatbot?: boolean;
 }> = ({
   children,
   host,
@@ -64,6 +67,7 @@ export const LayoutProvider: React.FC<{
   onMenuPermission,
   statics,
   onBeforeLogout,
+  useChatbot = false,
 }) => {
   const { defaultAlgorithm, darkAlgorithm } = themes;
   const initialTheme: "light" | "dark" = (localStorage.getItem("theme") ||
@@ -285,6 +289,7 @@ export const LayoutProvider: React.FC<{
         }}
       >
         <RootLayout />
+        {useChatbot && <MesChatBot />}
       </ConfigProvider>
     </LayoutContext.Provider>
   );
