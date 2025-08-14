@@ -1,36 +1,43 @@
 // src/hooks/useStreamingPost.js
 import { useState, useCallback } from "react";
 
-export const useStreamingPost = () => {
-  const [streamEffect, setStreamEffect] = useState("");
-  const [data, setData] = useState<
-    {
-      event: string;
-      data: string;
-    }[]
-  >([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+// 이전에 만들었던 "스마트 분류기" 함수를 훅 안으로 가져오거나 별도 유틸리티로 분리합니다.
+const processJsonPayload = (parsedJson: any) => {
+  // 'action' 이벤트일 경우에만 특별 처리를 합니다.
+  if (parsedJson.event === "action" && parsedJson.data?.commands) {
+    parsedJson.data.commands.forEach((command: any) => {
+      // payload가 유효한 JSON 문자열일 경우에만 객체로 변환합니다.
+      if (command.payload && typeof command.payload === "string") {
+        try {
+          command.payload = JSON.parse(command.payload);
+        } catch (e) {
+          // 파싱 실패 시 원본 문자열을 그대로 둡니다.
+        }
+      }
+    });
+  }
+  return parsedJson;
+};
 
-  /**
-   * 스트림 요청을 시작하는 함수
-   * @param {string} url - 요청을 보낼 엔드포인트 URL
-   * @param {object} body - POST 요청의 body 객체
-   */
+export const useStreamingPost = () => {
+  // 'data'는 모든 구조화된 이벤트 로그를 저장합니다.
+  const [data, setData] = useState<any[]>([]);
+  // 'streamText'는 'message' 이벤트의 텍스트만 누적하여 타이핑 효과를 구현합니다.
+  const [streamText, setStreamText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
   const fetchStream = useCallback(
     async ({ url, body }: { url: string; body: any }) => {
-      // 요청 시작 시 로딩 상태로 변경. 이전 데이터는 삭제.
-      setStreamEffect("");
       setData([]);
+      setStreamText("");
       setIsLoading(true);
       setError(null);
 
       try {
         const response = await fetch(url, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
         });
 
@@ -39,49 +46,66 @@ export const useStreamingPost = () => {
         }
 
         const reader = response.body?.getReader();
+        if (!reader) {
+          throw new Error("Failed to get ReadableStream reader.");
+        }
+
         const decoder = new TextDecoder("utf-8");
+        let buffer = ""; // ✅ 1. 청크 데이터가 중간에 잘릴 경우를 대비한 버퍼
 
         while (true) {
-          const { done, value } = (await reader?.read()) || {
-            done: true,
-            value: new Uint8Array(),
-          };
+          const { done, value } = await reader.read();
           if (done) break;
 
-          const chunk = decoder.decode(value);
-          const clean = chunk
-            .split("\n") // 줄 단위 분리
-            .filter((line) => line.startsWith("data:")) // data:로 시작하는 줄만
-            .map((line) => line.slice(5).trim()) // "data: " 제거
-            .join("");
+          // 버퍼에 새로운 청크를 추가하고, 줄바꿈 기준으로 라인들을 분리합니다.
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
 
-          if (clean) {
-            // 이전 데이터(prevData)에 새로운 조각(chunk)을 계속 이어붙임
-            const jsonData = JSON.parse(clean);
+          // ✅ 2. 마지막 라인은 데이터가 잘렸을 수 있으므로 다음 청크를 위해 버퍼에 남겨둡니다.
+          buffer = lines.pop() || "";
 
-            setStreamEffect(clean);
+          for (const line of lines) {
+            // ✅ 3. 각 라인을 독립적으로 처리합니다. (join X)
+            if (line.startsWith("data:")) {
+              const jsonString = line.slice(5).trim();
+              if (jsonString) {
+                try {
+                  let parsedJson = JSON.parse(jsonString);
 
-            setData((prev) => [...prev, jsonData]);
+                  // ✅ 4. "스마트 분류기" 로직으로 이중 포장된 JSON을 처리합니다.
+                  parsedJson = processJsonPayload(parsedJson);
+
+                  // 전체 이벤트 로그에 추가
+                  setData((prev) => [...prev, parsedJson]);
+
+                  // ✅ 5. 'message' 이벤트의 텍스트만 따로 누적합니다.
+                  if (
+                    parsedJson.event === "message" &&
+                    typeof parsedJson.data === "string"
+                  ) {
+                    setStreamText((prev) => prev + parsedJson.data);
+                  }
+                } catch (err) {
+                  console.warn("Invalid JSON chunk skipped:", jsonString);
+                }
+              }
+            }
           }
         }
       } catch (err) {
-        setError(err as any);
+        setError(err as Error);
         console.error("Streaming failed:", err);
       } finally {
         setIsLoading(false);
       }
     },
     []
-  ); // useCallback으로 감싸 불필요한 재성성 방지
+  );
 
-  /**
-   * 저장된 데이터를 초기화하는 함수
-   */
   const clearData = useCallback(() => {
     setData([]);
-    setStreamEffect("");
+    setStreamText("");
   }, []);
 
-  // 컴포넌트에서 사용할 상태와 함수들을 반환
-  return { data, streamEffect, isLoading, error, fetchStream, clearData };
+  return { data, streamText, isLoading, error, fetchStream, clearData };
 };

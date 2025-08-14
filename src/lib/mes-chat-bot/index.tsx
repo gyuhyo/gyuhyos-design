@@ -27,7 +27,7 @@ const ChatBotContainer = ({
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 }) => {
-  const { data, streamEffect, isLoading, error, fetchStream, clearData } =
+  const { data, streamText, isLoading, error, fetchStream, clearData } =
     useStreamingPost();
   const [messages, setMessages] = React.useState<
     {
@@ -59,12 +59,13 @@ const ChatBotContainer = ({
     if (lastEvent === "message") {
       setMessages((prev) => {
         const newContent =
-          prev[prev.length - 1].event === "message"
+          prev[prev.length - 1].role === "assistant" && "message"
             ? prev[prev.length - 1].content + data[data.length - 1].data
             : data[data.length - 1].data;
 
         return [
-          ...(prev[prev.length - 1].event === "message"
+          ...(prev[prev.length - 1].role === "assistant" &&
+          prev[prev.length - 1].event === "message"
             ? prev.slice(0, -1)
             : prev),
           {
@@ -84,7 +85,7 @@ const ChatBotContainer = ({
         },
       ]);
     }
-  }, [streamEffect]);
+  }, [streamText]);
 
   return (
     <ChatBotContainerBox
