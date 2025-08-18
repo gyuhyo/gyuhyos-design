@@ -37,7 +37,7 @@ const ChatBotContainer = ({
     }[]
   >([]);
   const [userMessage, setUserMessage] = React.useState<string>(
-    `주조 생산에서 데이터 조회 후 \{profDate: 2025-08-14, profCount: 100, profNgCount: 5\} 데이터 입력해줘.`
+    `주조 생산 메뉴를 열고 조회 후 profDate: 2025-08-18, profCount: 100, profNgCount: 5 데이터 추가해줘.`
   );
 
   const onSendMessage = () => {
@@ -135,6 +135,12 @@ const ChatBotContainer = ({
         <ChatBotFooterInput
           value={userMessage}
           onChange={(e) => setUserMessage(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              onSendMessage();
+            }
+          }}
         />
         <ChatBotFooterButton onClick={onSendMessage}>
           <i className="fa-solid fa-paper-plane" />
@@ -195,11 +201,11 @@ const ChatBotContainerCloseButton = newStyled.i({
 const ChatBotContainerContent = newStyled.div({
   flex: 1,
   width: "100%",
-  overflow: "auto",
   padding: 10,
   display: "flex",
   flexDirection: "column",
   gap: 10,
+  overflow: "hidden auto",
 });
 
 const ChatBotUserBubble = newStyled.div({
@@ -227,12 +233,13 @@ const ChatBotFooter = newStyled.div({
   backgroundColor: "#f0f0f0",
 });
 
-const ChatBotFooterInput = newStyled.input({
+const ChatBotFooterInput = newStyled.textarea({
   width: "100%",
-  height: 40,
+  height: "max-content",
   border: "1px solid #e0e0e0",
   borderRadius: 5,
   padding: 10,
+  resize: "none",
 });
 
 const ChatBotFooterButton = newStyled.button({
