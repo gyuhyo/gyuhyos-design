@@ -4,6 +4,7 @@ import React from "react";
 import { Button } from "./lib";
 import { IDataTableColumn } from "./lib";
 import { useDevsXlsx } from "./lib/hooks";
+import GyudDataTable from "./lib/gyud-datatable";
 
 const NumberFormatter = (number) => {
   const parse = parseInt(number);
@@ -307,7 +308,6 @@ const App = () => {
       },
       onAfter: (ws, utils, xlsx) => {
         const range = utils.decode_range(ws["!ref"]);
-        console.log(ws, ws["!ref"], range);
 
         for (let col = range.s.c; col <= range.e.c; col++) {
           const cellAddress = utils.encode_cell({ r: 0, c: col });
@@ -348,45 +348,42 @@ const App = () => {
   };
 
   return (
-    <DevsDataTable
-      ref={gridRef}
-      title="주조 생산 등록"
-      columns={columns}
-      setColumns={setColumns}
-      dataSource={dataSource}
-      setDataSource={setDataSource}
-      onCheckedRowsChanged={(rows) => {
-        console.log(rows);
-      }}
-      options={{
-        editType: "cell",
-        cellEditClickType: "click",
-        showRowNumber: true,
-        enabledRowCheck: true,
-        autoScrollKey: "profDay_15",
-      }}
-      buttons={{
-        custom: (
-          <>
-            <Button
-              bgColor="#df4873"
-              color="#fff"
-              borderColor="#df4873"
-              border={true}
-              compact={false}
-              onClick={onHideFixColumnClick}
-            >
-              asd
-            </Button>
-            <DevsDatePicker
-              picker="month"
-              selectedDate={selectedMonth}
-              setSelectedDate={setSelectedMonth}
-            />
-          </>
-        ),
-        onSearchClick: getDataList,
-      }}
+    <GyudDataTable
+      data={Array.from({ length: 100000 }, (_, index) => ({
+        aaa: index.toString(),
+        ab: `Name ${index}`,
+        caaa: index,
+      }))}
+      columns={[
+        {
+          field: "a",
+          title: "a",
+          children: [
+            {
+              field: "aaa",
+              title: "aaa",
+            },
+            {
+              field: "ab",
+              title: "ab",
+            },
+          ],
+        },
+        {
+          field: "b",
+          title: "b",
+        },
+        {
+          field: "c",
+          title: "c",
+          children: [
+            {
+              field: "caaa",
+              title: "caaa",
+            },
+          ],
+        },
+      ]}
     />
   );
 };
