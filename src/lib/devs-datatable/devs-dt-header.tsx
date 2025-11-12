@@ -12,6 +12,7 @@ import Button from "../button";
 interface DevsDtHeaderProps
   extends Pick<IDataTableProps, "title" | "buttons" | "options"> {
   title: string;
+  description?: any;
   buttons?: IDataTableButtons;
   options?: IDataTableOptions;
   setInnerLoading: React.Dispatch<SetStateAction<boolean>>;
@@ -66,9 +67,8 @@ const DevsDtHeader: React.FC<DevsDtHeaderProps> = (props) => {
               ) : (
                 props.title
               )}
-              {(props.options?.readonly === undefined ||
-                props.options.readonly === false) && (
-                <span
+              {props.description && (
+                <div
                   style={{
                     fontSize: 12,
                     color: "#7a7a7a",
@@ -78,10 +78,26 @@ const DevsDtHeader: React.FC<DevsDtHeaderProps> = (props) => {
                         : "0px",
                   }}
                 >
-                  (<span style={{ color: "var(--text-color)" }}>*</span>) 입력
-                  가능 (<span style={{ color: "red" }}>*</span>) 필수입력
-                </span>
+                  {props.description}
+                </div>
               )}
+              {(props.options?.readonly === undefined ||
+                props.options.readonly === false) &&
+                !props.description && (
+                  <span
+                    style={{
+                      fontSize: 12,
+                      color: "#7a7a7a",
+                      marginLeft:
+                        props.title !== undefined && props.title !== ""
+                          ? "7px"
+                          : "0px",
+                    }}
+                  >
+                    (<span style={{ color: "var(--text-color)" }}>*</span>) 입력
+                    가능 (<span style={{ color: "red" }}>*</span>) 필수입력
+                  </span>
+                )}
             </div>
           )}
           <DevsDtButtons

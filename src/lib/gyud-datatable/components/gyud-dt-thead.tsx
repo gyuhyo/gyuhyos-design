@@ -6,25 +6,26 @@ import GyudDtTh from "./gyud-dt-th";
 import { IDataTableColumn } from "../types";
 import {
   GyudDtEmptyHeaderCell,
+  GyudDtRowCheckHeaderCell,
   GyudDtRowNumberHeaderCell,
 } from "./gyud-dt-before-cells";
 
-const GyudTheadTrInner = ({
-  children,
-  depth,
-}: {
-  children: React.ReactNode;
-  depth: number;
-}) => {
-  const { options } = useGyudDt((state) => state);
-  return (
-    <GyudDtTheadTr key={depth}>
-      {depth === 1 && !options.isShowRowNumber && <GyudDtRowNumberHeaderCell />}
-      {children}
-      {depth === 1 && <GyudDtEmptyHeaderCell />}
-    </GyudDtTheadTr>
-  );
-};
+const GyudTheadTrInner = React.memo(
+  ({ children, depth }: { children: React.ReactNode; depth: number }) => {
+    const { options } = useGyudDt((state) => state);
+
+    return (
+      <GyudDtTheadTr key={depth}>
+        {depth === 1 && options.isShowRowNumber && (
+          <GyudDtRowNumberHeaderCell />
+        )}
+        {depth === 1 && options.isRowCheckable && <GyudDtRowCheckHeaderCell />}
+        {children}
+        {depth === 1 && <GyudDtEmptyHeaderCell />}
+      </GyudDtTheadTr>
+    );
+  }
+);
 
 const GyudDtThead = () => {
   const {

@@ -5,6 +5,7 @@ import { Button } from "./lib";
 import { IDataTableColumn } from "./lib";
 import { useDevsXlsx } from "./lib/hooks";
 import GyudDataTable from "./lib/gyud-datatable";
+import { IDtStore } from "./lib/gyud-datatable/store";
 
 const NumberFormatter = (number) => {
   const parse = parseInt(number);
@@ -172,6 +173,13 @@ const App = () => {
   const [dataSource, setDataSource] = React.useState([]);
   const [columns, setColumns] = React.useState<IDataTableColumn[]>([]);
   const [isHideFixColumn, setIsHideFixColumn] = React.useState(false);
+  const [data, setData] = React.useState<any[]>(
+    Array.from({ length: 100000 }, (_, index) => ({
+      aaa: index.toString(),
+      ab: `Name ${index}`,
+      caaa: index,
+    }))
+  );
 
   const getDataList = () => {
     fetch(
@@ -348,43 +356,33 @@ const App = () => {
   };
 
   return (
-    <GyudDataTable
-      data={Array.from({ length: 100000 }, (_, index) => ({
-        aaa: index.toString(),
-        ab: `Name ${index}`,
-        caaa: index,
-      }))}
-      columns={[
-        {
-          field: "a",
-          title: "a",
-          children: [
+    <>
+      <button
+        onClick={() => {
+          if (!gridRef.current) return;
+          (gridRef.current as any).store.setDataSource((prev) => [
             {
-              field: "aaa",
-              title: "aaa",
+              aaa: "123",
+              ab: "456",
+              caaa: "789",
             },
-            {
-              field: "ab",
-              title: "ab",
-            },
-          ],
-        },
-        {
-          field: "b",
-          title: "b",
-        },
-        {
-          field: "c",
-          title: "c",
-          children: [
-            {
-              field: "caaa",
-              title: "caaa",
-            },
-          ],
-        },
-      ]}
-    />
+            ...prev,
+          ]);
+        }}
+      >
+        Insert
+      </button>
+      <DevsDataTable
+        title="123"
+        description="파일을 끌어서 테이블에 올리거나 파일 추가 버튼을 클릭하여 업로드 해주세요."
+        ref={gridRef}
+        dataSource={dataSource}
+        setDataSource={setDataSource}
+        options={{}}
+        columns={columns}
+        setColumns={setColumns}
+      />
+    </>
   );
 };
 

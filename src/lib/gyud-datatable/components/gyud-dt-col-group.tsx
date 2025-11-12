@@ -8,9 +8,14 @@ const GyudDtColGroup = () => {
   const columns = getLastNodes();
   return (
     <GyudDtColGroupWrapper>
-      {!options.isShowRowNumber && (
+      {options.isShowRowNumber && (
         <GyudDtCol
           column={{ field: "rowNumber", title: "Row Number", width: 55 }}
+        />
+      )}
+      {options.isRowCheckable && (
+        <GyudDtCol
+          column={{ field: "rowCheck", title: "Row Check", width: 25 }}
         />
       )}
       {columns.map((column) => (

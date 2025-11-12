@@ -62,8 +62,15 @@ var DevsDtHeader = function (props) {
                         alignItems: "center",
                         columnGap: 7,
                         textWrap: "nowrap",
-                    }) }, { children: [typeof props.title === "string" && props.title !== "" ? (_jsxs("p", __assign({ style: { fontSize: 18, fontWeight: "bold" } }, { children: ["\u27A4 ", props.title] }))) : (props.title), (((_g = props.options) === null || _g === void 0 ? void 0 : _g.readonly) === undefined ||
-                            props.options.readonly === false) && (_jsxs("span", __assign({ style: {
+                    }) }, { children: [typeof props.title === "string" && props.title !== "" ? (_jsxs("p", __assign({ style: { fontSize: 18, fontWeight: "bold" } }, { children: ["\u27A4 ", props.title] }))) : (props.title), props.description && (_jsx("div", __assign({ style: {
+                                fontSize: 12,
+                                color: "#7a7a7a",
+                                marginLeft: props.title !== undefined && props.title !== ""
+                                    ? "7px"
+                                    : "0px",
+                            } }, { children: props.description }))), (((_g = props.options) === null || _g === void 0 ? void 0 : _g.readonly) === undefined ||
+                            props.options.readonly === false) &&
+                            !props.description && (_jsxs("span", __assign({ style: {
                                 fontSize: 12,
                                 color: "#7a7a7a",
                                 marginLeft: props.title !== undefined && props.title !== ""

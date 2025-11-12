@@ -3,7 +3,10 @@ import { IDataSource } from "../types";
 import { useGyudDt } from "../context";
 import newStyled from "@emotion/styled";
 import GyudDtTd from "./gyud-dt-td";
-import { GyudDtRowNumberCell } from "./gyud-dt-before-cells";
+import {
+  GyudDtRowCheckCell,
+  GyudDtRowNumberCell,
+} from "./gyud-dt-before-cells";
 
 const GyudDtTbodyTr = ({
   index,
@@ -14,9 +17,9 @@ const GyudDtTbodyTr = ({
   style: React.CSSProperties;
   data: IDataSource;
 }) => {
-  const { getLastNodes, getMaxDepth, options } = useGyudDt((state) => state);
+  const { getLastNodes, options } = useGyudDt((state) => state);
   const columns = getLastNodes();
-  const maxDepth = getMaxDepth();
+
   return (
     <GyudDtTrWrapper
       key={index}
@@ -28,12 +31,14 @@ const GyudDtTbodyTr = ({
         width: "max-content",
       }}
     >
-      {!options.isShowRowNumber && <GyudDtRowNumberCell index={index} />}
+      {options.isShowRowNumber && <GyudDtRowNumberCell index={index} />}
+      {options.isRowCheckable && <GyudDtRowCheckCell />}
       {columns &&
         columns.map((column) => (
           <GyudDtTd
             key={column.field}
             column={column}
+            rowId={data.rowId}
             data={data[column.field]}
           />
         ))}
@@ -52,6 +57,6 @@ const GyudDtTrWrapper = newStyled.tr({
     backgroundColor: "#fff",
   },
   "&:hover > .gyud-dt-td": {
-    backgroundColor: "#dff3ff",
+    backgroundColor: "#d1e4ff",
   },
 });

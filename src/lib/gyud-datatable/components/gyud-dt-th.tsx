@@ -2,6 +2,7 @@ import React from "react";
 import { IDataTableColumn } from "../types";
 import newStyled from "@emotion/styled";
 import { useGyudDt } from "../context";
+import { setColumnStickyPosition } from "../core";
 
 const GyudDtTh = ({
   column,
@@ -14,7 +15,8 @@ const GyudDtTh = ({
   colSpan: number;
   isLastNode: boolean;
 }) => {
-  const { tableRef, setColumnWidth } = useGyudDt((state) => state);
+  const { tableRef, setColumnWidth, getLastNodes, options, columns } =
+    useGyudDt((state) => state);
   const resizingColumnRef = React.useRef<{
     startX: number;
     startWidth: number;
@@ -29,6 +31,12 @@ const GyudDtTh = ({
         const newWidth = Math.max(startWidth + deltaX, 100);
 
         if (tableRef?.current) {
+          setColumnStickyPosition({
+            tableRef: tableRef.current,
+            lastNodes: getLastNodes(),
+            field: column.field,
+            options: options,
+          });
           resizingColumnRef.current.newWidth = newWidth;
           const cols = tableRef.current.querySelectorAll(
             `[data-field="${column.field}"]`
@@ -70,6 +78,30 @@ const GyudDtTh = ({
     [tableRef, handleMouseUp]
   );
 
+  const getStickyPosition = React.useMemo(() => {
+    if (
+      !column.sticky ||
+      !getLastNodes()
+        .filter((f) => f.sticky)
+        .includes(column)
+    )
+      return 0;
+
+    const lastNodes = getLastNodes().filter((f) => f.sticky);
+    const index = lastNodes.indexOf(column);
+    let offsetLeft = 0;
+    if (options.isShowRowNumber) offsetLeft += 55;
+    if (options.isRowCheckable) offsetLeft += 25;
+    offsetLeft += lastNodes.slice(0, index).reduce((acc, node) => {
+      const width =
+        typeof node.width === "number"
+          ? node.width
+          : parseInt(node.width as string);
+      return acc + width;
+    }, 0);
+    return offsetLeft;
+  }, [column.sticky, getLastNodes, options, columns]);
+
   return (
     <GyudDtThWrapper
       key={column.field}
@@ -77,6 +109,14 @@ const GyudDtTh = ({
       rowSpan={rowSpan}
       colSpan={colSpan}
       data-is-last-node={isLastNode}
+      data-is-last-sticky-col={column.isLastStickyCol}
+      data-field={column.field}
+      style={{
+        position: column.sticky ? "sticky" : "relative",
+        left: column.sticky ? getStickyPosition : "auto",
+        width: `${column.width || 100}px`,
+        zIndex: column.sticky ? 2 : 1,
+      }}
     >
       <GyudDtThCotent>
         {column.title}
@@ -103,10 +143,10 @@ export const GyudDtThWrapper = newStyled.th({
   textAlign: "center",
   padding: 0,
   "&[data-is-last-node='true']:hover": {
-    background: "linear-gradient(180deg, #dddddd, #b3b3b3) !important",
+    background: "linear-gradient(180deg, #e5e5e5, #cccccc) !important",
   },
   ":has(.gyud-dt-th-resize-handle:hover)": {
-    borderInlineEndColor: "#3cafff",
+    borderInlineEndColor: "#b7b7b7",
   },
 });
 
@@ -128,6 +168,6 @@ export const GyudDtThResizeHandle = newStyled.div({
   background: "transparent",
   cursor: "col-resize",
   "&:hover": {
-    background: "#3cafff",
+    background: "#b7b7b7",
   },
 });

@@ -56,6 +56,7 @@ export const LayoutProvider: React.FC<{
   statics?: string[];
   onBeforeLogout?: (user: IUser) => void;
   useChatbot?: boolean;
+  defaultLanguage?: string;
 }> = ({
   children,
   host,
@@ -68,6 +69,7 @@ export const LayoutProvider: React.FC<{
   statics,
   onBeforeLogout,
   useChatbot = false,
+  defaultLanguage = "ko",
 }) => {
   const { defaultAlgorithm, darkAlgorithm } = themes;
   const initialTheme: "light" | "dark" = (localStorage.getItem("theme") ||
@@ -227,12 +229,20 @@ export const LayoutProvider: React.FC<{
       );
     };
 
+    if (defaultLanguage !== "ko") {
+      setTimeout(() => {
+        handleLanguageChange(
+          languages.find((x) => x.code === defaultLanguage)!
+        );
+      }, 500);
+    }
+
     return () => {
       if (document.body.contains(addGoogleTranslateScript)) {
         document.body.removeChild(addGoogleTranslateScript);
       }
     };
-  }, [isLoaded, isClient]);
+  }, [isLoaded, isClient, defaultLanguage]);
 
   const handleLanguageChange = (lang: languagesProps) => {
     if (!isClient) return;
@@ -260,7 +270,24 @@ export const LayoutProvider: React.FC<{
     [...(statics || []), authUrl].includes(path.split("/")[1]) ||
     path.includes("popup")
   ) {
-    return <React.Fragment>{children}</React.Fragment>;
+    return (
+      <LayoutContext.Provider
+        value={{
+          menuType,
+          refreshTokenUrl,
+          calculWidth,
+          languages,
+          handleLanguageChange,
+          customSettings,
+          themeChange,
+          theme,
+          host,
+          onBeforeLogout,
+        }}
+      >
+        {children}
+      </LayoutContext.Provider>
+    );
   }
 
   if (!isLoaded || (!isDev && (user === undefined || user === null))) {

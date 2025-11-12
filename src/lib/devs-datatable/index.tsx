@@ -132,6 +132,7 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
     React.useImperativeHandle(
       ref,
       (): DevsDataTableRef => ({
+        table: table.current,
         tbody: tbody.current,
         thead: thead.current,
         api: {
@@ -619,6 +620,7 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
         )}
         <DevsDtHeader
           title={props.title}
+          description={props.description}
           buttons={props.buttons}
           options={props.options}
           setInnerLoading={setInnerLoading}

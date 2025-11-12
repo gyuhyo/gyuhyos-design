@@ -105,6 +105,7 @@ export interface IDataTableButtons {
 }
 
 export type DevsDataTableRef = {
+  table: HTMLDivElement | null;
   tbody: HTMLDivElement | null;
   thead: HTMLDivElement | null;
   api: {
@@ -174,6 +175,7 @@ export type DevsDataTableRef = {
 
 export interface IDataTableProps {
   title?: any;
+  description?: any;
   id?: string;
   columns: IDataTableColumn[];
   setColumns: React.Dispatch<React.SetStateAction<IDataTableColumn[]>>;

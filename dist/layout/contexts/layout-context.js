@@ -77,6 +77,7 @@ import { useMenuStore } from "../stores/menu-store";
 import { useUserStore } from "../stores/user-store";
 import { useGyudAccess } from "../../access-context";
 import { ConfigProvider, theme as themes } from "antd";
+import MesChatBot from "../../mes-chat-bot";
 var languages = [
     { code: "ko", name: "한국어", flag: "kr" },
     { code: "en", name: "English", flag: "us" },
@@ -84,14 +85,14 @@ var languages = [
 ];
 var LayoutContext = createContext(undefined);
 export var LayoutProvider = function (_a) {
-    var children = _a.children, host = _a.host, menus = _a.menus, refreshTokenUrl = _a.refreshTokenUrl, authUrl = _a.authUrl, _b = _a.menuType, menuType = _b === void 0 ? "slide" : _b, customSettings = _a.customSettings, onMenuPermission = _a.onMenuPermission, statics = _a.statics, onBeforeLogout = _a.onBeforeLogout;
+    var children = _a.children, host = _a.host, menus = _a.menus, refreshTokenUrl = _a.refreshTokenUrl, authUrl = _a.authUrl, _b = _a.menuType, menuType = _b === void 0 ? "slide" : _b, customSettings = _a.customSettings, onMenuPermission = _a.onMenuPermission, statics = _a.statics, onBeforeLogout = _a.onBeforeLogout, _c = _a.useChatbot, useChatbot = _c === void 0 ? false : _c, _d = _a.defaultLanguage, defaultLanguage = _d === void 0 ? "ko" : _d;
     var defaultAlgorithm = themes.defaultAlgorithm, darkAlgorithm = themes.darkAlgorithm;
     var initialTheme = (localStorage.getItem("theme") ||
         "light");
-    var _c = __read(React.useState(initialTheme), 2), theme = _c[0], setTheme = _c[1];
+    var _e = __read(React.useState(initialTheme), 2), theme = _e[0], setTheme = _e[1];
     var isAccess = useGyudAccess();
-    var _d = __read(React.useState(false), 2), isLoaded = _d[0], setIsLoaded = _d[1];
-    var _e = __read(React.useState(false), 2), isClient = _e[0], setIsClient = _e[1]; // 클라이언트 체크
+    var _f = __read(React.useState(false), 2), isLoaded = _f[0], setIsLoaded = _f[1];
+    var _g = __read(React.useState(false), 2), isClient = _g[0], setIsClient = _g[1]; // 클라이언트 체크
     var path = isClient ? window.location.pathname : ""; // 클라이언트에서만 접근
     var user = useUserStore(function (state) { var _a; return (_a = state.me) === null || _a === void 0 ? void 0 : _a.userNo; });
     var setInitialMenus = useMenuStore(function (state) { return state.setInitialMenus; });
@@ -214,12 +215,17 @@ export var LayoutProvider = function (_a) {
                 autoDisplay: true,
             }, "google_translate_element");
         };
+        if (defaultLanguage !== "ko") {
+            setTimeout(function () {
+                handleLanguageChange(languages.find(function (x) { return x.code === defaultLanguage; }));
+            }, 500);
+        }
         return function () {
             if (document.body.contains(addGoogleTranslateScript)) {
                 document.body.removeChild(addGoogleTranslateScript);
             }
         };
-    }, [isLoaded, isClient]);
+    }, [isLoaded, isClient, defaultLanguage]);
     var handleLanguageChange = function (lang) {
         if (!isClient)
             return;
@@ -238,7 +244,18 @@ export var LayoutProvider = function (_a) {
     if (!isClient ||
         __spreadArray(__spreadArray([], __read((statics || [])), false), [authUrl], false).includes(path.split("/")[1]) ||
         path.includes("popup")) {
-        return _jsx(React.Fragment, { children: children });
+        return (_jsx(LayoutContext.Provider, __assign({ value: {
+                menuType: menuType,
+                refreshTokenUrl: refreshTokenUrl,
+                calculWidth: calculWidth,
+                languages: languages,
+                handleLanguageChange: handleLanguageChange,
+                customSettings: customSettings,
+                themeChange: themeChange,
+                theme: theme,
+                host: host,
+                onBeforeLogout: onBeforeLogout,
+            } }, { children: children })));
     }
     if (!isLoaded || (!isDev && (user === undefined || user === null))) {
         return null;
@@ -254,9 +271,9 @@ export var LayoutProvider = function (_a) {
             theme: theme,
             host: host,
             onBeforeLogout: onBeforeLogout,
-        } }, { children: [_jsx("div", { id: "google_translate_element" }), _jsx(ConfigProvider, __assign({ theme: {
+        } }, { children: [_jsx("div", { id: "google_translate_element" }), _jsxs(ConfigProvider, __assign({ theme: {
                     algorithm: theme === "dark" ? darkAlgorithm : defaultAlgorithm,
-                } }, { children: _jsx(RootLayout, {}) }))] })));
+                } }, { children: [_jsx(RootLayout, {}), useChatbot && _jsx(MesChatBot, {})] }))] })));
 };
 export var useLayout = function () {
     var context = useContext(LayoutContext);

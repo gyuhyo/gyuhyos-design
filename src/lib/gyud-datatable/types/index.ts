@@ -1,8 +1,16 @@
-export type GyudDataTableRef = {};
+import { IDataTableOptions, IDtStore } from "../store/create-dt-store";
+
+export type GyudDataTableRef = {
+  tbody: HTMLTableSectionElement | null;
+  thead: HTMLTableSectionElement | null;
+  table: HTMLDivElement | null;
+  store: IDtStore;
+};
 
 export interface IDataTableProps {
   data: IDataSource[];
   columns: IDataTableColumn[];
+  options?: IDataTableOptions;
 }
 
 export interface IDataSource {
@@ -22,4 +30,5 @@ export interface IDataTableColumn {
   colSpan?: number;
   rowSpan?: number;
   depth?: number;
+  isLastStickyCol?: boolean;
 }

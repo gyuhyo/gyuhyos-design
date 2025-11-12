@@ -1,0 +1,27 @@
+.gyud-dt-sticky-col {
+  position: sticky;
+  left: var(--sticky-col-left, 0px);
+}
+
+tbody > .gyud-dt-row:hover > .gyud-dt-index-cell::before {
+  content: "\276F";
+  z-index: 2;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 3px;
+  font-size: 1rem;
+}
+
+.gyud-dt-sticky-col-last::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 30px;
+  box-shadow: inset 13px 0 13px -9px #00000070;
+  transform: translateX(100%);
+  pointer-events: none;
+  z-index: 1;
+}

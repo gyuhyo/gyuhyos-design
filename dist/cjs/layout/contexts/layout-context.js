@@ -106,6 +106,7 @@ var menu_store_1 = require("../stores/menu-store");
 var user_store_1 = require("../stores/user-store");
 var access_context_1 = require("../../access-context");
 var antd_1 = require("antd");
+var mes_chat_bot_1 = __importDefault(require("../../mes-chat-bot"));
 var languages = [
     { code: "ko", name: "한국어", flag: "kr" },
     { code: "en", name: "English", flag: "us" },
@@ -113,14 +114,14 @@ var languages = [
 ];
 var LayoutContext = (0, react_1.createContext)(undefined);
 var LayoutProvider = function (_a) {
-    var children = _a.children, host = _a.host, menus = _a.menus, refreshTokenUrl = _a.refreshTokenUrl, authUrl = _a.authUrl, _b = _a.menuType, menuType = _b === void 0 ? "slide" : _b, customSettings = _a.customSettings, onMenuPermission = _a.onMenuPermission, statics = _a.statics, onBeforeLogout = _a.onBeforeLogout;
+    var children = _a.children, host = _a.host, menus = _a.menus, refreshTokenUrl = _a.refreshTokenUrl, authUrl = _a.authUrl, _b = _a.menuType, menuType = _b === void 0 ? "slide" : _b, customSettings = _a.customSettings, onMenuPermission = _a.onMenuPermission, statics = _a.statics, onBeforeLogout = _a.onBeforeLogout, _c = _a.useChatbot, useChatbot = _c === void 0 ? false : _c, _d = _a.defaultLanguage, defaultLanguage = _d === void 0 ? "ko" : _d;
     var defaultAlgorithm = antd_1.theme.defaultAlgorithm, darkAlgorithm = antd_1.theme.darkAlgorithm;
     var initialTheme = (localStorage.getItem("theme") ||
         "light");
-    var _c = __read(react_1.default.useState(initialTheme), 2), theme = _c[0], setTheme = _c[1];
+    var _e = __read(react_1.default.useState(initialTheme), 2), theme = _e[0], setTheme = _e[1];
     var isAccess = (0, access_context_1.useGyudAccess)();
-    var _d = __read(react_1.default.useState(false), 2), isLoaded = _d[0], setIsLoaded = _d[1];
-    var _e = __read(react_1.default.useState(false), 2), isClient = _e[0], setIsClient = _e[1]; // 클라이언트 체크
+    var _f = __read(react_1.default.useState(false), 2), isLoaded = _f[0], setIsLoaded = _f[1];
+    var _g = __read(react_1.default.useState(false), 2), isClient = _g[0], setIsClient = _g[1]; // 클라이언트 체크
     var path = isClient ? window.location.pathname : ""; // 클라이언트에서만 접근
     var user = (0, user_store_1.useUserStore)(function (state) { var _a; return (_a = state.me) === null || _a === void 0 ? void 0 : _a.userNo; });
     var setInitialMenus = (0, menu_store_1.useMenuStore)(function (state) { return state.setInitialMenus; });
@@ -243,12 +244,17 @@ var LayoutProvider = function (_a) {
                 autoDisplay: true,
             }, "google_translate_element");
         };
+        if (defaultLanguage !== "ko") {
+            setTimeout(function () {
+                handleLanguageChange(languages.find(function (x) { return x.code === defaultLanguage; }));
+            }, 500);
+        }
         return function () {
             if (document.body.contains(addGoogleTranslateScript)) {
                 document.body.removeChild(addGoogleTranslateScript);
             }
         };
-    }, [isLoaded, isClient]);
+    }, [isLoaded, isClient, defaultLanguage]);
     var handleLanguageChange = function (lang) {
         if (!isClient)
             return;
@@ -267,7 +273,18 @@ var LayoutProvider = function (_a) {
     if (!isClient ||
         __spreadArray(__spreadArray([], __read((statics || [])), false), [authUrl], false).includes(path.split("/")[1]) ||
         path.includes("popup")) {
-        return (0, jsx_runtime_1.jsx)(react_1.default.Fragment, { children: children });
+        return ((0, jsx_runtime_1.jsx)(LayoutContext.Provider, __assign({ value: {
+                menuType: menuType,
+                refreshTokenUrl: refreshTokenUrl,
+                calculWidth: calculWidth,
+                languages: languages,
+                handleLanguageChange: handleLanguageChange,
+                customSettings: customSettings,
+                themeChange: themeChange,
+                theme: theme,
+                host: host,
+                onBeforeLogout: onBeforeLogout,
+            } }, { children: children })));
     }
     if (!isLoaded || (!isDev && (user === undefined || user === null))) {
         return null;
@@ -283,9 +300,9 @@ var LayoutProvider = function (_a) {
             theme: theme,
             host: host,
             onBeforeLogout: onBeforeLogout,
-        } }, { children: [(0, jsx_runtime_1.jsx)("div", { id: "google_translate_element" }), (0, jsx_runtime_1.jsx)(antd_1.ConfigProvider, __assign({ theme: {
+        } }, { children: [(0, jsx_runtime_1.jsx)("div", { id: "google_translate_element" }), (0, jsx_runtime_1.jsxs)(antd_1.ConfigProvider, __assign({ theme: {
                     algorithm: theme === "dark" ? darkAlgorithm : defaultAlgorithm,
-                } }, { children: (0, jsx_runtime_1.jsx)(root_layout_1.default, {}) }))] })));
+                } }, { children: [(0, jsx_runtime_1.jsx)(root_layout_1.default, {}), useChatbot && (0, jsx_runtime_1.jsx)(mes_chat_bot_1.default, {})] }))] })));
 };
 exports.LayoutProvider = LayoutProvider;
 var useLayout = function () {

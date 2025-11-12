@@ -4,6 +4,17 @@ import GyudDtColGroup from "./gyud-dt-col-group";
 import GyudDtTBody from "./gyud-dt-tbody";
 import GyudDtThead from "./gyud-dt-thead";
 import { useGyudDt } from "../context/gyud-dt-context";
+import EmptySvg from "../../devs-datatable/assets/empty.svg";
+
+const GyudDtTableEmptyWrapper = () => {
+  return (
+    <tr>
+      <td colSpan={100} style={{ height: "100%" }}>
+        <EmptySvg />
+      </td>
+    </tr>
+  );
+};
 
 const GyudDtTable = ({
   children,
@@ -14,15 +25,24 @@ const GyudDtTable = ({
   style: React.CSSProperties;
 }) => {
   const { setTableRef } = useGyudDt((state) => state);
+
+  const isEmpty =
+    !children || (Array.isArray(children) && children.length === 0);
   return (
     <GyudDtTableWrapper
-      style={{ ...style, width: "none" }}
+      style={{
+        ...style,
+        width: "none",
+        height: isEmpty ? "100%" : style.height,
+      }}
       {...rest}
       ref={(ref) => setTableRef(ref)}
     >
       <GyudDtColGroup />
       <GyudDtThead />
-      <GyudDtTBody>{children}</GyudDtTBody>
+      <GyudDtTBody>
+        {isEmpty ? <GyudDtTableEmptyWrapper /> : children}
+      </GyudDtTBody>
     </GyudDtTableWrapper>
   );
 };

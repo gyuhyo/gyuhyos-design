@@ -2,8 +2,21 @@ import { createStore, StoreApi } from "zustand";
 import { IDataSource, IDataTableColumn } from "../types";
 import uuid from "react-uuid";
 
+export interface IDataTableOptions {
+  isShowRowNumber?: boolean;
+  isRowCheckable?: boolean;
+}
+
 export interface IDtStore {
   columns: IDataTableColumn[];
+  dataSource: IDataSource[];
+  options: IDataTableOptions;
+  scrollOffset: number;
+  tbodyRef: React.RefObject<HTMLTableSectionElement> | null;
+  theadRef: React.RefObject<HTMLTableSectionElement> | null;
+  tableRef: React.RefObject<HTMLTableElement> | null;
+  focusedCell: { rowId: string; field: string };
+  focusedRow: string;
   setColumns: (
     columns:
       | IDataTableColumn[]
@@ -12,26 +25,26 @@ export interface IDtStore {
   initializeColumns: (columns: IDataTableColumn[]) => void;
   findColumn: (field: string) => IDataTableColumn;
   setColumnWidth: (field: string, width: number) => void;
-  dataSource: IDataSource[];
-  setDataSource: (dataSource: IDataSource[]) => void;
-  findData: (rowKey: string, field: string) => any;
+  setDataSource: (
+    dataSource: IDataSource[] | ((prev: IDataSource[]) => IDataSource[])
+  ) => void;
+  findData: (rowId: string, field: string) => any;
   getLastNodes: () => IDataTableColumn[];
   getMaxDepth: () => number;
   getFlatColumns: () => IDataTableColumn[];
-  options: {
-    isShowRowNumber?: boolean;
-  };
-  scrollOffset: number;
+  setOptions: (options: IDataTableOptions) => void;
   setScrollOffset: (scrollOffset: number) => void;
-  tableRef: React.RefObject<HTMLTableElement> | null;
-  tbodyRef: React.RefObject<HTMLTableSectionElement> | null;
-  theadRef: React.RefObject<HTMLTableSectionElement> | null;
   setTheadRef: (ref: HTMLTableSectionElement | null) => void;
   setTbodyRef: (ref: HTMLTableSectionElement | null) => void;
   setTableRef: (ref: HTMLTableElement | null) => void;
-  focusedCell: string;
-  focusedRow: string;
-  setFocusedCell: (cell: string) => void;
+  setFocusedCell: (
+    focusedCell:
+      | { rowId: string; field: string }
+      | ((prev: { rowId: string; field: string }) => {
+          rowId: string;
+          field: string;
+        })
+  ) => void;
   setFocusedRow: (row: string) => void;
 }
 
@@ -41,15 +54,33 @@ export const createDtStore = (): StoreApi<IDtStore> =>
     dataSource: [],
     options: {
       isShowRowNumber: false,
+      isRowCheckable: false,
     },
     scrollOffset: 0,
     tbodyRef: null,
     theadRef: null,
     tableRef: null,
-    focusedCell: "",
+    focusedCell: { rowId: "", field: "" },
     focusedRow: "",
-    setFocusedCell: (cell: string) => {
-      set((state: IDtStore) => ({ ...state, focusedCell: cell }));
+    setFocusedCell: (focusedCell) => {
+      set((state: IDtStore) => {
+        const newFocusedCell =
+          typeof focusedCell === "function"
+            ? focusedCell(state.focusedCell)
+            : focusedCell;
+
+        if (
+          newFocusedCell.rowId === state.focusedCell.rowId &&
+          newFocusedCell.field === state.focusedCell.field
+        ) {
+          return state;
+        }
+
+        return {
+          ...state,
+          focusedCell: newFocusedCell,
+        };
+      });
     },
     setFocusedRow: (row: string) => {
       set((state: IDtStore) => ({ ...state, focusedRow: row }));
@@ -81,6 +112,27 @@ export const createDtStore = (): StoreApi<IDtStore> =>
       })),
     initializeColumns: (columns: IDataTableColumn[]) => {
       set((state: IDtStore) => {
+        const isLastStickyCol = (column: IDataTableColumn) => {
+          const lastNodes = (columns: IDataTableColumn[]) => {
+            const lastNodes: IDataTableColumn[] = [];
+            const findLastNodes = (column: IDataTableColumn) => {
+              if (column.children && column.children.length > 0) {
+                column.children.forEach(findLastNodes);
+              } else {
+                lastNodes.push(column);
+              }
+            };
+            columns.forEach(findLastNodes);
+            return lastNodes;
+          };
+          const filteredLastNodes = lastNodes(columns).filter(
+            (node) => node.sticky
+          );
+          const index = filteredLastNodes.findIndex(
+            (node) => node.field === column.field
+          );
+          return index === filteredLastNodes.length - 1;
+        };
         const calcHeader = (nodes: IDataTableColumn[]): IDataTableColumn[] => {
           const maxDepth = getMaxDepth(nodes);
 
@@ -95,6 +147,7 @@ export const createDtStore = (): StoreApi<IDtStore> =>
                 depth,
                 colSpan: 1,
                 rowSpan: maxDepth - depth + 1,
+                isLastStickyCol: isLastStickyCol(node),
               };
             }
             const children = node.children.map((c) => dfs(c, depth + 1));
@@ -104,6 +157,7 @@ export const createDtStore = (): StoreApi<IDtStore> =>
               depth,
               colSpan: children.reduce((s, c) => s + (c.colSpan || 0), 0),
               rowSpan: 1,
+              isLastStickyCol: isLastStickyCol(node),
               children,
             };
           };
@@ -147,20 +201,24 @@ export const createDtStore = (): StoreApi<IDtStore> =>
         columns: setFindColumnWidth(state.columns),
       }));
     },
-    setDataSource: (dataSource: IDataSource[]) => {
+    setDataSource: (
+      dataSource: IDataSource[] | ((prev: IDataSource[]) => IDataSource[])
+    ) => {
       set((state: IDtStore) => {
-        const newDataSource = dataSource.map((row) => ({
-          rowKey: row.rowKey || uuid(),
-          mode: "r",
-          checked: false,
-          ...row,
-        }));
+        const newDataSource =
+          typeof dataSource === "function"
+            ? dataSource(state.dataSource).map((d) => ({
+                ...d,
+                rowId: d.rowId || uuid(),
+              }))
+            : dataSource.map((d) => ({ ...d, rowId: d.rowId || uuid() }));
+
         return { ...state, dataSource: newDataSource };
       });
     },
-    findData: (rowKey: string, field: string) => {
+    findData: (rowId: string, field: string) => {
       const dataSource = get().dataSource || [];
-      return dataSource.find((row) => row.rowKey === rowKey)?.[
+      return dataSource.find((row) => row.rowId === rowId)?.[
         field as keyof IDataSource
       ];
     },
@@ -198,7 +256,7 @@ export const createDtStore = (): StoreApi<IDtStore> =>
         0
       );
     },
-    setOptions: (options: { isShowRowNumber?: boolean }) => {
+    setOptions: (options: IDataTableOptions) => {
       set((state: IDtStore) => ({ ...state, options }));
     },
     setScrollOffset: (scrollOffset: number) => {

@@ -17,6 +17,7 @@ interface LayoutContextProps {
     theme: "light" | "dark";
     host: string;
     onBeforeLogout?: (user: IUser) => void;
+    useChatbot?: boolean;
 }
 export declare const LayoutProvider: React.FC<{
     children: React.ReactNode;
@@ -32,6 +33,8 @@ export declare const LayoutProvider: React.FC<{
     }) => Promise<SideMenuItemsProps[]>;
     statics?: string[];
     onBeforeLogout?: (user: IUser) => void;
+    useChatbot?: boolean;
+    defaultLanguage?: string;
 }>;
 export declare const useLayout: () => LayoutContextProps;
 export {};
