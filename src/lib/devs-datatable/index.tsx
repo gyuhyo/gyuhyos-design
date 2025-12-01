@@ -107,6 +107,14 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
       }
     }, [props.dataSource]);
 
+    const getAllRows = async () => {
+      await Promise.all(
+        Object.values(formsRef.current).map((form) => form.trigger("checked"))
+      );
+
+      return Object.values(formsRef.current).map((form) => form.getValues());
+    };
+
     const getCheckedRows = async () => {
       await Promise.all(
         Object.values(formsRef.current).map((form) => form.trigger("checked"))
@@ -213,6 +221,7 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
           getCheckedRows: Object.values(formsRef.current)
             .filter((f) => f.getValues("checked"))
             .map((x) => x.getValues()),
+          getAllRows: async () => await getAllRows(),
           getCheckedRowsData: async () => await getCheckedRows(),
           focusedRowIndex: (index: number) => {
             if (

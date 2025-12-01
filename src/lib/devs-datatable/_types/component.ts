@@ -115,6 +115,7 @@ export type DevsDataTableRef = {
     getFocusedCell: null | { row: null | IDataSource; field: null | string };
     getCheckedRows: IDataSource[];
     focusedRowForm: null | FormWithForce;
+    getAllRows: () => Promise<IDataSource[]>;
     getCheckedRowsData: () => Promise<IDataSource[]>;
     addRow: (defaultValues?: IDataSource) => void;
     setFocus: ({ rowId, field }: { rowId: string; field: string }) => void;

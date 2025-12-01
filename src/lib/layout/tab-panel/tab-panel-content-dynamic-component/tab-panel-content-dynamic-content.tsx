@@ -28,6 +28,7 @@ const TabPanelContentDynamicComponent: React.FC<any> = React.memo(() => {
     selectedMenu: { gr: string; mn: string };
     openedMenuSetComponent: (mns: SideMenuItemsChildProps[]) => void;
   } = useMenuStore();
+  const [contentWidth, setContentWidth] = React.useState("calc(100dvw - 55px)");
   const { calculWidth } = useLayout();
 
   React.useEffect(() => {
@@ -91,6 +92,30 @@ const TabPanelContentDynamicComponent: React.FC<any> = React.memo(() => {
   }, [menus, openedMenus, selectedMenu, contentRef]);
 
   React.useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const changeContentWidth = () => {
+      if (!contentRef.current) return;
+      const width = contentRef.current.clientWidth;
+      const contents = document.querySelectorAll(".tab-panel-full-content");
+
+      for (const content of contents) {
+        (content as HTMLElement).style.width = `${width}px`;
+        (content as HTMLElement).style.minWidth = `${width}px`;
+        (content as HTMLElement).style.maxWidth = `${width}px`;
+      }
+    };
+
+    changeContentWidth();
+    window.addEventListener("resize", changeContentWidth);
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("resize", changeContentWidth);
+      }
+    };
+  }, []);
+
+  React.useEffect(() => {
     if (menus.length === 0) return;
 
     const remakeOpenedMenus = openedMenus.map((mn) => {
@@ -116,9 +141,9 @@ const TabPanelContentDynamicComponent: React.FC<any> = React.memo(() => {
 
   const tabPanelFullContentCss = css({
     height: "calc(100dvh - 95px)",
-    width: calculWidth,
-    minWidth: calculWidth,
-    maxWidth: calculWidth,
+    width: "calc(100dvw - 55px)",
+    minWidth: "calc(100dvw - 55px)",
+    maxWidth: "calc(100dvw - 55px)",
     padding: "5px 7px",
     display: "flex",
     flexDirection: "column",
@@ -150,6 +175,7 @@ const TabPanelContentDynamicComponent: React.FC<any> = React.memo(() => {
                 style={{
                   visibility: isActive ? "visible" : "hidden",
                 }}
+                className="tab-panel-full-content"
                 data-is-view={isActive}
               ></div>
             );
@@ -162,6 +188,7 @@ const TabPanelContentDynamicComponent: React.FC<any> = React.memo(() => {
                 style={{
                   visibility: isActive ? "visible" : "hidden",
                 }}
+                className="tab-panel-full-content"
                 data-is-view={isActive}
               >
                 <Component />
@@ -176,6 +203,7 @@ const TabPanelContentDynamicComponent: React.FC<any> = React.memo(() => {
               style={{
                 visibility: isActive ? "visible" : "hidden",
               }}
+              className="tab-panel-full-content"
               data-is-view={isActive}
             >
               <PageErrorLayout menu={menu} errorNo={404} />

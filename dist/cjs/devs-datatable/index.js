@@ -187,6 +187,16 @@ var DevsDataTable = react_2.default.forwardRef(function (props, ref) {
             allCheck.checked = false;
         }
     }, [props.dataSource]);
+    var getAllRows = function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, Promise.all(Object.values(formsRef.current).map(function (form) { return form.trigger("checked"); }))];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/, Object.values(formsRef.current).map(function (form) { return form.getValues(); })];
+            }
+        });
+    }); };
     var getCheckedRows = function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -294,6 +304,12 @@ var DevsDataTable = react_2.default.forwardRef(function (props, ref) {
             getCheckedRows: Object.values(formsRef.current)
                 .filter(function (f) { return f.getValues("checked"); })
                 .map(function (x) { return x.getValues(); }),
+            getAllRows: function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, getAllRows()];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            }); }); },
             getCheckedRowsData: function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, getCheckedRows()];

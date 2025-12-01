@@ -47,7 +47,7 @@ var backdrop = css({
     background: "rgb(0, 0, 0, 0.5)",
     opacity: 0,
     backdropFilter: "blur(3px)",
-    zIndex: 6,
+    zIndex: 9999,
     transition: "backdrop-filter 200ms ease-in-out, opacity 200ms ease-in-out",
 });
 var visibleAlert = css({
