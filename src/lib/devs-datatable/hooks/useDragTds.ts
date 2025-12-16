@@ -1,5 +1,55 @@
 import React from "react";
 
+const boxTop = document.createElement("div");
+boxTop.className = "devs-dt-box-top";
+boxTop.style.position = "absolute";
+boxTop.style.left = `-1px`;
+boxTop.style.top = `-1px`;
+boxTop.style.width = `calc(100% + 2px)`;
+boxTop.style.height = `calc(100% + 2px)`;
+boxTop.style.pointerEvents = "none";
+boxTop.style.borderTop = "1px solid rgb(47 141 255)";
+
+const boxLeft = document.createElement("div");
+boxLeft.className = "devs-dt-box-left";
+boxLeft.style.position = "absolute";
+boxLeft.style.left = `-1px`;
+boxLeft.style.top = `-1px`;
+boxLeft.style.width = `calc(100% + 2px)`;
+boxLeft.style.height = `calc(100% + 2px)`;
+boxLeft.style.pointerEvents = "none";
+boxLeft.style.borderLeft = "1px solid rgb(47 141 255)";
+
+const boxRight = document.createElement("div");
+boxRight.className = "devs-dt-box-right";
+boxRight.style.position = "absolute";
+boxRight.style.left = `-1px`;
+boxRight.style.top = `-1px`;
+boxRight.style.width = `calc(100% + 2px)`;
+boxRight.style.height = `calc(100% + 2px)`;
+boxRight.style.pointerEvents = "none";
+boxRight.style.borderRight = "1px solid rgb(47 141 255)";
+
+const boxBottom = document.createElement("div");
+boxBottom.className = "devs-dt-box-bottom";
+boxBottom.style.position = "absolute";
+boxBottom.style.left = `-1px`;
+boxBottom.style.top = `-1px`;
+boxBottom.style.width = `calc(100% + 2px)`;
+boxBottom.style.height = `calc(100% + 2px)`;
+boxBottom.style.pointerEvents = "none";
+boxBottom.style.borderBottom = "1px solid rgb(47 141 255)";
+
+const boxInner = document.createElement("div");
+boxInner.className = "devs-dt-box-inner";
+boxInner.style.position = "absolute";
+boxInner.style.left = `-1px`;
+boxInner.style.top = `-1px`;
+boxInner.style.width = `calc(100% + 2px)`;
+boxInner.style.height = `calc(100% + 2px)`;
+boxInner.style.backgroundColor = "rgb(92 161 189 / 50%)";
+boxInner.style.pointerEvents = "none";
+
 const useDragTds = () => {
   const [tableRef, setTableRef] = React.useState<HTMLTableElement | null>(null);
   const [cells, setCells] = React.useState<HTMLTableCellElement[]>([]);
@@ -10,8 +60,26 @@ const useDragTds = () => {
   const [csv, setCsv] = React.useState("");
   const [dragginCount, setDragginCount] = React.useState(0);
 
-  const pointer = React.useRef({
+  const pointer = React.useRef<{
+    isDragging: boolean;
+    dragStartTd: HTMLTableCellElement | null;
+    dragEndTd: HTMLTableCellElement | null;
+    dragStart: {
+      x: number;
+      y: number;
+    };
+    dragEnd: {
+      x: number;
+      y: number;
+    };
+    curr: {
+      x: number;
+      y: number;
+    };
+  }>({
     isDragging: false,
+    dragStartTd: null,
+    dragEndTd: null,
     dragStart: {
       x: 0,
       y: 0,
@@ -28,42 +96,50 @@ const useDragTds = () => {
 
   const scrollRafId = React.useRef<number | null>(null);
 
-  const checkIntersection = React.useCallback(
-    (clientX: number, clientY: number) => {
-      const tds = tableRef!.querySelectorAll("td");
-      if (!tds) return;
+  const checkIntersection = React.useCallback(() => {
+    const tds = tableRef!.querySelectorAll("td");
+    if (!tds) return;
 
-      let intersectingCells: HTMLTableCellElement[] = [];
-      tds.forEach((td) => {
-        const rect = td.getBoundingClientRect();
-        const isIntersecting = !(
-          rect.right < Math.min(pointer.current.dragStart.x, clientX) ||
-          rect.left > Math.max(pointer.current.dragStart.x, clientX) ||
-          rect.bottom < Math.min(pointer.current.dragStart.y, clientY) ||
-          rect.top > Math.max(pointer.current.dragStart.y, clientY)
-        );
+    if (!pointer.current.dragStartTd || !pointer.current.dragEndTd) return;
 
-        if (isIntersecting) {
-          intersectingCells.push(td);
-        }
+    const dragStart = pointer.current.dragStartTd as HTMLTableCellElement;
+    const dragEnd = pointer.current.dragEndTd as HTMLTableCellElement;
+
+    const dsri = [...tableRef!.querySelectorAll("tr")].indexOf(
+      dragStart.closest("tr") as HTMLTableRowElement
+    );
+    const deri = [...tableRef!.querySelectorAll("tr")].indexOf(
+      dragEnd.closest("tr") as HTMLTableRowElement
+    );
+
+    const dragStartRowIndex = Math.min(dsri, deri);
+    const dragEndRowIndex = Math.max(dsri, deri);
+
+    const dsci = [...dragStart.closest("tr")!.querySelectorAll("td")].indexOf(
+      dragStart
+    );
+    const deci = [...dragEnd.closest("tr")!.querySelectorAll("td")].indexOf(
+      dragEnd
+    );
+
+    const dragStartCellIndex = Math.min(dsci, deci);
+    const dragEndCellIndex = Math.max(dsci, deci);
+
+    let intersectingCells: HTMLTableCellElement[] = [];
+
+    tableRef!.querySelectorAll("tr").forEach((tr, rowIndex) => {
+      if (rowIndex < dragStartRowIndex || rowIndex > dragEndRowIndex) return;
+      const cells = [...tr.querySelectorAll("td")];
+      cells.forEach((cell, cellIndex) => {
+        if (cellIndex < dragStartCellIndex || cellIndex > dragEndCellIndex)
+          return;
+        intersectingCells.push(cell);
       });
+    });
 
-      intersectingCells.sort((a, b) => {
-        const rectA = a.getBoundingClientRect();
-        const rectB = b.getBoundingClientRect();
-
-        if (rectA.top < rectB.top) return -1;
-        if (rectA.top > rectB.top) return 1;
-        if (rectA.left < rectB.left) return -1;
-        if (rectA.left > rectB.left) return 1;
-        return 0;
-      });
-
-      if (intersectingCells.length <= 1) return;
-      setCells(intersectingCells);
-    },
-    [tableRef]
-  );
+    if (intersectingCells.length <= 1) return;
+    setCells(intersectingCells);
+  }, [tableRef]);
 
   const scrollStep = React.useCallback(() => {
     if (!pointer.current.isDragging || !tableRef) return;
@@ -89,7 +165,7 @@ const useDragTds = () => {
       wrapper.scrollLeft += speed;
     }
 
-    checkIntersection(x, y);
+    checkIntersection();
 
     scrollRafId.current = requestAnimationFrame(scrollStep);
   }, [tableRef, checkIntersection]);
@@ -97,6 +173,10 @@ const useDragTds = () => {
   const handlePointerDown = (e: PointerEvent) => {
     setCells([]);
     pointer.current.isDragging = true;
+    pointer.current.dragStartTd =
+      e.target instanceof HTMLTableCellElement
+        ? e.target
+        : (e.target as HTMLElement).closest("td");
     pointer.current.dragStart = {
       x: e.clientX,
       y: e.clientY,
@@ -113,20 +193,26 @@ const useDragTds = () => {
   const handlePointerMove = (e: PointerEvent) => {
     if (!pointer.current.isDragging) return;
 
+    pointer.current.dragEndTd =
+      e.target instanceof HTMLTableCellElement
+        ? e.target
+        : (e.target as HTMLElement).closest("td");
     pointer.current.curr = {
       x: e.clientX,
       y: e.clientY,
     };
 
-    checkIntersection(e.clientX, e.clientY);
+    checkIntersection();
   };
 
   const handlePointerUp = (e: PointerEvent) => {
     setDragginCount(dragginCount + 1);
     pointer.current.isDragging = false;
+    pointer.current.dragEndTd = null;
+    pointer.current.dragStartTd = null;
     pointer.current.dragEnd = {
-      x: e.clientX,
-      y: e.clientY,
+      x: 0,
+      y: 0,
     };
     tableRef!.style.cursor = "default";
 
@@ -159,12 +245,12 @@ const useDragTds = () => {
 
     tableRef.addEventListener("pointerdown", handlePointerDown);
     tableRef.addEventListener("pointermove", handlePointerMove);
-    tableRef.addEventListener("pointerup", handlePointerUp);
+    window.addEventListener("pointerup", handlePointerUp);
 
     return () => {
       tableRef.removeEventListener("pointerdown", handlePointerDown);
       tableRef.removeEventListener("pointermove", handlePointerMove);
-      tableRef.removeEventListener("pointerup", handlePointerUp);
+      window.removeEventListener("pointerup", handlePointerUp);
       tableRef.style.cursor = "default";
     };
   }, [tableRef]);
@@ -172,37 +258,10 @@ const useDragTds = () => {
   React.useEffect(() => {
     if (!cells.length) return;
 
-    const minX = cells.reduce((min, cell) => {
-      const rect = cell.getBoundingClientRect();
-      return Math.min(min, rect.left - tableRef!.getBoundingClientRect().x);
-    }, Infinity);
-
-    const minY = cells.reduce((min, cell) => {
-      const rect = cell.getBoundingClientRect();
-      return Math.min(min, rect.top - tableRef!.getBoundingClientRect().y);
-    }, Infinity);
-
-    const maxX = cells.reduce((max, cell) => {
-      const rect = cell.getBoundingClientRect();
-      return Math.max(max, rect.right - tableRef!.getBoundingClientRect().x);
-    }, -Infinity);
-
-    const maxY = cells.reduce((max, cell) => {
-      const rect = cell.getBoundingClientRect();
-      return Math.max(max, rect.bottom - tableRef!.getBoundingClientRect().y);
-    }, -Infinity);
-
-    const box = document.createElement("div");
-    box.style.position = "absolute";
-    box.style.left = `${minX}px`;
-    box.style.top = `${minY}px`;
-    box.style.width = `${maxX - minX}px`;
-    box.style.height = `${maxY - minY}px`;
-    box.style.backgroundColor = "rgb(92 161 189 / 50%)";
-    box.style.pointerEvents = "none";
-    box.style.zIndex = "4";
-    box.style.border = "1px solid rgb(47 141 255)";
-    (tableRef as HTMLTableElement).appendChild(box);
+    const thead = tableRef!
+      .closest("div.dev-table-wrapper")
+      ?.querySelector("thead");
+    const ths = thead!.querySelectorAll("th");
 
     const uniqueFields: string[] = [
       ...new Set(
@@ -211,6 +270,14 @@ const useDragTds = () => {
           .filter((field) => field !== undefined)
       ),
     ];
+
+    const uniqueFieldsThs = uniqueFields.map((field) => {
+      const th = [...ths].find((th) => th.dataset.field === field);
+      return th
+        ?.querySelector("p")
+        ?.textContent?.replace(",", "")
+        .replace("\n", "");
+    });
 
     const rowCount = cells.reduce(
       (rows: HTMLTableRowElement[], cell: HTMLTableCellElement) => {
@@ -222,24 +289,37 @@ const useDragTds = () => {
     ).length;
 
     const cellCount = uniqueFields.length;
-    const cellsTextContent = cells.map((cell) =>
-      cell.textContent?.replace(",", "")
-    );
 
-    const thead = tableRef!
-      .closest("div.dev-table-wrapper")
-      ?.querySelector("thead");
-    const ths = thead!.querySelectorAll("th");
-    const uniqueFieldsThs = uniqueFields.map((field) => {
-      const th = [...ths].find((th) => th.dataset.field === field);
-      return th
-        ?.querySelector("p")
-        ?.textContent?.replace(",", "")
-        .replace("\n", "");
-    });
+    for (let row = 0; row < rowCount; row++) {
+      for (let cell = 0; cell < cellCount; cell++) {
+        const targetCell = cells[row * cellCount + cell];
+
+        if (row === 0) {
+          targetCell.appendChild(boxTop.cloneNode(true));
+        }
+
+        if (cell === 0) {
+          targetCell.appendChild(boxLeft.cloneNode(true));
+        }
+
+        if (row === rowCount - 1) {
+          targetCell.appendChild(boxBottom.cloneNode(true));
+        }
+
+        if (cell === cellCount - 1) {
+          targetCell.appendChild(boxRight.cloneNode(true));
+        }
+
+        targetCell.appendChild(boxInner.cloneNode(true));
+      }
+    }
 
     const columns = ["No", ...uniqueFields];
     const fields = ["No", ...uniqueFieldsThs];
+
+    const cellsTextContent = cells.map((cell) =>
+      cell.textContent?.replace(",", "")
+    );
 
     let datas: any[][] = [];
     for (let i = 0; i < rowCount; i++) {
@@ -256,8 +336,6 @@ const useDragTds = () => {
       .map((row) => row.join(","))
       .join("\n");
 
-    console.log(csv);
-
     setRowCount(rowCount);
     setCellCount(cellCount);
     setFields(uniqueFields);
@@ -265,7 +343,22 @@ const useDragTds = () => {
     setCsv(csv);
 
     return () => {
-      (tableRef as HTMLTableElement).removeChild(box);
+      const tds = tableRef!.querySelectorAll("td");
+
+      tds.forEach((td) => {
+        const top = td.querySelector(".devs-dt-box-top");
+        const left = td.querySelector(".devs-dt-box-left");
+        const bottom = td.querySelector(".devs-dt-box-bottom");
+        const right = td.querySelector(".devs-dt-box-right");
+        const inner = td.querySelector(".devs-dt-box-inner");
+
+        if (top) td.removeChild(top);
+        if (left) td.removeChild(left);
+        if (bottom) td.removeChild(bottom);
+        if (right) td.removeChild(right);
+        if (inner) td.removeChild(inner);
+      });
+
       setRowCount(0);
       setCellCount(0);
       setFields([]);
