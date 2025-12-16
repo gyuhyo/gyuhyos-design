@@ -256,6 +256,8 @@ const useDragTds = () => {
       .map((row) => row.join(","))
       .join("\n");
 
+    console.log(csv);
+
     setRowCount(rowCount);
     setCellCount(cellCount);
     setFields(uniqueFields);
