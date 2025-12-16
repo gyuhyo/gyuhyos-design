@@ -32,6 +32,8 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
     field: null,
     type: "asc",
   });
+  const [intersectingCellsCsv, setIntersectingCellsCsv] =
+    React.useState<string>("");
 
   React.useEffect(() => {
     if (props.setColumns !== undefined) {
@@ -129,6 +131,8 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
         originalColumns: originalColumns.current,
         setInnerLoading: props.setInnerLoading,
         wrapper: props.wrapper,
+        intersectingCellsCsv,
+        setIntersectingCellsCsv,
       }}
     >
       <MessageProvider>

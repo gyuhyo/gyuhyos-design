@@ -13,11 +13,7 @@ function RootLayoutHeader() {
   return (
     <header css={rootLayoutHeaderStyle}>
       <div>
-        <img
-          src="http://sqw.iptime.org:8092/header_logo_left1.png"
-          width={60}
-          height={30}
-        />
+        <img src="/header_logo_left1.png" width={60} height={30} />
       </div>
       <RootLayoutMenu />
       <RootLayoutUserCard />

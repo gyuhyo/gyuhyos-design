@@ -12,6 +12,7 @@ import {
 } from "@hello-pangea/dnd";
 import useDtUtils from "../hooks/useDtUtils";
 import DevsDtTFoot from "../devs-dt-tfoot";
+import useDragTds from "../hooks/useDragTds";
 
 type TDevsDtTBody = {
   tbody: React.MutableRefObject<HTMLDivElement | null>;
@@ -29,6 +30,7 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
     currentPage,
   } = useDt();
   const [isDrop, setIsDrop] = React.useState(false);
+  const { setTableRef, cells } = useDragTds();
   useDtUtils();
 
   const keyField: string | undefined = React.useMemo(() => {
@@ -394,7 +396,10 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
           {(provided) => (
             <table
               className="devs-dt-table devs-dt-table-fixed"
-              ref={provided.innerRef}
+              ref={(el) => {
+                provided.innerRef(el);
+                setTableRef(el);
+              }}
               {...provided.droppableProps}
             >
               <tbody className="devs-dt-tbody">

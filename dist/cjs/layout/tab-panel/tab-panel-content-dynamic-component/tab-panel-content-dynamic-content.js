@@ -33,6 +33,33 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -49,6 +76,7 @@ var TabPanelContentDynamicComponent = React.memo(function () {
     var contentRef = React.useRef(null);
     var isFirstRef = React.useRef({});
     var _a = (0, menu_store_1.useMenuStore)(), menus = _a.menus, openedMenus = _a.openedMenus, selectedMenu = _a.selectedMenu, openedMenuSetComponent = _a.openedMenuSetComponent;
+    var _b = __read(React.useState("calc(100dvw - 55px)"), 2), contentWidth = _b[0], setContentWidth = _b[1];
     var calculWidth = (0, layout_context_1.useLayout)().calculWidth;
     React.useEffect(function () {
         if (!isFirstRef.current)
@@ -96,6 +124,39 @@ var TabPanelContentDynamicComponent = React.memo(function () {
         };
     }, [menus, openedMenus, selectedMenu, contentRef]);
     React.useEffect(function () {
+        if (typeof window === "undefined")
+            return;
+        var changeContentWidth = function () {
+            var e_1, _a;
+            if (!contentRef.current)
+                return;
+            var width = contentRef.current.clientWidth;
+            var contents = document.querySelectorAll(".tab-panel-full-content");
+            try {
+                for (var contents_1 = __values(contents), contents_1_1 = contents_1.next(); !contents_1_1.done; contents_1_1 = contents_1.next()) {
+                    var content = contents_1_1.value;
+                    content.style.width = "".concat(width, "px");
+                    content.style.minWidth = "".concat(width, "px");
+                    content.style.maxWidth = "".concat(width, "px");
+                }
+            }
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            finally {
+                try {
+                    if (contents_1_1 && !contents_1_1.done && (_a = contents_1.return)) _a.call(contents_1);
+                }
+                finally { if (e_1) throw e_1.error; }
+            }
+        };
+        changeContentWidth();
+        window.addEventListener("resize", changeContentWidth);
+        return function () {
+            if (typeof window !== "undefined") {
+                window.removeEventListener("resize", changeContentWidth);
+            }
+        };
+    }, []);
+    React.useEffect(function () {
         if (menus.length === 0)
             return;
         var remakeOpenedMenus = openedMenus.map(function (mn) {
@@ -113,9 +174,9 @@ var TabPanelContentDynamicComponent = React.memo(function () {
     }, [menus]);
     var tabPanelFullContentCss = (0, react_1.css)({
         height: "calc(100dvh - 95px)",
-        width: calculWidth,
-        minWidth: calculWidth,
-        maxWidth: calculWidth,
+        width: "calc(100dvw - 55px)",
+        minWidth: "calc(100dvw - 55px)",
+        maxWidth: "calc(100dvw - 55px)",
         padding: "5px 7px",
         display: "flex",
         flexDirection: "column",
@@ -135,15 +196,15 @@ var TabPanelContentDynamicComponent = React.memo(function () {
                 if (!isActive && isFirstRef.current["".concat(group, "-").concat(key)])
                     return ((0, jsx_runtime_1.jsx)("div", { css: tabPanelFullContentCss, style: {
                             visibility: isActive ? "visible" : "hidden",
-                        }, "data-is-view": isActive }, "".concat(group, "/").concat(key)));
+                        }, className: "tab-panel-full-content", "data-is-view": isActive }, "".concat(group, "/").concat(key)));
                 if (Component && (0, react_is_1.isValidElementType)(Component)) {
                     return ((0, jsx_runtime_1.jsx)("div", __assign({ css: tabPanelFullContentCss, style: {
                             visibility: isActive ? "visible" : "hidden",
-                        }, "data-is-view": isActive }, { children: (0, jsx_runtime_1.jsx)(Component, {}) }), "".concat(group, "/").concat(key)));
+                        }, className: "tab-panel-full-content", "data-is-view": isActive }, { children: (0, jsx_runtime_1.jsx)(Component, {}) }), "".concat(group, "/").concat(key)));
                 }
                 return ((0, jsx_runtime_1.jsx)("div", __assign({ css: tabPanelFullContentCss, style: {
                         visibility: isActive ? "visible" : "hidden",
-                    }, "data-is-view": isActive }, { children: (0, jsx_runtime_1.jsx)(page_error_layout_1.default, { menu: menu, errorNo: 404 }) }), "".concat(group, "/").concat(key)));
+                    }, className: "tab-panel-full-content", "data-is-view": isActive }, { children: (0, jsx_runtime_1.jsx)(page_error_layout_1.default, { menu: menu, errorNo: 404 }) }), "".concat(group, "/").concat(key)));
             }) })));
 });
 exports.default = TabPanelContentDynamicComponent;

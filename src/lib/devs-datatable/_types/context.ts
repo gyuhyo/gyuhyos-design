@@ -58,4 +58,6 @@ export interface IDataTableContextProps extends IDataTableProps {
   originalColumns: IDataTableColumn[];
   setInnerLoading: React.Dispatch<React.SetStateAction<boolean>>;
   wrapper: React.MutableRefObject<HTMLDivElement | null>;
+  intersectingCellsCsv: string;
+  setIntersectingCellsCsv: React.Dispatch<React.SetStateAction<string>>;
 }

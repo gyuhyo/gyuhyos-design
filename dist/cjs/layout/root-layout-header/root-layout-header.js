@@ -25,6 +25,6 @@ var root_layout_user_card_1 = __importDefault(require("./root-layout-user-card")
 require("./style.css");
 function RootLayoutHeader() {
     var menuType = (0, layout_context_1.useLayout)().menuType;
-    return ((0, jsx_runtime_1.jsxs)("header", __assign({ css: root_layout_header_style_1.rootLayoutHeaderStyle }, { children: [(0, jsx_runtime_1.jsx)("div", { children: (0, jsx_runtime_1.jsx)("img", { src: "http://sqw.iptime.org:8092/header_logo_left1.png", width: 60, height: 30 }) }), (0, jsx_runtime_1.jsx)(root_layout_menu_1.default, {}), (0, jsx_runtime_1.jsx)(root_layout_user_card_1.default, {})] })));
+    return ((0, jsx_runtime_1.jsxs)("header", __assign({ css: root_layout_header_style_1.rootLayoutHeaderStyle }, { children: [(0, jsx_runtime_1.jsx)("div", { children: (0, jsx_runtime_1.jsx)("img", { src: "/header_logo_left1.png", width: 60, height: 30 }) }), (0, jsx_runtime_1.jsx)(root_layout_menu_1.default, {}), (0, jsx_runtime_1.jsx)(root_layout_user_card_1.default, {})] })));
 }
 exports.default = RootLayoutHeader;

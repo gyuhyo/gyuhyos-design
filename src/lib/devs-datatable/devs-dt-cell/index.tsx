@@ -751,6 +751,7 @@ function DevsDtCell({
     >
       <div
         ref={divRef}
+        className="devs-dt-cell-content"
         style={{
           position: "relative",
           overflow: "hidden",
