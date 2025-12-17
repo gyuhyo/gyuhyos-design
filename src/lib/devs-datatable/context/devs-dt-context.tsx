@@ -23,7 +23,7 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
   )?.field;
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [focusedRowForm, setFocusedRowForm] =
-    React.useState<null | UseFormReturn<IDataSource, any, undefined>>(null);
+    React.useState<null | UseFormReturn<IDataSource, any, any>>(null);
   const [sliderFormOpen, setSliderFormOpen] = React.useState(false);
   const [editMode, setEditMode] = React.useState<undefined | "grid" | "slider">(
     props.options?.showEditModeSelector ? "grid" : undefined

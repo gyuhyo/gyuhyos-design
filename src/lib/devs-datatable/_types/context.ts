@@ -3,7 +3,7 @@ import { IDataSource, IDataTableProps } from "./component";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { IDataTableColumn } from "./col";
 
-export type FormWithForce = ReturnType<typeof useForm<IDataSource>> & {
+export type FormWithForce = UseFormReturn<IDataSource, any, any> & {
   forceRerender: () => void;
 };
 
@@ -42,9 +42,9 @@ export interface IDataTableContextProps extends IDataTableProps {
   editCount: number;
   sliderFormOpen: boolean;
   setSliderFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  focusedRowForm: null | UseFormReturn<IDataSource, any, undefined>;
+  focusedRowForm: null | UseFormReturn<IDataSource, any, any>;
   setFocusedRowForm: React.Dispatch<
-    React.SetStateAction<null | UseFormReturn<IDataSource, any, undefined>>
+    React.SetStateAction<null | UseFormReturn<IDataSource, any, any>>
   >;
   editMode: undefined | "grid" | "slider";
   setEditMode: React.Dispatch<

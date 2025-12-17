@@ -118,7 +118,7 @@ export interface IDataTableColumn {
     onChange: (...event: any[]) => void;
     defaultValue: any;
     row: IDataSource;
-    form: UseFormReturn<IDataSource, any, undefined>;
+    form: UseFormReturn<IDataSource, any, any>;
     forceRerender?: () => void;
   }) => any;
   style?: ({
