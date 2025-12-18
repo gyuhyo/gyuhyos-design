@@ -53,12 +53,13 @@ boxInner.style.pointerEvents = "none";
 const useDragTds = () => {
   const [tableRef, setTableRef] = React.useState<HTMLTableElement | null>(null);
   const [cells, setCells] = React.useState<HTMLTableCellElement[]>([]);
-  const [rowCount, setRowCount] = React.useState(0);
-  const [cellCount, setCellCount] = React.useState(0);
+  const [rowCount, setRowCount] = React.useState<number>(0);
+  const [cellCount, setCellCount] = React.useState<number>(0);
   const [fields, setFields] = React.useState<string[]>([]);
-  const [data, setData] = React.useState<any[][]>([]);
-  const [csv, setCsv] = React.useState("");
-  const [dragginCount, setDragginCount] = React.useState(0);
+  const [data, setData] = React.useState<string[][]>([]);
+  const [csv, setCsv] = React.useState<string>("");
+  const [dragginCount, setDragginCount] = React.useState<number>(0);
+  const [isDragging, setIsDragging] = React.useState<boolean>(false);
 
   const pointer = React.useRef<{
     isDragging: boolean;
@@ -172,6 +173,7 @@ const useDragTds = () => {
 
   const handlePointerDown = (e: PointerEvent) => {
     setCells([]);
+    setIsDragging(true);
     pointer.current.isDragging = true;
     pointer.current.dragStartTd =
       e.target instanceof HTMLTableCellElement
@@ -207,6 +209,7 @@ const useDragTds = () => {
 
   const handlePointerUp = (e: PointerEvent) => {
     setDragginCount(dragginCount + 1);
+    setIsDragging(false);
     pointer.current.isDragging = false;
     pointer.current.dragEndTd = null;
     pointer.current.dragStartTd = null;
@@ -369,6 +372,7 @@ const useDragTds = () => {
 
   return {
     setTableRef,
+    isDragging,
     cells,
     rowCount,
     cellCount,

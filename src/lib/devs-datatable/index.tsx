@@ -618,6 +618,8 @@ const DevsDataTable = React.forwardRef<DevsDataTableRef, IDataTableProps>(
         wrapper={table}
         COLUMNS_STYLE_FORCE_UPDATE={COLUMNS_STYLE_FORCE_UPDATE}
         setInnerLoading={setInnerLoading}
+        onCellDragging={props.onCellDragging}
+        onCellDragEnd={props.onCellDragEnd}
       >
         {(props.loading === true || innerLoading === true) && (
           <div className="loader-backdrop">

@@ -154,6 +154,7 @@ const TabPanelContentDynamicComponent: React.FC<any> = React.memo(() => {
   return (
     <div
       ref={contentRef}
+      className="tab-panel-container"
       css={css({
         height: "100%",
         width: "auto",

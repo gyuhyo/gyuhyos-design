@@ -133,6 +133,8 @@ const DevsDtProviderComponent: React.FC<IDataTableProviderProps> = (props) => {
         wrapper: props.wrapper,
         intersectingCellsCsv,
         setIntersectingCellsCsv,
+        onCellDragging: props.onCellDragging,
+        onCellDragEnd: props.onCellDragEnd,
       }}
     >
       <MessageProvider>

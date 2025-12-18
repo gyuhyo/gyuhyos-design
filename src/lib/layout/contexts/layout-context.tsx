@@ -8,7 +8,6 @@ import { useMenuStore } from "../stores/menu-store";
 import { IUser, useUserStore } from "../stores/user-store";
 import { useGyudAccess } from "../../access-context";
 import { ConfigProvider, theme as themes } from "antd";
-import MesChatBot from "../../mes-chat-bot";
 
 interface languagesProps {
   code: string;
@@ -316,7 +315,6 @@ export const LayoutProvider: React.FC<{
         }}
       >
         <RootLayout />
-        {useChatbot && <MesChatBot />}
       </ConfigProvider>
     </LayoutContext.Provider>
   );

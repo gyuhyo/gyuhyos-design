@@ -17,7 +17,7 @@ function TabPanelContent({ children }: { children: React.ReactNode }) {
         overflow: "hidden",
       })}
     >
-      <main css={css({ height: "100%" })}>{children}</main>
+      <main css={css({ height: "100%", overflow: "hidden" })}>{children}</main>
     </div>
   );
 }

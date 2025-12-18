@@ -54,6 +54,7 @@ function TabPanelContainer() {
         display: "flex",
         flexDirection: "column",
         position: "relative",
+        overflow: "hidden",
       })}
     >
       <TabPanelLoading />

@@ -5,6 +5,7 @@ import SideMenuContainer from "../../side-menu/side-menu-container";
 import SideSettingSliderContainer from "../../side-setting-slider/side-setting-slider-container";
 import RootLayoutHeader from "../../root-layout-header/root-layout-header";
 import TabPanelContainer from "../../tab-panel/tab-panel-container";
+import MesChatBot from "../../../mes-chat-bot";
 
 function RootLayout() {
   const { menuType, calculWidth } = useLayout();
@@ -37,8 +38,16 @@ function RootLayout() {
           <SideSettingSliderContainer />
           <RootLayoutHeader />
         </div>
-        <div css={css({ flex: "1 1 0%", overflow: "hidden" })}>
+        <div
+          css={css({
+            flex: "1 1 0%",
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "row",
+          })}
+        >
           <TabPanelContainer />
+          <MesChatBot />
         </div>
         {/* <div
           css={css({

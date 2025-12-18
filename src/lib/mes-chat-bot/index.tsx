@@ -7,14 +7,30 @@ import rehypeRaw from "rehype-raw";
 
 const MesChatBot = () => {
   const [isOpen, setIsOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    setTimeout(() => {
+      const width = document.querySelector(".tab-panel-container")?.clientWidth;
+      const contents = document.querySelectorAll(".tab-panel-full-content");
+
+      for (const content of contents) {
+        (content as HTMLElement).style.width = `${width}px`;
+        (content as HTMLElement).style.minWidth = `${width}px`;
+        (content as HTMLElement).style.maxWidth = `${width}px`;
+      }
+    }, 300);
+  }, [isOpen]);
+
   return (
-    <ChatBotPositionedContainer>
+    <>
       <ChatBotContainer
         isOpen={isOpen}
         setIsOpen={setIsOpen}
       ></ChatBotContainer>
       <ChatBotFloatButton setIsOpen={setIsOpen} isOpen={isOpen} />
-    </ChatBotPositionedContainer>
+    </>
   );
 };
 
@@ -32,59 +48,29 @@ const ChatBotContainer = ({
   const [messages, setMessages] = React.useState<
     {
       role: "user" | "assistant";
-      event: string;
       content: string;
     }[]
   >([]);
-  const [userMessage, setUserMessage] = React.useState<string>(
-    `주조 생산 메뉴를 열고 조회 후 profDate: 2025-08-18, profCount: 100, profNgCount: 5 데이터 추가해줘.`
-  );
+  const [userMessage, setUserMessage] = React.useState<string>("");
 
   const onSendMessage = () => {
-    setMessages((prev) => [
-      ...prev,
-      { role: "user", event: "message", content: userMessage },
-    ]);
+    setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
     fetchStream({
-      url: "http://localhost:8000/api/stream",
-      body: { query: userMessage },
+      message: userMessage,
     });
+    setUserMessage("");
   };
 
   React.useEffect(() => {
-    if (data.length === 0) return;
-
-    const lastEvent = data[data.length - 1].event;
-
-    if (lastEvent === "message") {
-      setMessages((prev) => {
-        const newContent =
-          prev[prev.length - 1].role === "assistant" && "message"
-            ? prev[prev.length - 1].content + data[data.length - 1].data
-            : data[data.length - 1].data;
-
-        return [
-          ...(prev[prev.length - 1].role === "assistant" &&
-          prev[prev.length - 1].event === "message"
-            ? prev.slice(0, -1)
-            : prev),
-          {
-            role: "assistant",
-            event: lastEvent,
-            content: newContent,
-          },
-        ];
-      });
-    } else {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          event: lastEvent,
-          content: data[data.length - 1].data,
-        },
-      ]);
-    }
+    setMessages((prev) => [
+      ...(prev[prev.length - 1]?.role === "assistant"
+        ? prev.slice(0, -1)
+        : prev),
+      {
+        role: "assistant",
+        content: streamText,
+      },
+    ]);
   }, [streamText]);
 
   return (
@@ -108,27 +94,38 @@ const ChatBotContainer = ({
       </ChatBotContainerHeader>
       <ChatBotContainerContent>
         {messages.map((message, index) => {
-          if (message.event === "message") {
-            if (message.role === "user") {
-              return (
-                <ChatBotUserBubble key={index}>
-                  <p>{message.content}</p>
-                </ChatBotUserBubble>
-              );
-            }
+          if (message.role === "user") {
             return (
-              <ChatBotAssistantBubble key={index}>
-                <ReactMarkdown
-                  key={index}
-                  remarkPlugins={[remarkGfm]}
-                  rehypePlugins={[rehypeRaw]}
+              <ChatBotUserBubble key={index}>
+                <p
+                  style={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "pre-wrap",
+                  }}
                 >
                   {message.content}
-                </ReactMarkdown>
-              </ChatBotAssistantBubble>
+                </p>
+              </ChatBotUserBubble>
             );
           }
-          return null;
+          return (
+            <ChatBotAssistantBubble key={index}>
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeRaw]}
+                components={{
+                  strong: ({ node, ...props }) => (
+                    <h3 style={{ margin: "10px 0 0 0" }}>
+                      <strong {...props} />
+                    </h3>
+                  ),
+                }}
+              >
+                {message.content}
+              </ReactMarkdown>
+            </ChatBotAssistantBubble>
+          );
         })}
       </ChatBotContainerContent>
       <ChatBotFooter>
@@ -160,23 +157,18 @@ const ChatBotFloatButton = ({
   return <ChatBotButton isOpen={isOpen} onClick={() => setIsOpen(true)} />;
 };
 
-const ChatBotPositionedContainer = newStyled.div({
-  position: "fixed",
-  bottom: 20,
-  right: 20,
-  zIndex: 4,
-});
-
 const ChatBotContainerBox = newStyled.div(
   ({ isOpen }: { isOpen: boolean }) => ({
-    scale: isOpen ? 1 : 0,
+    flex: "none",
     opacity: isOpen ? 1 : 0,
-    boxShadow: isOpen ? "2px 2px 10px 0 rgba(0, 0, 0, 0.5)" : "none",
+    boxShadow: isOpen ? "-5px 0px 12px 0 rgba(0, 0, 0, 0.2)" : "none",
     width: isOpen ? 450 : 0,
-    height: isOpen ? 600 : 0,
+    height: "100%",
     borderRadius: 5,
     transition: "all 0.3s ease",
     backgroundColor: "#fff",
+    paddingBottom: 5,
+    zIndex: 2,
   })
 );
 
@@ -186,9 +178,10 @@ const ChatBotContainerHeader = newStyled.div({
   flexDirection: "row",
   justifyContent: "space-between",
   alignItems: "center",
-  padding: 10,
+  height: 35,
   borderBottom: "1px solid #e0e0e0",
   backgroundColor: "#f0f0f0",
+  padding: "0 10px",
 });
 
 const ChatBotContainerCloseButton = newStyled.i({
@@ -214,12 +207,14 @@ const ChatBotUserBubble = newStyled.div({
   boxShadow: "1px 1px 7px 0 rgba(0, 0, 0, 0.3)",
   padding: 10,
   alignSelf: "flex-end",
+  maxWidth: "-webkit-fill-available",
 });
 
 const ChatBotAssistantBubble = newStyled.div({
   borderRadius: 5,
   padding: 10,
   alignSelf: "flex-start",
+  maxWidth: "-webkit-fill-available",
 });
 
 const ChatBotFooter = newStyled.div({
@@ -253,8 +248,9 @@ const ChatBotFooterButton = newStyled.button({
 const ChatBotButton = newStyled.div(
   ({ isOpen }: { isOpen: boolean }) =>
     ({
-      position: "relative",
-      placeSelf: "end",
+      position: "absolute",
+      bottom: 20,
+      right: 20,
       opacity: isOpen ? 0 : 1,
       width: isOpen ? 0 : 50,
       height: isOpen ? 0 : 50,

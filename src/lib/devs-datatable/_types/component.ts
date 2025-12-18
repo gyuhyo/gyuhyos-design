@@ -195,4 +195,34 @@ export interface IDataTableProps {
   buttons?: IDataTableButtons;
   loading?: boolean;
   ref?: React.Ref<DevsDataTableRef>;
+  onCellDragging?: ({
+    cells,
+    rowCount,
+    cellCount,
+    fields,
+    data,
+    csv,
+  }: {
+    cells: HTMLTableCellElement[];
+    rowCount: number;
+    cellCount: number;
+    fields: string[];
+    data: string[][];
+    csv: string;
+  }) => void;
+  onCellDragEnd?: ({
+    cells,
+    rowCount,
+    cellCount,
+    fields,
+    data,
+    csv,
+  }: {
+    cells: HTMLTableCellElement[];
+    rowCount: number;
+    cellCount: number;
+    fields: string[];
+    data: string[][];
+    csv: string;
+  }) => void;
 }

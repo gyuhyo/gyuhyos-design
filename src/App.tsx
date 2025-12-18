@@ -173,6 +173,7 @@ const App = () => {
   const [dataSource, setDataSource] = React.useState([]);
   const [columns, setColumns] = React.useState<IDataTableColumn[]>([]);
   const [isHideFixColumn, setIsHideFixColumn] = React.useState(false);
+  const textRef = React.useRef(null);
   const [data, setData] = React.useState<any[]>(
     Array.from({ length: 100000 }, (_, index) => ({
       aaa: index.toString(),
@@ -180,7 +181,6 @@ const App = () => {
       caaa: index,
     }))
   );
-
   const getDataList = () => {
     fetch(
       `http://sqw.iptime.org:3095/production/foundry/${selectedMonth.format(
@@ -189,7 +189,7 @@ const App = () => {
     )
       .then((res) => res.json())
       .then((data) => {
-        setDataSource(data);
+        setDataSource([...data, ...data, ...data, ...data]);
       })
       .catch(() => {
         showMessage({
@@ -357,21 +357,6 @@ const App = () => {
 
   return (
     <>
-      <button
-        onClick={() => {
-          if (!gridRef.current) return;
-          (gridRef.current as any).store.setDataSource((prev) => [
-            {
-              aaa: "123",
-              ab: "456",
-              caaa: "789",
-            },
-            ...prev,
-          ]);
-        }}
-      >
-        Insert
-      </button>
       <DevsDataTable
         title="123"
         description="파일을 끌어서 테이블에 올리거나 파일 추가 버튼을 클릭하여 업로드 해주세요."
@@ -381,6 +366,10 @@ const App = () => {
         options={{}}
         columns={columns}
         setColumns={setColumns}
+        onCellDragEnd={({ csv }) => {
+          if (!csv) return;
+          navigator.clipboard.writeText(csv);
+        }}
       />
     </>
   );

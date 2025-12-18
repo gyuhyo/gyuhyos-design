@@ -28,6 +28,36 @@ export interface IDataTableProviderProps extends IDataTableProps {
   COLUMNS_STYLE_FORCE_UPDATE: React.Dispatch<React.SetStateAction<boolean>>;
   setInnerLoading: React.Dispatch<React.SetStateAction<boolean>>;
   wrapper: React.MutableRefObject<HTMLDivElement | null>;
+  onCellDragging?: ({
+    cells,
+    rowCount,
+    cellCount,
+    fields,
+    data,
+    csv,
+  }: {
+    cells: HTMLTableCellElement[];
+    rowCount: number;
+    cellCount: number;
+    fields: string[];
+    data: string[][];
+    csv: string;
+  }) => void;
+  onCellDragEnd?: ({
+    cells,
+    rowCount,
+    cellCount,
+    fields,
+    data,
+    csv,
+  }: {
+    cells: HTMLTableCellElement[];
+    rowCount: number;
+    cellCount: number;
+    fields: string[];
+    data: string[][];
+    csv: string;
+  }) => void;
 }
 
 export interface IDataTableContextProps extends IDataTableProps {
@@ -60,4 +90,34 @@ export interface IDataTableContextProps extends IDataTableProps {
   wrapper: React.MutableRefObject<HTMLDivElement | null>;
   intersectingCellsCsv: string;
   setIntersectingCellsCsv: React.Dispatch<React.SetStateAction<string>>;
+  onCellDragging?: ({
+    cells,
+    rowCount,
+    cellCount,
+    fields,
+    data,
+    csv,
+  }: {
+    cells: HTMLTableCellElement[];
+    rowCount: number;
+    cellCount: number;
+    fields: string[];
+    data: string[][];
+    csv: string;
+  }) => void;
+  onCellDragEnd?: ({
+    cells,
+    rowCount,
+    cellCount,
+    fields,
+    data,
+    csv,
+  }: {
+    cells: HTMLTableCellElement[];
+    rowCount: number;
+    cellCount: number;
+    fields: string[];
+    data: string[][];
+    csv: string;
+  }) => void;
 }

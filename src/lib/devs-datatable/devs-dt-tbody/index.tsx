@@ -28,10 +28,32 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
     formsRef,
     sorter,
     currentPage,
+    onCellDragging,
+    onCellDragEnd,
   } = useDt();
+  const [limit, setLimit] = React.useState(30);
   const [isDrop, setIsDrop] = React.useState(false);
-  const { setTableRef, cells } = useDragTds();
+  const {
+    setTableRef,
+    isDragging,
+    cells,
+    rowCount,
+    cellCount,
+    fields,
+    data,
+    csv,
+  } = useDragTds();
   useDtUtils();
+
+  React.useEffect(() => {
+    if (!data) return;
+
+    if (isDragging) {
+      onCellDragging?.({ cells, rowCount, cellCount, fields, data, csv });
+    } else {
+      onCellDragEnd?.({ cells, rowCount, cellCount, fields, data, csv });
+    }
+  }, [isDragging, data]);
 
   const keyField: string | undefined = React.useMemo(() => {
     return columns.find((col) => col.key)?.field;
@@ -326,6 +348,30 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
     return dataSource;
   }, [dataSource, lastNode, sorter, currentPage]);
 
+  React.useEffect(() => {
+    if (typeof window === "undefined" || !tbody.current) return;
+
+    const handleScroll = () => {
+      if (
+        tbody.current &&
+        tbody.current.scrollHeight -
+          tbody.current.scrollTop -
+          tbody.current.clientHeight <=
+          20
+      ) {
+        setLimit((prev) => prev + 20);
+      }
+    };
+
+    tbody.current.addEventListener("scroll", handleScroll);
+
+    return () => {
+      if (tbody.current) {
+        tbody.current.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []);
+
   const setRowOrderChange = React.useCallback(
     (e: DropResult<string>) => {
       setIsDrop(false);
@@ -406,6 +452,7 @@ function DevsDtTBody({ tbody, headerWidth }: TDevsDtTBody) {
                 {mergedDataSource &&
                   mergedDataSource
                     .filter((f) => f.rowId)
+                    .slice(0, limit)
                     .map((row, index) => {
                       return (
                         <Draggable
