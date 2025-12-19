@@ -67,55 +67,6 @@ const TabPanelContentDynamicComponent: React.FC<any> = React.memo(() => {
   }, [selectedMenu]);
 
   React.useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const moveToCurrentContent = () => {
-      if (!contentRef.current) return;
-
-      const findIndex = openedMenus.findIndex(
-        (f) => f.group === selectedMenu.gr && f.key === selectedMenu.mn
-      );
-
-      contentRef.current.scrollTo({
-        left: findIndex * contentRef.current.clientWidth,
-      });
-    };
-
-    moveToCurrentContent();
-    window.addEventListener("resize", moveToCurrentContent);
-    // Cleanup observer on component unmount
-    return () => {
-      window.removeEventListener("resize", moveToCurrentContent);
-      if (contentRef.current) {
-      }
-    };
-  }, [menus, openedMenus, selectedMenu, contentRef]);
-
-  React.useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const changeContentWidth = () => {
-      if (!contentRef.current) return;
-      const width = contentRef.current.clientWidth;
-      const contents = document.querySelectorAll(".tab-panel-full-content");
-
-      for (const content of contents) {
-        (content as HTMLElement).style.width = `${width}px`;
-        (content as HTMLElement).style.minWidth = `${width}px`;
-        (content as HTMLElement).style.maxWidth = `${width}px`;
-      }
-    };
-
-    changeContentWidth();
-    window.addEventListener("resize", changeContentWidth);
-    return () => {
-      if (typeof window !== "undefined") {
-        window.removeEventListener("resize", changeContentWidth);
-      }
-    };
-  }, []);
-
-  React.useEffect(() => {
     if (menus.length === 0) return;
 
     const remakeOpenedMenus = openedMenus.map((mn) => {
@@ -140,10 +91,6 @@ const TabPanelContentDynamicComponent: React.FC<any> = React.memo(() => {
   }, [menus]);
 
   const tabPanelFullContentCss = css({
-    height: "calc(100dvh - 95px)",
-    width: "calc(100dvw - 55px)",
-    minWidth: "calc(100dvw - 55px)",
-    maxWidth: "calc(100dvw - 55px)",
     padding: "5px 7px",
     display: "flex",
     flexDirection: "column",
@@ -174,7 +121,8 @@ const TabPanelContentDynamicComponent: React.FC<any> = React.memo(() => {
                 key={`${group}/${key}`}
                 css={tabPanelFullContentCss}
                 style={{
-                  visibility: isActive ? "visible" : "hidden",
+                  display: isActive ? "flex" : "none",
+                  width: "100%",
                 }}
                 className="tab-panel-full-content"
                 data-is-view={isActive}
@@ -187,7 +135,8 @@ const TabPanelContentDynamicComponent: React.FC<any> = React.memo(() => {
                 key={`${group}/${key}`}
                 css={tabPanelFullContentCss}
                 style={{
-                  visibility: isActive ? "visible" : "hidden",
+                  display: isActive ? "flex" : "none",
+                  width: "100%",
                 }}
                 className="tab-panel-full-content"
                 data-is-view={isActive}
@@ -202,7 +151,8 @@ const TabPanelContentDynamicComponent: React.FC<any> = React.memo(() => {
               key={`${group}/${key}`}
               css={tabPanelFullContentCss}
               style={{
-                visibility: isActive ? "visible" : "hidden",
+                display: isActive ? "flex" : "none",
+                width: "100%",
               }}
               className="tab-panel-full-content"
               data-is-view={isActive}

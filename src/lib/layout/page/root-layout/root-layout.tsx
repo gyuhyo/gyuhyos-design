@@ -47,23 +47,8 @@ function RootLayout() {
           })}
         >
           <TabPanelContainer />
-          <MesChatBot />
+          {process.env.REACT_APP_MES_CHAT_BOT === "true" && <MesChatBot />}
         </div>
-        {/* <div
-          css={css({
-            height: "30px",
-            flex: "none",
-            background: "linear-gradient(180deg, #d8d8d8, #ddd, #fff)",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "0px 14px",
-            fontSize: "0.8rem",
-          })}
-        >
-          <p>시스템 메시지</p>
-        </div> */}
       </div>
     </div>
   );
