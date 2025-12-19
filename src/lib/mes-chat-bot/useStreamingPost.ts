@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import OpenAI from "openai";
 import { useMenuStore } from "../layout/stores/menu-store";
 import { SideMenuItemsProps } from "../layout/types/side-menu-item-props";
+import { useLayout } from "../layout/contexts/layout-context";
 
 const tools = [
   {
@@ -38,11 +39,7 @@ type HistoryItem =
   | { role: "user"; content: string }
   | { role: "assistant"; content: string };
 
-export const useStreamingPost = (apiKey?: string) => {
-  const openai = new OpenAI({
-    apiKey: apiKey || process.env.REACT_APP_OPENAI_API_KEY,
-    dangerouslyAllowBrowser: true,
-  });
+export const useStreamingPost = () => {
   // ✅ data -> history (대화 기억)
   const [history, setHistory] = useState<HistoryItem[]>([
     // 원하면 시스템 규칙을 넣어 인사 반복도 줄일 수 있습니다.
@@ -50,14 +47,19 @@ export const useStreamingPost = (apiKey?: string) => {
   ]);
 
   const historyRef = useRef<HistoryItem[]>(history);
-  useEffect(() => {
-    historyRef.current = history;
-  }, [history]);
-
   const [streamText, setStreamText] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<any | null>(null);
   const { menus, openMenu, closeMenu } = useMenuStore();
+  const { apiKey } = useLayout();
+  const openai = new OpenAI({
+    apiKey: apiKey || process.env.REACT_APP_OPENAI_API_KEY,
+    dangerouslyAllowBrowser: true,
+  });
+
+  useEffect(() => {
+    historyRef.current = history;
+  }, [history]);
 
   const menuControlTool = ({
     type,

@@ -27,6 +27,7 @@ interface LayoutContextProps {
   host: string;
   onBeforeLogout?: (user: IUser) => void;
   useChatbot?: boolean;
+  apiKey?: string;
 }
 
 const languages = [
@@ -55,6 +56,7 @@ export const LayoutProvider: React.FC<{
   statics?: string[];
   onBeforeLogout?: (user: IUser) => void;
   useChatbot?: boolean;
+  apiKey?: string;
   defaultLanguage?: string;
 }> = ({
   children,
@@ -68,6 +70,7 @@ export const LayoutProvider: React.FC<{
   statics,
   onBeforeLogout,
   useChatbot = false,
+  apiKey,
   defaultLanguage = "ko",
 }) => {
   const { defaultAlgorithm, darkAlgorithm } = themes;
@@ -282,6 +285,7 @@ export const LayoutProvider: React.FC<{
           theme,
           host,
           onBeforeLogout,
+          apiKey,
         }}
       >
         {children}
@@ -306,6 +310,7 @@ export const LayoutProvider: React.FC<{
         theme,
         host,
         onBeforeLogout,
+        apiKey,
       }}
     >
       <div id="google_translate_element"></div>

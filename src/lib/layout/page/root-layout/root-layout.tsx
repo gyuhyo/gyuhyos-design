@@ -8,7 +8,7 @@ import TabPanelContainer from "../../tab-panel/tab-panel-container";
 import MesChatBot from "../../../mes-chat-bot";
 
 function RootLayout() {
-  const { menuType, calculWidth } = useLayout();
+  const { menuType, calculWidth, apiKey } = useLayout();
   const pathName = window.location.pathname;
 
   if (pathName === "/auth" || pathName.includes("popup")) return <></>;
@@ -47,7 +47,7 @@ function RootLayout() {
           })}
         >
           <TabPanelContainer />
-          {process.env.REACT_APP_MES_CHAT_BOT === "true" && <MesChatBot />}
+          {(apiKey || process.env.REACT_APP_OPENAI_API_KEY) && <MesChatBot />}
         </div>
       </div>
     </div>
