@@ -1,10 +1,8 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import { GoogleGenAI } from "@google/genai";
 import OpenAI from "openai";
 import { useMenuStore } from "../layout/stores/menu-store";
 import { SideMenuItemsProps } from "../layout/types/side-menu-item-props";
 
-const ai = new GoogleGenAI({ apiKey: process.env.REACT_APP_GEMINI_API_KEY });
 const openai = new OpenAI({
   apiKey: process.env.REACT_APP_OPENAI_API_KEY,
   dangerouslyAllowBrowser: true,
