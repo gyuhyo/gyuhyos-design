@@ -3,11 +3,6 @@ import OpenAI from "openai";
 import { useMenuStore } from "../layout/stores/menu-store";
 import { SideMenuItemsProps } from "../layout/types/side-menu-item-props";
 
-const openai = new OpenAI({
-  apiKey: process.env.REACT_APP_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true,
-});
-
 const tools = [
   {
     type: "function" as const,
@@ -43,7 +38,11 @@ type HistoryItem =
   | { role: "user"; content: string }
   | { role: "assistant"; content: string };
 
-export const useStreamingPost = () => {
+export const useStreamingPost = (apiKey?: string) => {
+  const openai = new OpenAI({
+    apiKey: apiKey || process.env.REACT_APP_OPENAI_API_KEY,
+    dangerouslyAllowBrowser: true,
+  });
   // ✅ data -> history (대화 기억)
   const [history, setHistory] = useState<HistoryItem[]>([
     // 원하면 시스템 규칙을 넣어 인사 반복도 줄일 수 있습니다.

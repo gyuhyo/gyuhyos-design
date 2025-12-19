@@ -6,7 +6,7 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import "highlight.js/styles/github.css";
 
-const MesChatBot = () => {
+const MesChatBot = ({ apiKey }: { apiKey?: string }) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
@@ -14,6 +14,7 @@ const MesChatBot = () => {
       <ChatBotContainer
         isOpen={isOpen}
         setIsOpen={setIsOpen}
+        apiKey={apiKey}
       ></ChatBotContainer>
       <ChatBotFloatButton setIsOpen={setIsOpen} isOpen={isOpen} />
     </>
@@ -25,9 +26,11 @@ export default MesChatBot;
 const ChatBotContainer = ({
   isOpen,
   setIsOpen,
+  apiKey,
 }: {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  apiKey?: string;
 }) => {
   const chatBotPositionRef = React.useRef({
     startX: 0,
@@ -35,7 +38,7 @@ const ChatBotContainer = ({
   });
   const resizerRef = React.useRef<HTMLDivElement>(null);
   const { history, streamText, isLoading, error, fetchStream, clearData } =
-    useStreamingPost();
+    useStreamingPost(apiKey);
   const [messages, setMessages] = React.useState<
     {
       role: "user" | "assistant";
