@@ -49,7 +49,6 @@
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
     "sheetjs-style": "^0.15.8",
-    "typescript": "^4.9.5",
     "usehooks-ts": "^3.1.1",
     "web-vitals": "^2.1.4",
     "zustand": "^5.0.2"
@@ -105,7 +104,7 @@
     "copyfiles": "^2.4.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "typescript": "^4.9.5",
+    "typescript": "^5.9.3",
     "webpack": "^5.97.1"
   }
 }
