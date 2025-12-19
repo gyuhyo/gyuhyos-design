@@ -1,54 +1,10 @@
 import React from "react";
 
-const boxTop = document.createElement("div");
-boxTop.className = "devs-dt-box-top";
-boxTop.style.position = "absolute";
-boxTop.style.left = `-1px`;
-boxTop.style.top = `-1px`;
-boxTop.style.width = `calc(100% + 2px)`;
-boxTop.style.height = `calc(100% + 2px)`;
-boxTop.style.pointerEvents = "none";
-boxTop.style.borderTop = "1px solid rgb(47 141 255)";
-
-const boxLeft = document.createElement("div");
-boxLeft.className = "devs-dt-box-left";
-boxLeft.style.position = "absolute";
-boxLeft.style.left = `-1px`;
-boxLeft.style.top = `-1px`;
-boxLeft.style.width = `calc(100% + 2px)`;
-boxLeft.style.height = `calc(100% + 2px)`;
-boxLeft.style.pointerEvents = "none";
-boxLeft.style.borderLeft = "1px solid rgb(47 141 255)";
-
-const boxRight = document.createElement("div");
-boxRight.className = "devs-dt-box-right";
-boxRight.style.position = "absolute";
-boxRight.style.left = `-1px`;
-boxRight.style.top = `-1px`;
-boxRight.style.width = `calc(100% + 2px)`;
-boxRight.style.height = `calc(100% + 2px)`;
-boxRight.style.pointerEvents = "none";
-boxRight.style.borderRight = "1px solid rgb(47 141 255)";
-
-const boxBottom = document.createElement("div");
-boxBottom.className = "devs-dt-box-bottom";
-boxBottom.style.position = "absolute";
-boxBottom.style.left = `-1px`;
-boxBottom.style.top = `-1px`;
-boxBottom.style.width = `calc(100% + 2px)`;
-boxBottom.style.height = `calc(100% + 2px)`;
-boxBottom.style.pointerEvents = "none";
-boxBottom.style.borderBottom = "1px solid rgb(47 141 255)";
-
-const boxInner = document.createElement("div");
-boxInner.className = "devs-dt-box-inner";
-boxInner.style.position = "absolute";
-boxInner.style.left = `-1px`;
-boxInner.style.top = `-1px`;
-boxInner.style.width = `calc(100% + 2px)`;
-boxInner.style.height = `calc(100% + 2px)`;
-boxInner.style.backgroundColor = "rgb(92 161 189 / 50%)";
-boxInner.style.pointerEvents = "none";
+let boxTop: HTMLDivElement | null = null;
+let boxLeft: HTMLDivElement | null = null;
+let boxRight: HTMLDivElement | null = null;
+let boxBottom: HTMLDivElement | null = null;
+let boxInner: HTMLDivElement | null = null;
 
 const useDragTds = () => {
   const [tableRef, setTableRef] = React.useState<HTMLTableElement | null>(null);
@@ -96,6 +52,60 @@ const useDragTds = () => {
   });
 
   const scrollRafId = React.useRef<number | null>(null);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    boxTop = document.createElement("div");
+    boxTop.className = "devs-dt-box-top";
+    boxTop.style.position = "absolute";
+    boxTop.style.left = `-1px`;
+    boxTop.style.top = `-1px`;
+    boxTop.style.width = `calc(100% + 2px)`;
+    boxTop.style.height = `calc(100% + 2px)`;
+    boxTop.style.pointerEvents = "none";
+    boxTop.style.borderTop = "1px solid rgb(47 141 255)";
+
+    boxLeft = document.createElement("div");
+    boxLeft.className = "devs-dt-box-left";
+    boxLeft.style.position = "absolute";
+    boxLeft.style.left = `-1px`;
+    boxLeft.style.top = `-1px`;
+    boxLeft.style.width = `calc(100% + 2px)`;
+    boxLeft.style.height = `calc(100% + 2px)`;
+    boxLeft.style.pointerEvents = "none";
+    boxLeft.style.borderLeft = "1px solid rgb(47 141 255)";
+
+    boxRight = document.createElement("div");
+    boxRight.className = "devs-dt-box-right";
+    boxRight.style.position = "absolute";
+    boxRight.style.left = `-1px`;
+    boxRight.style.top = `-1px`;
+    boxRight.style.width = `calc(100% + 2px)`;
+    boxRight.style.height = `calc(100% + 2px)`;
+    boxRight.style.pointerEvents = "none";
+    boxRight.style.borderRight = "1px solid rgb(47 141 255)";
+
+    boxBottom = document.createElement("div");
+    boxBottom.className = "devs-dt-box-bottom";
+    boxBottom.style.position = "absolute";
+    boxBottom.style.left = `-1px`;
+    boxBottom.style.top = `-1px`;
+    boxBottom.style.width = `calc(100% + 2px)`;
+    boxBottom.style.height = `calc(100% + 2px)`;
+    boxBottom.style.pointerEvents = "none";
+    boxBottom.style.borderBottom = "1px solid rgb(47 141 255)";
+
+    boxInner = document.createElement("div");
+    boxInner.className = "devs-dt-box-inner";
+    boxInner.style.position = "absolute";
+    boxInner.style.left = `-1px`;
+    boxInner.style.top = `-1px`;
+    boxInner.style.width = `calc(100% + 2px)`;
+    boxInner.style.height = `calc(100% + 2px)`;
+    boxInner.style.backgroundColor = "rgb(92 161 189 / 50%)";
+    boxInner.style.pointerEvents = "none";
+  }, []);
 
   const checkIntersection = React.useCallback(() => {
     const tds = tableRef!.querySelectorAll("td");
@@ -298,22 +308,22 @@ const useDragTds = () => {
         const targetCell = cells[row * cellCount + cell];
 
         if (row === 0) {
-          targetCell.appendChild(boxTop.cloneNode(true));
+          targetCell.appendChild(boxTop!.cloneNode(true));
         }
 
         if (cell === 0) {
-          targetCell.appendChild(boxLeft.cloneNode(true));
+          targetCell.appendChild(boxLeft!.cloneNode(true));
         }
 
         if (row === rowCount - 1) {
-          targetCell.appendChild(boxBottom.cloneNode(true));
+          targetCell.appendChild(boxBottom!.cloneNode(true));
         }
 
         if (cell === cellCount - 1) {
-          targetCell.appendChild(boxRight.cloneNode(true));
+          targetCell.appendChild(boxRight!.cloneNode(true));
         }
 
-        targetCell.appendChild(boxInner.cloneNode(true));
+        targetCell.appendChild(boxInner!.cloneNode(true));
       }
     }
 
